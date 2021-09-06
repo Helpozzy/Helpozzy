@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "217556872773",
+    "project_id": "helpozzyapp",
+    "storage_bucket": "helpozzyapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217556872773:android:493ed5bc5a0790182bfd2c",
+        "android_client_info": {
+          "package_name": "com.dev.helpozzy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217556872773-lse87vhklba0un1k6290n1lgipm82rrv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217556872773-lse87vhklba0un1k6290n1lgipm82rrv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
