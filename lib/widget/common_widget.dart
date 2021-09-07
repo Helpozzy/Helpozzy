@@ -312,7 +312,10 @@ EdgeInsets buildEdgeInsetsCustom(double width, left, top, right, bottom) {
 
 EdgeInsets bottomContinueBtnEdgeInsets(double width, double height) {
   return EdgeInsets.only(
-      left: width * 0.15, right: width * 0.15, bottom: height * 0.03);
+      top: height * 0.03,
+      left: width * 0.15,
+      right: width * 0.15,
+      bottom: height * 0.03);
 }
 
 Future showSnakeBar(BuildContext context, {required String msg}) async {

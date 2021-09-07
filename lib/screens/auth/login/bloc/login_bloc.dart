@@ -25,7 +25,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print('Password: $password');
       // call api
       yield state.copyWith(state, isLoading: true);
-      // yield LoginLoading();
       var user = await authRepository.signIn(email, password);
       if (user != null && user is User) {
         yield LoginSucceed(user: user);

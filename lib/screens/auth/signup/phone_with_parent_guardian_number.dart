@@ -21,6 +21,7 @@ class _PhoneWithParentGuardianNumberState
   final TextEditingController _personalPhoneController =
       TextEditingController();
   static final _formKey = GlobalKey<FormState>();
+  final GlobalKey<State> _dialogKey = GlobalKey<State>();
   final TextEditingController _parentPhoneController = TextEditingController();
   String dropdownValue = SELECT_RELATION_HINT;
   CountryCode? countryCodePersonal;
@@ -46,57 +47,58 @@ class _PhoneWithParentGuardianNumberState
         key: _formKey,
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  CommonWidget(context).showBackButton(),
-                  TopInfoLabel(label: DO_YOU_HAVE_NUMBER),
-                  CommonTextfield(
-                    controller: _personalPhoneController,
-                    prefixIcon: countryCodePicker(true),
-                    hintText: ENTER_PHONE_NUMBER_HINT,
-                    maxLength: 10,
-                    keyboardType: TextInputType.number,
-                    validator: (phone) {
-                      if (phone!.isEmpty) {
-                        return 'Please enter phone number';
-                      } else if (phone.isNotEmpty && phone.length != 10) {
-                        return 'Please enter 10 digit number';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  TopInfoLabel(label: ENTER_PARENT_NUMBER),
-                  CommonTextfield(
-                    controller: _parentPhoneController,
-                    keyboardType: TextInputType.number,
-                    maxLength: 10,
-                    hintText: ENTER_PHONE_NUMBER_HINT,
-                    prefixIcon: countryCodePicker(false),
-                    validator: (parentPhone) {
-                      if (parentPhone!.isEmpty) {
-                        return 'Please enter parents/guardian phone number';
-                      } else if (parentPhone.isNotEmpty &&
-                          parentPhone.length != 10) {
-                        return 'Please enter 10 digit number';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onChanged: (state) {},
-                  ),
-                  SizedBox(height: 10),
-                  TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: width * 0.15),
-                    child: selectRelationshipDropdown(),
-                  ),
-                  SizedBox(height: 10),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CommonWidget(context).showBackButton(),
+                    TopInfoLabel(label: DO_YOU_HAVE_NUMBER),
+                    CommonTextfield(
+                      controller: _personalPhoneController,
+                      prefixIcon: countryCodePicker(true),
+                      hintText: ENTER_PHONE_NUMBER_HINT,
+                      maxLength: 10,
+                      keyboardType: TextInputType.number,
+                      validator: (phone) {
+                        if (phone!.isEmpty) {
+                          return 'Please enter phone number';
+                        } else if (phone.isNotEmpty && phone.length != 10) {
+                          return 'Please enter 10 digit number';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TopInfoLabel(label: ENTER_PARENT_NUMBER),
+                    CommonTextfield(
+                      controller: _parentPhoneController,
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      hintText: ENTER_PHONE_NUMBER_HINT,
+                      prefixIcon: countryCodePicker(false),
+                      validator: (parentPhone) {
+                        if (parentPhone!.isEmpty) {
+                          return 'Please enter parents/guardian phone number';
+                        } else if (parentPhone.isNotEmpty &&
+                            parentPhone.length != 10) {
+                          return 'Please enter 10 digit number';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onChanged: (state) {},
+                    ),
+                    SizedBox(height: 10),
+                    TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.15),
+                      child: selectRelationshipDropdown(),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
-            Spacer(),
             Container(
               margin: EdgeInsets.only(
                   left: width * 0.15,
@@ -125,7 +127,7 @@ class _PhoneWithParentGuardianNumberState
                         ),
                       );
                     } else {
-                      PlatformAlertDialog().show(context,
+                      PlatformAlertDialog().show(context, _dialogKey,
                           title: ALERT,
                           content: 'Please select relationship status');
                     }

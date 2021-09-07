@@ -6,6 +6,7 @@ import 'package:helpozzy/bloc/event_categories_bloc.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/screens/explore/event/categorised_event_list.dart';
+import 'package:helpozzy/screens/explore/search_bar/search_event.dart';
 import 'package:helpozzy/screens/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -26,7 +27,6 @@ class _ExploreScreenState extends State<ExploreScreen>
   bool boo = true;
   late Animation<double> animation;
   late AnimationController controller;
-  TextEditingController _searchController = TextEditingController();
   final CategoryBloc _categoryBloc = CategoryBloc();
   final EventsBloc _eventsBloc = EventsBloc();
 
@@ -134,7 +134,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                   width: animation.value,
                   height: 35,
                   child: TextField(
-                    onTap: _modalBottomSheetMenu,
+                    onTap: () => SearchEvent().modalBottomSheetMenu(context),
                     decoration: InputDecoration(
                       hintText: SEARCH_HINT,
                       hintStyle: TextStyle(
@@ -179,176 +179,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(25),
       borderSide: BorderSide(color: TRANSPARENT_WHITE),
-    );
-  }
-
-  void _modalBottomSheetMenu() {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(11.0),
-          topRight: const Radius.circular(11.0),
-        ),
-      ),
-      isScrollControlled: true,
-      isDismissible: false,
-      builder: (builder) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 23,
-            horizontal: 10.0,
-          ),
-          child: Column(
-            children: [
-              bottomSheetSearchbar(),
-              currentLocationCard(),
-              searchList(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget bottomSheetSearchbar() {
-    return TextField(
-      controller: _searchController,
-      decoration: InputDecoration(
-        hintText: SEARCH_HINT,
-        hintStyle: TextStyle(
-          fontSize: 17,
-          color: DARK_GRAY,
-          fontFamily: QUICKSAND,
-          fontWeight: FontWeight.w500,
-        ),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(top: 3, left: 12),
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_rounded,
-              color: BLACK,
-            ),
-          ),
-        ),
-        suffixIcon: Padding(
-          padding: const EdgeInsets.only(top: 3, right: 10),
-          child: IconButton(
-            onPressed: () {
-              _searchController.clear();
-            },
-            icon: Icon(
-              Icons.close_rounded,
-              color: BLACK,
-              size: 25,
-            ),
-          ),
-        ),
-        enabledBorder: bottomSheetSearchBarDecoration(),
-        disabledBorder: bottomSheetSearchBarDecoration(),
-        focusedBorder: bottomSheetSearchBarDecoration(),
-        border: bottomSheetSearchBarDecoration(),
-      ),
-    );
-  }
-
-  Widget currentLocationCard() {
-    final BorderSide border = BorderSide(color: DIVIDER_COLOR, width: 0.3);
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          color: WHITE,
-          border: Border(left: border, right: border, bottom: border),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: SHADOW_GRAY,
-              offset: Offset(0.0, 2.0),
-              blurRadius: 2.0,
-              spreadRadius: 0.5,
-            ), //Bo//BoxShado
-          ],
-        ),
-        padding: EdgeInsets.symmetric(vertical: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 21.0, right: 8.0),
-              child: Icon(Icons.pin_drop_outlined),
-            ),
-            Text(
-              CURRENT_LOCATION,
-              style: TextStyle(
-                fontSize: 17,
-                color: BLUE,
-                fontFamily: QUICKSAND,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  InputBorder bottomSheetSearchBarDecoration() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: const Radius.circular(31.0),
-        topRight: const Radius.circular(31.0),
-      ),
-      borderSide: BorderSide(
-        color: DIVIDER_COLOR,
-        width: 0.3,
-      ),
-    );
-  }
-
-  Widget searchList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: eventStrings.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {},
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 3.0),
-                      child: Icon(Icons.search),
-                    ),
-                    Text(
-                      eventStrings[index],
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: DARK_GRAY,
-                        fontFamily: QUICKSAND,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                color: DIVIDER_COLOR,
-                height: 0.3,
-                endIndent: 5,
-                indent: 5,
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
@@ -528,6 +358,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             );
           }
           return GridView.count(
+            physics: NeverScrollableScrollPhysics(),
             crossAxisCount: 4,
             shrinkWrap: true,
             childAspectRatio: 0.85,
@@ -585,6 +416,7 @@ class _ExploreScreenState extends State<ExploreScreen>
           }
           return ListView.builder(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.all(5),
             itemCount: snapshot.data!.events.length,
             itemBuilder: (context, index) {
@@ -680,9 +512,10 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RatingBar.builder(
-                                    initialRating: 3,
+                                    initialRating: event.rating,
                                     minRating: 1,
-                                    itemSize: width / 20.5,
+                                    ignoreGestures: true,
+                                    itemSize: 18,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
                                     unratedColor: GRAY,

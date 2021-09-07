@@ -16,10 +16,12 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late double height;
   late double width;
+  late ThemeData _theme;
   TextEditingController _reviewController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -99,11 +101,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           bottom: 33,
           child: Text(
             widget.event.organization,
-            style: TextStyle(
-              fontSize: 25,
-              color: WHITE,
-              fontFamily: QUICKSAND,
-            ),
+            maxLines: 2,
+            style: _theme.textTheme.headline6!
+                .copyWith(color: WHITE, fontSize: 22),
           ),
         ),
         Positioned(
@@ -114,7 +114,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RatingBar.builder(
-                initialRating: 3,
+                initialRating: widget.event.rating,
+                ignoreGestures: true,
                 minRating: 1,
                 itemSize: 18,
                 direction: Axis.horizontal,
@@ -132,9 +133,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
               Text(
                 '(${widget.event.reviewCount} Reviews)',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: QUICKSAND,
+                style: _theme.textTheme.bodyText2!.copyWith(
                   color: WHITE,
                   fontWeight: FontWeight.w600,
                 ),
@@ -165,18 +164,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             widget.event.dateTime,
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 16,
-              fontFamily: QUICKSAND,
               color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             widget.event.eventName,
-            style: TextStyle(
-              fontSize: 22,
-              fontFamily: QUICKSAND,
+            style: _theme.textTheme.headline6!.copyWith(
               color: BLUE_GRAY,
               fontWeight: FontWeight.bold,
             ),
@@ -186,10 +182,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.only(bottom: 2.0),
             child: Text(
               ABOUT_ORGANIZER,
-              style: TextStyle(
-                fontSize: 15,
-                fontFamily: QUICKSAND,
-                color: PRIMARY_COLOR,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -199,10 +193,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
               widget.event.aboutOrganizer,
-              style: TextStyle(
-                fontSize: 13,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 12,
                 fontFamily: QUICKSAND,
-                color: PRIMARY_COLOR,
               ),
             ),
           ),
@@ -219,10 +212,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             OVERVIEW,
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -257,11 +248,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           SizedBox(width: 7),
           Text(
             text,
-            style: TextStyle(
-              fontSize: 12,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
-            ),
+            style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
           ),
         ],
       ),
@@ -278,10 +265,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.only(bottom: 2.0),
             child: Text(
               EVENT_DETAILS,
-              style: TextStyle(
-                fontSize: 15,
-                fontFamily: QUICKSAND,
-                color: PRIMARY_COLOR,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -291,11 +276,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
               widget.event.eventDetails,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: QUICKSAND,
-                color: PRIMARY_COLOR,
-              ),
+              style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
             ),
           ),
         ],
@@ -311,27 +292,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             SCHEDULES,
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             'Thu , Dec 31 2020 10:30 AM - 4:30 PM',
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             '(Schedules are allocated on slots basics)',
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
               color: DARK_GRAY,
               fontWeight: FontWeight.w500,
             ),
@@ -339,10 +315,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           SizedBox(height: 5),
           Text(
             DIRECTION,
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -356,9 +330,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               SizedBox(width: 5),
               Text(
                 '12 mins drive',
-                style: TextStyle(
+                style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
-                  fontFamily: QUICKSAND,
                   color: DARK_GRAY,
                   fontWeight: FontWeight.bold,
                 ),
@@ -366,9 +339,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               Spacer(),
               Text(
                 '3.2 mil',
-                style: TextStyle(
+                style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
-                  fontFamily: QUICKSAND,
                   color: DARK_GRAY,
                   fontWeight: FontWeight.bold,
                 ),
@@ -377,9 +349,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ),
           Text(
             '7600 Amador Valley Blvd, Dublin, CA 94568',
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
               color: DARK_GRAY,
               fontWeight: FontWeight.w500,
             ),
@@ -392,10 +363,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               children: [
                 Text(
                   'Contact Dublin Senior Center',
-                  style: TextStyle(
+                  style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 12,
-                    fontFamily: QUICKSAND,
-                    color: PRIMARY_COLOR,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -430,10 +399,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             INFO,
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 14,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -457,10 +424,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             text,
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -483,18 +448,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         children: [
           Text(
             REVIEWS,
-            style: TextStyle(
-              fontSize: 13,
-              fontFamily: QUICKSAND,
-              color: PRIMARY_COLOR,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             'Volunteers rated this non-profit highly for the work\nResponsiveness and professionalism',
-            style: TextStyle(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
-              fontFamily: QUICKSAND,
               color: DARK_GRAY,
               fontWeight: FontWeight.w500,
             ),
@@ -523,18 +485,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   children: [
                     Text(
                       'John Smith',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontFamily: QUICKSAND,
-                        color: PRIMARY_COLOR,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       'Dublin, CA 94568',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontFamily: QUICKSAND,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 12,
                         color: LIGHT_GRAY,
                         fontWeight: FontWeight.bold,
                       ),
@@ -546,7 +505,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
               child: RatingBar.builder(
-                initialRating: 3,
+                initialRating: 0,
                 minRating: 1,
                 itemSize: 18,
                 direction: Axis.horizontal,
@@ -567,8 +526,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               height: 35,
               width: width / 2,
               child: TextField(
-                style: TextStyle(
-                    color: BLACK, fontFamily: QUICKSAND, fontSize: 11),
+                style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
                 controller: _reviewController,
                 decoration: reviewFieldDecoration(),
               ),
@@ -592,7 +550,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       disabledBorder: UnderlineInputBorder(
         borderSide: BorderSide.none,
       ),
-      hintStyle: TextStyle(color: GRAY, fontFamily: QUICKSAND, fontSize: 11),
+      hintStyle:
+          _theme.textTheme.bodyText2!.copyWith(color: GRAY, fontSize: 12),
     );
   }
 
@@ -618,18 +577,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     children: [
                       Text(
                         review.name,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: QUICKSAND,
-                          color: PRIMARY_COLOR,
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         review.address,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontFamily: QUICKSAND,
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          fontSize: 12,
                           color: LIGHT_GRAY,
                           fontWeight: FontWeight.bold,
                         ),
@@ -642,6 +598,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                 child: RatingBar.builder(
                   initialRating: review.rating,
+                  ignoreGestures: true,
                   minRating: 1,
                   itemSize: 18,
                   direction: Axis.horizontal,
@@ -663,9 +620,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Text(
                         review.reviewText,
-                        style: TextStyle(
+                        style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 12,
-                          fontFamily: QUICKSAND,
                           color: DARK_GRAY_FONT_COLOR,
                           fontWeight: FontWeight.bold,
                         ),

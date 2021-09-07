@@ -30,54 +30,55 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
         key: _formKey,
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  CommonWidget(context).showCloseButton(),
-                  TextFieldWithLabel(
-                    controller: _stateController,
-                    label: WHICH_STATE,
-                    hintText: ENTER_STATE_HINT,
-                    validator: (state) {
-                      if (state!.isEmpty) {
-                        return 'Please enter state';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  TextFieldWithLabel(
-                    controller: _cityController,
-                    label: WHICH_CITY,
-                    hintText: ENTER_CITY_HINT,
-                    validator: (city) {
-                      if (city!.isEmpty) {
-                        return 'Please enter city';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  TextFieldWithLabel(
-                    controller: _zipCodeController,
-                    keyboardType: TextInputType.number,
-                    label: ENTER_ZIP_CODE,
-                    maxLength: 6,
-                    hintText: ENTER_ZIP_CODE_HINT,
-                    validator: (code) {
-                      if (code!.isEmpty) {
-                        return 'Please enter ZIP code';
-                      } else if (code.isNotEmpty && code.length != 6) {
-                        return 'Please enter 6 digit code';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CommonWidget(context).showCloseButton(),
+                    TextFieldWithLabel(
+                      controller: _stateController,
+                      label: WHICH_STATE,
+                      hintText: ENTER_STATE_HINT,
+                      validator: (state) {
+                        if (state!.isEmpty) {
+                          return 'Please enter state';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFieldWithLabel(
+                      controller: _cityController,
+                      label: WHICH_CITY,
+                      hintText: ENTER_CITY_HINT,
+                      validator: (city) {
+                        if (city!.isEmpty) {
+                          return 'Please enter city';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFieldWithLabel(
+                      controller: _zipCodeController,
+                      keyboardType: TextInputType.number,
+                      label: ENTER_ZIP_CODE,
+                      maxLength: 6,
+                      hintText: ENTER_ZIP_CODE_HINT,
+                      validator: (code) {
+                        if (code!.isEmpty) {
+                          return 'Please enter ZIP code';
+                        } else if (code.isNotEmpty && code.length != 6) {
+                          return 'Please enter 6 digit code';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-            Spacer(),
             Container(
               margin: bottomContinueBtnEdgeInsets(width, height),
               width: double.infinity,

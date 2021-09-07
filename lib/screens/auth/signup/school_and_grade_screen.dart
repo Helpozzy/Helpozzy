@@ -16,6 +16,7 @@ class SchoolAndGradeScreen extends StatefulWidget {
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   final TextEditingController _schoolController = TextEditingController();
+  final GlobalKey<State> _dialogKey = GlobalKey<State>();
   static final _formKey = GlobalKey<FormState>();
   String dropdownValue = SELECT_GRADE_HINT;
   late ThemeData _theme;
@@ -73,8 +74,12 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                         ),
                       );
                     } else {
-                      PlatformAlertDialog().show(context,
-                          title: ALERT, content: 'Please select your grade');
+                      PlatformAlertDialog().show(
+                        context,
+                        _dialogKey,
+                        title: ALERT,
+                        content: 'Please select your grade',
+                      );
                     }
                   }
                 },

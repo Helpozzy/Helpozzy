@@ -33,48 +33,49 @@ class PasswordSetScreen extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  CommonWidget(context).showBackButton(),
-                  TopInfoLabel(label: CHOOSE_YOUR_PASSWORD),
-                  CommonTextfield(
-                    obscureText: true,
-                    controller: _passController,
-                    hintText: ENTER_PASSWORD_HINT,
-                    validator: (password) {
-                      if (password!.isEmpty) {
-                        return 'Please enter password';
-                      } else if (password.isNotEmpty && password.length < 8) {
-                        return 'Password must be at least 8 characters';
-                      } else if (password.isNotEmpty &&
-                          !checkPassStrength(password)) {
-                        return "Password must contains 'A-z, Special char, 1-9'";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  CommonTextfield(
-                    obscureText: true,
-                    controller: _confirmPassController,
-                    hintText: ENTER_CONFIRM_PASSWORD_HINT,
-                    validator: (confirmPass) {
-                      if (confirmPass!.isEmpty) {
-                        return 'Please enter password';
-                      } else if (confirmPass != _passController.text) {
-                        return 'Does not match';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CommonWidget(context).showBackButton(),
+                    TopInfoLabel(label: CHOOSE_YOUR_PASSWORD),
+                    CommonTextfield(
+                      obscureText: true,
+                      controller: _passController,
+                      hintText: ENTER_PASSWORD_HINT,
+                      validator: (password) {
+                        if (password!.isEmpty) {
+                          return 'Please enter password';
+                        } else if (password.isNotEmpty && password.length < 8) {
+                          return 'Password must be at least 8 characters';
+                        } else if (password.isNotEmpty &&
+                            !checkPassStrength(password)) {
+                          return "Password must contains 'A-z, Special char, 1-9'";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    CommonTextfield(
+                      obscureText: true,
+                      controller: _confirmPassController,
+                      hintText: ENTER_CONFIRM_PASSWORD_HINT,
+                      validator: (confirmPass) {
+                        if (confirmPass!.isEmpty) {
+                          return 'Please enter confirm password';
+                        } else if (confirmPass != _passController.text) {
+                          return 'Does not match';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
-            Spacer(),
             Container(
               margin: bottomContinueBtnEdgeInsets(width, height),
               width: double.infinity,

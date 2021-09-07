@@ -223,23 +223,18 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> relationShips = [SELECT_RELATION_HINT, 'Father', 'Mother'];
+List<String> relationShips = [SELECT_RELATION_HINT, 'Parent', 'Guardian'];
 
 List<String> gradeLevels = [
   SELECT_GRADE_HINT,
-  'A+',
-  'A',
-  'A−',
-  'B+',
-  'B',
-  'B−',
-  'C+',
-  'C',
-  'C−',
-  'D+',
-  'D',
-  'D−',
-  'F'
+  '6th',
+  '7th',
+  '8th',
+  '9th',
+  '10th',
+  '11th',
+  '12th',
+  'College',
 ];
 //Temp Data
 List<int> items = [25, 50, 75, 100, 125, 150, 175, 200];
@@ -298,6 +293,7 @@ List<Map<String, dynamic>> eventList = [
     'location': '7600 Amador Valley Blvd,\nDublin, CA 94568',
     'review_count': 112,
     'is_liked': false,
+    'rating': 3.3,
     'about_organizer': SAMPLE_LONG_TEXT,
     'details': SAMPLE_LONG_TEXT,
   },
@@ -311,6 +307,7 @@ List<Map<String, dynamic>> eventList = [
     'location': '1200 NW Naito Pkway #14,\nPleasanton, CA 95677',
     'review_count': 74,
     'is_liked': true,
+    'rating': 4,
     'about_organizer': SAMPLE_LONG_TEXT,
     'details': SAMPLE_LONG_TEXT,
   },
@@ -324,6 +321,7 @@ List<Map<String, dynamic>> eventList = [
     'location': '1200 NW Naito Pkway #14,\nPleasanton, CA 95677',
     'review_count': 104,
     'is_liked': false,
+    'rating': 4.5,
     'about_organizer': SAMPLE_LONG_TEXT,
     'details': SAMPLE_LONG_TEXT,
   },

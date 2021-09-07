@@ -39,7 +39,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: SCREEN_BACKGROUND,
       body: Column(
         children: [
-          topIconSection(context, SELECT_CATEGORY),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: topIconSection(context, SELECT_CATEGORY),
+          ),
           volunteerList(),
         ],
       ),

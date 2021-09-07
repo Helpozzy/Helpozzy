@@ -100,9 +100,6 @@ class LoginInput extends StatelessWidget {
                   return null;
                 }
               },
-              onChanged: (email) {
-                context.read<LoginBloc>().add(LoginEmailChanged(email));
-              },
             ),
             SizedBox(height: 15),
             CommonTextfield(
@@ -118,9 +115,6 @@ class LoginInput extends StatelessWidget {
                   return null;
                 }
               },
-              onChanged: (password) {
-                context.read<LoginBloc>().add(LoginPasswordChanged(password));
-              },
             ),
             Container(
               margin: buildEdgeInsetsCustom(width, 0.15, 20.0, 0.15, 15.0),
@@ -130,6 +124,12 @@ class LoginInput extends StatelessWidget {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
+                    context
+                        .read<LoginBloc>()
+                        .add(LoginEmailChanged(_emailController.text));
+                    context
+                        .read<LoginBloc>()
+                        .add(LoginPasswordChanged(_passController.text));
                     context.read<LoginBloc>().add(const LoginSubmitted());
                   }
                 },

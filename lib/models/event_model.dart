@@ -18,6 +18,7 @@ class EventModel {
     organization = json['oraganization'];
     location = json['location'];
     reviewCount = json['review_count'];
+    rating = json['rating'];
     isLiked = json['is_liked'];
     aboutOrganizer = json['about_organizer'];
     eventDetails = json['details'];
@@ -32,6 +33,7 @@ class EventModel {
   late String location;
   late int reviewCount;
   late bool isLiked;
+  late double rating;
   late String aboutOrganizer;
   late String eventDetails;
 }

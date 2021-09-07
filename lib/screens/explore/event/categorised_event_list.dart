@@ -160,7 +160,7 @@ class _CategorisedEventsScreenState extends State<CategorisedEventsScreen> {
                         RatingBar.builder(
                           initialRating: 3,
                           minRating: 1,
-                          itemSize: width / 20.5,
+                          itemSize: 18,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
                           unratedColor: GRAY,

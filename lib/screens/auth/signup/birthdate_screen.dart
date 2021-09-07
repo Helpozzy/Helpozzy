@@ -20,6 +20,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _dateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<State> _dialogKey = GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +125,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
     } else {
       PlatformAlertDialog().show(
         context,
+        _dialogKey,
         title: ALERT,
         content: 'Please select your DOB',
       );
