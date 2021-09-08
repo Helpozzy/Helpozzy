@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/event_bloc.dart';
+import 'package:helpozzy/models/event_model.dart';
+import 'package:helpozzy/screens/explore/event/event_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class SearchEvent {
@@ -20,10 +23,25 @@ class SearchEvent {
   }
 }
 
-class SearchBarWidget extends StatelessWidget {
+class SearchBarWidget extends StatefulWidget {
+  @override
+  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  final EventsBloc _eventsBloc = EventsBloc();
   final TextEditingController _searchController = TextEditingController();
+  late ThemeData _theme;
+
+  @override
+  void initState() {
+    _eventsBloc.getEvents();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 23,
@@ -32,8 +50,8 @@ class SearchBarWidget extends StatelessWidget {
       child: Column(
         children: [
           bottomSheetSearchbar(context),
-          currentLocationCard(),
-          searchList(),
+          // currentLocationCard(),
+          Expanded(child: searchList()),
         ],
       ),
     );
@@ -42,12 +60,13 @@ class SearchBarWidget extends StatelessWidget {
   Widget bottomSheetSearchbar(context) {
     return TextField(
       controller: _searchController,
+      onChanged: (val) {
+        _eventsBloc.searchEvents(val);
+      },
       decoration: InputDecoration(
         hintText: SEARCH_HINT,
-        hintStyle: TextStyle(
-          fontSize: 17,
+        hintStyle: _theme.textTheme.headline6!.copyWith(
           color: DARK_GRAY,
-          fontFamily: QUICKSAND,
           fontWeight: FontWeight.w500,
         ),
         prefixIcon: Padding(
@@ -67,6 +86,7 @@ class SearchBarWidget extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               _searchController.clear();
+              _eventsBloc.searchEvents('');
             },
             icon: Icon(
               Icons.close_rounded,
@@ -110,10 +130,9 @@ class SearchBarWidget extends StatelessWidget {
             ),
             Text(
               CURRENT_LOCATION,
-              style: TextStyle(
-                fontSize: 17,
+              style: _theme.textTheme.headline6!.copyWith(
+                fontSize: 16,
                 color: BLUE,
-                fontFamily: QUICKSAND,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -137,45 +156,99 @@ class SearchBarWidget extends StatelessWidget {
   }
 
   Widget searchList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: eventStrings.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {},
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 3.0),
-                      child: Icon(Icons.search),
+    return StreamBuilder<dynamic>(
+      stream: _eventsBloc.getSearchedEventsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Text(
+              'Search for event',
+              style: _theme.textTheme.headline6,
+            ),
+          );
+        }
+        return snapshot.data.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final EventModel event = snapshot.data[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EventDetailsScreen(event: event),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 14),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6.0),
+                                child: Icon(
+                                  Icons.search,
+                                  color: PRIMARY_COLOR,
+                                  size: 25,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    event.eventName,
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 16,
+                                      color: DARK_GRAY,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 3),
+                                  Text(
+                                    event.organization,
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 12,
+                                      color: GRAY,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    event.location,
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 10,
+                                      color: BLUE_GRAY,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          color: DIVIDER_COLOR,
+                          height: 0.3,
+                          endIndent: 5,
+                          indent: 5,
+                        ),
+                      ],
                     ),
-                    Text(
-                      eventStrings[index],
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: DARK_GRAY,
-                        fontFamily: QUICKSAND,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  'Search Event..',
+                  style: _theme.textTheme.headline6,
                 ),
-              ),
-              Divider(
-                color: DIVIDER_COLOR,
-                height: 0.3,
-                endIndent: 5,
-                indent: 5,
-              ),
-            ],
-          ),
-        );
+              );
       },
     );
   }
