@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/screens/auth/auth_repository.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_event.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_state.dart';
+import 'package:helpozzy/utils/constants.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   var loginBloc;
@@ -27,6 +28,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield state.copyWith(state, isLoading: true);
       var user = await authRepository.signIn(email, password);
       if (user != null && user is User) {
+        prefsObject.setString('uID', user.uid);
         yield LoginSucceed(user: user);
       } else {
         yield LoginFailed(message: user.toString());

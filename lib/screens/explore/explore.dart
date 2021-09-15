@@ -123,7 +123,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       borderRadius: BorderRadius.circular(25),
                       color: WHITE.withOpacity(0.23),
                     ),
-                    child: Icon(Icons.search),
+                    child: Icon(CupertinoIcons.search),
                   ),
                 ),
               )
@@ -148,7 +148,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                         onTap: animateTextfield,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2.0),
-                          child: Icon(Icons.search, color: BLACK, size: 25),
+                          child: Icon(CupertinoIcons.search,
+                              color: BLACK, size: 25),
                         ),
                       ),
                       enabledBorder: searchBarDecoration(),

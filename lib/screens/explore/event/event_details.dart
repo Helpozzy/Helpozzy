@@ -478,7 +478,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           children: [
             Row(
               children: [
-                CommonUserPlaceholder(),
+                CommonUserPlaceholder(size: 30),
                 SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -570,7 +570,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Row(
                 children: [
-                  CommonUserPlaceholder(),
+                  CommonUserPlaceholder(size: 30),
                   SizedBox(width: 5),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

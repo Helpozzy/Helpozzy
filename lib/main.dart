@@ -4,12 +4,16 @@ import 'package:helpozzy/app.dart';
 import 'package:helpozzy/screens/auth/auth_repository.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_bloc.dart';
 import 'package:helpozzy/screens/auth/user/bloc/auth_bloc.dart';
-import 'package:helpozzy/screens/home/bloc/bloc/home_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:helpozzy/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/home/bloc/home_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefsObject = prefs;
   runApp(
     MultiBlocProvider(providers: [
       BlocProvider(

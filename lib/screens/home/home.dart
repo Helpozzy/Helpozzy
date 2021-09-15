@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/screens/common_screen.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
-import 'package:helpozzy/screens/home/bloc/bloc/home_bloc.dart';
+import 'package:helpozzy/screens/profile/profile_screen.dart';
 import 'package:helpozzy/screens/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -32,7 +34,7 @@ class _HomeState extends State<Home> {
     RewardsScreen(initialIndex: 1),
     CommonSampleScreen('Projects \nComing Soon!'),
     CommonSampleScreen('Inbox \nComing Soon!'),
-    CommonSampleScreen('Profile \nComing Soon!'),
+    ProfileScreen(),
   ];
 
   @override
@@ -41,30 +43,29 @@ class _HomeState extends State<Home> {
       return Scaffold(
         body: Center(child: _children[state.currentIndex]),
         bottomNavigationBar: BottomNavigationBar(
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.w900),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined),
+              icon: Icon(CupertinoIcons.search),
               label: 'Explore',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.card_giftcard_outlined),
+              icon: Icon(CupertinoIcons.gift),
               label: 'Rewards',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.assignment_outlined),
+              icon: Icon(CupertinoIcons.rectangle_3_offgrid),
               label: 'Projects',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.chat_outlined),
+              icon: Icon(CupertinoIcons.chat_bubble),
               label: 'Inbox',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline_rounded),
+              icon: Icon(CupertinoIcons.person),
               label: 'Profile',
               backgroundColor: Colors.white,
             ),

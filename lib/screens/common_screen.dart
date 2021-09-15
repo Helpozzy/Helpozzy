@@ -16,8 +16,8 @@ class CommonSampleScreen extends StatefulWidget {
 class _CommonSampleScreenState extends State<CommonSampleScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Scaffold(
+      body: Column(
         children: [
           Container(
             margin: EdgeInsets.all(50),

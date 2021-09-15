@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const PRIMARY_COLOR = Color(0xFF0F464C);
 const GRAY = Color(0xFFEAEAEA);
@@ -44,6 +45,7 @@ const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 const AUTH_TOKEN = 'auth_token';
+late SharedPreferences prefsObject;
 
 //Font family
 const QUICKSAND = 'Quicksand';

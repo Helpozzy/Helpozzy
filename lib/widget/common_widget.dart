@@ -478,14 +478,30 @@ class CommonDivider extends StatelessWidget {
   }
 }
 
+class CommonDividerWith extends StatelessWidget {
+  CommonDividerWith({this.height, this.color});
+  final double? height;
+  final Color? color;
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      color: color,
+      thickness: height,
+      height: height,
+    );
+  }
+}
+
 //Placer Holder
 class CommonUserPlaceholder extends StatelessWidget {
+  CommonUserPlaceholder({required this.size});
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/images/user_placeholder.png',
-      height: 30,
-      width: 30,
+      height: size,
+      width: size,
     );
   }
 }

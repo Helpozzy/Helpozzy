@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteers_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
@@ -82,5 +83,13 @@ class ApiProvider {
       events.add(event);
     });
     return Events.fromJson(list: events);
+  }
+
+  Future<UserModel> userInfoAPIProvider(String uId) async {
+    final DocumentReference documentRef =
+        firestore.collection('users').doc(uId);
+    final DocumentSnapshot doc = await documentRef.get();
+    final json = doc.data() as Map<String, dynamic>;
+    return UserModel.fromjson(json: json);
   }
 }

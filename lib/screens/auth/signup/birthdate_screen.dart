@@ -109,7 +109,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
     FocusScope.of(context).unfocus();
     Map<String, dynamic> json;
     json = widget.signUpModel.fromModelToMap();
-    json['date_of_birth'] = Timestamp.fromDate(_selectedDate).toString();
+    json['date_of_birth'] = Timestamp.fromDate(_selectedDate);
     final selectedDate = DateFormat.yMd().format(_selectedDate);
     final currentDate = DateFormat.yMd().format(DateTime.now());
 

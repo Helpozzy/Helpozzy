@@ -1,6 +1,7 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteers_model.dart';
 
 class Repository {
@@ -25,4 +26,7 @@ class Repository {
 
   Future<Events> getCategorisedEventsRepo(int categoryId) =>
       apiProvider.getCategorisedEventsAPIProvider(categoryId);
+
+  Future<UserModel> userInfoRepo(String uId) =>
+      apiProvider.userInfoAPIProvider(uId);
 }
