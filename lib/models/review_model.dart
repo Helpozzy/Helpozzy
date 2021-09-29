@@ -12,7 +12,9 @@ class ReviewModel {
     imageUrl = json['image_url'];
     name = json['name'];
     address = json['address'];
-    rating = json['rating'];
+    rating = json['rating'] is double
+        ? json['rating']
+        : double.parse(json['rating'].toString());
     dateTime = json['date_time'];
     reviewText = json['review_text'];
   }

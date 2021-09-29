@@ -1,4 +1,5 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
+import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -29,4 +30,8 @@ class Repository {
 
   Future<UserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
+
+  //Admin Repo
+  Future<AdminTypes> getAdminTypesRepo() =>
+      apiProvider.getAdminTypesAPIProvider();
 }

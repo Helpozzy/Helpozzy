@@ -160,6 +160,7 @@ const REDEEM_MY_POINT = 'Redeem my points';
 const CONTINUE_BUTTON = 'Continue';
 const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
+const ADD_NEW_PROJECT_BUTTON = 'ADD NEW PROJECT';
 
 //Event Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -177,6 +178,12 @@ const POINT_TAB = 'Points';
 const MY_REWARDS_TAB = 'My Rewards';
 const REDEEM_TAB = 'Redeem';
 const TRANSFER_POINT_TAB = 'Transfer Points';
+
+//Admin Panel
+
+const PROJECT_UPCOMING_TAB = 'Upcoming';
+const PROJECT_INPROGRESS_TAB = 'In-Progress';
+const PROJECT_PAST_TAB = 'Past';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';

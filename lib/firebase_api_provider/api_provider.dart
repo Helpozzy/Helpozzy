@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -91,5 +92,19 @@ class ApiProvider {
     final DocumentSnapshot doc = await documentRef.get();
     final json = doc.data() as Map<String, dynamic>;
     return UserModel.fromjson(json: json);
+  }
+
+  //Admin API Provider
+
+  Future<AdminTypes> getAdminTypesAPIProvider() async {
+    final DocumentReference documentRef =
+        firestore.collection('admin').doc('adminTypes');
+
+    final DocumentSnapshot categoriesDoc = await documentRef.get();
+
+    final Map<String, dynamic> categories =
+        categoriesDoc.data() as Map<String, dynamic>;
+
+    return AdminTypes.fromJson(items: categories['admin_types']);
   }
 }

@@ -18,7 +18,9 @@ class EventModel {
     organization = json['oraganization'];
     location = json['location'];
     reviewCount = json['review_count'];
-    rating = json['rating'];
+    rating = json['rating'] is double
+        ? json['rating']
+        : double.parse(json['rating'].toString());
     isLiked = json['is_liked'];
     aboutOrganizer = json['about_organizer'];
     eventDetails = json['details'];

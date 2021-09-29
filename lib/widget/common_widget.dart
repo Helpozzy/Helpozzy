@@ -372,14 +372,14 @@ Future<void> showLoadingDialog(
 
 //Top Icon on Intro
 class TopAppLogo extends StatelessWidget {
+  TopAppLogo({required this.height});
+  final double height;
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return Container(
       padding: const EdgeInsets.all(20.0),
-      margin: EdgeInsets.only(top: height * 0.05),
       width: MediaQuery.of(context).size.width,
-      height: height / 6,
+      height: height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -389,7 +389,7 @@ class TopAppLogo extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: DARK_BLACK,
-                  fontSize: height / 18,
+                  fontSize: height / 3,
                 ),
           )
         ],
@@ -398,8 +398,8 @@ class TopAppLogo extends StatelessWidget {
   }
 }
 
-class CustomButton extends StatelessWidget {
-  CustomButton({
+class CommonButton extends StatelessWidget {
+  CommonButton({
     required this.text,
     this.color = PRIMARY_COLOR,
     this.fontSize = 18,
@@ -428,6 +428,55 @@ class CustomButton extends StatelessWidget {
           fontSize: fontSize,
           fontFamily: QUICKSAND,
           color: Colors.white,
+        ),
+      ),
+      onPressed: onPressed,
+    );
+  }
+}
+
+class CommonButtonWithIcon extends StatelessWidget {
+  CommonButtonWithIcon({
+    required this.text,
+    required this.icon,
+    this.color = PRIMARY_COLOR,
+    this.fontSize = 18,
+    required this.onPressed,
+    this.borderColor = BLACK,
+  });
+  final IconData icon;
+  final String text;
+  final Color color;
+  final double fontSize;
+  final void Function() onPressed;
+  final Color borderColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: color,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: borderColor, width: 0.3),
+          borderRadius: BorderRadius.circular(100),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 10.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon),
+            SizedBox(width: 6),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontFamily: QUICKSAND,
+                color: WHITE,
+              ),
+            ),
+          ],
         ),
       ),
       onPressed: onPressed,
@@ -510,17 +559,34 @@ class CommonAppBar {
   CommonAppBar(this.context);
   final BuildContext context;
 
-  show({required String title}) {
+  show({
+    required String title,
+    double? elevation,
+    Color? color,
+    Color? textColor,
+    Function()? onBackPressed,
+    PreferredSizeWidget? bottom,
+  }) {
     return AppBar(
       centerTitle: true,
+      elevation: elevation,
+      backgroundColor: color ?? PRIMARY_COLOR,
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: WHITE,
-              fontSize: 20,
+              color: textColor ?? WHITE,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
       ),
+      leading: IconButton(
+        onPressed: onBackPressed,
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: textColor ?? WHITE,
+        ),
+      ),
+      bottom: bottom,
     );
   }
 }

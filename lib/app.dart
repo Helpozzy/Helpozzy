@@ -1,13 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/explore/explore.dart';
-import 'package:helpozzy/screens/home/home.dart';
-import 'package:helpozzy/screens/intro/intro.dart';
-import 'package:helpozzy/screens/auth/login/login.dart';
-import 'package:helpozzy/screens/auth/signup/volunteering_screen.dart';
+import 'package:helpozzy/screens/user/explore/explore.dart';
+import 'package:helpozzy/screens/user/home/home.dart';
+import 'package:helpozzy/screens/user/intro/intro.dart';
+import 'package:helpozzy/screens/user/auth/login/login.dart';
+import 'package:helpozzy/screens/user/auth/signup/volunteering_screen.dart';
 import 'package:helpozzy/splash/splash.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'screens/rewards/rewards.dart';
+import 'screens/user/rewards/rewards.dart';
 
 class HelpozzyApp extends MaterialApp {
   @override
@@ -24,7 +24,6 @@ class HelpozzyApp extends MaterialApp {
         fontFamily: QUICKSAND,
         colorScheme: ColorScheme.light(),
         primaryColor: PRIMARY_COLOR,
-        accentColor: PRIMARY_COLOR,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: Colors.white,
@@ -48,7 +47,6 @@ class HelpozzyApp extends MaterialApp {
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
-              // side: BorderSide(color: Colors.white, width: 0.5),
             ),
           ),
         ),

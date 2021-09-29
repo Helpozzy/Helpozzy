@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class SignUpModel {
   SignUpModel.fromJson({required Map<String, dynamic> json}) {
     volunteerType = json['volunteer_type'];
@@ -38,7 +36,7 @@ class SignUpModel {
   late int volunteerType;
   late String name;
   late String email;
-  late Timestamp? dateOfBirth;
+  late String dateOfBirth;
   late String personalPhnNo;
   late String parentPhnNo;
   late String relationshipWithParent;
