@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/screens/admin/admin_selection.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/screens/user/intro/intro.dart';
@@ -155,7 +156,7 @@ class HelpozzyApp extends MaterialApp {
 
   @override
   Map<String, WidgetBuilder> get routes => {
-        '/': (context) => Splash(),
+        '/': (context) => AdminSelectionScreen(),
         INTRO: (context) => IntroScreen(),
         LOGIN: (context) => Login(),
         SIGNUP: (context) => SignUpScreen(),

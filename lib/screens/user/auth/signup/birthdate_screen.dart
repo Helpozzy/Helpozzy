@@ -35,22 +35,25 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
           children: [
             CommonWidget(context).showBackButton(),
             TopInfoLabel(label: SELECT_BIRTH_DATE),
-            CommonTextfield(
-              controller: _dateController,
-              hintText: BIRTH_DATE_HINT,
-              readOnly: true,
-              keyboardType: TextInputType.number,
-              onTap: () {
-                pickDate();
-              },
-              validator: (state) {
-                if (state!.isEmpty) {
-                  return 'Please enter date of birth';
-                } else {
-                  return null;
-                }
-              },
-              onChanged: (state) {},
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+              child: CommonTextfield(
+                controller: _dateController,
+                hintText: BIRTH_DATE_HINT,
+                readOnly: true,
+                keyboardType: TextInputType.number,
+                onTap: () {
+                  pickDate();
+                },
+                validator: (state) {
+                  if (state!.isEmpty) {
+                    return 'Please enter date of birth';
+                  } else {
+                    return null;
+                  }
+                },
+                onChanged: (state) {},
+              ),
             ),
             Spacer(),
             Container(

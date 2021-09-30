@@ -10,6 +10,7 @@ import 'package:helpozzy/screens/user/explore/search_bar/search_event.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'event/event_sign_up.dart';
 import 'event/event_details.dart';
@@ -464,7 +465,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                               Row(
                                 children: [
                                   Text(
-                                    event.dateTime,
+                                    DateFormat('EEE, dd MMM - yyyy').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(event.dateTime),
+                                      ),
+                                    ),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: QUICKSAND,

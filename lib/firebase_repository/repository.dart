@@ -3,7 +3,7 @@ import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/models/volunteers_model.dart';
+import 'package:helpozzy/models/volunteer_type_model.dart';
 
 class Repository {
   final apiProvider = ApiProvider();

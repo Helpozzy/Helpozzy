@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/screens/admin/projects/projects_screen.dart';
+import 'package:helpozzy/screens/admin/volunteers/volunteer_screen.dart';
+import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -72,7 +74,11 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => ProjectsScreen(title: type.label),
+                    builder: (context) => type.id == 0
+                        ? ProjectsScreen(title: type.label)
+                        : type.id == 1
+                            ? VolunteerScreen(title: type.label)
+                            : CommonSampleScreen('No Available'),
                   ),
                 );
               },

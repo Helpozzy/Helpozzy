@@ -31,40 +31,49 @@ class ResidentialAddress extends StatelessWidget {
                   children: [
                     CommonWidget(context).showBackButton(),
                     TopInfoLabel(label: 'Residential Address'),
-                    CommonTextfield(
-                      controller: _houseNoController,
-                      hintText: HOUSE_NO_HINT,
-                      validator: (address) {
-                        if (address!.isEmpty) {
-                          return 'Please enter your house/apt number';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _houseNoController,
+                        hintText: HOUSE_NO_HINT,
+                        validator: (address) {
+                          if (address!.isEmpty) {
+                            return 'Please enter your house/apt number';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 25),
-                    CommonTextfield(
-                      controller: _streetController,
-                      hintText: STREET_NAME_HINT,
-                      validator: (address) {
-                        if (address!.isEmpty) {
-                          return 'Please enter your street name';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _streetController,
+                        hintText: STREET_NAME_HINT,
+                        validator: (address) {
+                          if (address!.isEmpty) {
+                            return 'Please enter your street name';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 25),
-                    CommonTextfield(
-                      controller: _cityController,
-                      hintText: CITY_HINT,
-                      validator: (address) {
-                        if (address!.isEmpty) {
-                          return 'Please enter your city';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _cityController,
+                        hintText: CITY_HINT,
+                        validator: (address) {
+                          if (address!.isEmpty) {
+                            return 'Please enter your city';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

@@ -87,37 +87,46 @@ class LoginInput extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            CommonTextfield(
-              controller: _emailController,
-              hintText: ENTER_EMAIL_HINT,
-              validator: (email) {
-                if (email!.isEmpty) {
-                  return 'Please enter email';
-                } else if (email.isNotEmpty &&
-                    !EmailValidator.validate(email)) {
-                  return 'Please enter valid email';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            SizedBox(height: 15),
-            CommonTextfield(
-              controller: _passController,
-              obscureText: true,
-              hintText: ENTER_PASSWORD_HINT,
-              validator: (password) {
-                if (password!.isEmpty) {
-                  return 'Please enter password';
-                } else if (password.isNotEmpty && password.length < 8) {
-                  return 'Password must be at least 8 characters';
-                } else {
-                  return null;
-                }
-              },
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CommonTextfield(
+                      controller: _emailController,
+                      hintText: ENTER_EMAIL_HINT,
+                      validator: (email) {
+                        if (email!.isEmpty) {
+                          return 'Please enter email';
+                        } else if (email.isNotEmpty &&
+                            !EmailValidator.validate(email)) {
+                          return 'Please enter valid email';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    CommonTextfield(
+                      controller: _passController,
+                      obscureText: true,
+                      hintText: ENTER_PASSWORD_HINT,
+                      validator: (password) {
+                        if (password!.isEmpty) {
+                          return 'Please enter password';
+                        } else if (password.isNotEmpty && password.length < 8) {
+                          return 'Password must be at least 8 characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ]),
             ),
             Container(
-              margin: buildEdgeInsetsCustom(width, 0.15, 20.0, 0.15, 15.0),
+              margin: buildEdgeInsetsCustom(width, 0.20, 20.0, 0.20, 15.0),
               width: double.infinity,
               child: CommonButton(
                 text: MSG_LOGIN.toUpperCase(),

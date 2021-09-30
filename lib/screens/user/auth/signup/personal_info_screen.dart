@@ -37,48 +37,57 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     CommonWidget(context).showBackButton(),
                     TopInfoLabel(label: ENTER_YOUR_NAME),
                     TextfieldLabelSmall(label: FIRST_NAME),
-                    CommonTextfield(
-                      controller: _firstNameController,
-                      hintText: ENTER_FIRST_NAME_HINT,
-                      validator: (fname) {
-                        if (fname!.isEmpty) {
-                          return 'Please enter first name';
-                        } else if (fname.isNotEmpty && fname.length <= 3) {
-                          return 'Please enter more than 3 charcters';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _firstNameController,
+                        hintText: ENTER_FIRST_NAME_HINT,
+                        validator: (fname) {
+                          if (fname!.isEmpty) {
+                            return 'Please enter first name';
+                          } else if (fname.isNotEmpty && fname.length <= 3) {
+                            return 'Please enter more than 3 charcters';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextfieldLabelSmall(label: LAST_NAME),
-                    CommonTextfield(
-                      controller: _lastNameController,
-                      hintText: ENTER_LAST_NAME_HINT,
-                      validator: (lname) {
-                        if (lname!.isEmpty) {
-                          return 'Please enter last name';
-                        } else if (lname.isNotEmpty && lname.length <= 3) {
-                          return 'Please enter more than 3 charcters';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _lastNameController,
+                        hintText: ENTER_LAST_NAME_HINT,
+                        validator: (lname) {
+                          if (lname!.isEmpty) {
+                            return 'Please enter last name';
+                          } else if (lname.isNotEmpty && lname.length <= 3) {
+                            return 'Please enter more than 3 charcters';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     TopInfoLabel(label: ENTER_YOUR_EMAIL),
-                    CommonTextfield(
-                      controller: _emailController,
-                      hintText: ENTER_EMAIL_HINT,
-                      validator: (email) {
-                        if (email!.isEmpty) {
-                          return 'Please enter email';
-                        } else if (email.isNotEmpty &&
-                            !EmailValidator.validate(email)) {
-                          return 'Please enter valid email';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _emailController,
+                        hintText: ENTER_EMAIL_HINT,
+                        validator: (email) {
+                          if (email!.isEmpty) {
+                            return 'Please enter email';
+                          } else if (email.isNotEmpty &&
+                              !EmailValidator.validate(email)) {
+                            return 'Please enter valid email';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

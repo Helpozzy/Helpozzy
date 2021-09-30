@@ -53,45 +53,50 @@ class _PhoneWithParentGuardianNumberState
                   children: [
                     CommonWidget(context).showBackButton(),
                     TopInfoLabel(label: DO_YOU_HAVE_NUMBER),
-                    CommonTextfield(
-                      controller: _personalPhoneController,
-                      prefixIcon: countryCodePicker(true),
-                      hintText: ENTER_PHONE_NUMBER_HINT,
-                      maxLength: 10,
-                      keyboardType: TextInputType.number,
-                      validator: (phone) {
-                        if (phone!.isEmpty) {
-                          return 'Please enter phone number';
-                        } else if (phone.isNotEmpty && phone.length != 10) {
-                          return 'Please enter 10 digit number';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _personalPhoneController,
+                        prefixIcon: countryCodePicker(true),
+                        hintText: ENTER_PHONE_NUMBER_HINT,
+                        maxLength: 10,
+                        keyboardType: TextInputType.number,
+                        validator: (phone) {
+                          if (phone!.isEmpty) {
+                            return 'Please enter phone number';
+                          } else if (phone.isNotEmpty && phone.length != 10) {
+                            return 'Please enter 10 digit number';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     TopInfoLabel(label: ENTER_PARENT_NUMBER),
-                    CommonTextfield(
-                      controller: _parentPhoneController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      hintText: ENTER_PHONE_NUMBER_HINT,
-                      prefixIcon: countryCodePicker(false),
-                      validator: (parentPhone) {
-                        if (parentPhone!.isEmpty) {
-                          return 'Please enter parents/guardian phone number';
-                        } else if (parentPhone.isNotEmpty &&
-                            parentPhone.length != 10) {
-                          return 'Please enter 10 digit number';
-                        } else {
-                          return null;
-                        }
-                      },
-                      onChanged: (state) {},
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        controller: _parentPhoneController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        hintText: ENTER_PHONE_NUMBER_HINT,
+                        prefixIcon: countryCodePicker(false),
+                        validator: (parentPhone) {
+                          if (parentPhone!.isEmpty) {
+                            return 'Please enter parents/guardian phone number';
+                          } else if (parentPhone.isNotEmpty &&
+                              parentPhone.length != 10) {
+                            return 'Please enter 10 digit number';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: width * 0.15),
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.10),
                       child: selectRelationshipDropdown(),
                     ),
                     SizedBox(height: 10),

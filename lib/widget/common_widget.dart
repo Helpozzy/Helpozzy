@@ -96,27 +96,24 @@ class CommonTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.15),
-      child: TextFormField(
-        obscureText: obscureText,
-        controller: controller,
-        readOnly: readOnly,
-        maxLength: maxLength,
-        textAlign: TextAlign.center,
-        style: _theme.textTheme.bodyText1,
-        keyboardType: keyboardType,
-        textInputAction: TextInputAction.next,
-        decoration: inputDecoration(
-          getHint: hintText,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-        ),
-        validator: validator,
-        onChanged: onChanged,
-        onTap: onTap,
+
+    return TextFormField(
+      obscureText: obscureText,
+      controller: controller,
+      readOnly: readOnly,
+      maxLength: maxLength,
+      textAlign: TextAlign.center,
+      style: _theme.textTheme.bodyText1,
+      keyboardType: keyboardType,
+      textInputAction: TextInputAction.next,
+      decoration: inputDecoration(
+        getHint: hintText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
+      validator: validator,
+      onChanged: onChanged,
+      onTap: onTap,
     );
   }
 }
@@ -166,17 +163,21 @@ class TextFieldWithLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         TopInfoLabel(label: label),
-        CommonTextfield(
-          controller: controller,
-          hintText: hintText,
-          validator: validator,
-          maxLength: maxLength,
-          keyboardType: keyboardType,
-          onTap: onTap,
-          onChanged: onChanged,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+          child: CommonTextfield(
+            controller: controller,
+            hintText: hintText,
+            validator: validator,
+            maxLength: maxLength,
+            keyboardType: keyboardType,
+            onTap: onTap,
+            onChanged: onChanged,
+          ),
         )
       ],
     );
@@ -439,25 +440,32 @@ class CommonButtonWithIcon extends StatelessWidget {
   CommonButtonWithIcon({
     required this.text,
     required this.icon,
-    this.color = PRIMARY_COLOR,
+    this.buttonColor = PRIMARY_COLOR,
     this.fontSize = 18,
     required this.onPressed,
     this.borderColor = BLACK,
+    this.fontColor = WHITE,
+    this.iconColor = WHITE,
+    this.iconSize,
   });
   final IconData icon;
   final String text;
-  final Color color;
+  final Color buttonColor;
   final double fontSize;
   final void Function() onPressed;
   final Color borderColor;
+  final Color fontColor;
+  final Color iconColor;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: color,
+        elevation: 1.0,
+        primary: buttonColor,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: borderColor, width: 0.3),
+          side: BorderSide(color: borderColor, width: 0.6),
           borderRadius: BorderRadius.circular(100),
         ),
       ),
@@ -466,14 +474,18 @@ class CommonButtonWithIcon extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              color: iconColor,
+              size: iconSize,
+            ),
             SizedBox(width: 6),
             Text(
               text,
               style: TextStyle(
                 fontSize: fontSize,
                 fontFamily: QUICKSAND,
-                color: WHITE,
+                color: fontColor,
               ),
             ),
           ],

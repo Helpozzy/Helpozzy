@@ -81,7 +81,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
   }
 
   Widget peopleRewards() {
-    final peoples = UserRewards(list: peoplesList).peoples;
+    final peoples = Volunteers(list: peoplesList).peoples;
     return ListView.builder(
       shrinkWrap: true,
       itemCount: expanded ? peoples.length : 2,

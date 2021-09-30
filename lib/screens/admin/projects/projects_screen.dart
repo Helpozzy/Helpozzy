@@ -30,7 +30,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           title: title!,
           elevation: 1,
           color: WHITE,
-          textColor: DARK_PINK_COLOR,
+          textColor: PRIMARY_COLOR,
           bottom: _tabBar(),
           onBackPressed: () {
             Navigator.of(context).pop();

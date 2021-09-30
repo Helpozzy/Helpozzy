@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/volunteer_bloc.dart';
-import 'package:helpozzy/models/volunteers_model.dart';
+import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/screens/user/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';

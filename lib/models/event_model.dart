@@ -38,4 +38,5 @@ class EventModel {
   late double rating;
   late String aboutOrganizer;
   late String eventDetails;
+  late bool isExpanded = false;
 }

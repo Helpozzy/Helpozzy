@@ -222,6 +222,14 @@ const AVAILABLE_POINT = 'Available points to redeem :';
 //Event Sign-up
 const CONTACT_PRO_LEAD = 'Contact Project Lead';
 
+//Admin Module text
+const LOCATION = 'Location';
+const CONTACT = 'Contact';
+const ENROLLMENT_STATUS = 'Enrollment Status';
+
+//Admin Hint Msg
+const ADMIN_SEARCH_HINT = 'Search';
+
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
     "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
@@ -288,51 +296,6 @@ List<Map<String, dynamic>> categories = [
     'id': 7,
     'img_url': 'assets/images/more.png',
     'label': MORE,
-  },
-];
-
-List<Map<String, dynamic>> eventList = [
-  {
-    'category_id': 5,
-    'event_id': 0,
-    'image_url': 'assets/images/event1.jpg',
-    'date_time': 'Thu, Dec 31 - 10:30 AM (PST)',
-    'event_name': 'New Year Eve Food Carting',
-    'oraganization': 'Dublin Senior Center',
-    'location': '7600 Amador Valley Blvd,\nDublin, CA 94568',
-    'review_count': 112,
-    'is_liked': false,
-    'rating': 3.3,
-    'about_organizer': SAMPLE_LONG_TEXT,
-    'details': SAMPLE_LONG_TEXT,
-  },
-  {
-    'category_id': 1,
-    'event_id': 1,
-    'image_url': 'assets/images/event2.jpg',
-    'date_time': 'Sat / Sun (All Weekends)',
-    'event_name': 'Give joy to Sick Child',
-    'oraganization': 'Children Cancer Association',
-    'location': '1200 NW Naito Pkway #14,\nPleasanton, CA 95677',
-    'review_count': 74,
-    'is_liked': true,
-    'rating': 4,
-    'about_organizer': SAMPLE_LONG_TEXT,
-    'details': SAMPLE_LONG_TEXT,
-  },
-  {
-    'category_id': 0,
-    'event_id': 2,
-    'image_url': 'assets/images/event3.jpg',
-    'date_time': 'Thu, Jan 07 - 4:30 (PST)',
-    'event_name': 'Food Distribution',
-    'oraganization': 'Food Camping Association',
-    'location': '1200 NW Naito Pkway #14,\nPleasanton, CA 95677',
-    'review_count': 104,
-    'is_liked': false,
-    'rating': 4.5,
-    'about_organizer': SAMPLE_LONG_TEXT,
-    'details': SAMPLE_LONG_TEXT,
   },
 ];
 
@@ -472,6 +435,9 @@ List<Map<String, dynamic>> peoplesList = [
   {
     'image_url': '',
     'fav': false,
+    'rating': 4.7,
+    'review_by_persons': 50,
+    'address': 'Dublin, CA 94568',
     'user_name': 'John Smith',
     'point_gifted': 0,
     'mail': 'Sample123@gmail.com',
@@ -479,6 +445,9 @@ List<Map<String, dynamic>> peoplesList = [
   {
     'image_url': '',
     'fav': true,
+    'rating': 3,
+    'review_by_persons': 20,
+    'address': 'Sacrdmento, CA 94203',
     'user_name': 'Abdul Iqbal',
     'point_gifted': 3,
     'mail': 'Sample123@gmail.com',
@@ -486,27 +455,39 @@ List<Map<String, dynamic>> peoplesList = [
   {
     'image_url': '',
     'fav': false,
+    'rating': 3.5,
+    'review_by_persons': 32,
     'user_name': 'Smith Andda',
+    'address': 'Dublin, CA 94568',
     'point_gifted': 1,
     'mail': 'Sample123@gmail.com',
   },
   {
     'image_url': '',
     'fav': true,
+    'rating': 5,
+    'review_by_persons': 45,
     'user_name': 'John Smith',
+    'address': 'Dublin, CA 94568',
     'point_gifted': 7,
     'mail': 'Sample123@gmail.com',
   },
   {
     'image_url': '',
     'fav': true,
+    'rating': 4,
+    'review_by_persons': 11,
     'user_name': 'John Carter',
+    'address': 'Sacrdmento, CA 94203',
     'point_gifted': 5,
     'mail': 'Sample123@gmail.com',
   },
   {
     'image_url': '',
     'fav': false,
+    'rating': 4.5,
+    'review_by_persons': 21,
+    'address': 'Dublin, CA 94568',
     'user_name': 'Bob Jons',
     'point_gifted': 2,
     'mail': 'Sample123@gmail.com',

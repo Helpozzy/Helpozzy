@@ -1,5 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
-import 'package:helpozzy/models/volunteers_model.dart';
+import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AirportDetailBloc {

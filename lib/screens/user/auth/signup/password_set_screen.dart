@@ -39,37 +39,44 @@ class PasswordSetScreen extends StatelessWidget {
                   children: [
                     CommonWidget(context).showBackButton(),
                     TopInfoLabel(label: CHOOSE_YOUR_PASSWORD),
-                    CommonTextfield(
-                      obscureText: true,
-                      controller: _passController,
-                      hintText: ENTER_PASSWORD_HINT,
-                      validator: (password) {
-                        if (password!.isEmpty) {
-                          return 'Please enter password';
-                        } else if (password.isNotEmpty && password.length < 8) {
-                          return 'Password must be at least 8 characters';
-                        } else if (password.isNotEmpty &&
-                            !checkPassStrength(password)) {
-                          return "Password must contains 'A-z, Special char, 1-9'";
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        obscureText: true,
+                        controller: _passController,
+                        hintText: ENTER_PASSWORD_HINT,
+                        validator: (password) {
+                          if (password!.isEmpty) {
+                            return 'Please enter password';
+                          } else if (password.isNotEmpty &&
+                              password.length < 8) {
+                            return 'Password must be at least 8 characters';
+                          } else if (password.isNotEmpty &&
+                              !checkPassStrength(password)) {
+                            return "Password must contains 'A-z, Special char, 1-9'";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 20),
-                    CommonTextfield(
-                      obscureText: true,
-                      controller: _confirmPassController,
-                      hintText: ENTER_CONFIRM_PASSWORD_HINT,
-                      validator: (confirmPass) {
-                        if (confirmPass!.isEmpty) {
-                          return 'Please enter confirm password';
-                        } else if (confirmPass != _passController.text) {
-                          return 'Does not match';
-                        } else {
-                          return null;
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonTextfield(
+                        obscureText: true,
+                        controller: _confirmPassController,
+                        hintText: ENTER_CONFIRM_PASSWORD_HINT,
+                        validator: (confirmPass) {
+                          if (confirmPass!.isEmpty) {
+                            return 'Please enter confirm password';
+                          } else if (confirmPass != _passController.text) {
+                            return 'Does not match';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(height: 20),
                   ],

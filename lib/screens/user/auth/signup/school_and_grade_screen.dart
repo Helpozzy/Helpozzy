@@ -35,20 +35,23 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           children: [
             CommonWidget(context).showBackButton(),
             TopInfoLabel(label: SCHOOL_NAME),
-            CommonTextfield(
-              controller: _schoolController,
-              hintText: ENTER_SCHOOL_HINT,
-              validator: (state) {
-                if (state!.isEmpty) {
-                  return 'Please enter your school';
-                } else {
-                  return null;
-                }
-              },
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+              child: CommonTextfield(
+                controller: _schoolController,
+                hintText: ENTER_SCHOOL_HINT,
+                validator: (state) {
+                  if (state!.isEmpty) {
+                    return 'Please enter your school';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
             ),
             TopInfoLabel(label: GRADE_LEVEL),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: width * 0.15),
+              margin: EdgeInsets.symmetric(horizontal: width * 0.10),
               child: selectGradeDropDown(),
             ),
             Spacer(),
