@@ -11,6 +11,7 @@ import 'package:helpozzy/screens/user/explore/event/categorised_event_list.dart'
 import 'package:helpozzy/screens/user/explore/event/event_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -184,12 +185,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           GestureDetector(
             onTap: () {
-              _launchCaller(user.personalPhnNo);
+              CommonUrlLauncher().launchCall(user.personalPhnNo);
             },
             child: Row(
               children: [
                 Text(
-                  'Contact',
+                  CONTACT_TEXT,
                   style: _theme.textTheme.bodyText2!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -201,15 +202,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
-  }
-
-  Future _launchCaller(String contact) async {
-    String url = 'tel://$contact';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   Widget aboutMe() {

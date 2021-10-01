@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
@@ -94,11 +95,18 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Image.network(
-                          type.imgUrl,
-                          fit: BoxFit.fill,
+                        child: CachedNetworkImage(
+                          imageUrl: type.imgUrl,
                           height: width / 5,
                           width: width / 5,
+                          placeholder: (context, url) => Center(
+                            child: LinearLoader(minheight: 10),
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outline_rounded,
+                            color: GRAY,
+                            size: width / 7,
+                          ),
                         ),
                       ),
                       CommonDivider(),

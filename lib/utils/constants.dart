@@ -78,8 +78,12 @@ const EVENT_DETAILS_SCREEN = 'event_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
 
 //Dropdown hint
-const SELECT_RELATION_HINT = '--Select Relation--';
-const SELECT_GRADE_HINT = '--Select Grade--';
+const SELECT_RELATION_HINT = '-- Select Relation --';
+const SELECT_GRADE_HINT = '-- Select Grade --';
+const SELECT_MODE_HINT = '-- Select Mode --';
+const FILTERS_HINT = 'Filters';
+const SORT_BY_HINT = 'Sort by';
+const FAVORITE_HINT = 'Favorite';
 
 //Helpozzy Text
 const HELPOZZY_REMAINING_TEXT = 'elpozzy';
@@ -179,6 +183,9 @@ const MY_REWARDS_TAB = 'My Rewards';
 const REDEEM_TAB = 'Redeem';
 const TRANSFER_POINT_TAB = 'Transfer Points';
 
+//Profile
+const CONTACT_TEXT = 'Contact';
+
 //Admin Panel
 
 const PROJECT_UPCOMING_TAB = 'Upcoming';
@@ -226,6 +233,9 @@ const CONTACT_PRO_LEAD = 'Contact Project Lead';
 const LOCATION = 'Location';
 const CONTACT = 'Contact';
 const ENROLLMENT_STATUS = 'Enrollment Status';
+const NAME_TEXT = 'NAME';
+const REVIEWS_TEXT = 'REVIEWS';
+const RATING_TEXT = 'RATINGS';
 
 //Admin Hint Msg
 const ADMIN_SEARCH_HINT = 'Search';
@@ -240,6 +250,8 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
+List<String> loginModes = [SELECT_MODE_HINT, 'User', 'Admin'];
+
 List<String> relationShips = [SELECT_RELATION_HINT, 'Parent', 'Guardian'];
 
 List<String> gradeLevels = [

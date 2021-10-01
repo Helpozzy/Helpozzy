@@ -5,6 +5,7 @@ import 'package:helpozzy/bloc/event_bloc.dart';
 import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
 
 class UpcomingTab extends StatefulWidget {
@@ -151,14 +152,18 @@ class _UpcomingTabState extends State<UpcomingTab> {
             detail: event.location,
             hasIcon: true,
             icon: Icons.directions,
-            iconOnPressed: () {},
+            iconOnPressed: () {
+              CommonUrlLauncher().launchMap(event.location);
+            },
           ),
           discription(
             title: CONTACT,
-            detail: event.organization,
+            detail: event.contactName + '\n' + event.contactNumber,
             hasIcon: true,
             icon: Icons.call_rounded,
-            iconOnPressed: () {},
+            iconOnPressed: () {
+              CommonUrlLauncher().launchCall(event.contactNumber);
+            },
           ),
           discription(
             title: ENROLLMENT_STATUS,

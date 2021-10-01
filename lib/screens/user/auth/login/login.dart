@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpozzy/screens/admin/admin_selection.dart';
 import 'package:helpozzy/screens/user/auth/auth_repository.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_bloc.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_event.dart';
@@ -71,10 +72,17 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginInput extends StatelessWidget {
+class LoginInput extends StatefulWidget {
+  @override
+  State<LoginInput> createState() => _LoginInputState();
+}
+
+class _LoginInputState extends State<LoginInput> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  String modeDropdownValue = SELECT_MODE_HINT;
+
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
@@ -90,40 +98,43 @@ class LoginInput extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CommonTextfield(
-                      controller: _emailController,
-                      hintText: ENTER_EMAIL_HINT,
-                      validator: (email) {
-                        if (email!.isEmpty) {
-                          return 'Please enter email';
-                        } else if (email.isNotEmpty &&
-                            !EmailValidator.validate(email)) {
-                          return 'Please enter valid email';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15),
-                    CommonTextfield(
-                      controller: _passController,
-                      obscureText: true,
-                      hintText: ENTER_PASSWORD_HINT,
-                      validator: (password) {
-                        if (password!.isEmpty) {
-                          return 'Please enter password';
-                        } else if (password.isNotEmpty && password.length < 8) {
-                          return 'Password must be at least 8 characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                  ]),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CommonTextfield(
+                    controller: _emailController,
+                    hintText: ENTER_EMAIL_HINT,
+                    validator: (email) {
+                      if (email!.isEmpty) {
+                        return 'Please enter email';
+                      } else if (email.isNotEmpty &&
+                          !EmailValidator.validate(email)) {
+                        return 'Please enter valid email';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  CommonTextfield(
+                    controller: _passController,
+                    obscureText: true,
+                    hintText: ENTER_PASSWORD_HINT,
+                    validator: (password) {
+                      if (password!.isEmpty) {
+                        return 'Please enter password';
+                      } else if (password.isNotEmpty && password.length < 8) {
+                        return 'Password must be at least 8 characters';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  selectloginTypeDropdown(),
+                ],
+              ),
             ),
             Container(
               margin: buildEdgeInsetsCustom(width, 0.20, 20.0, 0.20, 15.0),
@@ -131,7 +142,14 @@ class LoginInput extends StatelessWidget {
               child: CommonButton(
                 text: MSG_LOGIN.toUpperCase(),
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (modeDropdownValue == 'Admin') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminSelectionScreen(),
+                      ),
+                    );
+                  } else if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
                     context
                         .read<LoginBloc>()
@@ -189,5 +207,36 @@ class LoginInput extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget selectloginTypeDropdown() {
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+      ),
+      child: DropdownButton<String>(
+          value: modeDropdownValue,
+          icon: Icon(Icons.expand_more_outlined),
+          underline: SizedBox(),
+          isExpanded: true,
+          onChanged: (String? newValue) {
+            setState(() {
+              modeDropdownValue = newValue!;
+            });
+          },
+          items: loginModes.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Center(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }).toList()),
+    );
   }
 }

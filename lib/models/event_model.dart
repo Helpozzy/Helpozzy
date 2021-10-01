@@ -17,6 +17,8 @@ class EventModel {
     eventName = json['event_name'];
     organization = json['oraganization'];
     location = json['location'];
+    contactName = json['contact_person_name'];
+    contactNumber = json['contact_number'];
     reviewCount = json['review_count'];
     rating = json['rating'] is double
         ? json['rating']
@@ -31,6 +33,8 @@ class EventModel {
   late String imageUrl;
   late String dateTime;
   late String eventName;
+  late String contactName;
+  late String contactNumber;
   late String organization;
   late String location;
   late int reviewCount;

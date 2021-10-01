@@ -442,7 +442,7 @@ class CommonButtonWithIcon extends StatelessWidget {
     required this.icon,
     this.buttonColor = PRIMARY_COLOR,
     this.fontSize = 18,
-    required this.onPressed,
+    this.onPressed,
     this.borderColor = BLACK,
     this.fontColor = WHITE,
     this.iconColor = WHITE,
@@ -452,7 +452,7 @@ class CommonButtonWithIcon extends StatelessWidget {
   final String text;
   final Color buttonColor;
   final double fontSize;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final Color borderColor;
   final Color fontColor;
   final Color iconColor;
