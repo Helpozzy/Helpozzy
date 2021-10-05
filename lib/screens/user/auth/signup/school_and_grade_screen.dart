@@ -37,7 +37,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             TopInfoLabel(label: SCHOOL_NAME),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-              child: CommonTextfield(
+              child: CommonRoundedTextfield(
                 controller: _schoolController,
                 hintText: ENTER_SCHOOL_HINT,
                 validator: (state) {

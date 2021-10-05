@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
 import 'package:helpozzy/bloc/event_bloc.dart';
 import 'package:helpozzy/models/event_model.dart';
+import 'package:helpozzy/screens/admin/projects/create_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -41,7 +42,14 @@ class _UpcomingTabState extends State<UpcomingTab> {
           child: CommonButtonWithIcon(
             text: ADD_NEW_PROJECT_BUTTON,
             icon: CupertinoIcons.add_circled,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateProject(),
+                ),
+              );
+            },
           ),
         )
       ],
@@ -212,4 +220,3 @@ class _UpcomingTabState extends State<UpcomingTab> {
     );
   }
 }
-//  DateTime.now().millisecondsSinceEpoch.toString()

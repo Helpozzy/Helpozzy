@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
 import 'package:helpozzy/screens/user/auth/signup/phone_with_parent_guardian_number.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_date_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:intl/intl.dart';
@@ -37,13 +38,22 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
             TopInfoLabel(label: SELECT_BIRTH_DATE),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-              child: CommonTextfield(
+              child: CommonRoundedTextfield(
                 controller: _dateController,
                 hintText: BIRTH_DATE_HINT,
                 readOnly: true,
                 keyboardType: TextInputType.number,
                 onTap: () {
-                  pickDate();
+                  CommonDatepicker()
+                      .showPicker(context, initialDate: _selectedDate)
+                      .then((pickedDate) {
+                    if (pickedDate != null && pickedDate != _selectedDate)
+                      setState(() {
+                        _selectedDate = pickedDate;
+                      });
+                    _dateController.value = TextEditingValue(
+                        text: '${DateFormat.yMd().format(_selectedDate)}');
+                  });
                 },
                 validator: (state) {
                   if (state!.isEmpty) {
@@ -72,39 +82,6 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Future pickDate() async {
-    showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: PRIMARY_COLOR,
-              onPrimary: Colors.white,
-              onSurface: PRIMARY_COLOR,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(primary: PRIMARY_COLOR),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    ).then(
-      (pickedDate) {
-        if (pickedDate != null && pickedDate != _selectedDate)
-          setState(() {
-            _selectedDate = pickedDate;
-          });
-        _dateController.value =
-            TextEditingValue(text: '${DateFormat.yMd().format(_selectedDate)}');
-      },
     );
   }
 

@@ -67,7 +67,7 @@ class Service {
 
     return http
         .get(Uri.parse(BASE_URL + _url),
-            headers: (_headers != null) ? _headers : {})
+            headers: (_headers != {}) ? _headers : {})
         .then(
       (response) {
         final code = response.statusCode;
@@ -102,13 +102,13 @@ class Service {
   Future<Map<String, dynamic>> delete(
       String _url, Map<String, String> _headers) {
     print('_url => $_url');
-    if (_headers != null) {
+    if (_headers != {}) {
       print('_headers => $_headers');
     }
 
     return http
         .delete(Uri.parse(BASE_URL + _url),
-            headers: (_headers != null) ? _headers : {})
+            headers: (_headers != {}) ? _headers : {})
         .then(
       (response) {
         final code = response.statusCode;

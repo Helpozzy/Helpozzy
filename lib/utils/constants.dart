@@ -61,6 +61,8 @@ const HTTP_CODE = 'code';
 
 // Routes
 const INTRO = 'intro';
+const USER_SLECTION = 'user_selection';
+const ADMIN_SELECTION = 'admin_selection';
 const LOGIN = 'login';
 const SIGNUP = 'signup';
 const LIVING_INFO_SCREEN = 'state_select';
@@ -80,7 +82,7 @@ const REWARDS_SCREEN = 'rewards_screen';
 //Dropdown hint
 const SELECT_RELATION_HINT = '-- Select Relation --';
 const SELECT_GRADE_HINT = '-- Select Grade --';
-const SELECT_MODE_HINT = '-- Select Mode --';
+const SELECT_TYPE_HINT = 'Select Type';
 const FILTERS_HINT = 'Filters';
 const SORT_BY_HINT = 'Sort by';
 const FAVORITE_HINT = 'Favorite';
@@ -153,6 +155,7 @@ const CHANGE_COUNTRY_CODE = 'Change country code';
 const RELATIONSHIP_STATUS = 'Relationship';
 const SCHOOL_NAME = 'School Name';
 const GRADE_LEVEL = 'Grade Level';
+const SELECT_USER_TYPE = 'Select user type';
 
 //Alert Text
 const ALERT = 'Alert';
@@ -237,8 +240,20 @@ const NAME_TEXT = 'NAME';
 const REVIEWS_TEXT = 'REVIEWS';
 const RATING_TEXT = 'RATINGS';
 
+//Admin Button
+const ADD_PROJECT_BUTTON = 'ADD PROJECT';
+
 //Admin Hint Msg
 const ADMIN_SEARCH_HINT = 'Search';
+
+//Admin create projecct
+const PROJECT_NAME_HINT = 'Project Name';
+const PROJECT_DESCRIPTION_HINT = 'Description';
+const PROJECT_START_DATE_HINT = 'Start Date';
+const PROJECT_END_HINT = 'End Date';
+const PROJECT_OWNERS_HINT = 'Project Owners';
+const PROJECT_COLLABORATOR_HINT = 'Collaborators/Co-Admin';
+const PROJECT_MEMBERS_HINT = 'Members';
 
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
@@ -250,7 +265,7 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> loginModes = [SELECT_MODE_HINT, 'User', 'Admin'];
+List<String> loginModes = [SELECT_TYPE_HINT, 'User', 'Admin'];
 
 List<String> relationShips = [SELECT_RELATION_HINT, 'Parent', 'Guardian'];
 

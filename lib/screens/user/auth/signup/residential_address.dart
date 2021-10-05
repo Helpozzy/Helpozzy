@@ -33,7 +33,7 @@ class ResidentialAddress extends StatelessWidget {
                     TopInfoLabel(label: 'Residential Address'),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _houseNoController,
                         hintText: HOUSE_NO_HINT,
                         validator: (address) {
@@ -48,7 +48,7 @@ class ResidentialAddress extends StatelessWidget {
                     SizedBox(height: 25),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _streetController,
                         hintText: STREET_NAME_HINT,
                         validator: (address) {
@@ -63,7 +63,7 @@ class ResidentialAddress extends StatelessWidget {
                     SizedBox(height: 25),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _cityController,
                         hintText: CITY_HINT,
                         validator: (address) {

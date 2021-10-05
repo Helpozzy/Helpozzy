@@ -56,7 +56,7 @@ class TopInfoLabel extends StatelessWidget {
     final _theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.only(top: height * 0.05, bottom: height * 0.05),
+      margin: EdgeInsets.only(top: height * 0.05, bottom: height * 0.04),
       child: Text(
         label,
         textAlign: TextAlign.center,
@@ -67,8 +67,8 @@ class TopInfoLabel extends StatelessWidget {
   }
 }
 
-class CommonTextfield extends StatelessWidget {
-  const CommonTextfield({
+class CommonRoundedTextfield extends StatelessWidget {
+  const CommonRoundedTextfield({
     required this.controller,
     required this.hintText,
     required this.validator,
@@ -106,7 +106,7 @@ class CommonTextfield extends StatelessWidget {
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
-      decoration: inputDecoration(
+      decoration: inputRoundedDecoration(
         getHint: hintText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
@@ -114,6 +114,80 @@ class CommonTextfield extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onTap: onTap,
+    );
+  }
+}
+
+class CommonSimpleTextfield extends StatelessWidget {
+  const CommonSimpleTextfield({
+    required this.controller,
+    required this.hintText,
+    required this.validator,
+    this.onChanged,
+    this.maxLength,
+    this.onTap,
+    this.readOnly = false,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.prefixIcon,
+    this.suffixIcon,
+  });
+  final TextEditingController controller;
+  final String hintText;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
+  final GestureTapCallback? onTap;
+  final bool readOnly;
+  final int? maxLength;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: TextFormField(
+        obscureText: obscureText,
+        controller: controller,
+        readOnly: readOnly,
+        maxLength: maxLength,
+        style: _theme.textTheme.bodyText1,
+        keyboardType: keyboardType,
+        textInputAction: TextInputAction.next,
+        decoration: inputSimpleDecoration(
+          getHint: hintText,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+        ),
+        validator: validator,
+        onChanged: onChanged,
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class SmallInfoLabel extends StatelessWidget {
+  const SmallInfoLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(top: width * 0.04),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: _theme.textTheme.headline6!
+            .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
@@ -169,7 +243,7 @@ class TextFieldWithLabel extends StatelessWidget {
         TopInfoLabel(label: label),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-          child: CommonTextfield(
+          child: CommonRoundedTextfield(
             controller: controller,
             hintText: hintText,
             validator: validator,
@@ -252,7 +326,7 @@ Widget topBarTitleWidget(context, title) {
   );
 }
 
-InputDecoration inputDecoration(
+InputDecoration inputRoundedDecoration(
     {required String getHint, Widget? prefixIcon, Widget? suffixIcon}) {
   return InputDecoration(
     hintText: getHint,
@@ -278,6 +352,21 @@ InputDecoration inputDecoration(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
       borderSide: BorderSide(color: Colors.white, width: 1),
     ),
+  );
+}
+
+InputDecoration inputSimpleDecoration(
+    {required String getHint, Widget? prefixIcon, Widget? suffixIcon}) {
+  return InputDecoration(
+    hintText: getHint,
+    hintStyle: TextStyle(color: DARK_GRAY),
+    filled: true,
+    prefixIcon: prefixIcon,
+    suffixIcon: suffixIcon,
+    focusedErrorBorder: UnderlineInputBorder(),
+    errorBorder: UnderlineInputBorder(),
+    enabledBorder: UnderlineInputBorder(),
+    focusedBorder: UnderlineInputBorder(),
   );
 }
 
@@ -331,7 +420,7 @@ Future<void> showLoadingDialog(
     BuildContext context, GlobalKey _key, String message) async {
   return Future.delayed(
     Duration.zero,
-    () => {
+    () {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -366,7 +455,7 @@ Future<void> showLoadingDialog(
             ],
           );
         },
-      )
+      );
     },
   );
 }
@@ -592,7 +681,10 @@ class CommonAppBar {
             ),
       ),
       leading: IconButton(
-        onPressed: onBackPressed,
+        onPressed: onBackPressed ??
+            () {
+              Navigator.of(context).pop();
+            },
         icon: Icon(
           Icons.arrow_back_rounded,
           color: textColor ?? WHITE,

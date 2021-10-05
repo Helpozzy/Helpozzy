@@ -81,7 +81,7 @@ class _LoginInputState extends State<LoginInput> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  String modeDropdownValue = SELECT_MODE_HINT;
+  String modeDropdownValue = SELECT_TYPE_HINT;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class _LoginInputState extends State<LoginInput> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CommonTextfield(
+                  CommonRoundedTextfield(
                     controller: _emailController,
                     hintText: ENTER_EMAIL_HINT,
                     validator: (email) {
@@ -117,7 +117,7 @@ class _LoginInputState extends State<LoginInput> {
                     },
                   ),
                   SizedBox(height: 15),
-                  CommonTextfield(
+                  CommonRoundedTextfield(
                     controller: _passController,
                     obscureText: true,
                     hintText: ENTER_PASSWORD_HINT,
@@ -143,12 +143,7 @@ class _LoginInputState extends State<LoginInput> {
                 text: MSG_LOGIN.toUpperCase(),
                 onPressed: () async {
                   if (modeDropdownValue == 'Admin') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AdminSelectionScreen(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, ADMIN_SELECTION);
                   } else if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
                     context
@@ -197,8 +192,8 @@ class _LoginInputState extends State<LoginInput> {
                         color: PRIMARY_COLOR,
                         fontWeight: FontWeight.w700),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () =>
-                          Navigator.pushNamed(context, SIGNUP, arguments: {}),
+                      ..onTap =
+                          () => Navigator.pushNamed(context, USER_SLECTION),
                   ),
                 ],
               ),

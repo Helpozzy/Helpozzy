@@ -47,7 +47,7 @@ class IntroScreen extends StatelessWidget {
           buttonsTextColor: Colors.white,
           signupScreenCallback: (BuildContext context) {
             // Goto Sign Up Screen
-            Navigator.pushNamed(context, SIGNUP, arguments: {});
+            Navigator.pushNamed(context, USER_SLECTION, arguments: {});
           },
           loginScreenCallback: (BuildContext context) {
             // Goto Login Screen

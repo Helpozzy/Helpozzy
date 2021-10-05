@@ -39,7 +39,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     TextfieldLabelSmall(label: FIRST_NAME),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _firstNameController,
                         hintText: ENTER_FIRST_NAME_HINT,
                         validator: (fname) {
@@ -57,7 +57,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     TextfieldLabelSmall(label: LAST_NAME),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _lastNameController,
                         hintText: ENTER_LAST_NAME_HINT,
                         validator: (lname) {
@@ -74,7 +74,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     TopInfoLabel(label: ENTER_YOUR_EMAIL),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _emailController,
                         hintText: ENTER_EMAIL_HINT,
                         validator: (email) {

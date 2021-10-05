@@ -64,7 +64,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
               color: PRIMARY_COLOR,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
-              child: CommonTextfield(
+              child: CommonRoundedTextfield(
                 controller: _searchController,
                 hintText: ADMIN_SEARCH_HINT,
                 prefixIcon: Icon(

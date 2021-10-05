@@ -55,7 +55,7 @@ class _PhoneWithParentGuardianNumberState
                     TopInfoLabel(label: DO_YOU_HAVE_NUMBER),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _personalPhoneController,
                         prefixIcon: countryCodePicker(true),
                         hintText: ENTER_PHONE_NUMBER_HINT,
@@ -75,7 +75,7 @@ class _PhoneWithParentGuardianNumberState
                     TopInfoLabel(label: ENTER_PARENT_NUMBER),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         controller: _parentPhoneController,
                         keyboardType: TextInputType.number,
                         maxLength: 10,
@@ -167,7 +167,7 @@ class _PhoneWithParentGuardianNumberState
       favorite: ['+1', 'US'],
       textStyle: Theme.of(context).textTheme.bodyText2,
       closeIcon: Icon(Icons.close_rounded),
-      searchDecoration: inputDecoration(getHint: SEARCH_COUNTRY_HINT),
+      searchDecoration: inputRoundedDecoration(getHint: SEARCH_COUNTRY_HINT),
     );
   }
 

@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/screens/admin/admin_selection.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/screens/user/intro/intro.dart';
 import 'package:helpozzy/screens/user/auth/login/login.dart';
 import 'package:helpozzy/screens/user/auth/signup/volunteering_screen.dart';
+import 'package:helpozzy/screens/user_selection.dart';
 import 'package:helpozzy/splash/splash.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'screens/user/rewards/rewards.dart';
@@ -157,6 +159,8 @@ class HelpozzyApp extends MaterialApp {
   Map<String, WidgetBuilder> get routes => {
         '/': (context) => Splash(),
         INTRO: (context) => IntroScreen(),
+        USER_SLECTION: (context) => UserTypeSelection(),
+        ADMIN_SELECTION: (context) => AdminSelectionScreen(),
         LOGIN: (context) => Login(),
         SIGNUP: (context) => SignUpScreen(),
         HOME_SCREEN: (context) => HomeScreen(),

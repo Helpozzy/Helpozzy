@@ -41,7 +41,7 @@ class PasswordSetScreen extends StatelessWidget {
                     TopInfoLabel(label: CHOOSE_YOUR_PASSWORD),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         obscureText: true,
                         controller: _passController,
                         hintText: ENTER_PASSWORD_HINT,
@@ -63,7 +63,7 @@ class PasswordSetScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonTextfield(
+                      child: CommonRoundedTextfield(
                         obscureText: true,
                         controller: _confirmPassController,
                         hintText: ENTER_CONFIRM_PASSWORD_HINT,
