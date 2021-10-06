@@ -1,4 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
@@ -34,4 +36,17 @@ class Repository {
   //Admin Repo
   Future<AdminTypes> getAdminTypesRepo() =>
       apiProvider.getAdminTypesAPIProvider();
+
+  Future<bool> postProjectRepo(ProjectModel project) =>
+      apiProvider.postProjectAPIProvider(project);
+
+  Future<Projects> getprojectsRepo() => apiProvider.getProjectsAPIProvider();
+
+  Future<bool> postTaskRepo(TaskModel task) =>
+      apiProvider.postTaskAPIProvider(task);
+
+  Future<Tasks> getTasksRepo() => apiProvider.getTasksAPIProvider();
+
+  Future<bool> deleteTaskRepo(String taskId) =>
+      apiProvider.deleteTaskAPIProvider(taskId);
 }

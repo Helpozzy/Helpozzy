@@ -177,15 +177,14 @@ class SmallInfoLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
     return Container(
       alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(top: width * 0.04),
       child: Text(
         label,
         textAlign: TextAlign.center,
-        style: _theme.textTheme.headline6!
+        style: Theme.of(context)
+            .textTheme
+            .headline6!
             .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
@@ -360,9 +359,9 @@ InputDecoration inputSimpleDecoration(
   return InputDecoration(
     hintText: getHint,
     hintStyle: TextStyle(color: DARK_GRAY),
-    filled: true,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
+    fillColor: Colors.transparent,
     focusedErrorBorder: UnderlineInputBorder(),
     errorBorder: UnderlineInputBorder(),
     enabledBorder: UnderlineInputBorder(),
@@ -495,18 +494,23 @@ class CommonButton extends StatelessWidget {
     this.fontSize = 18,
     required this.onPressed,
     this.borderColor = BLACK,
+    this.fontColor = WHITE,
+    this.elevation = 3,
   });
   final String text;
   final Color color;
+  final Color fontColor;
   final double fontSize;
   final void Function() onPressed;
   final Color borderColor;
+  final double? elevation;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         primary: color,
+        elevation: elevation,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor, width: 0.3),
           borderRadius: BorderRadius.circular(25),
@@ -517,7 +521,7 @@ class CommonButton extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize,
           fontFamily: QUICKSAND,
-          color: Colors.white,
+          color: fontColor,
         ),
       ),
       onPressed: onPressed,
@@ -666,6 +670,7 @@ class CommonAppBar {
     Color? color,
     Color? textColor,
     Function()? onBackPressed,
+    List<Widget>? actions,
     PreferredSizeWidget? bottom,
   }) {
     return AppBar(
@@ -690,6 +695,7 @@ class CommonAppBar {
           color: textColor ?? WHITE,
         ),
       ),
+      actions: actions,
       bottom: bottom,
     );
   }

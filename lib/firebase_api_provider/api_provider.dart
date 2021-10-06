@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/event_model.dart';
@@ -106,5 +108,64 @@ class ApiProvider {
         categoriesDoc.data() as Map<String, dynamic>;
 
     return AdminTypes.fromJson(items: categories['admin_types']);
+  }
+
+  Future<bool> postProjectAPIProvider(ProjectModel project) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('project').doc();
+      project.projectId = documentReference.id;
+      await documentReference.set(project.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Projects> getProjectsAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('project').get();
+
+    List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
+    List<Map<String, dynamic>> projects = [];
+    projectsList.forEach((element) {
+      final task = element.data() as Map<String, dynamic>;
+      projects.add(task);
+    });
+    return Projects.fromJson(list: projects);
+  }
+
+  Future<bool> postTaskAPIProvider(TaskModel task) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('tasks').doc();
+      task.id = documentReference.id;
+      await documentReference.set(task.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Tasks> getTasksAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('tasks').get();
+
+    List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
+    List<Map<String, dynamic>> tasks = [];
+    tasksList.forEach((element) {
+      final task = element.data() as Map<String, dynamic>;
+      tasks.add(task);
+    });
+    return Tasks.fromJson(list: tasks);
+  }
+
+  Future<bool> deleteTaskAPIProvider(String taskId) async {
+    try {
+      await firestore.collection('tasks').doc(taskId).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

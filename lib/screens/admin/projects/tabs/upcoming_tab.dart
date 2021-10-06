@@ -40,7 +40,7 @@ class _UpcomingTabState extends State<UpcomingTab> {
           alignment: Alignment.bottomCenter,
           padding: const EdgeInsets.only(bottom: 8.0),
           child: CommonButtonWithIcon(
-            text: ADD_NEW_PROJECT_BUTTON,
+            text: ADD_NEW_PROJECT_BUTTON.toUpperCase(),
             icon: CupertinoIcons.add_circled,
             onPressed: () {
               Navigator.push(

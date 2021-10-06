@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -11,6 +15,7 @@ class CreateProject extends StatefulWidget {
 
 class _CreateProjectState extends State<CreateProject> {
   final _formKey = GlobalKey<FormState>();
+  AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
   final TextEditingController _projNameController = TextEditingController();
   final TextEditingController _projDesController = TextEditingController();
   final TextEditingController _projStartDateController =
@@ -22,13 +27,11 @@ class _CreateProjectState extends State<CreateProject> {
   final TextEditingController _projMembersController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
-  late ThemeData _themeData;
   late double width;
   late double height;
 
   @override
   Widget build(BuildContext context) {
-    _themeData = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -63,7 +66,7 @@ class _CreateProjectState extends State<CreateProject> {
                       hintText: PROJECT_DESCRIPTION_HINT,
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return 'Enter project name';
+                          return 'Enter project description';
                         }
                         return null;
                       },
@@ -77,7 +80,7 @@ class _CreateProjectState extends State<CreateProject> {
                             hintText: PROJECT_START_DATE_HINT,
                             validator: (val) {
                               if (val!.isEmpty) {
-                                return ' Select start date';
+                                return 'Select start date';
                               }
                               return null;
                             },
@@ -107,6 +110,9 @@ class _CreateProjectState extends State<CreateProject> {
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return 'Select end date';
+                              } else if (_selectedEndDate
+                                  .isBefore(_selectedStartDate)) {
+                                return 'Select valid end date';
                               }
                               return null;
                             },
@@ -159,8 +165,32 @@ class _CreateProjectState extends State<CreateProject> {
                         return null;
                       },
                     ),
-                    SmallInfoLabel(label: 'Projecct Status Tracking'),
-                    SmallInfoLabel(label: 'Projecct Hours'),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: width * 0.04),
+                      child: SmallInfoLabel(label: 'Projecct Status Tracking'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: width * 0.04),
+                      child: SmallInfoLabel(label: 'Projecct Hours'),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SmallInfoLabel(label: 'Tasks'),
+                        IconButton(
+                          icon: Icon(CupertinoIcons.add_circled),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => TasksScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -170,12 +200,51 @@ class _CreateProjectState extends State<CreateProject> {
               padding: EdgeInsets.symmetric(horizontal: width * 0.2),
               child: CommonButton(
                 text: ADD_PROJECT_BUTTON,
-                onPressed: () {},
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    FocusScope.of(context).unfocus();
+                    CircularLoader().show(context);
+                    final ProjectModel project = ProjectModel(
+                      projectId: '',
+                      projectName: _projNameController.text,
+                      description: _projDesController.text,
+                      startDate: _projStartDateController.text,
+                      endDate: _projEndDateController.text,
+                      projectOwner: _projOwnerController.text,
+                      collaboratorsCoadmin: _projCollaboraorController.text,
+                      members: _projMembersController.text,
+                    );
+                    final bool isUploaded =
+                        await _adminProjectsBloc.postProject(project);
+                    if (isUploaded) {
+                      await clearFields();
+                      CircularLoader().hide(context);
+                      showSnakeBar(context,
+                          msg: 'Project created successfully!');
+                    } else {
+                      await clearFields();
+                      CircularLoader().hide(context);
+                      showSnakeBar(context,
+                          msg:
+                              'Project not created due some error, Try again!');
+                    }
+                  }
+                },
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future clearFields() async {
+    _projNameController.clear();
+    _projDesController.clear();
+    _projStartDateController.clear();
+    _projEndDateController.clear();
+    _projOwnerController.clear();
+    _projCollaboraorController.clear();
+    _projMembersController.clear();
   }
 }

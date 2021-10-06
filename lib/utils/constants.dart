@@ -167,7 +167,7 @@ const REDEEM_MY_POINT = 'Redeem my points';
 const CONTINUE_BUTTON = 'Continue';
 const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
-const ADD_NEW_PROJECT_BUTTON = 'ADD NEW PROJECT';
+const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
 
 //Event Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -242,11 +242,12 @@ const RATING_TEXT = 'RATINGS';
 
 //Admin Button
 const ADD_PROJECT_BUTTON = 'ADD PROJECT';
+const ADD_TASK_BUTTON = 'ADD TASK';
 
 //Admin Hint Msg
 const ADMIN_SEARCH_HINT = 'Search';
 
-//Admin create projecct
+//Admin create project
 const PROJECT_NAME_HINT = 'Project Name';
 const PROJECT_DESCRIPTION_HINT = 'Description';
 const PROJECT_START_DATE_HINT = 'Start Date';
@@ -254,6 +255,17 @@ const PROJECT_END_HINT = 'End Date';
 const PROJECT_OWNERS_HINT = 'Project Owners';
 const PROJECT_COLLABORATOR_HINT = 'Collaborators/Co-Admin';
 const PROJECT_MEMBERS_HINT = 'Members';
+
+//Admin create task
+const TASK_NAME_HINT = 'Task Name';
+const TASK_DESCRIPTION_HINT = 'Description';
+const TASK_TIMELINE_HINT = 'Timeline';
+const TASK_MEMBERS_REQUIREMENT_HINT = 'Members Requirement';
+const TASK_AGE_RESTRICTION_HINT = 'Age Restriction';
+const TASK_QUALIFICATION_HINT = 'Qualification';
+const TASK_START_DATE_HINT = 'Start Date';
+const TASK_END_HINT = 'End Date';
+const TASK_MEMBERS_HINT = 'Members';
 
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
