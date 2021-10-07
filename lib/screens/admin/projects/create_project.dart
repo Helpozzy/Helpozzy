@@ -4,7 +4,7 @@ import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'package:helpozzy/widget/common_date_picker.dart';
+import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -25,17 +25,22 @@ class _CreateProjectState extends State<CreateProject> {
   final TextEditingController _projCollaboraorController =
       TextEditingController();
   final TextEditingController _projMembersController = TextEditingController();
+  final TextEditingController _projHoursController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  late ThemeData _themeData;
   late double width;
   late double height;
+  int _selectedIndexValue = 0;
 
   @override
   Widget build(BuildContext context) {
+    _themeData = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: ADD_NEW_PROJECT_BUTTON),
+      appBar: CommonAppBar(context).show(title: CREATE_PROJECT_APPBAR),
       body: body(),
     );
   }
@@ -86,7 +91,7 @@ class _CreateProjectState extends State<CreateProject> {
                             },
                             onTap: () {
                               CommonDatepicker()
-                                  .showPicker(context,
+                                  .showDatePickerDialog(context,
                                       initialDate: _selectedStartDate)
                                   .then((pickedDate) {
                                 if (pickedDate != null &&
@@ -118,7 +123,7 @@ class _CreateProjectState extends State<CreateProject> {
                             },
                             onTap: () {
                               CommonDatepicker()
-                                  .showPicker(context,
+                                  .showDatePickerDialog(context,
                                       initialDate: _selectedEndDate)
                                   .then((pickedDate) {
                                 if (pickedDate != null &&
@@ -165,21 +170,44 @@ class _CreateProjectState extends State<CreateProject> {
                         return null;
                       },
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                      child: SmallInfoLabel(label: 'Projecct Status Tracking'),
+                    CommonSimpleTextfield(
+                      readOnly: true,
+                      controller: _projHoursController,
+                      hintText: PROJECT_HOURS_HINT,
+                      validator: (val) {
+                        if (val!.isEmpty && selectedTime.toString().isEmpty) {
+                          return 'Select hours';
+                        }
+                        return null;
+                      },
+                      onTap: () {
+                        CommonDatepicker()
+                            .showTimePickerDialog(context,
+                                selectedTime: selectedTime)
+                            .then((selectedTimeVal) {
+                          if (selectedTimeVal != null)
+                            setState(() {
+                              selectedTime = selectedTimeVal;
+                            });
+                          _projHoursController.value = TextEditingValue(
+                              text:
+                                  '${selectedTime.hour}.${selectedTime.minute}');
+                        });
+                      },
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                      child: SmallInfoLabel(label: 'Projecct Hours'),
+                      child: SmallInfoLabel(label: 'Project Status Tracking'),
                     ),
+                    statusSegmentation(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SmallInfoLabel(label: 'Tasks'),
                         IconButton(
-                          icon: Icon(CupertinoIcons.add_circled),
+                          icon: Icon(CupertinoIcons.add_circled,
+                              color: DARK_GRAY),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -203,31 +231,7 @@ class _CreateProjectState extends State<CreateProject> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     FocusScope.of(context).unfocus();
-                    CircularLoader().show(context);
-                    final ProjectModel project = ProjectModel(
-                      projectId: '',
-                      projectName: _projNameController.text,
-                      description: _projDesController.text,
-                      startDate: _projStartDateController.text,
-                      endDate: _projEndDateController.text,
-                      projectOwner: _projOwnerController.text,
-                      collaboratorsCoadmin: _projCollaboraorController.text,
-                      members: _projMembersController.text,
-                    );
-                    final bool isUploaded =
-                        await _adminProjectsBloc.postProject(project);
-                    if (isUploaded) {
-                      await clearFields();
-                      CircularLoader().hide(context);
-                      showSnakeBar(context,
-                          msg: 'Project created successfully!');
-                    } else {
-                      await clearFields();
-                      CircularLoader().hide(context);
-                      showSnakeBar(context,
-                          msg:
-                              'Project not created due some error, Try again!');
-                    }
+                    await onAddProject();
                   }
                 },
               ),
@@ -238,6 +242,66 @@ class _CreateProjectState extends State<CreateProject> {
     );
   }
 
+  Widget statusSegmentation() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: CupertinoSlidingSegmentedControl(
+          groupValue: _selectedIndexValue,
+          backgroundColor: GRAY,
+          thumbColor: DARK_GRAY.withAlpha(100),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
+          children: {
+            0: segmentItem(TOGGLE_NOT_STARTED),
+            1: segmentItem(TOGGLE_INPROGRESS),
+            2: segmentItem(TOGGLE_COMPLE),
+          },
+          onValueChanged: (value) {
+            setState(() {
+              _selectedIndexValue = value.hashCode;
+            });
+          }),
+    );
+  }
+
+  Widget segmentItem(String title) {
+    return Text(
+      title,
+      style: _themeData.textTheme.bodyText2!
+          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
+    );
+  }
+
+  Future onAddProject() async {
+    CircularLoader().show(context);
+    final ProjectModel project = ProjectModel(
+      projectId: '',
+      projectName: _projNameController.text,
+      description: _projDesController.text,
+      startDate: _projStartDateController.text,
+      endDate: _projEndDateController.text,
+      projectOwner: _projOwnerController.text,
+      collaboratorsCoadmin: _projCollaboraorController.text,
+      members: _projMembersController.text,
+      status: _selectedIndexValue == 0
+          ? TOGGLE_NOT_STARTED
+          : _selectedIndexValue == 1
+              ? TOGGLE_INPROGRESS
+              : TOGGLE_COMPLE,
+      hours: double.parse(_projHoursController.text),
+    );
+    final bool isUploaded = await _adminProjectsBloc.postProject(project);
+    if (isUploaded) {
+      await clearFields();
+      CircularLoader().hide(context);
+      showSnakeBar(context, msg: 'Project created successfully!');
+    } else {
+      await clearFields();
+      CircularLoader().hide(context);
+      showSnakeBar(context,
+          msg: 'Project not created due some error, Try again!');
+    }
+  }
+
   Future clearFields() async {
     _projNameController.clear();
     _projDesController.clear();
@@ -246,5 +310,6 @@ class _CreateProjectState extends State<CreateProject> {
     _projOwnerController.clear();
     _projCollaboraorController.clear();
     _projMembersController.clear();
+    _projHoursController.clear();
   }
 }

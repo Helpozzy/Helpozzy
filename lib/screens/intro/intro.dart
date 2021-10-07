@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/user/intro/intro_widget.dart';
+import 'package:helpozzy/screens/intro/intro_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:provider/provider.dart';
 

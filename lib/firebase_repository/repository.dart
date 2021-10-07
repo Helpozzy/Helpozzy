@@ -45,6 +45,9 @@ class Repository {
   Future<bool> postTaskRepo(TaskModel task) =>
       apiProvider.postTaskAPIProvider(task);
 
+  Future<bool> updateTaskRepo(TaskModel task) =>
+      apiProvider.updateTaskAPIProvider(task);
+
   Future<Tasks> getTasksRepo() => apiProvider.getTasksAPIProvider();
 
   Future<bool> deleteTaskRepo(String taskId) =>

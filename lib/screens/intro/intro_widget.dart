@@ -88,7 +88,6 @@ class IntroWidget extends StatelessWidget {
                     signupScreenCallback(context);
                   }),
             ),
-            SizedBox(height: 19),
             TextButton(
               child: Text(
                 MSG_LOGIN,
@@ -157,8 +156,6 @@ class IntroWidget extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      // height: isActive ? 12 : 8,
-      // width: isActive ? 12 : 8,
       height: 8,
       width: 8,
       decoration: BoxDecoration(
@@ -169,8 +166,6 @@ class IntroWidget extends StatelessWidget {
 
   Widget _pageBuilder(BuildContext context, PageItem page) {
     return Container(
-        // height: MediaQuery.of(context).size.height,
-        // width: MediaQuery.of(context).size.width,
         child: Stack(
       fit: StackFit.expand,
       children: [
@@ -189,7 +184,6 @@ class IntroWidget extends StatelessWidget {
 class PageItem {
   String imgPath;
   String text;
-  // ignore: sort_constructors_first
   PageItem({required this.imgPath, required this.text});
 }
 

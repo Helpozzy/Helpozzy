@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/create_task.dart';
+import 'package:helpozzy/screens/admin/projects/tasks/create_edit_task.dart';
+import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -14,7 +15,6 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   late double width;
-  late ThemeData _themeData;
 
   @override
   void initState() {
@@ -24,10 +24,8 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _themeData = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: SCREEN_BACKGROUND,
       appBar: CommonAppBar(context).show(
         title: 'Tasks',
         actions: [
@@ -43,7 +41,8 @@ class _TasksScreenState extends State<TasksScreen> {
                 onPressed: () async {
                   await Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => CreateTask()),
+                    CupertinoPageRoute(
+                        builder: (context) => CreateEditTask(fromEdit: false)),
                   );
                   await _projectTaskBloc.getTasks();
                 },
@@ -71,51 +70,34 @@ class _TasksScreenState extends State<TasksScreen> {
           itemCount: snapshot.data!.tasks.length,
           itemBuilder: (context, index) {
             final TaskModel task = snapshot.data!.tasks[index];
-            return Card(
-              elevation: 3,
-              margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 10.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: ListTile(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                title: Text(
-                  task.taskName,
-                  style: _themeData.textTheme.headline6!
-                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                subtitle: Text(
-                  task.description,
-                  style: _themeData.textTheme.bodyText2!
-                      .copyWith(color: DARK_GRAY),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(
-                      child: Icon(Icons.edit),
-                      onTap: () {},
+            return TaskCard(
+              title: task.taskName,
+              description: task.description,
+              optionEnable: true,
+              onTapEdit: () async {
+                await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => CreateEditTask(
+                      fromEdit: true,
+                      task: task,
                     ),
-                    SizedBox(width: 8),
-                    InkWell(
-                      child: Icon(Icons.delete),
-                      onTap: () async {
-                        CircularLoader().show(context);
-                        final bool deleted =
-                            await _projectTaskBloc.deleteTask(task.id);
-                        if (deleted) {
-                          CircularLoader().hide(context);
-                          showSnakeBar(context, msg: 'Task deleted!');
-                        } else {
-                          CircularLoader().hide(context);
-                          showSnakeBar(context, msg: 'Something went wrong!');
-                        }
-                        _projectTaskBloc.getTasks();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+                await _projectTaskBloc.getTasks();
+              },
+              onTapDelete: () async {
+                CircularLoader().show(context);
+                final bool deleted = await _projectTaskBloc.deleteTask(task.id);
+                if (deleted) {
+                  CircularLoader().hide(context);
+                  showSnakeBar(context, msg: 'Task deleted!');
+                } else {
+                  CircularLoader().hide(context);
+                  showSnakeBar(context, msg: 'Something went wrong!');
+                }
+                await _projectTaskBloc.getTasks();
+              },
             );
           },
         );

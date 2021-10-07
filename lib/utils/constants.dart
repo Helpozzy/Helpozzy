@@ -240,8 +240,14 @@ const NAME_TEXT = 'NAME';
 const REVIEWS_TEXT = 'REVIEWS';
 const RATING_TEXT = 'RATINGS';
 
+//Admin Appbar title
+const CREATE_PROJECT_APPBAR = 'Create Project';
+const CREATE_TASK_APPBAR = 'Create Task';
+const EDIT_TASK_APPBAR = 'Edit Task';
+
 //Admin Button
 const ADD_PROJECT_BUTTON = 'ADD PROJECT';
+const UPDATE_TASK_BUTTON = 'UPDATE';
 const ADD_TASK_BUTTON = 'ADD TASK';
 
 //Admin Hint Msg
@@ -255,6 +261,10 @@ const PROJECT_END_HINT = 'End Date';
 const PROJECT_OWNERS_HINT = 'Project Owners';
 const PROJECT_COLLABORATOR_HINT = 'Collaborators/Co-Admin';
 const PROJECT_MEMBERS_HINT = 'Members';
+const PROJECT_HOURS_HINT = 'Hours';
+const TOGGLE_NOT_STARTED = 'Not Started';
+const TOGGLE_INPROGRESS = 'In Progress';
+const TOGGLE_COMPLE = 'Complete';
 
 //Admin create task
 const TASK_NAME_HINT = 'Task Name';
@@ -266,6 +276,7 @@ const TASK_QUALIFICATION_HINT = 'Qualification';
 const TASK_START_DATE_HINT = 'Start Date';
 const TASK_END_HINT = 'End Date';
 const TASK_MEMBERS_HINT = 'Members';
+const TASK_HOURS_HINT = 'Hours';
 
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "

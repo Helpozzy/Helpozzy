@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/screens/admin/admin_selection.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/home/home.dart';
-import 'package:helpozzy/screens/user/intro/intro.dart';
+import 'package:helpozzy/screens/intro/intro.dart';
 import 'package:helpozzy/screens/user/auth/login/login.dart';
 import 'package:helpozzy/screens/user/auth/signup/volunteering_screen.dart';
 import 'package:helpozzy/screens/user_selection.dart';

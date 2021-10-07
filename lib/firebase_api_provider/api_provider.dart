@@ -147,6 +147,17 @@ class ApiProvider {
     }
   }
 
+  Future<bool> updateTaskAPIProvider(TaskModel task) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('tasks').doc(task.id);
+      await documentReference.update(task.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<Tasks> getTasksAPIProvider() async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('tasks').get();

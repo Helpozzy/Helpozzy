@@ -18,6 +18,8 @@ class ProjectModel {
     required this.projectOwner,
     required this.collaboratorsCoadmin,
     required this.members,
+    required this.status,
+    required this.hours,
   });
 
   ProjectModel.fromjson({required Map<String, dynamic> json}) {
@@ -29,6 +31,8 @@ class ProjectModel {
     projectOwner = json['project_owner'];
     collaboratorsCoadmin = json['collaborators_or_co_admin'];
     members = json['members'];
+    status = json['status'];
+    hours = json['hours'];
   }
 
   Map<String, Object?> toJson() {
@@ -41,6 +45,8 @@ class ProjectModel {
       'project_owner': projectOwner,
       'collaborators_or_co_admin': collaboratorsCoadmin,
       'members': members,
+      'status': status,
+      'hours': hours,
     };
   }
 
@@ -52,4 +58,6 @@ class ProjectModel {
   late String projectOwner;
   late String collaboratorsCoadmin;
   late String members;
+  late String status;
+  late double hours;
 }

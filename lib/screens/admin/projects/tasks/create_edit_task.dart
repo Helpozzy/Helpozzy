@@ -3,16 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'package:helpozzy/widget/common_date_picker.dart';
+import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
-class CreateTask extends StatefulWidget {
+class CreateEditTask extends StatefulWidget {
+  CreateEditTask({required this.fromEdit, this.task});
+  final bool fromEdit;
+  final TaskModel? task;
   @override
-  _CreateTaskState createState() => _CreateTaskState();
+  _CreateEditTaskState createState() =>
+      _CreateEditTaskState(fromEdit: fromEdit, task: task);
 }
 
-class _CreateTaskState extends State<CreateTask> {
+class _CreateEditTaskState extends State<CreateEditTask> {
+  _CreateEditTaskState({required this.fromEdit, this.task});
+  final bool fromEdit;
+  final TaskModel? task;
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDesController = TextEditingController();
@@ -27,16 +35,46 @@ class _CreateTaskState extends State<CreateTask> {
       TextEditingController();
   final TextEditingController _taskEndDateController = TextEditingController();
   final TextEditingController _taskMembersController = TextEditingController();
+  final TextEditingController _taskHoursController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  late ThemeData _themeData;
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  int _selectedIndexValue = 0;
+
+  @override
+  void initState() {
+    if (fromEdit) retriveTaskDetails();
+    super.initState();
+  }
+
+  Future retriveTaskDetails() async {
+    _taskNameController.text = task!.taskName;
+    _taskDesController.text = task!.description;
+    _taskTimelineController.text = task!.timeLine;
+    _taskMemberReqController.text = task!.memberRequirement;
+    _taskAgeRestrictionController.text = task!.ageRestriction;
+    _taskQualificationController.text = task!.qualification;
+    _taskStartDateController.text = task!.startDate;
+    _taskEndDateController.text = task!.endDate;
+    _taskMembersController.text = task!.members;
+    _taskHoursController.text = task!.hours.toString();
+    _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
+        ? 0
+        : task!.status == TOGGLE_INPROGRESS
+            ? 1
+            : 2;
+  }
 
   @override
   Widget build(BuildContext context) {
+    _themeData = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: 'Create Task'),
+      appBar: CommonAppBar(context)
+          .show(title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR),
       body: body(),
     );
   }
@@ -132,7 +170,7 @@ class _CreateTaskState extends State<CreateTask> {
                               },
                               onTap: () {
                                 CommonDatepicker()
-                                    .showPicker(context,
+                                    .showDatePickerDialog(context,
                                         initialDate: _selectedStartDate)
                                     .then((pickedDate) {
                                   if (pickedDate != null &&
@@ -164,7 +202,7 @@ class _CreateTaskState extends State<CreateTask> {
                               },
                               onTap: () {
                                 CommonDatepicker()
-                                    .showPicker(context,
+                                    .showDatePickerDialog(context,
                                         initialDate: _selectedEndDate)
                                     .then((pickedDate) {
                                   if (pickedDate != null &&
@@ -191,6 +229,36 @@ class _CreateTaskState extends State<CreateTask> {
                           return null;
                         },
                       ),
+                      CommonSimpleTextfield(
+                        readOnly: true,
+                        controller: _taskHoursController,
+                        hintText: TASK_HOURS_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty && selectedTime.toString().isEmpty) {
+                            return 'Select hours';
+                          }
+                          return null;
+                        },
+                        onTap: () {
+                          CommonDatepicker()
+                              .showTimePickerDialog(context,
+                                  selectedTime: selectedTime)
+                              .then((selectedTimeVal) {
+                            if (selectedTimeVal != null)
+                              setState(() {
+                                selectedTime = selectedTimeVal;
+                              });
+                            _taskHoursController.value = TextEditingValue(
+                                text:
+                                    '${selectedTime.hour}.${selectedTime.minute}');
+                          });
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: width * 0.04),
+                        child: SmallInfoLabel(label: 'Project Status Tracking'),
+                      ),
+                      statusSegmentation(),
                     ],
                   ),
                 ),
@@ -199,37 +267,11 @@ class _CreateTaskState extends State<CreateTask> {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: width * 0.2),
                 child: CommonButton(
-                  text: ADD_TASK_BUTTON,
+                  text: fromEdit ? UPDATE_TASK_BUTTON : ADD_TASK_BUTTON,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       FocusScope.of(context).unfocus();
-                      CircularLoader().show(context);
-                      final TaskModel task = TaskModel(
-                        projectId: '',
-                        id: '',
-                        taskName: _taskNameController.text,
-                        description: _taskDesController.text,
-                        timeLine: _taskTimelineController.text,
-                        memberRequirement: _taskMemberReqController.text,
-                        ageRestriction: _taskAgeRestrictionController.text,
-                        qualification: _taskQualificationController.text,
-                        startDate: _taskStartDateController.text,
-                        endDate: _taskEndDateController.text,
-                        members: _taskMembersController.text,
-                      );
-                      final bool isUploaded =
-                          await _projectTaskBloc.postTasks(task);
-                      if (isUploaded) {
-                        await clearFields();
-                        CircularLoader().hide(context);
-                        showSnakeBar(context,
-                            msg: 'Task created successfully!');
-                      } else {
-                        await clearFields();
-                        CircularLoader().hide(context);
-                        showSnakeBar(context,
-                            msg: 'Task not created due some error, Try again!');
-                      }
+                      await addOrUpdateData();
                     }
                   },
                 ),
@@ -238,6 +280,76 @@ class _CreateTaskState extends State<CreateTask> {
           ),
         ),
       ),
+    );
+  }
+
+  Future addOrUpdateData() async {
+    CircularLoader().show(context);
+    final TaskModel taskDetails = TaskModel(
+      projectId: '',
+      id: fromEdit ? task!.id : '',
+      taskName: _taskNameController.text,
+      description: _taskDesController.text,
+      timeLine: _taskTimelineController.text,
+      memberRequirement: _taskMemberReqController.text,
+      ageRestriction: _taskAgeRestrictionController.text,
+      qualification: _taskQualificationController.text,
+      startDate: _taskStartDateController.text,
+      endDate: _taskEndDateController.text,
+      members: _taskMembersController.text,
+      status: _selectedIndexValue == 0
+          ? TOGGLE_NOT_STARTED
+          : _selectedIndexValue == 1
+              ? TOGGLE_INPROGRESS
+              : TOGGLE_COMPLE,
+      hours: double.parse(_taskHoursController.text),
+    );
+    final bool isUploaded = fromEdit
+        ? await _projectTaskBloc.updateTasks(taskDetails)
+        : await _projectTaskBloc.postTasks(taskDetails);
+    if (isUploaded) {
+      if (!fromEdit) await clearFields();
+      CircularLoader().hide(context);
+      showSnakeBar(context,
+          msg: fromEdit
+              ? 'Task updated successfully!'
+              : 'Task created successfully!');
+    } else {
+      if (!fromEdit) await clearFields();
+      CircularLoader().hide(context);
+      showSnakeBar(context,
+          msg: fromEdit
+              ? 'Task not updated due some error, Try again!'
+              : 'Task not created due some error, Try again!');
+    }
+  }
+
+  Widget statusSegmentation() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: CupertinoSlidingSegmentedControl(
+          groupValue: _selectedIndexValue,
+          backgroundColor: GRAY,
+          thumbColor: DARK_GRAY.withAlpha(100),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
+          children: {
+            0: segmentItem(TOGGLE_NOT_STARTED),
+            1: segmentItem(TOGGLE_INPROGRESS),
+            2: segmentItem(TOGGLE_COMPLE),
+          },
+          onValueChanged: (value) {
+            setState(() {
+              _selectedIndexValue = value.hashCode;
+            });
+          }),
+    );
+  }
+
+  Widget segmentItem(String title) {
+    return Text(
+      title,
+      style: _themeData.textTheme.bodyText2!
+          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
     );
   }
 
@@ -251,19 +363,6 @@ class _CreateTaskState extends State<CreateTask> {
     _taskStartDateController.clear();
     _taskEndDateController.clear();
     _taskMembersController.clear();
+    _taskHoursController.clear();
   }
 }
-
-// Tasks - Create/Update/Modify/Delete
-// - Task Name
-// - Task Description
-// - Task Timeline
-// - Task Member Requirement - How many members are needed
-// - Task Age Restriction
-// - Task Qualification
-// - Task Start Date/Time
-// - Task End Date/Time
-// - Task Members
-// - Task Status (Non Started, In Progress, Complete)
-// - Task Hours
-// - Task Notifications (Start, In-Progress, Complete)

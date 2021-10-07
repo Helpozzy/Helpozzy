@@ -70,11 +70,12 @@ class _UpcomingTabState extends State<UpcomingTab> {
           itemBuilder: (context, index) {
             final EventModel event = snapshot.data!.events[index];
             return StreamBuilder<bool>(
-                initialData: false,
-                stream: _adminProjectsBloc.getProjectExpandStream,
-                builder: (context, snapshot) {
-                  return projectItem(event: event, isExpanded: snapshot.data!);
-                });
+              initialData: false,
+              stream: _adminProjectsBloc.getProjectExpandStream,
+              builder: (context, snapshot) {
+                return projectItem(event: event, isExpanded: snapshot.data!);
+              },
+            );
           },
         );
       },
@@ -121,7 +122,9 @@ class _UpcomingTabState extends State<UpcomingTab> {
                           event.isExpanded = !event.isExpanded;
                           _adminProjectsBloc.isExpanded(isExpanded);
                         },
-                        icon: Icons.keyboard_arrow_down_rounded,
+                        icon: event.isExpanded
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded,
                         borderColor: event.isExpanded ? WHITE : PRIMARY_COLOR,
                         fontSize: 15,
                         iconSize: 18,

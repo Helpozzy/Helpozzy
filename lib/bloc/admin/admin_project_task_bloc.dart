@@ -14,6 +14,11 @@ class ProjectTaskBloc {
     return response;
   }
 
+  Future<bool> updateTasks(TaskModel task) async {
+    final bool response = await repo.updateTaskRepo(task);
+    return response;
+  }
+
   Future getTasks() async {
     final Tasks response = await repo.getTasksRepo();
     tasksController.sink.add(response);

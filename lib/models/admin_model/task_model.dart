@@ -21,6 +21,8 @@ class TaskModel {
     required this.startDate,
     required this.endDate,
     required this.members,
+    required this.status,
+    required this.hours,
   });
   TaskModel.fromjson({required Map<String, dynamic> json}) {
     projectId = json['project_id'];
@@ -34,6 +36,10 @@ class TaskModel {
     startDate = json['start_date'];
     endDate = json['end_date'];
     members = json['members'];
+    status = json['status'];
+    hours = json['hours'] is int
+        ? double.parse(json['hours'].toString())
+        : json['hours'];
   }
 
   Map<String, Object?> toJson() {
@@ -49,6 +55,8 @@ class TaskModel {
       'start_date': startDate,
       'end_date': endDate,
       'members': members,
+      'status': status,
+      'hours': hours,
     };
   }
 
@@ -63,4 +71,6 @@ class TaskModel {
   late String startDate;
   late String endDate;
   late String members;
+  late String status;
+  late double hours;
 }

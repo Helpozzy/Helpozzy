@@ -185,7 +185,7 @@ class SmallInfoLabel extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .headline6!
-            .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+            .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
 import 'package:helpozzy/screens/user/auth/signup/phone_with_parent_guardian_number.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'package:helpozzy/widget/common_date_picker.dart';
+import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:intl/intl.dart';
@@ -45,7 +45,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 keyboardType: TextInputType.number,
                 onTap: () {
                   CommonDatepicker()
-                      .showPicker(context, initialDate: _selectedDate)
+                      .showDatePickerDialog(context, initialDate: _selectedDate)
                       .then((pickedDate) {
                     if (pickedDate != null && pickedDate != _selectedDate)
                       setState(() {
