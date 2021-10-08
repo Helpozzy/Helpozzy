@@ -23,6 +23,7 @@ class TaskModel {
     required this.members,
     required this.status,
     required this.hours,
+    this.isSelected,
   });
   TaskModel.fromjson({required Map<String, dynamic> json}) {
     projectId = json['project_id'];
@@ -73,4 +74,5 @@ class TaskModel {
   late String members;
   late String status;
   late double hours;
+  late bool? isSelected = false;
 }

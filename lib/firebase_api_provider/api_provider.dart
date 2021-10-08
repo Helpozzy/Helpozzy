@@ -171,6 +171,22 @@ class ApiProvider {
     return Tasks.fromJson(list: tasks);
   }
 
+  Future<Tasks> getSelectedTasksAPIProvider(List<String> taskIds) async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('tasks').get();
+
+    List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
+    List<Map<String, dynamic>> tasks = [];
+    tasksList.forEach((element) {
+      final Map<String, dynamic> task = element.data() as Map<String, dynamic>;
+
+      if (taskIds.contains(task['task_id'])) {
+        tasks.add(task);
+      }
+    });
+    return Tasks.fromJson(list: tasks);
+  }
+
   Future<bool> deleteTaskAPIProvider(String taskId) async {
     try {
       await firestore.collection('tasks').doc(taskId).delete();

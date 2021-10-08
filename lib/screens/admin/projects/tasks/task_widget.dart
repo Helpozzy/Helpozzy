@@ -6,6 +6,7 @@ class TaskCard extends StatelessWidget {
     required this.title,
     required this.description,
     this.optionEnable = false,
+    this.selected = false,
     this.onTapEdit,
     this.onTapDelete,
     this.onTapItem,
@@ -14,6 +15,7 @@ class TaskCard extends StatelessWidget {
   final String title;
   final String description;
   final bool optionEnable;
+  final bool selected;
   final GestureTapCallback? onTapItem;
   final GestureTapCallback? onLongPressItem;
   final GestureTapCallback? onTapEdit;
@@ -23,9 +25,13 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData _themeData = Theme.of(context);
     return Card(
-      elevation: 3,
-      color: SCREEN_BACKGROUND,
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      elevation: selected ? 1 : 0,
+      color: !optionEnable
+          ? GRAY
+          : selected
+              ? DIVIDER_COLOR
+              : GRAY,
+      margin: EdgeInsets.symmetric(vertical: 6.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),

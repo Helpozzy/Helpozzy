@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
 import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
@@ -16,6 +19,7 @@ class CreateProject extends StatefulWidget {
 class _CreateProjectState extends State<CreateProject> {
   final _formKey = GlobalKey<FormState>();
   AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
+  ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   final TextEditingController _projNameController = TextEditingController();
   final TextEditingController _projDesController = TextEditingController();
   final TextEditingController _projStartDateController =
@@ -33,6 +37,12 @@ class _CreateProjectState extends State<CreateProject> {
   late double width;
   late double height;
   int _selectedIndexValue = 0;
+
+  @override
+  void initState() {
+    _projectTaskBloc.getSelectedTasks(taskIds: []);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,17 +218,21 @@ class _CreateProjectState extends State<CreateProject> {
                         IconButton(
                           icon: Icon(CupertinoIcons.add_circled,
                               color: DARK_GRAY),
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            final List<String> tasks = await Navigator.push(
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => TasksScreen(),
                               ),
                             );
+                            await _projectTaskBloc.getSelectedTasks(
+                                taskIds: tasks);
                           },
                         ),
                       ],
                     ),
+                    taskList(),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -268,6 +282,34 @@ class _CreateProjectState extends State<CreateProject> {
       title,
       style: _themeData.textTheme.bodyText2!
           .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
+    );
+  }
+
+  Widget taskList() {
+    return StreamBuilder<Tasks>(
+      stream: _projectTaskBloc.getSelectedTaskStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: LinearLoader(minheight: 13),
+          );
+        }
+        return snapshot.data!.tasks.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.tasks.length,
+                itemBuilder: (context, index) {
+                  final TaskModel task = snapshot.data!.tasks[index];
+                  return TaskCard(
+                    title: task.taskName,
+                    description: task.description,
+                    optionEnable: false,
+                  );
+                },
+              )
+            : SizedBox();
+      },
     );
   }
 

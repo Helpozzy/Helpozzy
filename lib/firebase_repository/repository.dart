@@ -50,6 +50,9 @@ class Repository {
 
   Future<Tasks> getTasksRepo() => apiProvider.getTasksAPIProvider();
 
+  Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
+      apiProvider.getSelectedTasksAPIProvider(taskIds);
+
   Future<bool> deleteTaskRepo(String taskId) =>
       apiProvider.deleteTaskAPIProvider(taskId);
 }

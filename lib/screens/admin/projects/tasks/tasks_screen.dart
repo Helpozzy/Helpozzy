@@ -15,6 +15,7 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   late double width;
+  late List<String> selectedItems = [];
 
   @override
   void initState() {
@@ -28,6 +29,9 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       appBar: CommonAppBar(context).show(
         title: 'Tasks',
+        onBackPressed: () {
+          Navigator.pop(context, selectedItems);
+        },
         actions: [
           Transform.scale(
             scale: 0.6,
@@ -66,42 +70,57 @@ class _TasksScreenState extends State<TasksScreen> {
         }
         return ListView.builder(
           shrinkWrap: true,
-          padding: EdgeInsets.symmetric(vertical: 10.0),
+          padding: EdgeInsets.symmetric(
+              vertical: width * 0.04, horizontal: width * 0.05),
           itemCount: snapshot.data!.tasks.length,
           itemBuilder: (context, index) {
             final TaskModel task = snapshot.data!.tasks[index];
             return TaskCard(
               title: task.taskName,
               description: task.description,
+              selected: task.isSelected! ? true : false,
               optionEnable: true,
-              onTapEdit: () async {
-                await Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => CreateEditTask(
-                      fromEdit: true,
-                      task: task,
-                    ),
-                  ),
-                );
-                await _projectTaskBloc.getTasks();
-              },
-              onTapDelete: () async {
-                CircularLoader().show(context);
-                final bool deleted = await _projectTaskBloc.deleteTask(task.id);
-                if (deleted) {
-                  CircularLoader().hide(context);
-                  showSnakeBar(context, msg: 'Task deleted!');
-                } else {
-                  CircularLoader().hide(context);
-                  showSnakeBar(context, msg: 'Something went wrong!');
+              onLongPressItem: () {},
+              onTapItem: () {
+                setState(() {
+                  task.isSelected = !task.isSelected!;
+                });
+                if (task.isSelected!) {
+                  selectedItems.add(task.id);
                 }
-                await _projectTaskBloc.getTasks();
               },
+              onTapEdit: () async => await onEdit(task),
+              onTapDelete: () async => await onDelete(task),
             );
           },
         );
       },
     );
+  }
+
+  Future onEdit(TaskModel task) async {
+    await Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => CreateEditTask(
+          fromEdit: true,
+          task: task,
+        ),
+      ),
+    );
+    await _projectTaskBloc.getTasks();
+  }
+
+  Future onDelete(TaskModel task) async {
+    CircularLoader().show(context);
+    final bool deleted = await _projectTaskBloc.deleteTask(task.id);
+    if (deleted) {
+      CircularLoader().hide(context);
+      showSnakeBar(context, msg: 'Task deleted!');
+    } else {
+      CircularLoader().hide(context);
+      showSnakeBar(context, msg: 'Something went wrong!');
+    }
+    await _projectTaskBloc.getTasks();
   }
 }

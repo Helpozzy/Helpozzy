@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
+import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -38,6 +40,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   final TextEditingController _taskHoursController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
+  late List<PlatformFile> pickedFiles = [];
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   late ThemeData _themeData;
   late double width;
@@ -256,9 +259,32 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                        child: SmallInfoLabel(label: 'Project Status Tracking'),
+                        child: SmallInfoLabel(label: 'Task Status Tracking'),
                       ),
                       statusSegmentation(),
+                      _selectedIndexValue == 2
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SmallInfoLabel(label: 'Attachments'),
+                                IconButton(
+                                  icon: Icon(CupertinoIcons.add_circled,
+                                      color: DARK_GRAY),
+                                  onPressed: () async {
+                                    FilePickerResult? result =
+                                        await CommonPicker().showPickFileDialog(
+                                            allowMultiple: true);
+                                    setState(() {
+                                      pickedFiles = result!.files;
+                                    });
+                                  },
+                                ),
+                              ],
+                            )
+                          : SizedBox(),
+                      _selectedIndexValue == 2 ? attachments() : SizedBox(),
+                      SizedBox(height: 10)
                     ],
                   ),
                 ),
@@ -280,6 +306,60 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget attachments() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: pickedFiles.length,
+      itemBuilder: (context, index) {
+        final PlatformFile file = pickedFiles[index];
+        return Card(
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: GRAY,
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.05),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        file.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: _themeData.textTheme.headline6!
+                            .copyWith(fontSize: 16),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        '${file.size / 1000} kb',
+                        style: _themeData.textTheme.bodyText2!
+                            .copyWith(fontSize: 12, color: DARK_GRAY),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  file.name.contains('.jpg') || file.name.contains('.webp')
+                      ? CupertinoIcons.photo
+                      : file.name.contains('.pdf') || file.name.contains('.txt')
+                          ? CupertinoIcons.doc_text
+                          : CupertinoIcons.link,
+                  color: DARK_GRAY,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
