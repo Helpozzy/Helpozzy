@@ -9,7 +9,9 @@ import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'tasks/create_edit_task.dart';
 
 class CreateProject extends StatefulWidget {
   @override
@@ -25,18 +27,16 @@ class _CreateProjectState extends State<CreateProject> {
   final TextEditingController _projStartDateController =
       TextEditingController();
   final TextEditingController _projEndDateController = TextEditingController();
-  final TextEditingController _projOwnerController = TextEditingController();
+  final TextEditingController _projCategoryController = TextEditingController();
   final TextEditingController _projCollaboraorController =
       TextEditingController();
-  final TextEditingController _projMembersController = TextEditingController();
-  final TextEditingController _projHoursController = TextEditingController();
+  final TextEditingController _searchEmailController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   late ThemeData _themeData;
   late double width;
   late double height;
-  int _selectedIndexValue = 0;
 
   @override
   void initState() {
@@ -50,7 +50,11 @@ class _CreateProjectState extends State<CreateProject> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: CREATE_PROJECT_APPBAR),
+      appBar: CommonAppBar(context).show(
+          title: CREATE_PROJECT_APPBAR,
+          color: WHITE,
+          textColor: DARK_PINK_COLOR,
+          elevation: 1),
       body: body(),
     );
   }
@@ -58,15 +62,16 @@ class _CreateProjectState extends State<CreateProject> {
   Widget body() {
     return Form(
       key: _formKey,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommonSimpleTextfield(
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: SimpleFieldWithLabel(
+                      label: PROJECT_NAME_LABEL,
                       controller: _projNameController,
                       hintText: PROJECT_NAME_HINT,
                       validator: (val) {
@@ -76,7 +81,12 @@ class _CreateProjectState extends State<CreateProject> {
                         return null;
                       },
                     ),
-                    CommonSimpleTextfield(
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: SimpleFieldWithLabel(
+                      label: PROJECT_DESCRIPTION_LABEL,
                       controller: _projDesController,
                       hintText: PROJECT_DESCRIPTION_HINT,
                       validator: (val) {
@@ -86,203 +96,193 @@ class _CreateProjectState extends State<CreateProject> {
                         return null;
                       },
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CommonSimpleTextfield(
-                            readOnly: true,
-                            controller: _projStartDateController,
-                            hintText: PROJECT_START_DATE_HINT,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Select start date';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              CommonDatepicker()
-                                  .showDatePickerDialog(context,
-                                      initialDate: _selectedStartDate)
-                                  .then((pickedDate) {
-                                if (pickedDate != null &&
-                                    pickedDate != _selectedStartDate)
-                                  setState(() {
-                                    _selectedStartDate = pickedDate;
-                                  });
-                                _projStartDateController.value = TextEditingValue(
-                                    text:
-                                        '${DateFormat.yMd().format(_selectedStartDate)}');
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: CommonSimpleTextfield(
-                            readOnly: true,
-                            controller: _projEndDateController,
-                            hintText: PROJECT_END_HINT,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Select end date';
-                              } else if (_selectedEndDate
-                                  .isBefore(_selectedStartDate)) {
-                                return 'Select valid end date';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              CommonDatepicker()
-                                  .showDatePickerDialog(context,
-                                      initialDate: _selectedEndDate)
-                                  .then((pickedDate) {
-                                if (pickedDate != null &&
-                                    pickedDate != _selectedEndDate)
-                                  setState(() {
-                                    _selectedEndDate = pickedDate;
-                                  });
-                                _projEndDateController.value = TextEditingValue(
-                                    text:
-                                        '${DateFormat.yMd().format(_selectedEndDate)}');
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    CommonSimpleTextfield(
-                      controller: _projOwnerController,
-                      hintText: PROJECT_OWNERS_HINT,
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: SimpleFieldWithLabel(
+                      label: PROJECT_CATEGORY_LABEL,
+                      controller: _projCategoryController,
+                      hintText: PROJECT_CATEGORY_HINT,
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return 'Enter owner name';
+                          return 'Enter category';
                         }
                         return null;
                       },
                     ),
-                    CommonSimpleTextfield(
-                      controller: _projCollaboraorController,
-                      hintText: PROJECT_COLLABORATOR_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter Collaborator/Co-admin';
-                        }
-                        return null;
-                      },
-                    ),
-                    CommonSimpleTextfield(
-                      controller: _projMembersController,
-                      hintText: PROJECT_MEMBERS_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter members names';
-                        }
-                        return null;
-                      },
-                    ),
-                    CommonSimpleTextfield(
-                      readOnly: true,
-                      controller: _projHoursController,
-                      hintText: PROJECT_HOURS_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty && selectedTime.toString().isEmpty) {
-                          return 'Select hours';
-                        }
-                        return null;
-                      },
-                      onTap: () {
-                        CommonDatepicker()
-                            .showTimePickerDialog(context,
-                                selectedTime: selectedTime)
-                            .then((selectedTimeVal) {
-                          if (selectedTimeVal != null)
-                            setState(() {
-                              selectedTime = selectedTimeVal;
-                            });
-                          _projHoursController.value = TextEditingValue(
-                              text:
-                                  '${selectedTime.hour}.${selectedTime.minute}');
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                      child: SmallInfoLabel(label: 'Project Status Tracking'),
-                    ),
-                    statusSegmentation(),
-                    Row(
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: width * 0.03, horizontal: width * 0.05),
+                    child: SmallInfoLabel(label: 'Tasks'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SmallInfoLabel(label: 'Tasks'),
-                        IconButton(
-                          icon: Icon(CupertinoIcons.add_circled,
-                              color: DARK_GRAY),
+                        CommonButtonWithIcon(
+                          icon: Icons.add,
+                          text: ADD_NEW_TASK_BUTTON,
+                          fontSize: 12,
+                          iconSize: 15,
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      CreateEditTask(fromEdit: false)),
+                            );
+                            await _projectTaskBloc.getTasks();
+                          },
+                        ),
+                        TextButton(
                           onPressed: () async {
                             final List<String> tasks = await Navigator.push(
                               context,
-                              CupertinoPageRoute(
+                              MaterialPageRoute(
                                 builder: (context) => TasksScreen(),
                               ),
                             );
-                            await _projectTaskBloc.getSelectedTasks(
-                                taskIds: tasks);
+                            if (tasks.isNotEmpty) {
+                              await _projectTaskBloc.getSelectedTasks(
+                                  taskIds: tasks);
+                            }
                           },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(CupertinoIcons.list_bullet,
+                                  color: PURPLE_BLUE_COLOR),
+                              SizedBox(width: 5),
+                              Text(
+                                TASK_LIST_BUTTON,
+                                style: _themeData.textTheme.bodyText2!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: PURPLE_BLUE_COLOR),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    taskList(),
-                    SizedBox(height: 20),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: taskList(),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: width * 0.03, left: width * 0.05),
+                    child: SmallInfoLabel(
+                        label: PROJECT_INVITE_COLLABORATOR_LABEL),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: inviteCollaborators(),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: width * 0.03, left: width * 0.05),
+                    child: SmallInfoLabel(label: TIMELINE_LABEL),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: startDateAndEndDateSection(),
+                  ),
+                  Divider(),
+                  SizedBox(height: 10)
+                ],
               ),
             ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: width * 0.2),
-              child: CommonButton(
-                text: ADD_PROJECT_BUTTON,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    FocusScope.of(context).unfocus();
-                    await onAddProject();
-                  }
-                },
-              ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.2, vertical: width * 0.03),
+            child: CommonButton(
+              text: PUBLISH_PROJECT_BUTTON,
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  FocusScope.of(context).unfocus();
+                  await onAddProject();
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget statusSegmentation() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      child: CupertinoSlidingSegmentedControl(
-          groupValue: _selectedIndexValue,
-          backgroundColor: GRAY,
-          thumbColor: DARK_GRAY.withAlpha(100),
-          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
-          children: {
-            0: segmentItem(TOGGLE_NOT_STARTED),
-            1: segmentItem(TOGGLE_INPROGRESS),
-            2: segmentItem(TOGGLE_COMPLE),
-          },
-          onValueChanged: (value) {
-            setState(() {
-              _selectedIndexValue = value.hashCode;
-            });
-          }),
+  Widget inviteCollaborators() {
+    return Column(
+      children: [
+        TextButton(
+          onPressed: () {},
+          child: Row(
+            children: [
+              Icon(
+                Icons.link,
+                color: BLACK,
+              ),
+              SizedBox(width: 5),
+              Text(
+                COPY_LINK,
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                    fontWeight: FontWeight.w600, color: PRIMARY_COLOR),
+              )
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            appImageButton(
+              onPressed: () => CommonUrlLauncher().launchInstagram(),
+              asset: 'instagram.png',
+            ),
+            appImageButton(
+              onPressed: () => CommonUrlLauncher().launchWhatsapp(),
+              asset: 'whatsapp.png',
+            ),
+            appImageButton(
+              onPressed: () {},
+              asset: 'twitter.png',
+            ),
+            appImageButton(
+              onPressed: () {},
+              asset: 'snapchat.png',
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Icon(
+              CupertinoIcons.search,
+              color: BLACK,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: CommonSimpleTextfield(
+                controller: _searchEmailController,
+                hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
+                validator: (val) {},
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget segmentItem(String title) {
-    return Text(
-      title,
-      style: _themeData.textTheme.bodyText2!
-          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
-    );
+  IconButton appImageButton(
+      {required void Function()? onPressed, required String asset}) {
+    return IconButton(
+        onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
   }
 
   Widget taskList() {
@@ -297,6 +297,7 @@ class _CreateProjectState extends State<CreateProject> {
         return snapshot.data!.tasks.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
+                padding: EdgeInsets.symmetric(vertical: 8.0),
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: snapshot.data!.tasks.length,
                 itemBuilder: (context, index) {
@@ -313,6 +314,76 @@ class _CreateProjectState extends State<CreateProject> {
     );
   }
 
+  Widget startDateAndEndDateSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _projStartDateController,
+            hintText: PROJECT_START_DATE_HINT,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Select start date';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showDatePickerDialog(context,
+                      initialDate: _selectedStartDate)
+                  .then((pickedDate) {
+                if (pickedDate != null && pickedDate != _selectedStartDate)
+                  setState(() {
+                    _selectedStartDate = pickedDate;
+                  });
+                _projStartDateController.value = TextEditingValue(
+                    text: '${DateFormat.yMd().format(_selectedStartDate)}');
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Text(
+            TO,
+            style: _themeData.textTheme.bodyText2!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _projEndDateController,
+            hintText: PROJECT_END_HINT,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Select end date';
+              } else if (_selectedEndDate.isBefore(_selectedStartDate)) {
+                return 'Select valid end date';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showDatePickerDialog(context, initialDate: _selectedEndDate)
+                  .then((pickedDate) {
+                if (pickedDate != null && pickedDate != _selectedEndDate)
+                  setState(() {
+                    _selectedEndDate = pickedDate;
+                  });
+                _projEndDateController.value = TextEditingValue(
+                    text: '${DateFormat.yMd().format(_selectedEndDate)}');
+              });
+            },
+          ),
+        ),
+        SizedBox(width: 10),
+        Icon(Icons.calendar_today_rounded)
+      ],
+    );
+  }
+
   Future onAddProject() async {
     CircularLoader().show(context);
     final ProjectModel project = ProjectModel(
@@ -321,15 +392,9 @@ class _CreateProjectState extends State<CreateProject> {
       description: _projDesController.text,
       startDate: _projStartDateController.text,
       endDate: _projEndDateController.text,
-      projectOwner: _projOwnerController.text,
+      projectOwner: _projCategoryController.text,
       collaboratorsCoadmin: _projCollaboraorController.text,
-      members: _projMembersController.text,
-      status: _selectedIndexValue == 0
-          ? TOGGLE_NOT_STARTED
-          : _selectedIndexValue == 1
-              ? TOGGLE_INPROGRESS
-              : TOGGLE_COMPLE,
-      hours: double.parse(_projHoursController.text),
+      category: prefsObject.getString('uID')!,
     );
     final bool isUploaded = await _adminProjectsBloc.postProject(project);
     if (isUploaded) {
@@ -349,9 +414,8 @@ class _CreateProjectState extends State<CreateProject> {
     _projDesController.clear();
     _projStartDateController.clear();
     _projEndDateController.clear();
-    _projOwnerController.clear();
+    _projCategoryController.clear();
     _projCollaboraorController.clear();
-    _projMembersController.clear();
-    _projHoursController.clear();
+    _searchEmailController.clear();
   }
 }

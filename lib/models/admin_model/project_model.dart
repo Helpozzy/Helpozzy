@@ -17,9 +17,7 @@ class ProjectModel {
     required this.endDate,
     required this.projectOwner,
     required this.collaboratorsCoadmin,
-    required this.members,
-    required this.status,
-    required this.hours,
+    required this.category,
   });
 
   ProjectModel.fromjson({required Map<String, dynamic> json}) {
@@ -30,9 +28,7 @@ class ProjectModel {
     endDate = json['end_date'];
     projectOwner = json['project_owner'];
     collaboratorsCoadmin = json['collaborators_or_co_admin'];
-    members = json['members'];
-    status = json['status'];
-    hours = json['hours'];
+    category = json['category'];
   }
 
   Map<String, Object?> toJson() {
@@ -44,9 +40,7 @@ class ProjectModel {
       'end_date': endDate,
       'project_owner': projectOwner,
       'collaborators_or_co_admin': collaboratorsCoadmin,
-      'members': members,
-      'status': status,
-      'hours': hours,
+      'members': category,
     };
   }
 
@@ -57,7 +51,5 @@ class ProjectModel {
   late String endDate;
   late String projectOwner;
   late String collaboratorsCoadmin;
-  late String members;
-  late String status;
-  late double hours;
+  late String category;
 }

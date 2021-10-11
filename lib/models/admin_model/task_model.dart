@@ -14,7 +14,6 @@ class TaskModel {
     required this.id,
     required this.taskName,
     required this.description,
-    required this.timeLine,
     required this.memberRequirement,
     required this.ageRestriction,
     required this.qualification,
@@ -22,7 +21,6 @@ class TaskModel {
     required this.endDate,
     required this.members,
     required this.status,
-    required this.hours,
     this.isSelected,
   });
   TaskModel.fromjson({required Map<String, dynamic> json}) {
@@ -30,7 +28,6 @@ class TaskModel {
     id = json['task_id'];
     taskName = json['task_name'];
     description = json['description'];
-    timeLine = json['timeline'];
     memberRequirement = json['member_requirement'];
     ageRestriction = json['age_restriction'];
     qualification = json['qualification'];
@@ -38,9 +35,6 @@ class TaskModel {
     endDate = json['end_date'];
     members = json['members'];
     status = json['status'];
-    hours = json['hours'] is int
-        ? double.parse(json['hours'].toString())
-        : json['hours'];
   }
 
   Map<String, Object?> toJson() {
@@ -49,7 +43,6 @@ class TaskModel {
       'task_id': id,
       'task_name': taskName,
       'description': description,
-      'timeline': timeLine,
       'member_requirement': memberRequirement,
       'age_restriction': ageRestriction,
       'qualification': qualification,
@@ -57,7 +50,6 @@ class TaskModel {
       'end_date': endDate,
       'members': members,
       'status': status,
-      'hours': hours,
     };
   }
 
@@ -65,7 +57,6 @@ class TaskModel {
   late String id;
   late String taskName;
   late String description;
-  late String timeLine;
   late String memberRequirement;
   late String ageRestriction;
   late String qualification;
@@ -73,6 +64,5 @@ class TaskModel {
   late String endDate;
   late String members;
   late String status;
-  late double hours;
   late bool? isSelected = false;
 }

@@ -14,6 +14,7 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  late ThemeData _themeData;
   late double width;
   late List<String> selectedItems = [];
 
@@ -26,31 +27,21 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+    _themeData = Theme.of(context);
     return Scaffold(
       appBar: CommonAppBar(context).show(
-        title: 'Tasks',
+        title: TASKS_APPBAR,
         onBackPressed: () {
-          Navigator.pop(context, selectedItems);
+          Navigator.pop(context);
         },
         actions: [
-          Transform.scale(
-            scale: 0.6,
-            child: Container(
-              width: width / 4,
-              child: CommonButton(
-                text: 'Create',
-                color: WHITE,
-                elevation: 0,
-                fontColor: PRIMARY_COLOR,
-                onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => CreateEditTask(fromEdit: false)),
-                  );
-                  await _projectTaskBloc.getTasks();
-                },
-              ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, selectedItems);
+            },
+            child: Text(
+              ADD_TO_PROJECT_BUTTON,
+              style: _themeData.textTheme.bodyText2!.copyWith(color: WHITE),
             ),
           ),
         ],

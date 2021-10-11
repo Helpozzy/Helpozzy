@@ -34,6 +34,7 @@ const ACCENT_GRAY = Color(0xFFE6E2E3);
 const DARK_ACCENT_GRAY = Color(0xFFF8F5F5);
 const LIGHT_ACCENT_GRAY = Color(0xFFE5DBDD);
 const TABLE_ROW_GRAY_COLOR = Color(0xFFFBFAFA);
+const PURPLE_BLUE_COLOR = Color(0xFF89C4FB);
 
 //Splash color
 const PURPLE_COLOR = Color(0xFF445393);
@@ -159,7 +160,7 @@ const SELECT_USER_TYPE = 'Select user type';
 
 //Alert Text
 const ALERT = 'Alert';
-const SUCCESSFULL = 'Successfull';
+const SUCCESSFULL = 'Successful';
 
 //Button Text
 const SIGN_UP = 'Sign-Up';
@@ -242,41 +243,64 @@ const RATING_TEXT = 'RATINGS';
 
 //Admin Appbar title
 const CREATE_PROJECT_APPBAR = 'Create Project';
+const TASKS_APPBAR = 'Tasks';
 const CREATE_TASK_APPBAR = 'Create Task';
 const EDIT_TASK_APPBAR = 'Edit Task';
+const MEMBERS_APPBAR = 'Members';
+const PROJECTS_APPBAR = 'Projects';
 
 //Admin Button
-const ADD_PROJECT_BUTTON = 'ADD PROJECT';
+const PUBLISH_PROJECT_BUTTON = 'PUBLISH PROJECT';
 const UPDATE_TASK_BUTTON = 'UPDATE';
 const ADD_TASK_BUTTON = 'ADD TASK';
+const ADD_NEW_TASK_BUTTON = 'Create New Task';
+const ADD_TO_PROJECT_BUTTON = 'ADD TO PROJECT';
+const TASK_LIST_BUTTON = 'Task List';
+const MEMBERS_LIST_BUTTON = 'Members List';
 
 //Admin Hint Msg
 const ADMIN_SEARCH_HINT = 'Search';
 
 //Admin create project
-const PROJECT_NAME_HINT = 'Project Name';
-const PROJECT_DESCRIPTION_HINT = 'Description';
+const PROJECT_NAME_LABEL = 'Project Name';
+const PROJECT_DESCRIPTION_LABEL = 'Project Description';
+const PROJECT_CATEGORY_LABEL = 'Project Category';
+const PROJECT_COLLABORATOR_LABEL = 'Collaborators/Co-Admin';
+const MEMBERS_LABEL = 'Members';
+const HOURS_LABEL = 'Hours';
+const TIMELINE_LABEL = 'Timeline';
+const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';
+const PROJECT_NAME_HINT = 'Enter Name';
+const PROJECT_DESCRIPTION_HINT = 'Enter Description';
 const PROJECT_START_DATE_HINT = 'Start Date';
 const PROJECT_END_HINT = 'End Date';
-const PROJECT_OWNERS_HINT = 'Project Owners';
+const PROJECT_CATEGORY_HINT = 'Enter Project Category';
 const PROJECT_COLLABORATOR_HINT = 'Collaborators/Co-Admin';
-const PROJECT_MEMBERS_HINT = 'Members';
-const PROJECT_HOURS_HINT = 'Hours';
+const PROJECT_SEARCH_WITH_EMAIL_HINT = 'Search with email';
 const TOGGLE_NOT_STARTED = 'Not Started';
 const TOGGLE_INPROGRESS = 'In Progress';
 const TOGGLE_COMPLE = 'Complete';
+const TO = 'to';
+const COPY_LINK = 'Copy Link';
 
 //Admin create task
-const TASK_NAME_HINT = 'Task Name';
-const TASK_DESCRIPTION_HINT = 'Description';
-const TASK_TIMELINE_HINT = 'Timeline';
-const TASK_MEMBERS_REQUIREMENT_HINT = 'Members Requirement';
-const TASK_AGE_RESTRICTION_HINT = 'Age Restriction';
-const TASK_QUALIFICATION_HINT = 'Qualification';
+const TASK_NAME_LABEL = 'Task Name';
+const TASK_DESCRIPTION_LABEL = 'Description';
+const TASK_TIMELINE_LABEL = 'Timeline';
+const TASK_MEMBERS_REQUIREMENT_LABEL = 'Members Requirements';
+const TASK_MEMBERS_LABEL = '# of Members';
+const TASK_MINIMUM_AGE_LABEL = 'Minimum Age';
+const TASK_QUALIFICATION_LABEL = 'Any Qualification';
+const TASK_START_DATE_LABEL = 'Start Date';
+const TASK_END_LABEL = 'End Date';
+const TASK_NAME_HINT = 'Enter Task Name';
+const TASK_DESCRIPTION_HINT = 'Enter Task Description';
+const TASK_MEMBERS_REQUIREMENT_HINT = 'Enter no of Members';
+const TASK_MINIMUM_AGE_HINT = 'Enter Minimum Age';
+const TASK_QUALIFICATION_HINT = 'Enter Qualification';
 const TASK_START_DATE_HINT = 'Start Date';
 const TASK_END_HINT = 'End Date';
-const TASK_MEMBERS_HINT = 'Members';
-const TASK_HOURS_HINT = 'Hours';
+const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "

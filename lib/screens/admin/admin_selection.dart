@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/screens/admin/projects/projects_screen.dart';
-import 'package:helpozzy/screens/admin/volunteers/volunteer_screen.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+
+import 'members/members.dart';
 
 class AdminSelectionScreen extends StatefulWidget {
   @override
@@ -76,9 +77,9 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => type.id == 0
-                        ? ProjectsScreen(title: type.label)
+                        ? ProjectsScreen()
                         : type.id == 1
-                            ? VolunteerScreen(title: type.label)
+                            ? MembersScreen()
                             : CommonSampleScreen('No Available'),
                   ),
                 );
@@ -99,6 +100,7 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
                           imageUrl: type.imgUrl,
                           height: width / 5,
                           width: width / 5,
+                          color: BLACK,
                           placeholder: (context, url) => Center(
                             child: LinearLoader(minheight: 10),
                           ),

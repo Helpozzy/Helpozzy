@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/screens/admin/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
-import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +29,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   final TextEditingController _taskTimelineController = TextEditingController();
   final TextEditingController _taskMemberReqController =
       TextEditingController();
-  final TextEditingController _taskAgeRestrictionController =
+  final TextEditingController _taskMinimumAgeController =
       TextEditingController();
   final TextEditingController _taskQualificationController =
       TextEditingController();
@@ -38,6 +38,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   final TextEditingController _taskEndDateController = TextEditingController();
   final TextEditingController _taskMembersController = TextEditingController();
   final TextEditingController _taskHoursController = TextEditingController();
+  final TextEditingController _searchEmailController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
   late List<PlatformFile> pickedFiles = [];
@@ -46,6 +47,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   int _selectedIndexValue = 0;
+  bool postOnLocalCheck = false;
 
   @override
   void initState() {
@@ -56,14 +58,12 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   Future retriveTaskDetails() async {
     _taskNameController.text = task!.taskName;
     _taskDesController.text = task!.description;
-    _taskTimelineController.text = task!.timeLine;
     _taskMemberReqController.text = task!.memberRequirement;
-    _taskAgeRestrictionController.text = task!.ageRestriction;
+    _taskMinimumAgeController.text = task!.ageRestriction;
     _taskQualificationController.text = task!.qualification;
     _taskStartDateController.text = task!.startDate;
     _taskEndDateController.text = task!.endDate;
     _taskMembersController.text = task!.members;
-    _taskHoursController.text = task!.hours.toString();
     _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
         ? 0
         : task!.status == TOGGLE_INPROGRESS
@@ -76,8 +76,12 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     _themeData = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context)
-          .show(title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR),
+      appBar: CommonAppBar(context).show(
+        title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
+        color: WHITE,
+        textColor: DARK_PINK_COLOR,
+        elevation: 1,
+      ),
       body: body(),
     );
   }
@@ -89,277 +93,286 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       },
       child: Form(
         key: _formKey,
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CommonSimpleTextfield(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: SimpleFieldWithLabel(
+                        label: TASK_NAME_LABEL,
                         controller: _taskNameController,
                         hintText: TASK_NAME_HINT,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Enter project name';
+                            return 'Enter task name';
                           }
                           return null;
                         },
                       ),
-                      CommonSimpleTextfield(
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: SimpleFieldWithLabel(
+                        label: TASK_DESCRIPTION_LABEL,
                         controller: _taskDesController,
                         hintText: TASK_DESCRIPTION_HINT,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Enter project description';
+                            return 'Enter task description';
                           }
                           return null;
                         },
                       ),
-                      CommonSimpleTextfield(
-                        controller: _taskTimelineController,
-                        hintText: TASK_TIMELINE_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter timeline';
-                          }
-                          return null;
-                        },
-                      ),
-                      CommonSimpleTextfield(
-                        controller: _taskMemberReqController,
-                        hintText: TASK_MEMBERS_REQUIREMENT_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter members requirement';
-                          }
-                          return null;
-                        },
-                      ),
-                      CommonSimpleTextfield(
-                        controller: _taskAgeRestrictionController,
-                        hintText: TASK_AGE_RESTRICTION_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter age restriction';
-                          }
-                          return null;
-                        },
-                      ),
-                      CommonSimpleTextfield(
-                        controller: _taskQualificationController,
-                        hintText: TASK_QUALIFICATION_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter qualification';
-                          }
-                          return null;
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CommonSimpleTextfield(
-                              readOnly: true,
-                              controller: _taskStartDateController,
-                              hintText: TASK_START_DATE_HINT,
-                              validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Select start date';
-                                }
-                                return null;
-                              },
-                              onTap: () {
-                                CommonDatepicker()
-                                    .showDatePickerDialog(context,
-                                        initialDate: _selectedStartDate)
-                                    .then((pickedDate) {
-                                  if (pickedDate != null &&
-                                      pickedDate != _selectedStartDate)
-                                    setState(() {
-                                      _selectedStartDate = pickedDate;
-                                    });
-                                  _taskStartDateController.value = TextEditingValue(
-                                      text:
-                                          '${DateFormat.yMd().format(_selectedStartDate)}');
-                                });
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: CommonSimpleTextfield(
-                              readOnly: true,
-                              controller: _taskEndDateController,
-                              hintText: TASK_END_HINT,
-                              validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Select end date';
-                                } else if (_selectedEndDate
-                                    .isBefore(_selectedStartDate)) {
-                                  return 'Select valid end date';
-                                }
-                                return null;
-                              },
-                              onTap: () {
-                                CommonDatepicker()
-                                    .showDatePickerDialog(context,
-                                        initialDate: _selectedEndDate)
-                                    .then((pickedDate) {
-                                  if (pickedDate != null &&
-                                      pickedDate != _selectedEndDate)
-                                    setState(() {
-                                      _selectedEndDate = pickedDate;
-                                    });
-                                  _taskEndDateController.value = TextEditingValue(
-                                      text:
-                                          '${DateFormat.yMd().format(_selectedEndDate)}');
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      CommonSimpleTextfield(
-                        controller: _taskMembersController,
-                        hintText: TASK_MEMBERS_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter members';
-                          }
-                          return null;
-                        },
-                      ),
-                      CommonSimpleTextfield(
-                        readOnly: true,
-                        controller: _taskHoursController,
-                        hintText: TASK_HOURS_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty && selectedTime.toString().isEmpty) {
-                            return 'Select hours';
-                          }
-                          return null;
-                        },
-                        onTap: () {
-                          CommonDatepicker()
-                              .showTimePickerDialog(context,
-                                  selectedTime: selectedTime)
-                              .then((selectedTimeVal) {
-                            if (selectedTimeVal != null)
-                              setState(() {
-                                selectedTime = selectedTimeVal;
-                              });
-                            _taskHoursController.value = TextEditingValue(
-                                text:
-                                    '${selectedTime.hour}.${selectedTime.minute}');
-                          });
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                        child: SmallInfoLabel(label: 'Task Status Tracking'),
-                      ),
-                      statusSegmentation(),
-                      _selectedIndexValue == 2
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SmallInfoLabel(label: 'Attachments'),
-                                IconButton(
-                                  icon: Icon(CupertinoIcons.add_circled,
-                                      color: DARK_GRAY),
-                                  onPressed: () async {
-                                    FilePickerResult? result =
-                                        await CommonPicker().showPickFileDialog(
-                                            allowMultiple: true);
-                                    setState(() {
-                                      pickedFiles = result!.files;
-                                    });
-                                  },
-                                ),
-                              ],
-                            )
-                          : SizedBox(),
-                      _selectedIndexValue == 2 ? attachments() : SizedBox(),
-                      SizedBox(height: 10)
-                    ],
-                  ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: width * 0.03, left: width * 0.05),
+                      child: SmallInfoLabel(label: TIMELINE_LABEL),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: startDateAndEndDateSection(),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: width * 0.03, left: width * 0.05),
+                      child: SmallInfoLabel(label: MEMBERS_LABEL),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: inviteMembersSection(),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: width * 0.04, horizontal: width * 0.05),
+                      child:
+                          SmallInfoLabel(label: TASK_MEMBERS_REQUIREMENT_LABEL),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: memberRequirementsSection(),
+                    ),
+                    Divider(),
+                    SizedBox(height: 10)
+                  ],
                 ),
               ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: width * 0.2),
-                child: CommonButton(
-                  text: fromEdit ? UPDATE_TASK_BUTTON : ADD_TASK_BUTTON,
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      FocusScope.of(context).unfocus();
-                      await addOrUpdateData();
-                    }
-                  },
-                ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: width * 0.2),
+              child: CommonButton(
+                text: fromEdit ? UPDATE_TASK_BUTTON : ADD_TASK_BUTTON,
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    FocusScope.of(context).unfocus();
+                    await addOrUpdateData();
+                  }
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget attachments() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: pickedFiles.length,
-      itemBuilder: (context, index) {
-        final PlatformFile file = pickedFiles[index];
-        return Card(
-          elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          color: GRAY,
-          child: Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.05),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        file.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: _themeData.textTheme.headline6!
-                            .copyWith(fontSize: 16),
-                      ),
-                      SizedBox(height: 3),
-                      Text(
-                        '${file.size / 1000} kb',
-                        style: _themeData.textTheme.bodyText2!
-                            .copyWith(fontSize: 12, color: DARK_GRAY),
-                      ),
-                    ],
+  Widget inviteMembersSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              CupertinoIcons.search,
+              color: BLACK,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: CommonSimpleTextfield(
+                controller: _searchEmailController,
+                hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
+                validator: (val) {},
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.link,
+                    color: BLACK,
                   ),
+                  SizedBox(width: 5),
+                  Text(
+                    COPY_LINK,
+                    style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.w600, color: PRIMARY_COLOR),
+                  )
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Checkbox(
+                  value: postOnLocalCheck,
+                  onChanged: (val) {
+                    setState(() {
+                      postOnLocalCheck = !postOnLocalCheck;
+                    });
+                  },
                 ),
-                Icon(
-                  file.name.contains('.jpg') || file.name.contains('.webp')
-                      ? CupertinoIcons.photo
-                      : file.name.contains('.pdf') || file.name.contains('.txt')
-                          ? CupertinoIcons.doc_text
-                          : CupertinoIcons.link,
-                  color: DARK_GRAY,
+                Text(
+                  POST_ON_LOCAL_FEED,
+                  style: _themeData.textTheme.bodyText2!.copyWith(
+                      fontWeight: FontWeight.bold, color: PRIMARY_COLOR),
                 ),
               ],
             ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: CommonButtonWithIcon(
+            icon: Icons.group_outlined,
+            text: MEMBERS_LIST_BUTTON,
+            fontSize: 12,
+            iconSize: 15,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MembersScreen(),
+                ),
+              );
+            },
           ),
-        );
-      },
+        )
+      ],
+    );
+  }
+
+  Widget startDateAndEndDateSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _taskStartDateController,
+            hintText: PROJECT_START_DATE_HINT,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Select start date';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showDatePickerDialog(context,
+                      initialDate: _selectedStartDate)
+                  .then((pickedDate) {
+                if (pickedDate != null && pickedDate != _selectedStartDate)
+                  setState(() {
+                    _selectedStartDate = pickedDate;
+                  });
+                _taskStartDateController.value = TextEditingValue(
+                    text: '${DateFormat.yMd().format(_selectedStartDate)}');
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Text(
+            TO,
+            style: _themeData.textTheme.bodyText2!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _taskEndDateController,
+            hintText: PROJECT_END_HINT,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Select end date';
+              } else if (_selectedEndDate.isBefore(_selectedStartDate)) {
+                return 'Select valid end date';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showDatePickerDialog(context, initialDate: _selectedEndDate)
+                  .then((pickedDate) {
+                if (pickedDate != null && pickedDate != _selectedEndDate)
+                  setState(() {
+                    _selectedEndDate = pickedDate;
+                  });
+                _taskEndDateController.value = TextEditingValue(
+                    text: '${DateFormat.yMd().format(_selectedEndDate)}');
+              });
+            },
+          ),
+        ),
+        SizedBox(width: 10),
+        Icon(Icons.calendar_today_rounded)
+      ],
+    );
+  }
+
+  Widget memberRequirementsSection() {
+    return Column(
+      children: [
+        TextfieldLabelSmall(label: TASK_MEMBERS_LABEL),
+        CommonSimpleTextfield(
+          controller: _taskMemberReqController,
+          hintText: TASK_MEMBERS_REQUIREMENT_HINT,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return 'Enter no of members are required';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 8),
+        TextfieldLabelSmall(label: TASK_MINIMUM_AGE_LABEL),
+        CommonSimpleTextfield(
+          controller: _taskMinimumAgeController,
+          hintText: TASK_MINIMUM_AGE_HINT,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return 'Enter age restriction';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 8),
+        TextfieldLabelSmall(label: TASK_QUALIFICATION_LABEL),
+        CommonSimpleTextfield(
+          controller: _taskQualificationController,
+          hintText: TASK_QUALIFICATION_HINT,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return 'Enter qualification';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
@@ -370,9 +383,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       id: fromEdit ? task!.id : '',
       taskName: _taskNameController.text,
       description: _taskDesController.text,
-      timeLine: _taskTimelineController.text,
       memberRequirement: _taskMemberReqController.text,
-      ageRestriction: _taskAgeRestrictionController.text,
+      ageRestriction: _taskMinimumAgeController.text,
       qualification: _taskQualificationController.text,
       startDate: _taskStartDateController.text,
       endDate: _taskEndDateController.text,
@@ -382,7 +394,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           : _selectedIndexValue == 1
               ? TOGGLE_INPROGRESS
               : TOGGLE_COMPLE,
-      hours: double.parse(_taskHoursController.text),
     );
     final bool isUploaded = fromEdit
         ? await _projectTaskBloc.updateTasks(taskDetails)
@@ -438,7 +449,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     _taskDesController.clear();
     _taskTimelineController.clear();
     _taskMemberReqController.clear();
-    _taskAgeRestrictionController.clear();
+    _taskMinimumAgeController.clear();
     _taskQualificationController.clear();
     _taskStartDateController.clear();
     _taskEndDateController.clear();

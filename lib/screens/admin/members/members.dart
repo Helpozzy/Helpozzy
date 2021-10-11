@@ -6,19 +6,14 @@ import 'package:helpozzy/models/user_rewards_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class VolunteerScreen extends StatefulWidget {
-  VolunteerScreen({this.title});
-  final String? title;
+class MembersScreen extends StatefulWidget {
   @override
-  _VolunteerScreenState createState() => _VolunteerScreenState(title: title);
+  _MembersScreenState createState() => _MembersScreenState();
 }
 
-class _VolunteerScreenState extends State<VolunteerScreen> {
-  _VolunteerScreenState({this.title});
-  final String? title;
-
+class _MembersScreenState extends State<MembersScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final VolunteersBloc _volunteersBloc = VolunteersBloc();
+  final MembersBloc _membersBloc = MembersBloc();
   late double width;
   late double height;
   late ThemeData _theme;
@@ -27,7 +22,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
 
   @override
   void initState() {
-    _volunteersBloc.searchVolunteers(searchText: '');
+    _membersBloc.searchMembers(searchText: '');
     super.initState();
   }
 
@@ -39,7 +34,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(context).show(
-          title: title!,
+          title: MEMBERS_APPBAR,
           elevation: 0,
           color: WHITE,
           textColor: PRIMARY_COLOR,
@@ -75,7 +70,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                   return null;
                 },
                 onChanged: (val) {
-                  _volunteersBloc.searchVolunteers(searchText: val);
+                  _membersBloc.searchMembers(searchText: val);
                 },
               ),
             ),
@@ -102,7 +97,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
         popupButton(),
         StreamBuilder<bool>(
             initialData: favVolunteers,
-            stream: _volunteersBloc.getFavVolunteersStream,
+            stream: _membersBloc.getFavVolunteersStream,
             builder: (context, snapshot) {
               return selectShowOption(
                 buttonText: FAVORITE_HINT,
@@ -113,7 +108,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 icon: Icons.favorite_border_rounded,
                 onPressed: () {
                   favVolunteers = !favVolunteers;
-                  _volunteersBloc.changeFavVal(favVolunteers);
+                  _membersBloc.changeFavVal(favVolunteers);
                 },
               );
             }),
@@ -156,13 +151,13 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
   Future handleClick(int item) async {
     switch (item) {
       case 0:
-        _volunteersBloc.sortVolunteersByName();
+        _membersBloc.sortMembersByName();
         break;
       case 1:
-        _volunteersBloc.sortVolunteersByRating();
+        _membersBloc.sortMembersByRating();
         break;
       case 2:
-        _volunteersBloc.sortVolunteersByReviewedPersons();
+        _membersBloc.sortMembersByReviewedPersons();
         break;
     }
   }
@@ -195,7 +190,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
 
   Widget volunteerList() {
     return StreamBuilder<dynamic>(
-      stream: _volunteersBloc.getSearchedVolunteersStream,
+      stream: _membersBloc.getSearchedMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader(minheight: 12));
@@ -208,7 +203,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
             final PeopleModel volunteer = snapshot.data[index];
             return StreamBuilder<bool>(
               initialData: favVolunteers,
-              stream: _volunteersBloc.getFavVolunteersStream,
+              stream: _membersBloc.getFavVolunteersStream,
               builder: (context, snapshot) {
                 return snapshot.data!
                     ? volunteer.favorite

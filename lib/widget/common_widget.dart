@@ -118,79 +118,6 @@ class CommonRoundedTextfield extends StatelessWidget {
   }
 }
 
-class CommonSimpleTextfield extends StatelessWidget {
-  const CommonSimpleTextfield({
-    required this.controller,
-    required this.hintText,
-    required this.validator,
-    this.onChanged,
-    this.maxLength,
-    this.onTap,
-    this.readOnly = false,
-    this.keyboardType = TextInputType.text,
-    this.obscureText = false,
-    this.prefixIcon,
-    this.suffixIcon,
-  });
-  final TextEditingController controller;
-  final String hintText;
-  final FormFieldValidator<String>? validator;
-  final ValueChanged<String>? onChanged;
-  final GestureTapCallback? onTap;
-  final bool readOnly;
-  final int? maxLength;
-  final TextInputType keyboardType;
-  final bool obscureText;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: TextFormField(
-        obscureText: obscureText,
-        controller: controller,
-        readOnly: readOnly,
-        maxLength: maxLength,
-        style: _theme.textTheme.bodyText1,
-        keyboardType: keyboardType,
-        textInputAction: TextInputAction.next,
-        decoration: inputSimpleDecoration(
-          getHint: hintText,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-        ),
-        validator: validator,
-        onChanged: onChanged,
-        onTap: onTap,
-      ),
-    );
-  }
-}
-
-class SmallInfoLabel extends StatelessWidget {
-  const SmallInfoLabel({required this.label});
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      child: Text(
-        label,
-        textAlign: TextAlign.center,
-        style: Theme.of(context)
-            .textTheme
-            .headline6!
-            .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
-
 class TextfieldLabelSmall extends StatelessWidget {
   const TextfieldLabelSmall({required this.label});
   final String label;
@@ -198,17 +125,13 @@ class TextfieldLabelSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
     return Align(
       alignment: Alignment.topLeft,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.19, vertical: 4.0),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: _theme.textTheme.headline6!
-              .copyWith(fontSize: 11, fontWeight: FontWeight.bold),
-        ),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: _theme.textTheme.headline6!
+            .copyWith(fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -239,7 +162,7 @@ class TextFieldWithLabel extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        TopInfoLabel(label: label),
+        TextfieldLabelSmall(label: label),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.1),
           child: CommonRoundedTextfield(
@@ -252,6 +175,117 @@ class TextFieldWithLabel extends StatelessWidget {
             onChanged: onChanged,
           ),
         )
+      ],
+    );
+  }
+}
+
+class SmallInfoLabel extends StatelessWidget {
+  const SmallInfoLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: Theme.of(context)
+            .textTheme
+            .headline6!
+            .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class CommonSimpleTextfield extends StatelessWidget {
+  const CommonSimpleTextfield({
+    required this.controller,
+    required this.hintText,
+    required this.validator,
+    this.onChanged,
+    this.maxLength,
+    this.onTap,
+    this.readOnly = false,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.prefixIcon,
+    this.suffixIcon,
+  });
+  final TextEditingController controller;
+  final String hintText;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
+  final GestureTapCallback? onTap;
+  final bool readOnly;
+  final int? maxLength;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    return TextFormField(
+      obscureText: obscureText,
+      controller: controller,
+      readOnly: readOnly,
+      maxLength: maxLength,
+      style: _theme.textTheme.bodyText1,
+      keyboardType: keyboardType,
+      textInputAction: TextInputAction.next,
+      decoration: inputSimpleDecoration(
+        getHint: hintText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+      ),
+      validator: validator,
+      onChanged: onChanged,
+      onTap: onTap,
+    );
+  }
+}
+
+class SimpleFieldWithLabel extends StatelessWidget {
+  const SimpleFieldWithLabel({
+    required this.controller,
+    required this.label,
+    required this.hintText,
+    required this.validator,
+    this.onChanged,
+    this.onTap,
+    this.maxLength,
+    this.keyboardType = TextInputType.text,
+  });
+  final TextEditingController controller;
+  final String label;
+  final String hintText;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
+  final GestureTapCallback? onTap;
+  final TextInputType keyboardType;
+  final int? maxLength;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: width * 0.05),
+        SmallInfoLabel(label: label),
+        CommonSimpleTextfield(
+          controller: controller,
+          hintText: hintText,
+          validator: validator,
+          maxLength: maxLength,
+          keyboardType: keyboardType,
+          onTap: onTap,
+          onChanged: onChanged,
+        ),
       ],
     );
   }

@@ -94,7 +94,11 @@ class _PhoneWithParentGuardianNumberState
                       ),
                     ),
                     SizedBox(height: 10),
-                    TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.19, vertical: 4.0),
+                      child: TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+                    ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 0.10),
                       child: selectRelationshipDropdown(),

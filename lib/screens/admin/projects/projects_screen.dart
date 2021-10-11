@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/event_bloc.dart';
+import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/screens/admin/projects/tabs/upcoming_tab.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectsScreen extends StatefulWidget {
-  ProjectsScreen({this.title});
-  final String? title;
   @override
-  _ProjectsScreenState createState() => _ProjectsScreenState(title: title);
+  _ProjectsScreenState createState() => _ProjectsScreenState();
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen>
     with TickerProviderStateMixin {
-  _ProjectsScreenState({this.title});
-  final String? title;
   late TabController _tabController;
+  final EventsBloc _eventsBloc = EventsBloc();
 
   @override
   void initState() {
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
+    _eventsBloc.getEvents();
     super.initState();
   }
 
@@ -27,7 +26,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(context).show(
-          title: title!,
+          title: PROJECTS_APPBAR,
           elevation: 1,
           color: WHITE,
           textColor: PRIMARY_COLOR,
@@ -65,13 +64,22 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       );
 
   Widget body() {
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        UpcomingTab(),
-        CommonSampleScreen('In Progress\nComing Soon!'),
-        CommonSampleScreen('Past\nComing Soon!'),
-      ],
+    return StreamBuilder<Events>(
+      stream: _eventsBloc.getEventsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        final List<EventModel> events = snapshot.data!.events;
+        return TabBarView(
+          controller: _tabController,
+          children: [
+            ProjectListScreen(events: events),
+            ProjectListScreen(events: events),
+            ProjectListScreen(events: events),
+          ],
+        );
+      },
     );
   }
 }

@@ -36,7 +36,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   children: [
                     CommonWidget(context).showBackButton(),
                     TopInfoLabel(label: ENTER_YOUR_NAME),
-                    TextfieldLabelSmall(label: FIRST_NAME),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.19, vertical: 4.0),
+                      child: TextfieldLabelSmall(label: FIRST_NAME),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                       child: CommonRoundedTextfield(
@@ -54,7 +58,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    TextfieldLabelSmall(label: LAST_NAME),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.19, vertical: 4.0),
+                      child: TextfieldLabelSmall(label: LAST_NAME),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                       child: CommonRoundedTextfield(

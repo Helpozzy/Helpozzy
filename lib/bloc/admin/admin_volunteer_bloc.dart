@@ -1,19 +1,17 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
-import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_rewards_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
-class VolunteersBloc {
+class MembersBloc {
   final repo = Repository();
 
-  final volunteersController = PublishSubject<Volunteers>();
-  final _searchVolunteersList = BehaviorSubject<dynamic>();
+  final membersController = PublishSubject<Volunteers>();
+  final _searchMembersList = BehaviorSubject<dynamic>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
-  Stream<Volunteers> get getVolunteersStream => volunteersController.stream;
-  Stream<dynamic> get getSearchedVolunteersStream =>
-      _searchVolunteersList.stream;
+  Stream<Volunteers> get getMembersStream => membersController.stream;
+  Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future<bool> postEvents(List events) async {
@@ -21,48 +19,48 @@ class VolunteersBloc {
     return response;
   }
 
-  Future getVolunteers() async {
-    final Events response = await repo.getEventsRepo();
-    volunteersFromAPI = Volunteers(list: peoplesList).peoples;
-    volunteersController.sink.add(Volunteers(list: peoplesList));
-    return volunteersFromAPI;
+  Future getMembers() async {
+    // final Events response = await repo.getEventsRepo();
+    membersFromAPI = Volunteers(list: peoplesList).peoples;
+    membersController.sink.add(Volunteers(list: peoplesList));
+    return membersFromAPI;
   }
 
-  List<PeopleModel> volunteersFromAPI = [];
-  dynamic searchedVolunteersList = [];
+  List<PeopleModel> membersFromAPI = [];
+  dynamic searchedMembersList = [];
 
-  Future searchVolunteers({required String searchText}) async {
-    await getVolunteers();
-    searchedVolunteersList = [];
+  Future searchMembers({required String searchText}) async {
+    await getMembers();
+    searchedMembersList = [];
     if (searchText.isEmpty) {
-      _searchVolunteersList.sink.add(volunteersFromAPI);
+      _searchMembersList.sink.add(membersFromAPI);
     } else {
-      volunteersFromAPI.forEach((event) {
+      membersFromAPI.forEach((event) {
         if (event.name.toLowerCase().contains(searchText.toLowerCase()) ||
             event.address.toLowerCase().contains(searchText.toLowerCase())) {
-          searchedVolunteersList.add(event);
+          searchedMembersList.add(event);
         }
       });
-      _searchVolunteersList.sink.add(searchedVolunteersList);
+      _searchMembersList.sink.add(searchedMembersList);
     }
   }
 
-  Future sortVolunteersByName() async {
-    final List<PeopleModel> list = await getVolunteers();
+  Future sortMembersByName() async {
+    final List<PeopleModel> list = await getMembers();
     list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-    _searchVolunteersList.sink.add(list);
+    _searchMembersList.sink.add(list);
   }
 
-  Future sortVolunteersByReviewedPersons() async {
-    final List<PeopleModel> list = await getVolunteers();
+  Future sortMembersByReviewedPersons() async {
+    final List<PeopleModel> list = await getMembers();
     list.sort((a, b) => a.reviewsByPersons.compareTo(b.reviewsByPersons));
-    _searchVolunteersList.sink.add(list);
+    _searchMembersList.sink.add(list);
   }
 
-  Future sortVolunteersByRating() async {
-    final List<PeopleModel> list = await getVolunteers();
+  Future sortMembersByRating() async {
+    final List<PeopleModel> list = await getMembers();
     list.sort((a, b) => a.rating.compareTo(b.rating));
-    _searchVolunteersList.sink.add(list);
+    _searchMembersList.sink.add(list);
   }
 
   Future changeFavVal(bool enabled) async {
@@ -70,8 +68,8 @@ class VolunteersBloc {
   }
 
   void dispose() {
-    volunteersController.close();
-    _searchVolunteersList.close();
+    membersController.close();
+    _searchMembersList.close();
     _filteredFavContoller.close();
   }
 }
