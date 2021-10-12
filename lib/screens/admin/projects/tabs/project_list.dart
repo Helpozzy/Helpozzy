@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
-import 'package:helpozzy/models/event_model.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/screens/admin/projects/create_project.dart';
 import 'package:helpozzy/screens/admin/projects/project_tile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectListScreen extends StatefulWidget {
-  ProjectListScreen({required this.events});
-  final List<EventModel> events;
+  ProjectListScreen({required this.projects});
+  final List<ProjectModel> projects;
   @override
   _ProjectListScreenState createState() =>
-      _ProjectListScreenState(events: events);
+      _ProjectListScreenState(projects: projects);
 }
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
-  _ProjectListScreenState({required this.events});
-  final List<EventModel> events;
+  _ProjectListScreenState({required this.projects});
+  final List<ProjectModel> projects;
   late double height;
   late double width;
   late bool isExpanded = false;
@@ -32,7 +32,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       children: [
         Expanded(child: projectList()),
         Container(
-          padding: EdgeInsets.symmetric(vertical: width * 0.03),
+          padding: EdgeInsets.symmetric(vertical: width * 0.02),
           child: CommonButton(
             text: ADD_NEW_PROJECT_BUTTON.toUpperCase(),
             onPressed: () {
@@ -53,15 +53,15 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     return ListView.builder(
       shrinkWrap: true,
       physics: ScrollPhysics(),
-      itemCount: events.length,
+      itemCount: projects.length,
       itemBuilder: (context, index) {
-        final EventModel event = events[index];
+        final ProjectModel project = projects[index];
         return StreamBuilder<bool>(
           initialData: false,
           stream: _adminProjectsBloc.getProjectExpandStream,
           builder: (context, snapshot) {
             return ProjectTile(
-              event: event,
+              project: project,
               isExpanded: snapshot.data!,
               adminProjectsBloc: _adminProjectsBloc,
             );

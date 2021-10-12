@@ -3,7 +3,6 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -53,39 +52,32 @@ class ApiProvider {
     return Categories.fromJson(items: categories['categories']);
   }
 
-  Future<bool> postEventAPIProvider(List list) async {
-    list.forEach((event) async {
-      await firestore.collection('events').add(event);
-    });
-    return true;
-  }
-
-  Future<Events> getEventsAPIProvider() async {
+  Future<Projects> getUserProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('events').get();
 
-    List<QueryDocumentSnapshot<Object?>> eventList = querySnapshot.docs;
-    List<Map<String, dynamic>> events = [];
-    eventList.forEach((element) {
-      final event = element.data() as Map<String, dynamic>;
-      events.add(event);
+    List<QueryDocumentSnapshot<Object?>> projectList = querySnapshot.docs;
+    List<Map<String, dynamic>> projects = [];
+    projectList.forEach((element) {
+      final project = element.data() as Map<String, dynamic>;
+      projects.add(project);
     });
-    return Events.fromJson(list: events);
+    return Projects.fromJson(list: projects);
   }
 
-  Future<Events> getCategorisedEventsAPIProvider(int categoryId) async {
+  Future<Projects> getCategorisedProjectsAPIProvider(int categoryId) async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('events')
         .where('category_id', isEqualTo: categoryId)
         .get();
 
-    List<QueryDocumentSnapshot<Object?>> eventList = querySnapshot.docs;
-    List<Map<String, dynamic>> events = [];
-    eventList.forEach((element) {
-      final event = element.data() as Map<String, dynamic>;
-      events.add(event);
+    List<QueryDocumentSnapshot<Object?>> projectList = querySnapshot.docs;
+    List<Map<String, dynamic>> projects = [];
+    projectList.forEach((element) {
+      final project = element.data() as Map<String, dynamic>;
+      projects.add(project);
     });
-    return Events.fromJson(list: events);
+    return Projects.fromJson(list: projects);
   }
 
   Future<UserModel> userInfoAPIProvider(String uId) async {
@@ -98,7 +90,7 @@ class ApiProvider {
 
   //Admin API Provider
 
-  Future<AdminTypes> getAdminTypesAPIProvider() async {
+  Future<AdminTypes> getAdminCategoriesAPIProvider() async {
     final DocumentReference documentRef =
         firestore.collection('admin').doc('adminTypes');
 
@@ -133,6 +125,12 @@ class ApiProvider {
       projects.add(task);
     });
     return Projects.fromJson(list: projects);
+  }
+
+  Future<Users> otherUserInfoAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('users').get();
+    return Users.fromJson(list: querySnapshot.docs);
   }
 
   Future<bool> postTaskAPIProvider(TaskModel task) async {

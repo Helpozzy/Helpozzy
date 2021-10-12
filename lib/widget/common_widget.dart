@@ -395,6 +395,7 @@ InputDecoration inputSimpleDecoration(
     hintStyle: TextStyle(color: DARK_GRAY),
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
+    contentPadding: EdgeInsets.zero,
     fillColor: Colors.transparent,
     focusedErrorBorder: UnderlineInputBorder(),
     errorBorder: UnderlineInputBorder(),
@@ -406,13 +407,13 @@ InputDecoration inputSimpleDecoration(
 BoxDecoration boxDecorationContainer() {
   return BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.circular(30), //border corner radius
+    borderRadius: BorderRadius.circular(30),
     boxShadow: [
       BoxShadow(
-        color: Colors.grey.withOpacity(0.5), //color of shadow
-        spreadRadius: 5, //spread radius
-        blurRadius: 7, // blur radius
-        offset: Offset(0, 2), // changes position of shadow
+        color: Colors.grey.withOpacity(0.5),
+        spreadRadius: 5,
+        blurRadius: 7,
+        offset: Offset(0, 2),
       ),
     ],
   );
@@ -550,12 +551,15 @@ class CommonButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontFamily: QUICKSAND,
-          color: fontColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontFamily: QUICKSAND,
+            color: fontColor,
+          ),
         ),
       ),
       onPressed: onPressed,

@@ -2,19 +2,20 @@ import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AdminTypesBloc {
+class AdminCategoriesBloc {
   final repo = Repository();
 
-  final adminTypesController = PublishSubject<AdminTypes>();
+  final adminCategoriesController = PublishSubject<AdminTypes>();
 
-  Stream<AdminTypes> get getAdminTypesStream => adminTypesController.stream;
+  Stream<AdminTypes> get getAdminCategoriesStream =>
+      adminCategoriesController.stream;
 
   Future getCategories() async {
-    final AdminTypes response = await repo.getAdminTypesRepo();
-    adminTypesController.sink.add(response);
+    final AdminTypes response = await repo.getAdminCategoriesRepo();
+    adminCategoriesController.sink.add(response);
   }
 
   void dispose() {
-    adminTypesController.close();
+    adminCategoriesController.close();
   }
 }

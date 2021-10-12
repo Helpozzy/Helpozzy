@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
+import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/screens/admin/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -45,6 +46,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   late ThemeData _themeData;
   late double width;
+  late double height;
+  AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   int _selectedIndexValue = 0;
   bool postOnLocalCheck = false;
@@ -52,6 +55,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   @override
   void initState() {
     if (fromEdit) retriveTaskDetails();
+    _adminProjectsBloc.getOtherUsersInfo();
+    _adminProjectsBloc.searchUsers('');
     super.initState();
   }
 
@@ -75,6 +80,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   Widget build(BuildContext context) {
     _themeData = Theme.of(context);
     width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: CommonAppBar(context).show(
         title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
@@ -167,7 +173,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: width * 0.2),
+              padding:
+                  EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 6),
               child: CommonButton(
                 text: fromEdit ? UPDATE_TASK_BUTTON : ADD_TASK_BUTTON,
                 onPressed: () async {
@@ -200,10 +207,14 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                 controller: _searchEmailController,
                 hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
                 validator: (val) {},
+                onChanged: (val) {
+                  _adminProjectsBloc.searchUsers(val);
+                },
               ),
             ),
           ],
         ),
+        expandSearchUserList(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -261,6 +272,70 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ),
         )
       ],
+    );
+  }
+
+  Widget expandSearchUserList() {
+    return StreamBuilder<dynamic>(
+      stream: _adminProjectsBloc.getSearchedUsersStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: LinearLoader(minheight: 13),
+          );
+        }
+        final List<dynamic> users = snapshot.data;
+        return users.isNotEmpty
+            ? PreferredSize(
+                preferredSize: Size(width, height),
+                child: ListView.builder(
+                  itemCount: users.length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(
+                    top: 6.0,
+                    bottom: 6,
+                    left: width * 0.09,
+                    right: width * 0.01,
+                  ),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        _searchEmailController.text = users[index].email;
+                        _adminProjectsBloc.searchUsers('');
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  users[index].name,
+                                  style: _themeData.textTheme.bodyText2!
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  users[index].email,
+                                  style: _themeData.textTheme.bodyText2!
+                                      .copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+            : SizedBox();
+      },
     );
   }
 
@@ -413,35 +488,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               ? 'Task not updated due some error, Try again!'
               : 'Task not created due some error, Try again!');
     }
-  }
-
-  Widget statusSegmentation() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      child: CupertinoSlidingSegmentedControl(
-          groupValue: _selectedIndexValue,
-          backgroundColor: GRAY,
-          thumbColor: DARK_GRAY.withAlpha(100),
-          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
-          children: {
-            0: segmentItem(TOGGLE_NOT_STARTED),
-            1: segmentItem(TOGGLE_INPROGRESS),
-            2: segmentItem(TOGGLE_COMPLE),
-          },
-          onValueChanged: (value) {
-            setState(() {
-              _selectedIndexValue = value.hashCode;
-            });
-          }),
-    );
-  }
-
-  Widget segmentItem(String title) {
-    return Text(
-      title,
-      style: _themeData.textTheme.bodyText2!
-          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
-    );
   }
 
   Future clearFields() async {

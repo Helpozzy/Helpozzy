@@ -1,19 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:helpozzy/bloc/event_bloc.dart';
-import 'package:helpozzy/bloc/event_categories_bloc.dart';
+import 'package:helpozzy/bloc/user_projects_bloc.dart';
+import 'package:helpozzy/bloc/project_categories_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/event_model.dart';
-import 'package:helpozzy/screens/user/explore/event/categorised_event_list.dart';
-import 'package:helpozzy/screens/user/explore/search_bar/search_event.dart';
+import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
+import 'package:helpozzy/screens/user/explore/search_bar/search_project.dart';
+import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
-import 'event/event_sign_up.dart';
-import 'event/event_details.dart';
+import 'user_project/user_project_sign_up.dart';
+import 'user_project/project_details.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -29,12 +28,12 @@ class _ExploreScreenState extends State<ExploreScreen>
   late Animation<double> animation;
   late AnimationController controller;
   final CategoryBloc _categoryBloc = CategoryBloc();
-  final EventsBloc _eventsBloc = EventsBloc();
+  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
 
   @override
   void initState() {
     super.initState();
-    _eventsBloc.getEvents();
+    _userProjectsBloc.getProjects();
     _categoryBloc.getCategories();
     controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
@@ -88,7 +87,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               CommonDivider(),
               categoryView(),
               CommonDivider(),
-              eventListView(),
+              projectListView(),
             ],
           ),
         ),
@@ -137,7 +136,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                   width: animation.value,
                   height: 35,
                   child: TextField(
-                    onTap: () => SearchEvent().modalBottomSheetMenu(context),
+                    onTap: () => SearchProject().modalBottomSheetMenu(context),
                     decoration: InputDecoration(
                       hintText: SEARCH_HINT,
                       hintStyle: TextStyle(
@@ -374,7 +373,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          CategorisedEventsScreen(categoryId: category.id),
+                          CategorisedProjectsScreen(categoryId: category.id),
                     ),
                   );
                 },
@@ -408,172 +407,41 @@ class _ExploreScreenState extends State<ExploreScreen>
         });
   }
 
-  Widget eventListView() {
-    return StreamBuilder<Events>(
-        stream: _eventsBloc.getEventsStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Center(child: LinearLoader(minheight: 12)),
-            );
-          }
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(5),
-            itemCount: snapshot.data!.events.length,
-            itemBuilder: (context, index) {
-              final EventModel event = snapshot.data!.events[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventDetailsScreen(event: event),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6),
-                          ),
-                          child: Image.asset(
-                            event.imageUrl,
-                            fit: BoxFit.cover,
-                            height: height / 5,
-                            width: double.infinity,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    DateFormat('EEE, dd MMM - yyyy').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(event.dateTime),
-                                      ),
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: QUICKSAND,
-                                      color: PRIMARY_COLOR,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  event.isLiked
-                                      ? Icon(Icons.favorite_rounded,
-                                          color: Colors.red, size: 19)
-                                      : Icon(
-                                          Icons.favorite_border_rounded,
-                                          color: DARK_GRAY,
-                                          size: 19,
-                                        ),
-                                ],
-                              ),
-                              Text(
-                                event.eventName,
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontFamily: QUICKSAND,
-                                  color: BLUE_GRAY,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                event.organization,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: QUICKSAND,
-                                  color: BLACK,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                event.location,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: QUICKSAND,
-                                  color: BLACK,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  RatingBar.builder(
-                                    initialRating: event.rating,
-                                    minRating: 1,
-                                    ignoreGestures: true,
-                                    itemSize: 18,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    unratedColor: GRAY,
-                                    itemCount: 5,
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 1.0),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: AMBER_COLOR,
-                                    ),
-                                    onRatingUpdate: (rating) {
-                                      print(rating);
-                                    },
-                                  ),
-                                  Text(
-                                    '(${event.reviewCount} Reviews)',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: QUICKSAND,
-                                      color: DARK_GRAY,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  CommonButton(
-                                    fontSize: 11,
-                                    text: SIGN_UP,
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EventSignUpScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+  Widget projectListView() {
+    return StreamBuilder<Projects>(
+      stream: _userProjectsBloc.getProjectsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(child: LinearLoader(minheight: 12)),
           );
-        });
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(5),
+          itemCount: snapshot.data!.projects.length,
+          itemBuilder: (context, index) {
+            final ProjectModel project = snapshot.data!.projects[index];
+            return UserProjectCard(
+              project: project,
+              onTapCard: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProjectDetailsScreen(project: project),
+                ),
+              ),
+              onPressedSignUpButton: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProjectUserSignUpScreen(),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

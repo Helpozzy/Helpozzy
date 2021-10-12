@@ -1,3 +1,6 @@
+import 'package:external_app_launcher/external_app_launcher.dart';
+import 'package:helpozzy/utils/constants.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommonUrlLauncher {
@@ -19,55 +22,21 @@ class CommonUrlLauncher {
     }
   }
 
-  Future launchInstagram() async {
-    String url = 'https://www.instagram.com';
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        universalLinksOnly: true,
-        enableJavaScript: true,
-      );
+  Future launchApp(
+      {required String androidPackageName,
+      required String iosUrlScheme,
+      required String subject}) async {
+    final bool isAvailable = await LaunchApp.isAppInstalled(
+        androidPackageName: androidPackageName, iosUrlScheme: iosUrlScheme);
+    if (isAvailable) {
+      LaunchApp.openApp(
+          androidPackageName: androidPackageName, iosUrlScheme: iosUrlScheme);
     } else {
-      throw 'Could not launch Map $url';
+      Share.share(HELPOZZY_TEXT, subject: subject);
     }
   }
 
-  Future launchWhatsapp() async {
-    String url = 'https://wa.me/?text=YourTextHere';
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        universalLinksOnly: true,
-        enableJavaScript: true,
-      );
-    } else {
-      throw 'Could not launch Map $url';
-    }
-  }
-
-  Future launchTwitter() async {
-    String url = '';
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        universalLinksOnly: true,
-        enableJavaScript: true,
-      );
-    } else {
-      throw 'Could not launch Map $url';
-    }
-  }
-
-  Future launchSnapchat() async {
-    String url = '';
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        universalLinksOnly: true,
-        enableJavaScript: true,
-      );
-    } else {
-      throw 'Could not launch Map $url';
-    }
+  Future shareToOtherApp({required String subject}) async {
+    Share.share(HELPOZZY_TEXT, subject: subject);
   }
 }

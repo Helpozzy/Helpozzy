@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/event_bloc.dart';
-import 'package:helpozzy/models/event_model.dart';
-import 'package:helpozzy/screens/admin/projects/tabs/upcoming_tab.dart';
+import 'package:helpozzy/bloc/user_projects_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/admin/projects/tabs/project_list.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -13,12 +13,12 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final EventsBloc _eventsBloc = EventsBloc();
+  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
 
   @override
   void initState() {
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
-    _eventsBloc.getEvents();
+    _userProjectsBloc.getProjects();
     super.initState();
   }
 
@@ -64,19 +64,19 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       );
 
   Widget body() {
-    return StreamBuilder<Events>(
-      stream: _eventsBloc.getEventsStream,
+    return StreamBuilder<Projects>(
+      stream: _userProjectsBloc.getProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader(minheight: 12));
         }
-        final List<EventModel> events = snapshot.data!.events;
+        final List<ProjectModel> projects = snapshot.data!.projects;
         return TabBarView(
           controller: _tabController,
           children: [
-            ProjectListScreen(events: events),
-            ProjectListScreen(events: events),
-            ProjectListScreen(events: events),
+            ProjectListScreen(projects: projects),
+            ProjectListScreen(projects: projects),
+            ProjectListScreen(projects: projects),
           ],
         );
       },

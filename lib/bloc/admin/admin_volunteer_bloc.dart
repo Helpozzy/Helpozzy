@@ -14,13 +14,7 @@ class MembersBloc {
   Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
-  Future<bool> postEvents(List events) async {
-    final bool response = await repo.postEventsRepo(events);
-    return response;
-  }
-
   Future getMembers() async {
-    // final Events response = await repo.getEventsRepo();
     membersFromAPI = Volunteers(list: peoplesList).peoples;
     membersController.sink.add(Volunteers(list: peoplesList));
     return membersFromAPI;
@@ -35,10 +29,10 @@ class MembersBloc {
     if (searchText.isEmpty) {
       _searchMembersList.sink.add(membersFromAPI);
     } else {
-      membersFromAPI.forEach((event) {
-        if (event.name.toLowerCase().contains(searchText.toLowerCase()) ||
-            event.address.toLowerCase().contains(searchText.toLowerCase())) {
-          searchedMembersList.add(event);
+      membersFromAPI.forEach((project) {
+        if (project.name.toLowerCase().contains(searchText.toLowerCase()) ||
+            project.address.toLowerCase().contains(searchText.toLowerCase())) {
+          searchedMembersList.add(project);
         }
       });
       _searchMembersList.sink.add(searchedMembersList);

@@ -3,7 +3,6 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 
@@ -22,25 +21,26 @@ class Repository {
   Future<Categories> getCategoriesRepo() =>
       apiProvider.getCategoriesAPIProvider();
 
-  Future<bool> postEventsRepo(List events) =>
-      apiProvider.postEventAPIProvider(events);
+  Future<Projects> getuserProjectsRepo() =>
+      apiProvider.getUserProjectsAPIProvider();
 
-  Future<Events> getEventsRepo() => apiProvider.getEventsAPIProvider();
-
-  Future<Events> getCategorisedEventsRepo(int categoryId) =>
-      apiProvider.getCategorisedEventsAPIProvider(categoryId);
+  Future<Projects> getCategorisedProjectsRepo(int categoryId) =>
+      apiProvider.getCategorisedProjectsAPIProvider(categoryId);
 
   Future<UserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
 
   //Admin Repo
-  Future<AdminTypes> getAdminTypesRepo() =>
-      apiProvider.getAdminTypesAPIProvider();
+  Future<AdminTypes> getAdminCategoriesRepo() =>
+      apiProvider.getAdminCategoriesAPIProvider();
 
   Future<bool> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);
 
   Future<Projects> getprojectsRepo() => apiProvider.getProjectsAPIProvider();
+
+  Future<Users> getOtherUserInfoRepo() =>
+      apiProvider.otherUserInfoAPIProvider();
 
   Future<bool> postTaskRepo(TaskModel task) =>
       apiProvider.postTaskAPIProvider(task);

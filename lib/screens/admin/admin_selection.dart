@@ -16,7 +16,7 @@ class AdminSelectionScreen extends StatefulWidget {
 }
 
 class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
-  final AdminTypesBloc _adminTypesBloc = AdminTypesBloc();
+  final AdminCategoriesBloc _adminTypesBloc = AdminCategoriesBloc();
   late double height;
   late double width;
   late ThemeData _theme;
@@ -59,7 +59,7 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
 
   Widget typeSelectionGrid() {
     return StreamBuilder<AdminTypes>(
-      stream: _adminTypesBloc.getAdminTypesStream,
+      stream: _adminTypesBloc.getAdminCategoriesStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator(color: PRIMARY_COLOR));

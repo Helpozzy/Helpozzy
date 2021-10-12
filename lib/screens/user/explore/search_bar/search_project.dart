@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/event_bloc.dart';
-import 'package:helpozzy/models/event_model.dart';
-import 'package:helpozzy/screens/user/explore/event/event_details.dart';
+import 'package:helpozzy/bloc/user_projects_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 
-class SearchEvent {
+class SearchProject {
   Future<void> modalBottomSheetMenu(BuildContext context) async {
     showModalBottomSheet(
       context: context,
@@ -29,13 +29,13 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  final EventsBloc _eventsBloc = EventsBloc();
+  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
   final TextEditingController _searchController = TextEditingController();
   late ThemeData _theme;
 
   @override
   void initState() {
-    _eventsBloc.getEvents();
+    _userProjectsBloc.getProjects();
     super.initState();
   }
 
@@ -61,7 +61,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     return TextField(
       controller: _searchController,
       onChanged: (val) {
-        _eventsBloc.searchEvents(val);
+        _userProjectsBloc.searchProjects(val);
       },
       decoration: InputDecoration(
         hintText: SEARCH_HINT,
@@ -86,7 +86,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           child: IconButton(
             onPressed: () {
               _searchController.clear();
-              _eventsBloc.searchEvents('');
+              _userProjectsBloc.searchProjects('');
             },
             icon: Icon(
               Icons.close_rounded,
@@ -157,12 +157,12 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   Widget searchList() {
     return StreamBuilder<dynamic>(
-      stream: _eventsBloc.getSearchedEventsStream,
+      stream: _userProjectsBloc.getSearchedProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
             child: Text(
-              'Search for event',
+              'Search for project',
               style: _theme.textTheme.headline6,
             ),
           );
@@ -172,14 +172,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  final EventModel event = snapshot.data[index];
+                  final ProjectModel project = snapshot.data[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              EventDetailsScreen(event: event),
+                              ProjectDetailsScreen(project: project),
                         ),
                       );
                     },
@@ -203,7 +203,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    event.eventName,
+                                    project.projectName,
                                     style: _theme.textTheme.bodyText2!.copyWith(
                                       fontSize: 16,
                                       color: DARK_GRAY,
@@ -212,7 +212,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                                   ),
                                   SizedBox(height: 3),
                                   Text(
-                                    event.organization,
+                                    project.organization,
                                     style: _theme.textTheme.bodyText2!.copyWith(
                                       fontSize: 12,
                                       color: GRAY,
@@ -221,7 +221,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                                   ),
                                   SizedBox(height: 2),
                                   Text(
-                                    event.location,
+                                    project.location,
                                     style: _theme.textTheme.bodyText2!.copyWith(
                                       fontSize: 10,
                                       color: BLUE_GRAY,
@@ -245,7 +245,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               )
             : Center(
                 child: Text(
-                  'Search Event..',
+                  'Search Project..',
                   style: _theme.textTheme.headline6,
                 ),
               );

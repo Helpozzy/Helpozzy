@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
-  Users({required List<Map<String, dynamic>> list}) {
+  Users.fromJson({required List<QueryDocumentSnapshot> list}) {
     list.forEach((element) {
-      peoples.add(UserModel.fromjson(json: element));
+      final userJson = element.data() as Map<String, dynamic>;
+      peoples.add(UserModel.fromjson(json: userJson));
     });
   }
   late List<UserModel> peoples = [];

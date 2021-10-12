@@ -50,6 +50,8 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   percent_indicator: ^3.0.1
   country_code_picker: ^2.0.2
+  external_app_launcher: ^2.0.1
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:

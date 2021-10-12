@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
 import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -22,8 +24,10 @@ class _CreateProjectState extends State<CreateProject> {
   final _formKey = GlobalKey<FormState>();
   AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
   ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final CategoryBloc _categoryBloc = CategoryBloc();
   final TextEditingController _projNameController = TextEditingController();
   final TextEditingController _projDesController = TextEditingController();
+  final TextEditingController _projLocationController = TextEditingController();
   final TextEditingController _projStartDateController =
       TextEditingController();
   final TextEditingController _projEndDateController = TextEditingController();
@@ -37,9 +41,13 @@ class _CreateProjectState extends State<CreateProject> {
   late ThemeData _themeData;
   late double width;
   late double height;
+  late int selectedCategoryId;
 
   @override
   void initState() {
+    _categoryBloc.getCategories();
+    _adminProjectsBloc.getOtherUsersInfo();
+    _adminProjectsBloc.searchUsers('');
     _projectTaskBloc.getSelectedTasks(taskIds: []);
     super.initState();
   }
@@ -100,13 +108,18 @@ class _CreateProjectState extends State<CreateProject> {
                   Divider(),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: projectCategoryDropdown(),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: SimpleFieldWithLabel(
-                      label: PROJECT_CATEGORY_LABEL,
-                      controller: _projCategoryController,
-                      hintText: PROJECT_CATEGORY_HINT,
+                      label: PROJECT_LOCATION_LABEL,
+                      controller: _projLocationController,
+                      hintText: PROJECT_LOCATION_HINT,
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return 'Enter category';
+                          return 'Enter project location';
                         }
                         return null;
                       },
@@ -219,11 +232,58 @@ class _CreateProjectState extends State<CreateProject> {
     );
   }
 
+  Widget projectCategoryDropdown() {
+    return Column(
+      children: [
+        SizedBox(height: width * 0.05),
+        SmallInfoLabel(label: PROJECT_CATEGORY_LABEL),
+        StreamBuilder<Categories>(
+          stream: _categoryBloc.getCategoriesStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Center(child: LinearLoader(minheight: 12)),
+              );
+            }
+            return DropdownButtonFormField<CategoryModel>(
+              decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
+              icon: Icon(Icons.expand_more_outlined),
+              validator: (val) {
+                if (_projCategoryController.text.isEmpty) {
+                  return 'Select any category';
+                }
+                return null;
+              },
+              isExpanded: false,
+              onChanged: (CategoryModel? newValue) {
+                setState(() {
+                  _projCategoryController.text = newValue!.label;
+                  selectedCategoryId = newValue.id;
+                });
+              },
+              items: snapshot.data!.item
+                  .map<DropdownMenuItem<CategoryModel>>((CategoryModel value) {
+                return DropdownMenuItem<CategoryModel>(
+                  value: value,
+                  child: Text(
+                    value.label.replaceAll('\n', ' ').replaceAll(' ', ' '),
+                  ),
+                );
+              }).toList(),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   Widget inviteCollaborators() {
     return Column(
       children: [
         TextButton(
-          onPressed: () {},
+          onPressed: () =>
+              CommonUrlLauncher().shareToOtherApp(subject: 'Test share text!'),
           child: Row(
             children: [
               Icon(
@@ -242,19 +302,35 @@ class _CreateProjectState extends State<CreateProject> {
         Row(
           children: [
             appImageButton(
-              onPressed: () => CommonUrlLauncher().launchInstagram(),
+              onPressed: () => CommonUrlLauncher().launchApp(
+                androidPackageName: 'com.instagram.android',
+                iosUrlScheme: 'instagram://',
+                subject: 'Test share text!',
+              ),
               asset: 'instagram.png',
             ),
             appImageButton(
-              onPressed: () => CommonUrlLauncher().launchWhatsapp(),
+              onPressed: () => CommonUrlLauncher().launchApp(
+                androidPackageName: 'com.whatsapp',
+                iosUrlScheme: 'whatsapp://',
+                subject: 'Test share text!',
+              ),
               asset: 'whatsapp.png',
             ),
             appImageButton(
-              onPressed: () {},
+              onPressed: () => CommonUrlLauncher().launchApp(
+                androidPackageName: 'com.twitter.android',
+                iosUrlScheme: 'twitter://',
+                subject: 'Test share text!',
+              ),
               asset: 'twitter.png',
             ),
             appImageButton(
-              onPressed: () {},
+              onPressed: () => CommonUrlLauncher().launchApp(
+                androidPackageName: 'com.snapchat.android',
+                iosUrlScheme: 'snapchat://',
+                subject: 'Test share text!',
+              ),
               asset: 'snapchat.png',
             ),
           ],
@@ -271,11 +347,79 @@ class _CreateProjectState extends State<CreateProject> {
                 controller: _searchEmailController,
                 hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
                 validator: (val) {},
+                onChanged: (val) {
+                  _adminProjectsBloc.searchUsers(val);
+                },
               ),
             ),
           ],
         ),
+        expandSearchUserList()
       ],
+    );
+  }
+
+  Widget expandSearchUserList() {
+    return StreamBuilder<dynamic>(
+      stream: _adminProjectsBloc.getSearchedUsersStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: LinearLoader(minheight: 13),
+          );
+        }
+        final List<dynamic> users = snapshot.data;
+        return users.isNotEmpty
+            ? PreferredSize(
+                preferredSize: Size(width, height),
+                child: ListView.builder(
+                  itemCount: users.length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 6,
+                    left: width * 0.09,
+                    right: width * 0.01,
+                  ),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        _searchEmailController.text = users[index].email;
+                        _adminProjectsBloc.searchUsers('');
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  users[index].name,
+                                  style: _themeData.textTheme.bodyText2!
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  users[index].email,
+                                  style: _themeData.textTheme.bodyText2!
+                                      .copyWith(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+            : SizedBox();
+      },
     );
   }
 
@@ -388,13 +532,21 @@ class _CreateProjectState extends State<CreateProject> {
     CircularLoader().show(context);
     final ProjectModel project = ProjectModel(
       projectId: '',
+      categoryId: selectedCategoryId,
+      aboutOrganizer: '',
+      contactName: '',
+      contactNumber: '',
+      imageUrl: '',
+      location: '',
+      organization: '',
+      rating: 0.0,
+      reviewCount: 0,
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: _projStartDateController.text,
       endDate: _projEndDateController.text,
-      projectOwner: _projCategoryController.text,
+      projectOwner: prefsObject.getString('uID')!,
       collaboratorsCoadmin: _projCollaboraorController.text,
-      category: prefsObject.getString('uID')!,
     );
     final bool isUploaded = await _adminProjectsBloc.postProject(project);
     if (isUploaded) {
@@ -417,5 +569,6 @@ class _CreateProjectState extends State<CreateProject> {
     _projCategoryController.clear();
     _projCollaboraorController.clear();
     _searchEmailController.clear();
+    _projLocationController.clear();
   }
 }

@@ -80,7 +80,7 @@ class _LoginInputState extends State<LoginInput> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  String modeDropdownValue = SELECT_TYPE_HINT;
+  final TextEditingController _modeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +141,7 @@ class _LoginInputState extends State<LoginInput> {
               child: CommonButton(
                 text: MSG_LOGIN.toUpperCase(),
                 onPressed: () async {
-                  if (modeDropdownValue == 'Admin') {
+                  if (_modeController.text == 'Admin') {
                     Navigator.pushNamed(context, ADMIN_SELECTION);
                   } else if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
@@ -204,33 +204,31 @@ class _LoginInputState extends State<LoginInput> {
   }
 
   Widget selectloginTypeDropdown() {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      ),
-      child: DropdownButton<String>(
-          value: modeDropdownValue,
-          icon: Icon(Icons.expand_more_outlined),
-          underline: SizedBox(),
-          isExpanded: true,
-          onChanged: (String? newValue) {
-            setState(() {
-              modeDropdownValue = newValue!;
-            });
-          },
-          items: loginModes.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Center(
-                child: Text(
-                  value,
-                  textAlign: TextAlign.center,
-                ),
+    return DropdownButtonFormField<String>(
+        decoration: inputRoundedDecoration(getHint: SELECT_TYPE_HINT),
+        icon: Icon(Icons.expand_more_outlined),
+        isExpanded: true,
+        validator: (val) {
+          if (_modeController.text.isEmpty) {
+            return 'Choose user wnat to login';
+          }
+          return null;
+        },
+        onChanged: (String? newValue) {
+          setState(() {
+            _modeController.text = newValue!;
+          });
+        },
+        items: loginModes.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Center(
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
               ),
-            );
-          }).toList()),
-    );
+            ),
+          );
+        }).toList());
   }
 }

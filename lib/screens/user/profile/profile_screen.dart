@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/event_bloc.dart';
-import 'package:helpozzy/bloc/event_categories_bloc.dart';
+import 'package:helpozzy/bloc/user_projects_bloc.dart';
+import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/event_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
-import 'package:helpozzy/screens/user/explore/event/categorised_event_list.dart';
-import 'package:helpozzy/screens/user/explore/event/event_details.dart';
+import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
+import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -25,14 +25,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
-  final EventsBloc _eventsBloc = EventsBloc();
+  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
 
   @override
   void initState() {
     final uId = prefsObject.getString('uID');
     _userInfoBloc.getUser(uId!);
     _categoryBloc.getCategories();
-    _eventsBloc.getEvents();
+    _userProjectsBloc.getProjects();
     super.initState();
   }
 
@@ -162,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                ownEventsList(),
+                ownProjectsList(),
               ],
             ),
           );
@@ -258,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CategorisedEventsScreen(
+                            builder: (context) => CategorisedProjectsScreen(
                                 categoryId: category.id),
                           ),
                         );
@@ -303,18 +303,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget ownEventsList() {
-    return StreamBuilder<Events>(
-      stream: _eventsBloc.getEventsStream,
+  Widget ownProjectsList() {
+    return StreamBuilder<Projects>(
+      stream: _userProjectsBloc.getProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          _eventsBloc.getEvents();
+          _userProjectsBloc.getProjects();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Center(child: LinearLoader(minheight: 12)),
           );
         }
-        final List<EventModel> events = snapshot.data!.events;
+        final List<ProjectModel> projects = snapshot.data!.projects;
         return Column(
           children: [
             Container(
@@ -331,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    events.length.toString(),
+                    projects.length.toString(),
                     style: _theme.textTheme.bodyText2!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
@@ -342,15 +342,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.all(0),
-              itemCount: events.length,
+              itemCount: projects.length,
               itemBuilder: (context, index) {
-                final EventModel event = events[index];
+                final ProjectModel project = projects[index];
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EventDetailsScreen(event: event),
+                        builder: (context) =>
+                            ProjectDetailsScreen(project: project),
                       ),
                     );
                   },
@@ -367,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  event.eventName,
+                                  project.projectName,
                                   style: TextStyle(
                                     fontFamily: QUICKSAND,
                                     color: BLUE_GRAY,
@@ -375,14 +376,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 Text(
-                                  event.organization,
+                                  project.organization,
                                   style: TextStyle(
                                     fontFamily: QUICKSAND,
                                     color: DARK_GRAY,
                                   ),
                                 ),
                                 Text(
-                                  event.dateTime,
+                                  project.startDate,
                                   style: TextStyle(
                                     fontFamily: QUICKSAND,
                                     color: BLUE,

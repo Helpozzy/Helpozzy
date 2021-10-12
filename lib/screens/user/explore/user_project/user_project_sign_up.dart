@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class EventSignUpScreen extends StatefulWidget {
-  const EventSignUpScreen({Key? key}) : super(key: key);
-
+class ProjectUserSignUpScreen extends StatefulWidget {
   @override
-  _EventSignUpScreenState createState() => _EventSignUpScreenState();
+  _ProjectUserSignUpScreenState createState() =>
+      _ProjectUserSignUpScreenState();
 }
 
-class _EventSignUpScreenState extends State<EventSignUpScreen> {
+class _ProjectUserSignUpScreenState extends State<ProjectUserSignUpScreen> {
   late ThemeData _theme;
   late double height;
   late double width;

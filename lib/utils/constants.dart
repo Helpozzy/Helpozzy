@@ -77,19 +77,21 @@ const SCHOOL_AND_GRADE_SCREEN = 'school_screen';
 const PASSWORD_SET_SCREEN = 'password_setScreen';
 const HOME_SCREEN = 'home_screen';
 const EXPLORE_SCREEN = 'explore_screen';
-const EVENT_DETAILS_SCREEN = 'event_details_screen';
+const PROJECT_DETAILS_SCREEN = 'project_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
 
 //Dropdown hint
 const SELECT_RELATION_HINT = '-- Select Relation --';
 const SELECT_GRADE_HINT = '-- Select Grade --';
 const SELECT_TYPE_HINT = 'Select Type';
+const SELECT_CATEGORY_HINT = 'Select Category';
 const FILTERS_HINT = 'Filters';
 const SORT_BY_HINT = 'Sort by';
 const FAVORITE_HINT = 'Favorite';
 
 //Helpozzy Text
 const HELPOZZY_REMAINING_TEXT = 'elpozzy';
+const HELPOZZY_TEXT = 'Helpozzy';
 
 // Messages
 const MSG_SIGN_UP = 'Sign Up';
@@ -99,7 +101,7 @@ const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
 //Hint Msg
-const SEARCH_HINT = 'Search for events';
+const SEARCH_HINT = 'Search for projects';
 const REVIEW_HINT = 'Tap to review..';
 const ENTER_STATE_HINT = 'Enter State';
 const ENTER_CITY_HINT = 'Enter City';
@@ -170,11 +172,11 @@ const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
 const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
 
-//Event Details Text
+//User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
 const ABOUT_ORGANIZER = 'About Organizer';
 const OVERVIEW = 'Overview';
-const EVENT_DETAILS = 'Event Details';
+const PROJECT_DETAILS = 'Project Details';
 const SCHEDULES = 'Schedules';
 const DIRECTION = 'Direction';
 const INFO = 'Info';
@@ -198,6 +200,7 @@ const PROJECT_PAST_TAB = 'Past';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';
+const PROJECT_APPBAR = 'Projects';
 
 //Details Tab
 const COLUMN_ONE = 'Age\nGroup\n(Yrs old)';
@@ -230,7 +233,7 @@ const ACCEPT_GIFT = 'Accept Gift';
 //Transfer Point Tab
 const AVAILABLE_POINT = 'Available points to redeem :';
 
-//Event Sign-up
+//User Project Sign-up
 const CONTACT_PRO_LEAD = 'Contact Project Lead';
 
 //Admin Module text
@@ -264,6 +267,7 @@ const ADMIN_SEARCH_HINT = 'Search';
 //Admin create project
 const PROJECT_NAME_LABEL = 'Project Name';
 const PROJECT_DESCRIPTION_LABEL = 'Project Description';
+const PROJECT_LOCATION_LABEL = 'Project Location';
 const PROJECT_CATEGORY_LABEL = 'Project Category';
 const PROJECT_COLLABORATOR_LABEL = 'Collaborators/Co-Admin';
 const MEMBERS_LABEL = 'Members';
@@ -272,6 +276,7 @@ const TIMELINE_LABEL = 'Timeline';
 const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';
 const PROJECT_NAME_HINT = 'Enter Name';
 const PROJECT_DESCRIPTION_HINT = 'Enter Description';
+const PROJECT_LOCATION_HINT = 'Enter Location';
 const PROJECT_START_DATE_HINT = 'Start Date';
 const PROJECT_END_HINT = 'End Date';
 const PROJECT_CATEGORY_HINT = 'Enter Project Category';
@@ -312,7 +317,7 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> loginModes = [SELECT_TYPE_HINT, 'User', 'Admin'];
+List<String> loginModes = ['User', 'Admin'];
 
 List<String> relationShips = [SELECT_RELATION_HINT, 'Parent', 'Guardian'];
 
@@ -371,16 +376,6 @@ List<Map<String, dynamic>> categories = [
     'img_url': 'assets/images/more.png',
     'label': MORE,
   },
-];
-
-List<String> eventStrings = [
-  'Wildlife Conservation',
-  'Volunteer with Children',
-  'Teaching',
-  'Public Health',
-  'Animal Care',
-  'Women’s Empowerment',
-  'Children and Youth',
 ];
 
 List<Map<String, dynamic>> reviewData = [
