@@ -334,7 +334,8 @@ class _ExploreScreenState extends State<ExploreScreen>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RewardsScreen(initialIndex: 0),
+                    builder: (context) =>
+                        RewardsScreen(initialIndex: 0, fromBottomBar: false),
                   ));
             },
           ),

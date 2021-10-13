@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/user_projects_bloc.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/screens/admin/projects/tabs/project_list.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -13,12 +11,10 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
 
   @override
   void initState() {
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
-    _userProjectsBloc.getProjects();
     super.initState();
   }
 
@@ -54,32 +50,28 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            fontFamily: QUICKSAND,
-            color: DARK_PINK_COLOR,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                fontSize: 13,
+                color: DARK_PINK_COLOR,
+                fontWeight: FontWeight.bold,
+              ),
         ),
       );
 
   Widget body() {
-    return StreamBuilder<Projects>(
-      stream: _userProjectsBloc.getProjectsStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
-        }
-        final List<ProjectModel> projects = snapshot.data!.projects;
-        return TabBarView(
-          controller: _tabController,
-          children: [
-            ProjectListScreen(projects: projects),
-            ProjectListScreen(projects: projects),
-            ProjectListScreen(projects: projects),
-          ],
-        );
-      },
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        ProjectListScreen(
+          projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
+        ),
+        ProjectListScreen(
+          projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB,
+        ),
+        ProjectListScreen(
+          projectTabType: ProjectTabType.PROJECT_PAST_TAB,
+        ),
+      ],
     );
   }
 }

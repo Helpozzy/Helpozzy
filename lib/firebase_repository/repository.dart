@@ -5,6 +5,7 @@ import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
+import 'package:helpozzy/utils/constants.dart';
 
 class Repository {
   final apiProvider = ApiProvider();
@@ -37,7 +38,8 @@ class Repository {
   Future<bool> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);
 
-  Future<Projects> getprojectsRepo() => apiProvider.getProjectsAPIProvider();
+  Future<Projects> getprojectsRepo(ProjectTabType projectTabType) =>
+      apiProvider.getProjectsAPIProvider(projectTabType);
 
   Future<Users> getOtherUserInfoRepo() =>
       apiProvider.otherUserInfoAPIProvider();

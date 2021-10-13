@@ -31,7 +31,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final List<Widget> _children = [
     ExploreScreen(),
-    RewardsScreen(initialIndex: 1),
+    RewardsScreen(initialIndex: 1, fromBottomBar: true),
     CommonSampleScreen('Projects \nComing Soon!'),
     CommonSampleScreen('Inbox \nComing Soon!'),
     ProfileScreen(),

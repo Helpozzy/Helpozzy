@@ -702,7 +702,7 @@ class CommonAppBar {
   CommonAppBar(this.context);
   final BuildContext context;
 
-  show({
+  AppBar show({
     required String title,
     double? elevation,
     Color? color,
@@ -710,6 +710,7 @@ class CommonAppBar {
     Function()? onBackPressed,
     List<Widget>? actions,
     PreferredSizeWidget? bottom,
+    bool backButton = true,
   }) {
     return AppBar(
       centerTitle: true,
@@ -723,16 +724,18 @@ class CommonAppBar {
               fontWeight: FontWeight.w600,
             ),
       ),
-      leading: IconButton(
-        onPressed: onBackPressed ??
-            () {
-              Navigator.of(context).pop();
-            },
-        icon: Icon(
-          Icons.arrow_back_rounded,
-          color: textColor ?? WHITE,
-        ),
-      ),
+      leading: backButton
+          ? IconButton(
+              onPressed: onBackPressed ??
+                  () {
+                    Navigator.of(context).pop();
+                  },
+              icon: Icon(
+                Icons.arrow_back_rounded,
+                color: textColor ?? WHITE,
+              ),
+            )
+          : SizedBox(),
       actions: actions,
       bottom: bottom,
     );

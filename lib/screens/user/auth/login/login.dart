@@ -37,22 +37,18 @@ class LoginPage extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (_dialogKey != null && _dialogKey.currentContext != null) {
+        if (_dialogKey.currentContext != null) {
           Navigator.pop(_dialogKey.currentContext!);
-        }
-        if (state is LoginInitial) {
+        } else if (state is LoginInitial) {
           print('LoginInitial');
-        }
-        if (state is LoginLoading) {
+        } else if (state is LoginLoading) {
           print('LoginLoading');
-        }
-        if (state is LoginSucceed) {
+        } else if (state is LoginSucceed) {
           CircularLoader().hide(context);
           showSnakeBar(context, msg: 'Login Succeed');
           Navigator.pushNamedAndRemoveUntil(
               context, HOME_SCREEN, (route) => false);
-        }
-        if (state is LoginFailed) {
+        } else if (state is LoginFailed) {
           CircularLoader().hide(context);
           showSnakeBar(context, msg: state.message);
         }

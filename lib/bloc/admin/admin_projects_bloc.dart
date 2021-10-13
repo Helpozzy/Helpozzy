@@ -1,6 +1,7 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AdminProjectsBloc {
@@ -26,8 +27,8 @@ class AdminProjectsBloc {
     return response;
   }
 
-  Future getProjects() async {
-    final Projects response = await repo.getprojectsRepo();
+  Future getProjects({required ProjectTabType projectTabType}) async {
+    final Projects response = await repo.getprojectsRepo(projectTabType);
     projectsController.sink.add(response);
   }
 

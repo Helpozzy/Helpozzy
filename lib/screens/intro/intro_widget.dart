@@ -127,8 +127,8 @@ class IntroWidget extends StatelessWidget {
         return Stack(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(bottom: height * 0.05),
+              padding: EdgeInsets.all(8),
+              margin: EdgeInsets.only(bottom: height * 0.03),
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.42),
                 border: Border.all(color: Colors.white, width: 1),
@@ -155,9 +155,9 @@ class IntroWidget extends StatelessWidget {
   Widget _circleIndicator(bool isActive) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      height: 8,
-      width: 8,
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      height: 7,
+      width: 7,
       decoration: BoxDecoration(
           color: isActive ? pageIndicatorSelectedColor : pageIndicatorColor,
           borderRadius: const BorderRadius.all(Radius.circular(12))),

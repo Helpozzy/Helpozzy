@@ -105,7 +105,7 @@ class ApiProvider {
   Future<bool> postProjectAPIProvider(ProjectModel project) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('project').doc();
+          firestore.collection('events').doc();
       project.projectId = documentReference.id;
       await documentReference.set(project.toJson());
       return true;
@@ -114,9 +114,24 @@ class ApiProvider {
     }
   }
 
-  Future<Projects> getProjectsAPIProvider() async {
+  Future<Projects> getProjectsAPIProvider(ProjectTabType projectTabType) async {
     final QuerySnapshot querySnapshot =
-        await firestore.collection('project').get();
+        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+            ? await firestore
+                .collection('events')
+                .where('status', isEqualTo: PROJECT_NOT_STARTED)
+                .get()
+            : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+                ? await firestore
+                    .collection('events')
+                    .where('status', isEqualTo: PROJECT_IN_PROGRESS)
+                    .get()
+                : projectTabType == ProjectTabType.PROJECT_PAST_TAB
+                    ? await firestore
+                        .collection('events')
+                        .where('status', isEqualTo: PROJECT_COMPLTED)
+                        .get()
+                    : await firestore.collection('events').get();
 
     List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

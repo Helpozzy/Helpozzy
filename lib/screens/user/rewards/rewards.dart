@@ -9,8 +9,9 @@ import 'tabs/points_tab.dart';
 import 'tabs/transfer_point_tab.dart';
 
 class RewardsScreen extends StatefulWidget {
-  RewardsScreen({required this.initialIndex});
-  late final int initialIndex;
+  RewardsScreen({required this.initialIndex, this.fromBottomBar = false});
+  final int initialIndex;
+  final bool fromBottomBar;
   @override
   _RewardsScreenState createState() => _RewardsScreenState();
 }
@@ -33,28 +34,18 @@ class _RewardsScreenState extends State<RewardsScreen>
       initialIndex: widget.initialIndex,
       child: Scaffold(
         backgroundColor: WHITE,
-        appBar: appBar(),
+        appBar: CommonAppBar(context).show(
+          backButton: widget.fromBottomBar ? false : true,
+          title: REWARDS_APPBAR,
+          bottom: _tabBar(),
+          color: WHITE,
+          textColor: DARK_PINK_COLOR,
+          elevation: 1,
+        ),
         body: body(),
       ),
     );
   }
-
-  AppBar appBar() => AppBar(
-        centerTitle: true,
-        backgroundColor: WHITE,
-        elevation: 1.0,
-        title: Text(
-          REWARDS_APPBAR,
-          style: appBarTextStyle(),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
-        ),
-        bottom: _tabBar(),
-      );
 
   TabBar _tabBar() => TabBar(
         isScrollable: true,

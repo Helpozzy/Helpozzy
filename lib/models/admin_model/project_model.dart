@@ -26,6 +26,7 @@ class ProjectModel {
     required this.reviewCount,
     required this.rating,
     required this.aboutOrganizer,
+    required this.status,
   });
 
   ProjectModel.fromjson({required Map<String, dynamic> json}) {
@@ -47,6 +48,7 @@ class ProjectModel {
         ? json['rating']
         : double.parse(json['rating'].toString());
     aboutOrganizer = json['about_organizer'];
+    status = json['status'];
   }
 
   Map<String, Object?> toJson() {
@@ -67,6 +69,7 @@ class ProjectModel {
       'review_count': reviewCount,
       'rating': rating,
       'about_organizer': aboutOrganizer,
+      'status': status,
     };
   }
 
@@ -86,6 +89,7 @@ class ProjectModel {
   late int reviewCount;
   late double rating;
   late String aboutOrganizer;
+  late String status;
   late bool isLiked = false;
   late bool isExpanded = false;
   late bool isExpandStatus = false;

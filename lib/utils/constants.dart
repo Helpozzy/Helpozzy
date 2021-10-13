@@ -45,13 +45,20 @@ const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-const AUTH_TOKEN = 'auth_token';
 late SharedPreferences prefsObject;
+
+//Enum
+enum ProjectTabType {
+  PROJECT_UPCOMING_TAB,
+  PROJECT_INPROGRESS_TAB,
+  PROJECT_PAST_TAB
+}
 
 //Font family
 const QUICKSAND = 'Quicksand';
 
 //API keyword
+const AUTH_TOKEN = 'auth_token';
 const STATUS = 'STATUS';
 const SUCCESS = 'success';
 const MESSAGE = 'message';
@@ -192,8 +199,9 @@ const TRANSFER_POINT_TAB = 'Transfer Points';
 //Profile
 const CONTACT_TEXT = 'Contact';
 
-//Admin Panel
+//Admin Module
 
+//Admin Project Tab
 const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
 const PROJECT_PAST_TAB = 'Past';
@@ -287,6 +295,9 @@ const TOGGLE_INPROGRESS = 'In Progress';
 const TOGGLE_COMPLE = 'Complete';
 const TO = 'to';
 const COPY_LINK = 'Copy Link';
+const PROJECT_NOT_STARTED = 'Not Started';
+const PROJECT_IN_PROGRESS = 'In Progress';
+const PROJECT_COMPLTED = 'Completed';
 
 //Admin create task
 const TASK_NAME_LABEL = 'Task Name';

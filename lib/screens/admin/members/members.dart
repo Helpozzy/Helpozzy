@@ -219,89 +219,97 @@ class _MembersScreenState extends State<MembersScreen> {
   }
 
   Widget volunteerItem({required PeopleModel volunteer}) {
-    return Stack(
-      children: [
-        Card(
-          elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            child: Row(
-              children: [
-                CommonUserPlaceholder(size: width * 0.13),
-                SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      volunteer.name,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: width * 0.02, horizontal: 10.0),
+        child: Row(
+          children: [
+            CommonUserPlaceholder(size: width * 0.13),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    volunteer.name,
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      volunteer.address,
-                      style: _theme.textTheme.bodyText2!,
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 3.0, bottom: 3.0, right: 5.0),
-                          child: RatingBar.builder(
-                            initialRating: volunteer.rating,
-                            ignoreGestures: true,
-                            minRating: 1,
-                            itemSize: 15,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            unratedColor: GRAY,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: AMBER_COLOR,
-                            ),
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
+                  ),
+                  Text(
+                    volunteer.address,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: _theme.textTheme.bodyText2!,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 3.0, bottom: 3.0, right: 5.0),
+                        child: RatingBar.builder(
+                          initialRating: volunteer.rating,
+                          ignoreGestures: true,
+                          minRating: 1,
+                          itemSize: 15,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          unratedColor: GRAY,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: AMBER_COLOR,
                           ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+                          },
                         ),
-                        Text(
-                          '(${volunteer.reviewsByPersons} Reviews)',
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(fontSize: 10),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      Text(
+                        '(${volunteer.reviewsByPersons} Reviews)',
+                        style:
+                            _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      volunteer.favorite = !volunteer.favorite;
+                    });
+                  },
+                  child: Icon(
+                    volunteer.favorite
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: volunteer.favorite ? PINK_COLOR : BLACK,
+                    size: 13,
+                  ),
+                ),
+                SizedBox(height: 12),
+                InkWell(
+                  onTap: () {},
+                  child: Icon(
+                    CupertinoIcons.chat_bubble_2_fill,
+                    color: BLACK,
+                    size: 13,
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
-        Positioned(
-          top: 0,
-          right: 0,
-          child: IconButton(
-            onPressed: () {
-              setState(() {
-                volunteer.favorite = !volunteer.favorite;
-              });
-            },
-            icon: Icon(
-              volunteer.favorite
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border_rounded,
-              color: volunteer.favorite ? PINK_COLOR : BLACK,
-              size: 13,
-            ),
-          ),
-        )
-      ],
+      ),
     );
   }
 }

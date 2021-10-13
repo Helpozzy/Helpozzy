@@ -8,21 +8,33 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectListScreen extends StatefulWidget {
-  ProjectListScreen({required this.projects});
-  final List<ProjectModel> projects;
+  ProjectListScreen({required this.projectTabType});
+  final ProjectTabType projectTabType;
   @override
   _ProjectListScreenState createState() =>
-      _ProjectListScreenState(projects: projects);
+      _ProjectListScreenState(projectTabType: projectTabType);
 }
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
-  _ProjectListScreenState({required this.projects});
-  final List<ProjectModel> projects;
+  _ProjectListScreenState({required this.projectTabType});
+  final ProjectTabType projectTabType;
   late double height;
   late double width;
   late bool isExpanded = false;
 
   AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
+
+  @override
+  void initState() {
+    if (projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
+      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
+    } else if (projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB) {
+      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
+    } else if (projectTabType == ProjectTabType.PROJECT_PAST_TAB) {
+      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +62,29 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   }
 
   Widget projectList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: ScrollPhysics(),
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        final ProjectModel project = projects[index];
-        return StreamBuilder<bool>(
-          initialData: false,
-          stream: _adminProjectsBloc.getProjectExpandStream,
-          builder: (context, snapshot) {
-            return ProjectTile(
-              project: project,
-              isExpanded: snapshot.data!,
-              adminProjectsBloc: _adminProjectsBloc,
+    return StreamBuilder<Projects>(
+      stream: _adminProjectsBloc.getProjectsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        final List<ProjectModel> projects = snapshot.data!.projects;
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+          itemCount: projects.length,
+          itemBuilder: (context, index) {
+            final ProjectModel project = projects[index];
+            return StreamBuilder<bool>(
+              initialData: false,
+              stream: _adminProjectsBloc.getProjectExpandStream,
+              builder: (context, snapshot) {
+                return ProjectTile(
+                  project: project,
+                  isExpanded: snapshot.data!,
+                  adminProjectsBloc: _adminProjectsBloc,
+                );
+              },
             );
           },
         );

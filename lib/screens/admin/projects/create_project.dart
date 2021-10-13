@@ -547,6 +547,7 @@ class _CreateProjectState extends State<CreateProject> {
       endDate: _projEndDateController.text,
       projectOwner: prefsObject.getString('uID')!,
       collaboratorsCoadmin: _projCollaboraorController.text,
+      status: PROJECT_NOT_STARTED,
     );
     final bool isUploaded = await _adminProjectsBloc.postProject(project);
     if (isUploaded) {
