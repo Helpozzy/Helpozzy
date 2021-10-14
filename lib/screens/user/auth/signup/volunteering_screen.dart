@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/volunteer_bloc.dart';
+import 'package:helpozzy/models/signup_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/screens/user/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class Volunteering {
-  const Volunteering({required this.id, required this.name});
-  final int id;
-  final String name;
-}
-
 class SignUpScreen extends StatefulWidget {
+  SignUpScreen({required this.signUpModel});
+  final SignUpModel signUpModel;
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignUpScreenState createState() =>
+      _SignUpScreenState(signUpModel: signUpModel);
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  _SignUpScreenState({required this.signUpModel});
+  final SignUpModel signUpModel;
   late double width;
   late double height;
   late ThemeData _theme;
@@ -104,11 +104,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: LIGHT_BLACK,
                   text: _item.type,
                   onPressed: () {
+                    signUpModel.volunteerType = index;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            LivingInfoScreen(volunteerType: index),
+                            LivingInfoScreen(signUpModel: signUpModel),
                       ),
                     );
                   },

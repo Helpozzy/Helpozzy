@@ -383,7 +383,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 Text(
-                                  project.startDate,
+                                  DateFormat('EEE, dd MMM - yyyy').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(project.startDate),
+                                    ),
+                                  ),
                                   style: TextStyle(
                                     fontFamily: QUICKSAND,
                                     color: BLUE,

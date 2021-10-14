@@ -63,7 +63,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   Map<String, dynamic> json;
-                  json = widget.signUpModel.fromModelToMap();
+                  json = widget.signUpModel.toJson();
                   json['school_name'] = _schoolController.text;
                   json['grade_level'] = dropdownValue;
                   if (_formKey.currentState!.validate()) {

@@ -330,7 +330,7 @@ const SAMPLE_LONG_TEXT =
 //Dropdowns
 List<String> loginModes = ['User', 'Admin'];
 
-List<String> relationShips = [SELECT_RELATION_HINT, 'Parent', 'Guardian'];
+List<String> relationShips = ['Parent', 'Guardian'];
 
 List<String> gradeLevels = [
   SELECT_GRADE_HINT,

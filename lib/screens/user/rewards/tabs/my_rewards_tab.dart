@@ -84,6 +84,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
     final peoples = Volunteers(list: peoplesList).peoples;
     return ListView.builder(
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemCount: expanded ? peoples.length : 2,
       itemBuilder: (context, index) {
         final PeopleModel people = peoples[index];

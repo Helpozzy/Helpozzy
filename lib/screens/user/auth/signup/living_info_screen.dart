@@ -6,14 +6,17 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class LivingInfoScreen extends StatefulWidget {
-  LivingInfoScreen({required this.volunteerType});
-  final int volunteerType;
+  LivingInfoScreen({required this.signUpModel});
+  final SignUpModel signUpModel;
 
   @override
-  _LivingInfoScreenState createState() => _LivingInfoScreenState();
+  _LivingInfoScreenState createState() =>
+      _LivingInfoScreenState(signUpModel: signUpModel);
 }
 
 class _LivingInfoScreenState extends State<LivingInfoScreen> {
+  _LivingInfoScreenState({required this.signUpModel});
+  final SignUpModel signUpModel;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -86,19 +89,17 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
-                  Map<String, dynamic> json = {
-                    'volunteer_type': widget.volunteerType,
-                    'state': _stateController.text,
-                    'city': _cityController.text,
-                    'zip_code': _zipCodeController.text,
-                  };
+                  signUpModel.volunteerType = signUpModel.volunteerType;
+                  signUpModel.state = _stateController.text;
+                  signUpModel.city = _cityController.text;
+                  signUpModel.zipCode = _zipCodeController.text;
+
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PersonalInfoScreen(
-                          signUpModel: SignUpModel.fromJson(json: json),
-                        ),
+                        builder: (context) =>
+                            PersonalInfoScreen(signUpModel: signUpModel),
                       ),
                     );
                   }

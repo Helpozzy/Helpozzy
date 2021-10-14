@@ -112,7 +112,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   Map<String, dynamic> json;
-                  json = widget.signUpModel.fromModelToMap();
+                  json = widget.signUpModel.toJson();
                   json['name'] = _firstNameController.text +
                       ' ' +
                       _lastNameController.text;

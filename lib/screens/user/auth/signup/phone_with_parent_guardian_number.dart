@@ -23,7 +23,7 @@ class _PhoneWithParentGuardianNumberState
   static final _formKey = GlobalKey<FormState>();
   final GlobalKey<State> _dialogKey = GlobalKey<State>();
   final TextEditingController _parentPhoneController = TextEditingController();
-  String dropdownValue = SELECT_RELATION_HINT;
+  final TextEditingController _relationController = TextEditingController();
   CountryCode? countryCodePersonal;
   CountryCode? countryCodeParent;
   late double width;
@@ -119,14 +119,14 @@ class _PhoneWithParentGuardianNumberState
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   Map<String, dynamic> json;
-                  json = widget.signUpModel.fromModelToMap();
+                  json = widget.signUpModel.toJson();
                   json['personal_phn_no'] = countryCodePersonal!.code! +
                       _personalPhoneController.text;
                   json['parent_phn_no'] =
                       countryCodeParent!.code! + _parentPhoneController.text;
-                  json['relationship_with_parent'] = dropdownValue;
+                  json['relationship_with_parent'] = _relationController.text;
                   if (_formKey.currentState!.validate()) {
-                    if (dropdownValue != SELECT_RELATION_HINT) {
+                    if (_relationController.text != SELECT_RELATION_HINT) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -182,15 +182,19 @@ class _PhoneWithParentGuardianNumberState
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(50.0)),
       ),
-      child: DropdownButton<String>(
-          value: dropdownValue,
+      child: DropdownButtonFormField<String>(
           icon: Icon(Icons.expand_more_outlined),
-          underline: SizedBox(),
           isExpanded: true,
           onChanged: (String? newValue) {
             setState(() {
-              dropdownValue = newValue!;
+              _relationController.text = newValue!;
             });
+          },
+          validator: (val) {
+            if (_relationController.text.isEmpty) {
+              return 'Select relationship status';
+            }
+            return null;
           },
           items: relationShips.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(

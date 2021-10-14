@@ -23,6 +23,7 @@ class TaskModel {
     required this.status,
     this.isSelected,
   });
+
   TaskModel.fromjson({required Map<String, dynamic> json}) {
     projectId = json['project_id'];
     id = json['task_id'];

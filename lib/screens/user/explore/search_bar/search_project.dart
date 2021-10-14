@@ -10,12 +10,11 @@ class SearchProject {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(11.0),
-          topRight: const Radius.circular(11.0),
+          topLeft: const Radius.circular(15.0),
+          topRight: const Radius.circular(15.0),
         ),
       ),
       isScrollControlled: true,
-      isDismissible: false,
       builder: (builder) {
         return SearchBarWidget();
       },
@@ -42,17 +41,20 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 23,
-        horizontal: 10.0,
-      ),
-      child: Column(
-        children: [
-          bottomSheetSearchbar(context),
-          // currentLocationCard(),
-          Expanded(child: searchList()),
-        ],
+    return SafeArea(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.965,
+        padding: const EdgeInsets.symmetric(
+          vertical: 23,
+          horizontal: 10.0,
+        ),
+        child: Column(
+          children: [
+            bottomSheetSearchbar(context),
+            // currentLocationCard(),
+            Expanded(child: searchList()),
+          ],
+        ),
       ),
     );
   }

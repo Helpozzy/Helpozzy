@@ -5,8 +5,7 @@ import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/screens/intro/intro.dart';
 import 'package:helpozzy/screens/user/auth/login/login.dart';
-import 'package:helpozzy/screens/user/auth/signup/volunteering_screen.dart';
-import 'package:helpozzy/screens/user_selection.dart';
+import 'package:helpozzy/screens/user/auth/signup/user_selection.dart';
 import 'package:helpozzy/splash/splash.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'screens/user/rewards/rewards.dart';
@@ -162,7 +161,6 @@ class HelpozzyApp extends MaterialApp {
         USER_SLECTION: (context) => UserTypeSelection(),
         ADMIN_SELECTION: (context) => AdminSelectionScreen(),
         LOGIN: (context) => Login(),
-        SIGNUP: (context) => SignUpScreen(),
         HOME_SCREEN: (context) => HomeScreen(),
         EXPLORE_SCREEN: (context) => ExploreScreen(),
         REWARDS_SCREEN: (context) => RewardsScreen(initialIndex: 0),

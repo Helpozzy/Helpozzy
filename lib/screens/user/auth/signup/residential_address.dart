@@ -87,7 +87,7 @@ class ResidentialAddress extends StatelessWidget {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   Map<String, dynamic> json;
-                  json = signUpModel.fromModelToMap();
+                  json = signUpModel.toJson();
                   json['address'] = _houseNoController.text +
                       ' ' +
                       _streetController.text +

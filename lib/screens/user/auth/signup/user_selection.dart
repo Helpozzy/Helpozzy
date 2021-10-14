@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/models/signup_model.dart';
+import 'package:helpozzy/screens/user/auth/signup/volunteering_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -26,7 +28,8 @@ class UserSelection extends StatefulWidget {
 
 class _UserSelectionState extends State<UserSelection> {
   final _formKey = GlobalKey<FormState>();
-  String modeDropdownValue = SELECT_TYPE_HINT;
+  late String modeDropdownValue = '';
+  late TextEditingController _typeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +38,26 @@ class _UserSelectionState extends State<UserSelection> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.only(top: height * 0.15, bottom: height * 0.10),
+        padding: EdgeInsets.only(top: height * 0.05, bottom: height * 0.10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                margin:
+                    EdgeInsets.only(right: width * 0.07, bottom: width * 0.14),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: CLOSE_ICON,
+                  ),
+                ),
+              ),
+            ),
             TopAppLogo(height: height / 6),
             TopInfoLabel(label: SELECT_USER_TYPE),
             selectUserTypeDropdown(),
@@ -49,10 +68,19 @@ class _UserSelectionState extends State<UserSelection> {
                 text: CONTINUE_BUTTON.toUpperCase(),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (modeDropdownValue == 'User') {
-                      Navigator.pushNamed(context, SIGNUP);
-                    } else if (modeDropdownValue == 'Admin') {
-                      Navigator.pushNamed(context, ADMIN_SELECTION);
+                    if (_typeController.text == 'User') {
+                      final SignUpModel signUpModel =
+                          SignUpModel(userType: _typeController.text);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SignUpScreen(signUpModel: signUpModel),
+                        ),
+                      );
+                    } else if (_typeController.text == 'Admin') {
+                      Navigator.pushNamed(context, ADMIN_SELECTION,
+                          arguments: _typeController.text);
                     }
                   }
                 },
@@ -70,11 +98,10 @@ class _UserSelectionState extends State<UserSelection> {
           horizontal: MediaQuery.of(context).size.width * 0.1),
       padding: EdgeInsets.only(left: 20, right: 10),
       child: DropdownButtonFormField<String>(
-          value: modeDropdownValue,
           decoration: inputRoundedDecoration(getHint: SELECT_TYPE_HINT),
           icon: Icon(Icons.expand_more_outlined),
           validator: (val) {
-            if (val!.isNotEmpty && val == SELECT_TYPE_HINT) {
+            if (_typeController.text.isEmpty) {
               return 'Select user want to continue';
             }
             return null;
@@ -82,7 +109,7 @@ class _UserSelectionState extends State<UserSelection> {
           isExpanded: true,
           onChanged: (String? newValue) {
             setState(() {
-              modeDropdownValue = newValue!;
+              _typeController.text = newValue!;
             });
           },
           items: loginModes.map<DropdownMenuItem<String>>((String value) {
