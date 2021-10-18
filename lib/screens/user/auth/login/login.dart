@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/auth/auth_repository.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_bloc.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_event.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_state.dart';
@@ -40,9 +40,7 @@ class LoginPage extends StatelessWidget {
         if (_dialogKey.currentContext != null) {
           Navigator.pop(_dialogKey.currentContext!);
         } else if (state is LoginInitial) {
-          print('LoginInitial');
         } else if (state is LoginLoading) {
-          print('LoginLoading');
         } else if (state is LoginSucceed) {
           CircularLoader().hide(context);
           showSnakeBar(context, msg: 'Login Succeed');
@@ -201,7 +199,8 @@ class _LoginInputState extends State<LoginInput> {
 
   Widget selectloginTypeDropdown() {
     return DropdownButtonFormField<String>(
-        decoration: inputRoundedDecoration(getHint: SELECT_TYPE_HINT),
+        decoration:
+            inputRoundedDecoration(getHint: SELECT_TYPE_HINT, isDropDown: true),
         icon: Icon(Icons.expand_more_outlined),
         isExpanded: true,
         validator: (val) {

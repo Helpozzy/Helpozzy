@@ -199,6 +199,12 @@ const TRANSFER_POINT_TAB = 'Transfer Points';
 //Profile
 const CONTACT_TEXT = 'Contact';
 
+//Drop Down items
+const SELECT_USER = 'User';
+const SELECT_ADMIN = 'Admin';
+const SELECT_PARENT = 'Parent';
+const SELECT_GAURDIAN = 'Guardian';
+
 //Admin Module
 
 //Admin Project Tab
@@ -279,14 +285,18 @@ const PROJECT_LOCATION_LABEL = 'Project Location';
 const PROJECT_CATEGORY_LABEL = 'Project Category';
 const PROJECT_COLLABORATOR_LABEL = 'Collaborators/Co-Admin';
 const MEMBERS_LABEL = 'Members';
+const TASKS_LABEL = 'Tasks';
 const HOURS_LABEL = 'Hours';
+const STATUS_LABEL = 'Status';
 const TIMELINE_LABEL = 'Timeline';
 const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';
 const PROJECT_NAME_HINT = 'Enter Name';
 const PROJECT_DESCRIPTION_HINT = 'Enter Description';
 const PROJECT_LOCATION_HINT = 'Enter Location';
 const PROJECT_START_DATE_HINT = 'Start Date';
-const PROJECT_END_HINT = 'End Date';
+const PROJECT_END_DATE_HINT = 'End Date';
+const PROJECT_START_TIME_HINT = 'Start Time';
+const PROJECT_END_TIME_HINT = 'End Time';
 const PROJECT_CATEGORY_HINT = 'Enter Project Category';
 const PROJECT_COLLABORATOR_HINT = 'Collaborators/Co-Admin';
 const PROJECT_SEARCH_WITH_EMAIL_HINT = 'Search with email';
@@ -328,9 +338,9 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> loginModes = ['User', 'Admin'];
+List<String> loginModes = [SELECT_USER, SELECT_ADMIN];
 
-List<String> relationShips = ['Parent', 'Guardian'];
+List<String> relationShips = [SELECT_PARENT, SELECT_GAURDIAN];
 
 List<String> gradeLevels = [
   SELECT_GRADE_HINT,

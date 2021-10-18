@@ -360,7 +360,10 @@ Widget topBarTitleWidget(context, title) {
 }
 
 InputDecoration inputRoundedDecoration(
-    {required String getHint, Widget? prefixIcon, Widget? suffixIcon}) {
+    {required String getHint,
+    Widget? prefixIcon,
+    Widget? suffixIcon,
+    bool isDropDown = false}) {
   return InputDecoration(
     hintText: getHint,
     hintStyle: TextStyle(color: DARK_GRAY),
@@ -368,7 +371,7 @@ InputDecoration inputRoundedDecoration(
     fillColor: Colors.white,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    contentPadding: EdgeInsets.only(left: 30, right: 30),
+    contentPadding: EdgeInsets.only(left: 30, right: isDropDown ? 15 : 30),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
       borderSide: BorderSide(color: Colors.white, width: 1),

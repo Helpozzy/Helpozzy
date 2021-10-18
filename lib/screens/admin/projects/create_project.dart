@@ -35,9 +35,14 @@ class _CreateProjectState extends State<CreateProject> {
   final TextEditingController _projCollaboraorController =
       TextEditingController();
   final TextEditingController _searchEmailController = TextEditingController();
+  final TextEditingController _projTaskStartHrsController =
+      TextEditingController();
+  final TextEditingController _projTaskEndHrsController =
+      TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  TimeOfDay selectedStartTime = TimeOfDay(hour: 00, minute: 00);
+  TimeOfDay selectedEndTime = TimeOfDay(hour: 00, minute: 00);
   late ThemeData _themeData;
   late double width;
   late double height;
@@ -129,7 +134,7 @@ class _CreateProjectState extends State<CreateProject> {
                   Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: width * 0.03, horizontal: width * 0.05),
-                    child: SmallInfoLabel(label: 'Tasks'),
+                    child: SmallInfoLabel(label: TASKS_LABEL),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -185,6 +190,87 @@ class _CreateProjectState extends State<CreateProject> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: taskList(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: width * 0.03, horizontal: width * 0.05),
+                    child: SmallInfoLabel(label: HOURS_LABEL),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CommonSimpleTextfield(
+                            readOnly: true,
+                            controller: _projTaskStartHrsController,
+                            hintText: PROJECT_START_TIME_HINT,
+                            validator: (val) {
+                              if (val!.isEmpty &&
+                                  selectedStartTime.toString().isEmpty) {
+                                return 'Select hours';
+                              }
+                              return null;
+                            },
+                            onTap: () {
+                              CommonDatepicker()
+                                  .showTimePickerDialog(context,
+                                      selectedTime: selectedStartTime)
+                                  .then((selectedTimeVal) {
+                                if (selectedTimeVal != null)
+                                  setState(() {
+                                    selectedStartTime = selectedTimeVal;
+                                  });
+                                _projTaskStartHrsController.value =
+                                    TextEditingValue(
+                                        text:
+                                            '${selectedStartTime.hour}.${selectedStartTime.minute}');
+                              });
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * 0.05),
+                          child: Text(
+                            TO,
+                            style: _themeData.textTheme.bodyText2!
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Expanded(
+                          child: CommonSimpleTextfield(
+                            readOnly: true,
+                            controller: _projTaskEndHrsController,
+                            hintText: PROJECT_END_TIME_HINT,
+                            validator: (val) {
+                              if (val!.isEmpty &&
+                                  selectedEndTime.toString().isEmpty) {
+                                return 'Select hours';
+                              }
+                              return null;
+                            },
+                            onTap: () {
+                              CommonDatepicker()
+                                  .showTimePickerDialog(context,
+                                      selectedTime: selectedEndTime)
+                                  .then((selectedTimeVal) {
+                                if (selectedTimeVal != null)
+                                  setState(() {
+                                    selectedEndTime = selectedTimeVal;
+                                  });
+                                _projTaskStartHrsController.value =
+                                    TextEditingValue(
+                                        text:
+                                            '${selectedEndTime.hour}.${selectedEndTime.minute}');
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(Icons.history_rounded)
+                      ],
+                    ),
                   ),
                   Divider(),
                   Padding(
@@ -499,7 +585,7 @@ class _CreateProjectState extends State<CreateProject> {
           child: CommonSimpleTextfield(
             readOnly: true,
             controller: _projEndDateController,
-            hintText: PROJECT_END_HINT,
+            hintText: PROJECT_END_DATE_HINT,
             validator: (val) {
               if (val!.isEmpty) {
                 return 'Select end date';
@@ -571,5 +657,7 @@ class _CreateProjectState extends State<CreateProject> {
     _projCollaboraorController.clear();
     _searchEmailController.clear();
     _projLocationController.clear();
+    _projTaskStartHrsController.clear();
+    _projEndDateController.clear();
   }
 }

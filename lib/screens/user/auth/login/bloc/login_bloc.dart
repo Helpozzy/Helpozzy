@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/auth/auth_repository.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_event.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_state.dart';
 import 'package:helpozzy/utils/constants.dart';

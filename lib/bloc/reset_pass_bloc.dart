@@ -1,4 +1,4 @@
-import 'package:helpozzy/screens/user/auth/auth_repository.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ResetPasswordBloc {

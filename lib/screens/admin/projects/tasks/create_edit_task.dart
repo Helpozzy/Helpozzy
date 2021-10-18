@@ -166,6 +166,16 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                       child: memberRequirementsSection(),
                     ),
                     Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: width * 0.03,
+                        left: width * 0.05,
+                        bottom: width * 0.03,
+                      ),
+                      child: SmallInfoLabel(label: STATUS_LABEL),
+                    ),
+                    statusSegmentation(),
+                    Divider(),
                     SizedBox(height: 10)
                   ],
                 ),
@@ -380,7 +390,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           child: CommonSimpleTextfield(
             readOnly: true,
             controller: _taskEndDateController,
-            hintText: PROJECT_END_HINT,
+            hintText: PROJECT_END_DATE_HINT,
             validator: (val) {
               if (val!.isEmpty) {
                 return 'Select end date';
@@ -448,6 +458,35 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           },
         ),
       ],
+    );
+  }
+
+  Widget statusSegmentation() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: CupertinoSlidingSegmentedControl(
+          groupValue: _selectedIndexValue,
+          backgroundColor: GRAY,
+          thumbColor: DARK_GRAY.withAlpha(100),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
+          children: {
+            0: segmentItem(TOGGLE_NOT_STARTED),
+            1: segmentItem(TOGGLE_INPROGRESS),
+            2: segmentItem(TOGGLE_COMPLE),
+          },
+          onValueChanged: (value) {
+            setState(() {
+              _selectedIndexValue = value.hashCode;
+            });
+          }),
+    );
+  }
+
+  Widget segmentItem(String title) {
+    return Text(
+      title,
+      style: _themeData.textTheme.bodyText2!
+          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
     );
   }
 

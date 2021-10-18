@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:helpozzy/screens/user/auth/auth_repository.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

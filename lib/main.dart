@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/app.dart';
-import 'package:helpozzy/screens/user/auth/auth_repository.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
+import 'package:helpozzy/screens/user/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/user/auth/login/bloc/login_bloc.dart';
-import 'package:helpozzy/screens/user/auth/user/bloc/auth_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

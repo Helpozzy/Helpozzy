@@ -5,6 +5,7 @@ import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:intl/intl.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   ProjectDetailsScreen({required this.project});
@@ -175,7 +176,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            project.startDate,
+            DateFormat('EEE, dd MMM - yyyy').format(
+              DateTime.fromMillisecondsSinceEpoch(
+                int.parse(project.startDate),
+              ),
+            ),
             style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 16,
               color: PRIMARY_COLOR,
