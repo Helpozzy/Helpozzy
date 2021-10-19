@@ -191,87 +191,6 @@ class _CreateProjectState extends State<CreateProject> {
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: taskList(),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: width * 0.03, horizontal: width * 0.05),
-                    child: SmallInfoLabel(label: HOURS_LABEL),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: CommonSimpleTextfield(
-                            readOnly: true,
-                            controller: _projTaskStartHrsController,
-                            hintText: PROJECT_START_TIME_HINT,
-                            validator: (val) {
-                              if (val!.isEmpty &&
-                                  selectedStartTime.toString().isEmpty) {
-                                return 'Select hours';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              CommonDatepicker()
-                                  .showTimePickerDialog(context,
-                                      selectedTime: selectedStartTime)
-                                  .then((selectedTimeVal) {
-                                if (selectedTimeVal != null)
-                                  setState(() {
-                                    selectedStartTime = selectedTimeVal;
-                                  });
-                                _projTaskStartHrsController.value =
-                                    TextEditingValue(
-                                        text:
-                                            '${selectedStartTime.hour}.${selectedStartTime.minute}');
-                              });
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * 0.05),
-                          child: Text(
-                            TO,
-                            style: _themeData.textTheme.bodyText2!
-                                .copyWith(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Expanded(
-                          child: CommonSimpleTextfield(
-                            readOnly: true,
-                            controller: _projTaskEndHrsController,
-                            hintText: PROJECT_END_TIME_HINT,
-                            validator: (val) {
-                              if (val!.isEmpty &&
-                                  selectedEndTime.toString().isEmpty) {
-                                return 'Select hours';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              CommonDatepicker()
-                                  .showTimePickerDialog(context,
-                                      selectedTime: selectedEndTime)
-                                  .then((selectedTimeVal) {
-                                if (selectedTimeVal != null)
-                                  setState(() {
-                                    selectedEndTime = selectedTimeVal;
-                                  });
-                                _projTaskStartHrsController.value =
-                                    TextEditingValue(
-                                        text:
-                                            '${selectedEndTime.hour}.${selectedEndTime.minute}');
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Icon(Icons.history_rounded)
-                      ],
-                    ),
-                  ),
                   Divider(),
                   Padding(
                     padding:
@@ -292,6 +211,16 @@ class _CreateProjectState extends State<CreateProject> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: startDateAndEndDateSection(),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: width * 0.03, horizontal: width * 0.05),
+                    child: SmallInfoLabel(label: HOURS_LABEL),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: projectHours(),
                   ),
                   Divider(),
                   SizedBox(height: 10)
@@ -315,6 +244,75 @@ class _CreateProjectState extends State<CreateProject> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget projectHours() {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _projTaskStartHrsController,
+            hintText: PROJECT_START_TIME_HINT,
+            validator: (val) {
+              if (val!.isEmpty && _projTaskStartHrsController.text.isEmpty) {
+                return 'Select start time';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showTimePickerDialog(context,
+                      selectedTime: selectedStartTime)
+                  .then((selectedTimeVal) {
+                if (selectedTimeVal != null)
+                  setState(() {
+                    selectedStartTime = selectedTimeVal;
+                  });
+                _projTaskStartHrsController.value = TextEditingValue(
+                    text:
+                        '${selectedStartTime.hour}.${selectedStartTime.minute}');
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Text(
+            TO,
+            style: _themeData.textTheme.bodyText2!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _projTaskEndHrsController,
+            hintText: PROJECT_END_TIME_HINT,
+            validator: (val) {
+              if (val!.isEmpty && _projTaskEndHrsController.text.isEmpty) {
+                return 'Select end time';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showTimePickerDialog(context, selectedTime: selectedEndTime)
+                  .then((selectedTimeVal) {
+                if (selectedTimeVal != null)
+                  setState(() {
+                    selectedEndTime = selectedTimeVal;
+                  });
+                _projTaskEndHrsController.value = TextEditingValue(
+                    text: '${selectedEndTime.hour}.${selectedEndTime.minute}');
+              });
+            },
+          ),
+        ),
+        SizedBox(width: 10),
+        Icon(Icons.watch_later_outlined)
+      ],
     );
   }
 
@@ -616,6 +614,9 @@ class _CreateProjectState extends State<CreateProject> {
 
   Future onAddProject() async {
     CircularLoader().show(context);
+    double startTime = timeConvertToDouble(selectedStartTime);
+    double endTime = timeConvertToDouble(selectedEndTime);
+    double hrsDiff = endTime - startTime;
     final ProjectModel project = ProjectModel(
       projectId: '',
       categoryId: selectedCategoryId,
@@ -627,6 +628,7 @@ class _CreateProjectState extends State<CreateProject> {
       organization: '',
       rating: 0.0,
       reviewCount: 0,
+      hours: hrsDiff,
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: _projStartDateController.text,

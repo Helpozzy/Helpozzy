@@ -745,6 +745,9 @@ class CommonAppBar {
   }
 }
 
+double timeConvertToDouble(TimeOfDay myTime) =>
+    myTime.hour + myTime.minute / 60.0;
+
 showAlertDialog(BuildContext context,
     {required String title, required String content}) {
   Widget okButton = TextButton(

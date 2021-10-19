@@ -38,7 +38,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       TextEditingController();
   final TextEditingController _taskEndDateController = TextEditingController();
   final TextEditingController _taskMembersController = TextEditingController();
-  final TextEditingController _taskHoursController = TextEditingController();
+  final TextEditingController _taskStartTimeController =
+      TextEditingController();
+  final TextEditingController _taskEndTimeController = TextEditingController();
   final TextEditingController _searchEmailController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
@@ -51,6 +53,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   int _selectedIndexValue = 0;
   bool postOnLocalCheck = false;
+  TimeOfDay selectedStartTime = TimeOfDay(hour: 00, minute: 00);
+  TimeOfDay selectedEndTime = TimeOfDay(hour: 00, minute: 00);
 
   @override
   void initState() {
@@ -148,22 +152,21 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
+                      child: SmallInfoLabel(label: HOURS_LABEL),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: projectTaskHours(),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: width * 0.03, left: width * 0.05),
                       child: SmallInfoLabel(label: MEMBERS_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                       child: inviteMembersSection(),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: width * 0.04, horizontal: width * 0.05),
-                      child:
-                          SmallInfoLabel(label: TASK_MEMBERS_REQUIREMENT_LABEL),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: memberRequirementsSection(),
                     ),
                     Divider(),
                     Padding(
@@ -175,6 +178,17 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                       child: SmallInfoLabel(label: STATUS_LABEL),
                     ),
                     statusSegmentation(),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: width * 0.04, horizontal: width * 0.05),
+                      child:
+                          SmallInfoLabel(label: TASK_MEMBERS_REQUIREMENT_LABEL),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: memberRequirementsSection(),
+                    ),
                     Divider(),
                     SizedBox(height: 10)
                   ],
@@ -198,6 +212,75 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget projectTaskHours() {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _taskStartTimeController,
+            hintText: PROJECT_START_TIME_HINT,
+            validator: (val) {
+              if (val!.isEmpty && _taskStartTimeController.text.isEmpty) {
+                return 'Select start time';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showTimePickerDialog(context,
+                      selectedTime: selectedStartTime)
+                  .then((selectedTimeVal) {
+                if (selectedTimeVal != null)
+                  setState(() {
+                    selectedStartTime = selectedTimeVal;
+                  });
+                _taskStartTimeController.value = TextEditingValue(
+                    text:
+                        '${selectedStartTime.hour}.${selectedStartTime.minute}');
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Text(
+            TO,
+            style: _themeData.textTheme.bodyText2!
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: CommonSimpleTextfield(
+            readOnly: true,
+            controller: _taskEndTimeController,
+            hintText: PROJECT_END_TIME_HINT,
+            validator: (val) {
+              if (val!.isEmpty && _taskEndTimeController.text.isEmpty) {
+                return 'Select end time';
+              }
+              return null;
+            },
+            onTap: () {
+              CommonDatepicker()
+                  .showTimePickerDialog(context, selectedTime: selectedEndTime)
+                  .then((selectedTimeVal) {
+                if (selectedTimeVal != null)
+                  setState(() {
+                    selectedEndTime = selectedTimeVal;
+                  });
+                _taskEndTimeController.value = TextEditingValue(
+                    text: '${selectedEndTime.hour}.${selectedEndTime.minute}');
+              });
+            },
+          ),
+        ),
+        SizedBox(width: 10),
+        Icon(Icons.watch_later_outlined)
+      ],
     );
   }
 
@@ -492,6 +575,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
 
   Future addOrUpdateData() async {
     CircularLoader().show(context);
+    double startTime = timeConvertToDouble(selectedStartTime);
+    double endTime = timeConvertToDouble(selectedEndTime);
+    double hrsDiff = endTime - startTime;
     final TaskModel taskDetails = TaskModel(
       projectId: '',
       id: fromEdit ? task!.id : '',
@@ -502,6 +588,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       qualification: _taskQualificationController.text,
       startDate: _taskStartDateController.text,
       endDate: _taskEndDateController.text,
+      hours: hrsDiff,
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
           ? TOGGLE_NOT_STARTED
@@ -539,6 +626,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     _taskStartDateController.clear();
     _taskEndDateController.clear();
     _taskMembersController.clear();
-    _taskHoursController.clear();
+    _taskStartTimeController.clear();
   }
 }
