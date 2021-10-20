@@ -4,7 +4,6 @@ import 'package:helpozzy/models/signup_model.dart';
 import 'package:helpozzy/screens/user/auth/signup/password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class SchoolAndGradeScreen extends StatefulWidget {
   SchoolAndGradeScreen({required this.signUpModel});
@@ -16,9 +15,8 @@ class SchoolAndGradeScreen extends StatefulWidget {
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   final TextEditingController _schoolController = TextEditingController();
-  final GlobalKey<State> _dialogKey = GlobalKey<State>();
+  final TextEditingController _gradeLevelController = TextEditingController();
   static final _formKey = GlobalKey<FormState>();
-  String dropdownValue = SELECT_GRADE_HINT;
   late ThemeData _theme;
 
   @override
@@ -65,25 +63,16 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                   Map<String, dynamic> json;
                   json = widget.signUpModel.toJson();
                   json['school_name'] = _schoolController.text;
-                  json['grade_level'] = dropdownValue;
+                  json['grade_level'] = _gradeLevelController.text;
                   if (_formKey.currentState!.validate()) {
-                    if (dropdownValue != SELECT_GRADE_HINT) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PasswordSetScreen(
-                            signUpModel: SignUpModel.fromJson(json: json),
-                          ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PasswordSetScreen(
+                          signUpModel: SignUpModel.fromJson(json: json),
                         ),
-                      );
-                    } else {
-                      PlatformAlertDialog().show(
-                        context,
-                        _dialogKey,
-                        title: ALERT,
-                        content: 'Please select your grade',
-                      );
-                    }
+                      ),
+                    );
                   }
                 },
               ),
@@ -101,16 +90,23 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(50.0)),
       ),
-      child: DropdownButton<String>(
-          value: dropdownValue,
+      child: DropdownButtonFormField<String>(
           hint: Text(SELECT_GRADE_HINT),
           icon: Icon(Icons.expand_more_outlined),
-          underline: SizedBox(),
+          decoration: inputRoundedDecoration(
+              getHint: SELECT_RELATION_HINT, isDropDown: true),
           isExpanded: true,
           onChanged: (String? newValue) {
             setState(() {
-              dropdownValue = newValue!;
+              _gradeLevelController.text = newValue!;
             });
+          },
+          validator: (val) {
+            if (_gradeLevelController.text.isNotEmpty &&
+                _gradeLevelController.text == SELECT_RELATION_HINT) {
+              return 'Select grade level';
+            }
+            return null;
           },
           items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(

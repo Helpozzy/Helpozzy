@@ -31,6 +31,8 @@ class Repository {
   Future<UserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
 
+  Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
+
   //Admin Repo
   Future<AdminTypes> getAdminCategoriesRepo() =>
       apiProvider.getAdminCategoriesAPIProvider();

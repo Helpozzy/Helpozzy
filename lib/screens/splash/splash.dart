@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/screens/user/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
@@ -22,9 +23,7 @@ class Splash extends StatelessWidget {
         if (state is AuthenticateState) {
           Navigator.pushNamedAndRemoveUntil(
               context, HOME_SCREEN, (route) => false);
-          print('ISLOGIN');
         } else {
-          print('NOTLOGIN');
           Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
         }
       },
@@ -45,27 +44,7 @@ class Splash extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/helpozzy_logo.png',
-                  height: height / 6,
-                  width: height / 6,
-                ),
-                Text(
-                  HELPOZZY_REMAINING_TEXT,
-                  style: Theme.of(context).textTheme.headline5!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: DARK_BLACK,
-                        fontSize: height / 14,
-                      ),
-                )
-              ],
-            ),
-          ),
+          TopAppLogo(height: height / 5),
         ],
       ),
     );

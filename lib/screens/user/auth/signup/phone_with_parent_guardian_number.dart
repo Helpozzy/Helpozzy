@@ -185,6 +185,8 @@ class _PhoneWithParentGuardianNumberState
       child: DropdownButtonFormField<String>(
           icon: Icon(Icons.expand_more_outlined),
           isExpanded: true,
+          decoration: inputRoundedDecoration(
+              getHint: SELECT_RELATION_HINT, isDropDown: true),
           onChanged: (String? newValue) {
             setState(() {
               _relationController.text = newValue!;

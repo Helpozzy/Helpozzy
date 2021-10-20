@@ -98,7 +98,8 @@ class _UserSelectionState extends State<UserSelection> {
           horizontal: MediaQuery.of(context).size.width * 0.1),
       padding: EdgeInsets.only(left: 20, right: 10),
       child: DropdownButtonFormField<String>(
-          decoration: inputRoundedDecoration(getHint: SELECT_TYPE_HINT),
+          decoration: inputRoundedDecoration(
+              getHint: SELECT_TYPE_HINT, isDropDown: true),
           icon: Icon(Icons.expand_more_outlined),
           validator: (val) {
             if (_typeController.text.isEmpty) {

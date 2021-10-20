@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
-import 'package:helpozzy/models/user_rewards_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -76,7 +76,7 @@ class _MembersScreenState extends State<MembersScreen> {
             ),
           ),
           volunteerFilteringSection(),
-          Expanded(child: volunteerList()),
+          Expanded(child: membersList()),
         ],
       ),
     );
@@ -188,7 +188,7 @@ class _MembersScreenState extends State<MembersScreen> {
     );
   }
 
-  Widget volunteerList() {
+  Widget membersList() {
     return StreamBuilder<dynamic>(
       stream: _membersBloc.getSearchedMembersStream,
       builder: (context, snapshot) {
@@ -200,16 +200,16 @@ class _MembersScreenState extends State<MembersScreen> {
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
-            final PeopleModel volunteer = snapshot.data[index];
+            final UserModel volunteer = snapshot.data[index];
             return StreamBuilder<bool>(
               initialData: favVolunteers,
               stream: _membersBloc.getFavVolunteersStream,
               builder: (context, snapshot) {
                 return snapshot.data!
                     ? volunteer.favorite
-                        ? volunteerItem(volunteer: volunteer)
+                        ? memberItem(volunteer: volunteer)
                         : SizedBox()
-                    : volunteerItem(volunteer: volunteer);
+                    : memberItem(volunteer: volunteer);
               },
             );
           },
@@ -218,15 +218,16 @@ class _MembersScreenState extends State<MembersScreen> {
     );
   }
 
-  Widget volunteerItem({required PeopleModel volunteer}) {
+  Widget memberItem({required UserModel volunteer}) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: width * 0.02, horizontal: 10.0),
+        padding: EdgeInsets.symmetric(
+            vertical: width * 0.035, horizontal: width * 0.04),
         child: Row(
           children: [
-            CommonUserPlaceholder(size: width * 0.13),
+            CommonUserPlaceholder(size: width * 0.14),
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -235,7 +236,7 @@ class _MembersScreenState extends State<MembersScreen> {
                   Text(
                     volunteer.name,
                     style: _theme.textTheme.bodyText2!.copyWith(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -293,7 +294,7 @@ class _MembersScreenState extends State<MembersScreen> {
                         ? Icons.favorite_rounded
                         : Icons.favorite_border_rounded,
                     color: volunteer.favorite ? PINK_COLOR : BLACK,
-                    size: 13,
+                    size: 16,
                   ),
                 ),
                 SizedBox(height: 12),
@@ -302,7 +303,7 @@ class _MembersScreenState extends State<MembersScreen> {
                   child: Icon(
                     CupertinoIcons.chat_bubble_2_fill,
                     color: BLACK,
-                    size: 13,
+                    size: 16,
                   ),
                 ),
               ],

@@ -1,35 +1,34 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
-import 'package:helpozzy/models/user_rewards_model.dart';
-import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MembersBloc {
   final repo = Repository();
+  final uId = 'WESDIeexsgWhWniD91XfU9XlPlD3';
+  //FirebaseAuth.instance.currentUser!.uid;
 
-  final membersController = PublishSubject<Volunteers>();
+  final membersController = PublishSubject<Users>();
   final _searchMembersList = BehaviorSubject<dynamic>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
-  Stream<Volunteers> get getMembersStream => membersController.stream;
+  Stream<Users> get getMembersStream => membersController.stream;
   Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future getMembers() async {
-    membersFromAPI = Volunteers(list: peoplesList).peoples;
-    membersController.sink.add(Volunteers(list: peoplesList));
-    return membersFromAPI;
+    final Users users = await repo.usersRepo(uId);
+    membersController.sink.add(users);
   }
 
-  List<PeopleModel> membersFromAPI = [];
   dynamic searchedMembersList = [];
 
   Future searchMembers({required String searchText}) async {
-    await getMembers();
+    final Users users = await repo.usersRepo(uId);
     searchedMembersList = [];
     if (searchText.isEmpty) {
-      _searchMembersList.sink.add(membersFromAPI);
+      _searchMembersList.sink.add(users.peoples);
     } else {
-      membersFromAPI.forEach((project) {
+      users.peoples.forEach((project) {
         if (project.name.toLowerCase().contains(searchText.toLowerCase()) ||
             project.address.toLowerCase().contains(searchText.toLowerCase())) {
           searchedMembersList.add(project);
@@ -40,21 +39,23 @@ class MembersBloc {
   }
 
   Future sortMembersByName() async {
-    final List<PeopleModel> list = await getMembers();
-    list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-    _searchMembersList.sink.add(list);
+    final Users users = await repo.usersRepo(uId);
+    users.peoples
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    _searchMembersList.sink.add(users.peoples);
   }
 
   Future sortMembersByReviewedPersons() async {
-    final List<PeopleModel> list = await getMembers();
-    list.sort((a, b) => a.reviewsByPersons.compareTo(b.reviewsByPersons));
-    _searchMembersList.sink.add(list);
+    final Users users = await repo.usersRepo(uId);
+    users.peoples
+        .sort((a, b) => a.reviewsByPersons.compareTo(b.reviewsByPersons));
+    _searchMembersList.sink.add(users.peoples);
   }
 
   Future sortMembersByRating() async {
-    final List<PeopleModel> list = await getMembers();
-    list.sort((a, b) => a.rating.compareTo(b.rating));
-    _searchMembersList.sink.add(list);
+    final Users users = await repo.usersRepo(uId);
+    users.peoples.sort((a, b) => b.rating.compareTo(a.rating));
+    _searchMembersList.sink.add(users.peoples);
   }
 
   Future changeFavVal(bool enabled) async {

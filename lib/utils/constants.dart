@@ -88,8 +88,8 @@ const PROJECT_DETAILS_SCREEN = 'project_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
 
 //Dropdown hint
-const SELECT_RELATION_HINT = '-- Select Relation --';
-const SELECT_GRADE_HINT = '-- Select Grade --';
+const SELECT_RELATION_HINT = 'Select Relation';
+const SELECT_GRADE_HINT = 'Select Grade Level';
 const SELECT_TYPE_HINT = 'Select Type';
 const SELECT_CATEGORY_HINT = 'Select Category';
 const FILTERS_HINT = 'Filters';
@@ -524,7 +524,6 @@ Map<String, dynamic> rewardsList = {
 List<Map<String, dynamic>> peoplesList = [
   {
     'image_url': '',
-    'fav': false,
     'rating': 4.7,
     'review_by_persons': 50,
     'address': 'Dublin, CA 94568',
@@ -534,7 +533,6 @@ List<Map<String, dynamic>> peoplesList = [
   },
   {
     'image_url': '',
-    'fav': true,
     'rating': 3,
     'review_by_persons': 20,
     'address': 'Sacrdmento, CA 94203',
@@ -544,7 +542,6 @@ List<Map<String, dynamic>> peoplesList = [
   },
   {
     'image_url': '',
-    'fav': false,
     'rating': 3.5,
     'review_by_persons': 32,
     'user_name': 'Smith Andda',

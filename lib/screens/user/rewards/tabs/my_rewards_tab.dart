@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/user_rewards_model.dart';
+import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/user/rewards/tabs/accept_gift_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -14,6 +15,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
   late double height;
   late double width;
   late bool expanded = false;
+  final MembersBloc _membersBloc = MembersBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +83,22 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
   }
 
   Widget peopleRewards() {
-    final peoples = Volunteers(list: peoplesList).peoples;
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: expanded ? peoples.length : 2,
-      itemBuilder: (context, index) {
-        final PeopleModel people = peoples[index];
-        return rewardItem(people);
+    return StreamBuilder<Users>(
+      stream: _membersBloc.getMembersStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        final peoples = snapshot.data!.peoples;
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: expanded ? peoples.length : 2,
+          itemBuilder: (context, index) {
+            final UserModel people = peoples[index];
+            return rewardItem(people);
+          },
+        );
       },
     );
   }
@@ -123,7 +133,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
     );
   }
 
-  Widget rewardItem(PeopleModel people) {
+  Widget rewardItem(UserModel people) {
     return Column(
       children: [
         Padding(
@@ -166,7 +176,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
     );
   }
 
-  Future showAcceptDialog(PeopleModel people) {
+  Future showAcceptDialog(UserModel people) {
     return showDialog(
       context: context,
       barrierDismissible: false,

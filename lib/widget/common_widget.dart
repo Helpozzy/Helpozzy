@@ -162,7 +162,7 @@ class TextFieldWithLabel extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        TextfieldLabelSmall(label: label),
+        TopInfoLabel(label: label),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.1),
           child: CommonRoundedTextfield(
@@ -510,7 +510,11 @@ class TopAppLogo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/helpozzy_logo.png'),
+          Image.asset(
+            'assets/images/helpozzy_logo.png',
+            height: height / 1,
+          ),
+          SizedBox(width: 5),
           Text(
             HELPOZZY_REMAINING_TEXT,
             style: Theme.of(context).textTheme.headline5!.copyWith(

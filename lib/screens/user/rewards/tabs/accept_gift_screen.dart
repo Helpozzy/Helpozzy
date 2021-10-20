@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/user_rewards_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class AcceptGiftScreen extends StatefulWidget {
   AcceptGiftScreen({required this.people});
-  final PeopleModel people;
+  final UserModel people;
   @override
   _AcceptGiftScreenState createState() => _AcceptGiftScreenState();
 }

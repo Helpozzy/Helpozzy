@@ -26,20 +26,31 @@ class UserModel {
     state = json['state'];
     volunteerType = json['volunteer_type'];
     zipCode = json['zip_code'];
+    rofileUrl = json['profile_url'];
+    rating = json['rating'] is double
+        ? json['rating']
+        : double.parse(json['rating'].toString());
+    reviewsByPersons = json['review_by_persons'];
+    pointGifted = json['point_gifted'];
   }
 
   late String uId;
+  late String name;
+  late String email;
   late String address;
   late String city;
+  late String state;
+  late String zipCode;
   late Timestamp? dateOfBirth;
-  late String email;
   late String gradeLevel;
-  late String name;
   late String parentPhnNo;
   late String personalPhnNo;
   late String relationshipWithParent;
   late String schoolName;
-  late String state;
   late int volunteerType;
-  late String zipCode;
+  late String rofileUrl;
+  late bool favorite = false;
+  late int pointGifted;
+  late double rating;
+  late int reviewsByPersons;
 }

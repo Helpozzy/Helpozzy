@@ -88,6 +88,15 @@ class ApiProvider {
     return UserModel.fromjson(json: json);
   }
 
+  Future<Users> usersAPIProvider(String uId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .where('user_id', isNotEqualTo: uId)
+        .get();
+    List<QueryDocumentSnapshot<Object?>> userList = querySnapshot.docs;
+    return Users.fromJson(list: userList);
+  }
+
   //Admin API Provider
 
   Future<AdminTypes> getAdminCategoriesAPIProvider() async {
