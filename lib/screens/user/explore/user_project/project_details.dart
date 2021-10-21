@@ -510,10 +510,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     Text(
                       'Dublin, CA 94568',
                       style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 12,
-                        color: LIGHT_GRAY,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 12,
+                          color: DARK_GRAY,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -528,7 +527,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
-                unratedColor: GRAY,
+                unratedColor: LIGHT_GRAY,
                 itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
@@ -568,7 +567,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         borderSide: BorderSide.none,
       ),
       hintStyle:
-          _theme.textTheme.bodyText2!.copyWith(color: GRAY, fontSize: 12),
+          _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY, fontSize: 12),
     );
   }
 
@@ -603,8 +602,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                         review.address,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 12,
-                          color: LIGHT_GRAY,
-                          fontWeight: FontWeight.bold,
+                          color: DARK_GRAY,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -621,7 +620,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
-                  unratedColor: GRAY,
+                  unratedColor: LIGHT_GRAY,
                   itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                   itemBuilder: (context, _) => Icon(
                     Icons.star,

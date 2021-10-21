@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
@@ -55,6 +56,22 @@ class ApiProvider {
   Future<Projects> getUserProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('events').get();
+
+    List<QueryDocumentSnapshot<Object?>> projectList = querySnapshot.docs;
+    List<Map<String, dynamic>> projects = [];
+    projectList.forEach((element) {
+      final project = element.data() as Map<String, dynamic>;
+      projects.add(project);
+    });
+    return Projects.fromJson(list: projects);
+  }
+
+  Future<Projects> getUserCompltedProjectsAPIProvider() async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('events')
+        .where('project_owner',
+            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
 
     List<QueryDocumentSnapshot<Object?>> projectList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

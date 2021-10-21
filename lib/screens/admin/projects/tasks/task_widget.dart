@@ -25,12 +25,12 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData _themeData = Theme.of(context);
     return Card(
-      elevation: selected ? 1 : 0,
+      elevation: 2,
       color: !optionEnable
-          ? GRAY
+          ? WHITE
           : selected
-              ? DIVIDER_COLOR
-              : GRAY,
+              ? GRAY
+              : WHITE,
       margin: EdgeInsets.symmetric(vertical: 6.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(

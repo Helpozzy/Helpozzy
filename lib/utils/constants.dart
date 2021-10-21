@@ -197,7 +197,11 @@ const REDEEM_TAB = 'Redeem';
 const TRANSFER_POINT_TAB = 'Transfer Points';
 
 //Profile
+const EDIT_PROFILE_TEXT = 'Edit Profile';
 const CONTACT_TEXT = 'Contact';
+const ABOUT_TEXT = 'About';
+const PROJECT_PREFRENCES_TEXT = 'Project Prefrences';
+const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 
 //Drop Down items
 const SELECT_USER = 'User';
@@ -271,7 +275,6 @@ const PUBLISH_PROJECT_BUTTON = 'PUBLISH PROJECT';
 const UPDATE_TASK_BUTTON = 'UPDATE';
 const ADD_TASK_BUTTON = 'ADD TASK';
 const ADD_NEW_TASK_BUTTON = 'Create New Task';
-const ADD_TO_PROJECT_BUTTON = 'ADD TO PROJECT';
 const TASK_LIST_BUTTON = 'Task List';
 const MEMBERS_LIST_BUTTON = 'Members List';
 

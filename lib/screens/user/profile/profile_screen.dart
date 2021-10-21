@@ -6,6 +6,7 @@ import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/user/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
@@ -13,6 +14,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -32,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final uId = prefsObject.getString('uID');
     _userInfoBloc.getUser(uId!);
     _categoryBloc.getCategories();
-    _userProjectsBloc.getProjects();
+    _userProjectsBloc.getOwnCompletedProjects();
     super.initState();
   }
 
@@ -51,9 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           final UserModel? user = snapshot.data;
-          final DateTime date = DateTime.fromMicrosecondsSinceEpoch(
-              user!.dateOfBirth!.seconds * 1000);
-          final dob = DateFormat('MMM yyyy').format(date);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -75,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Center(
                         child: Text(
-                          user.name,
+                          user!.name,
                           style: _theme.textTheme.headline6!
                               .copyWith(fontWeight: FontWeight.w600),
                         ),
@@ -88,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Icon(Icons.people_alt_outlined, size: 16),
                               SizedBox(width: 2),
                               Text(
-                                '2 Reviews',
+                                '${user.reviewsByPersons} review',
                                 style: _theme.textTheme.bodyText2!.copyWith(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -98,7 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           Text(
-                            dob,
+                            DateFormat('MMM yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(user.joiningDate),
+                              ),
+                            ),
                             style: _theme.textTheme.bodyText2!.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -121,11 +124,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 2),
-                      Align(
+                      Container(
+                        padding:
+                            EdgeInsets.only(top: 6.0, bottom: 3.0, right: 3.0),
                         alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
+                        child: InkWell(
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -135,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                           },
                           child: Text(
-                            'Edit Profile',
+                            EDIT_PROFILE_TEXT,
                             style: _theme.textTheme.bodyText2!.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -163,6 +167,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 ownProjectsList(),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: 10, horizontal: width * 0.1),
+                  width: double.infinity,
+                  child: CommonButton(
+                      text: 'Logout',
+                      onPressed: () async {
+                        Provider.of<AuthBloc>(context, listen: false)
+                            .add(AppLogout());
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, INTRO, (route) => false);
+                      }),
+                ),
               ],
             ),
           );
@@ -210,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About',
+            ABOUT_TEXT,
             style: _theme.textTheme.bodyText2!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
@@ -234,15 +251,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Project Prefrences',
+            PROJECT_PREFRENCES_TEXT,
             style: _theme.textTheme.bodyText2!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          StreamBuilder<Categories>(
-            stream: _categoryBloc.getCategoriesStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                _categoryBloc.getCategories();
+          StreamBuilder<Projects>(
+            stream: _userProjectsBloc.getCompletedProjectsStream,
+            builder: (context, projectSnapshot) {
+              if (!projectSnapshot.hasData) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Center(child: LinearLoader(minheight: 12)),
@@ -250,50 +266,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
               return Container(
                 height: width * 0.25,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: snapshot.data!.item.map((category) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategorisedProjectsScreen(
-                                categoryId: category.id),
+                child: StreamBuilder<Categories>(
+                  stream: _categoryBloc.getCategoriesStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      _categoryBloc.getCategories();
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Center(child: LinearLoader(minheight: 12)),
+                      );
+                    }
+                    late List<CategoryModel> availCategory = [];
+                    snapshot.data!.item.forEach((category) {
+                      projectSnapshot.data!.projects.forEach((project) {
+                        if (project.categoryId == category.id) {
+                          availCategory.add(category);
+                        }
+                      });
+                    });
+                    return ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: availCategory.map((category) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CategorisedProjectsScreen(
+                                    categoryId: category.id),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  category.imgUrl,
+                                  fit: BoxFit.cover,
+                                  height: width * 0.09,
+                                  width: width * 0.09,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  category.label,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: QUICKSAND,
+                                    color: PRIMARY_COLOR,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.asset(
-                                category.imgUrl,
-                                fit: BoxFit.fill,
-                                height: width * 0.09,
-                                width: width * 0.09,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              category.label,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontFamily: QUICKSAND,
-                                color: PRIMARY_COLOR,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
+                      }).toList(),
                     );
-                  }).toList(),
+                  },
                 ),
               );
             },
@@ -305,10 +338,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget ownProjectsList() {
     return StreamBuilder<Projects>(
-      stream: _userProjectsBloc.getProjectsStream,
+      stream: _userProjectsBloc.getCompletedProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          _userProjectsBloc.getProjects();
+          _userProjectsBloc.getOwnCompletedProjects();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Center(child: LinearLoader(minheight: 12)),
@@ -326,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Completed Projects',
+                    COMPLETED_PROJECT_TEXT,
                     style: _theme.textTheme.bodyText2!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),

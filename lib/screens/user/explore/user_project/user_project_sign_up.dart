@@ -36,7 +36,7 @@ class _ProjectUserSignUpScreenState extends State<ProjectUserSignUpScreen> {
     return Container(
       color: SCREEN_BACKGROUND,
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 26, horizontal: 27),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 27),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

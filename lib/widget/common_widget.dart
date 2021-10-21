@@ -711,9 +711,6 @@ class CommonAppBar {
 
   AppBar show({
     required String title,
-    double? elevation,
-    Color? color,
-    Color? textColor,
     Function()? onBackPressed,
     List<Widget>? actions,
     PreferredSizeWidget? bottom,
@@ -721,12 +718,12 @@ class CommonAppBar {
   }) {
     return AppBar(
       centerTitle: true,
-      elevation: elevation,
-      backgroundColor: color ?? PRIMARY_COLOR,
+      elevation: 1,
+      backgroundColor: WHITE,
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: textColor ?? WHITE,
+              color: DARK_PINK_COLOR,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -739,7 +736,7 @@ class CommonAppBar {
                   },
               icon: Icon(
                 Icons.arrow_back_rounded,
-                color: textColor ?? WHITE,
+                color: DARK_PINK_COLOR,
               ),
             )
           : SizedBox(),

@@ -14,9 +14,8 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-  late ThemeData _themeData;
   late double width;
-  late List<String> selectedItems = [];
+  late List<TaskModel> selectedItems = [];
 
   @override
   void initState() {
@@ -27,7 +26,6 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
-    _themeData = Theme.of(context);
     return Scaffold(
       appBar: CommonAppBar(context).show(
         title: TASKS_APPBAR,
@@ -35,13 +33,14 @@ class _TasksScreenState extends State<TasksScreen> {
           Navigator.pop(context);
         },
         actions: [
-          TextButton(
+          IconButton(
             onPressed: () {
-              Navigator.pop(context, selectedItems);
+              Navigator.pop(context, _projectTaskBloc);
+              _projectTaskBloc.getSelectedTasks(tasks: selectedItems);
             },
-            child: Text(
-              ADD_TO_PROJECT_BUTTON,
-              style: _themeData.textTheme.bodyText2!.copyWith(color: WHITE),
+            icon: Icon(
+              Icons.check,
+              color: DARK_PINK_COLOR,
             ),
           ),
         ],
@@ -77,7 +76,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   task.isSelected = !task.isSelected!;
                 });
                 if (task.isSelected!) {
-                  selectedItems.add(task.id);
+                  selectedItems.add(task);
                 }
               },
               onTapEdit: () async => await onEdit(task),

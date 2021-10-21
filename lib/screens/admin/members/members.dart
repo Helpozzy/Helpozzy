@@ -35,9 +35,6 @@ class _MembersScreenState extends State<MembersScreen> {
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(context).show(
           title: MEMBERS_APPBAR,
-          elevation: 0,
-          color: WHITE,
-          textColor: PRIMARY_COLOR,
           onBackPressed: () {
             Navigator.of(context).pop();
           }),
@@ -52,10 +49,11 @@ class _MembersScreenState extends State<MembersScreen> {
       },
       child: Column(
         children: [
+          SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
             child: Card(
-              elevation: 4,
+              elevation: 2,
               color: PRIMARY_COLOR,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
@@ -297,7 +295,7 @@ class _MembersScreenState extends State<MembersScreen> {
                     size: 16,
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 20),
                 InkWell(
                   onTap: () {},
                   child: Icon(

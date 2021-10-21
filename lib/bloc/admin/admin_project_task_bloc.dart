@@ -6,10 +6,11 @@ class ProjectTaskBloc {
   final repo = Repository();
 
   final tasksController = PublishSubject<Tasks>();
-  final selectedTasksController = PublishSubject<Tasks>();
+  final selectedTasksController = BehaviorSubject<List<TaskModel>>();
 
   Stream<Tasks> get getTasksStream => tasksController.stream;
-  Stream<Tasks> get getSelectedTaskStream => selectedTasksController.stream;
+  Stream<List<TaskModel>> get getSelectedTaskStream =>
+      selectedTasksController.stream;
 
   Future<bool> postTasks(TaskModel task) async {
     final bool response = await repo.postTaskRepo(task);
@@ -21,9 +22,8 @@ class ProjectTaskBloc {
     tasksController.sink.add(response);
   }
 
-  Future getSelectedTasks({required List<String> taskIds}) async {
-    final Tasks response = await repo.getSelectedTasksRepo(taskIds);
-    selectedTasksController.sink.add(response);
+  Future getSelectedTasks({required List<TaskModel> tasks}) async {
+    selectedTasksController.sink.add(tasks);
   }
 
   Future<bool> updateTasks(TaskModel task) async {

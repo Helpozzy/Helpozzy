@@ -35,7 +35,9 @@ class TaskModel {
     qualification = json['qualification'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    hours = json['hours'];
+    hours = json['hours'] is double
+        ? json['hours']
+        : double.parse(json['hours'].toString());
     members = json['members'];
     status = json['status'];
   }

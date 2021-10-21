@@ -23,9 +23,6 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     return Scaffold(
       appBar: CommonAppBar(context).show(
           title: PROJECTS_APPBAR,
-          elevation: 1,
-          color: WHITE,
-          textColor: PRIMARY_COLOR,
           bottom: _tabBar(),
           onBackPressed: () {
             Navigator.of(context).pop();

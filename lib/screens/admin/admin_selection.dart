@@ -100,7 +100,6 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
                           imageUrl: type.imgUrl,
                           height: width / 5,
                           width: width / 5,
-                          color: BLACK,
                           placeholder: (context, url) => Center(
                             child: LinearLoader(minheight: 10),
                           ),

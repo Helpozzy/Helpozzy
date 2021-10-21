@@ -25,6 +25,9 @@ class Repository {
   Future<Projects> getuserProjectsRepo() =>
       apiProvider.getUserProjectsAPIProvider();
 
+  Future<Projects> getuserCompletedProjectsRepo() =>
+      apiProvider.getUserCompltedProjectsAPIProvider();
+
   Future<Projects> getCategorisedProjectsRepo(int categoryId) =>
       apiProvider.getCategorisedProjectsAPIProvider(categoryId);
 

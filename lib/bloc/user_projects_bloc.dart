@@ -6,29 +6,36 @@ class UserProjectsBloc {
   final repo = Repository();
 
   final projectsController = PublishSubject<Projects>();
+  final completedOwnProjectsController = PublishSubject<Projects>();
   final categorisedProjectsController = PublishSubject<Projects>();
   final _searchProjectsList = BehaviorSubject<dynamic>();
 
   Stream<Projects> get getProjectsStream => projectsController.stream;
+  Stream<Projects> get getCompletedProjectsStream =>
+      completedOwnProjectsController.stream;
   Stream<Projects> get getCategorisedProjectsStream =>
       categorisedProjectsController.stream;
   Stream<dynamic> get getSearchedProjectsStream => _searchProjectsList.stream;
 
   Future getProjects() async {
     final Projects response = await repo.getuserProjectsRepo();
-    projectsFromAPI = response.projects;
     projectsController.sink.add(response);
   }
 
-  List<ProjectModel> projectsFromAPI = [];
+  Future getOwnCompletedProjects() async {
+    final Projects response = await repo.getuserCompletedProjectsRepo();
+    completedOwnProjectsController.sink.add(response);
+  }
+
   dynamic searchedProjectList = [];
 
   Future searchProjects(String searchText) async {
+    final Projects response = await repo.getuserProjectsRepo();
     searchedProjectList = [];
     if (searchText.isEmpty) {
-      _searchProjectsList.sink.add(projectsFromAPI);
+      _searchProjectsList.sink.add(response.projects);
     } else {
-      projectsFromAPI.forEach((project) {
+      response.projects.forEach((project) {
         if (project.projectName
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
@@ -50,6 +57,7 @@ class UserProjectsBloc {
 
   void dispose() {
     projectsController.close();
+    completedOwnProjectsController.close();
     categorisedProjectsController.close();
     _searchProjectsList.close();
   }

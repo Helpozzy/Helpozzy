@@ -10,8 +10,8 @@ class SearchProject {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(15.0),
-          topRight: const Radius.circular(15.0),
+          topLeft: const Radius.circular(35.0),
+          topRight: const Radius.circular(35.0),
         ),
       ),
       isScrollControlled: true,
@@ -34,7 +34,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   void initState() {
-    _userProjectsBloc.getProjects();
+    _userProjectsBloc.searchProjects('');
     super.initState();
   }
 
@@ -42,18 +42,23 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.965,
-        padding: const EdgeInsets.symmetric(
-          vertical: 23,
-          horizontal: 10.0,
-        ),
-        child: Column(
-          children: [
-            bottomSheetSearchbar(context),
-            // currentLocationCard(),
-            Expanded(child: searchList()),
-          ],
+      child: GestureDetector(
+        onPanDown: (_) {
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.965,
+          padding: const EdgeInsets.symmetric(
+            vertical: 18,
+            horizontal: 16.0,
+          ),
+          child: Column(
+            children: [
+              bottomSheetSearchbar(context),
+              // currentLocationCard(),
+              Expanded(child: searchList()),
+            ],
+          ),
         ),
       ),
     );
@@ -69,10 +74,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         hintText: SEARCH_HINT,
         hintStyle: _theme.textTheme.headline6!.copyWith(
           color: DARK_GRAY,
+          fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
         prefixIcon: Padding(
-          padding: const EdgeInsets.only(top: 3, left: 12),
+          padding: const EdgeInsets.only(left: 6),
           child: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -80,11 +86,12 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             icon: Icon(
               Icons.arrow_back_ios_rounded,
               color: BLACK,
+              size: 18,
             ),
           ),
         ),
         suffixIcon: Padding(
-          padding: const EdgeInsets.only(top: 3, right: 10),
+          padding: const EdgeInsets.only(right: 5),
           child: IconButton(
             onPressed: () {
               _searchController.clear();
@@ -93,7 +100,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             icon: Icon(
               Icons.close_rounded,
               color: BLACK,
-              size: 25,
+              size: 22,
             ),
           ),
         ),
@@ -119,7 +126,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               offset: Offset(0.0, 2.0),
               blurRadius: 2.0,
               spreadRadius: 0.5,
-            ), //Bo//BoxShado
+            ),
           ],
         ),
         padding: EdgeInsets.symmetric(vertical: 16),
@@ -151,7 +158,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         topRight: const Radius.circular(31.0),
       ),
       borderSide: BorderSide(
-        color: DIVIDER_COLOR,
+        color: DARK_GRAY,
         width: 0.3,
       ),
     );
@@ -176,15 +183,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 itemBuilder: (context, index) {
                   final ProjectModel project = snapshot.data[index];
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProjectDetailsScreen(project: project),
-                        ),
-                      );
-                    },
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProjectDetailsScreen(project: project),
+                      ),
+                    ),
                     child: Column(
                       children: [
                         Padding(
@@ -193,6 +198,38 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      project.projectName,
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 16,
+                                        color: DARK_GRAY_FONT_COLOR,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      project.organization,
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 12,
+                                        color: BLUE_GRAY,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(height: 2),
+                                    Text(
+                                      project.location,
+                                      style: _theme.textTheme.bodyText2!
+                                          .copyWith(
+                                              fontSize: 10, color: DARK_GRAY),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(right: 6.0),
                                 child: Icon(
@@ -200,36 +237,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                                   color: PRIMARY_COLOR,
                                   size: 25,
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    project.projectName,
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      fontSize: 16,
-                                      color: DARK_GRAY,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    project.organization,
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      fontSize: 12,
-                                      color: GRAY,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 2),
-                                  Text(
-                                    project.location,
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      fontSize: 10,
-                                      color: BLUE_GRAY,
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           ),

@@ -24,6 +24,7 @@ class _CreateProjectState extends State<CreateProject> {
   final _formKey = GlobalKey<FormState>();
   AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
   ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  ProjectTaskBloc selectedTaskBloc = ProjectTaskBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
   final TextEditingController _projNameController = TextEditingController();
   final TextEditingController _projDesController = TextEditingController();
@@ -53,7 +54,6 @@ class _CreateProjectState extends State<CreateProject> {
     _categoryBloc.getCategories();
     _adminProjectsBloc.getOtherUsersInfo();
     _adminProjectsBloc.searchUsers('');
-    _projectTaskBloc.getSelectedTasks(taskIds: []);
     super.initState();
   }
 
@@ -63,11 +63,7 @@ class _CreateProjectState extends State<CreateProject> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(
-          title: CREATE_PROJECT_APPBAR,
-          color: WHITE,
-          textColor: DARK_PINK_COLOR,
-          elevation: 1),
+      appBar: CommonAppBar(context).show(title: CREATE_PROJECT_APPBAR),
       body: body(),
     );
   }
@@ -158,16 +154,13 @@ class _CreateProjectState extends State<CreateProject> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            final List<String> tasks = await Navigator.push(
+                            selectedTaskBloc = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => TasksScreen(),
                               ),
                             );
-                            if (tasks.isNotEmpty) {
-                              await _projectTaskBloc.getSelectedTasks(
-                                  taskIds: tasks);
-                            }
+                            setState(() {});
                           },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -514,22 +507,20 @@ class _CreateProjectState extends State<CreateProject> {
   }
 
   Widget taskList() {
-    return StreamBuilder<Tasks>(
-      stream: _projectTaskBloc.getSelectedTaskStream,
+    return StreamBuilder<List<TaskModel>>(
+      stream: selectedTaskBloc.getSelectedTaskStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: LinearLoader(minheight: 13),
-          );
+          return Center(child: SizedBox());
         }
-        return snapshot.data!.tasks.isNotEmpty
+        return snapshot.data!.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.tasks.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final TaskModel task = snapshot.data!.tasks[index];
+                  final TaskModel task = snapshot.data![index];
                   return TaskCard(
                     title: task.taskName,
                     description: task.description,
@@ -631,8 +622,12 @@ class _CreateProjectState extends State<CreateProject> {
       hours: hrsDiff,
       projectName: _projNameController.text,
       description: _projDesController.text,
-      startDate: _projStartDateController.text,
-      endDate: _projEndDateController.text,
+      startDate: DateTime.parse(_projStartDateController.text)
+          .millisecondsSinceEpoch
+          .toString(),
+      endDate: DateTime.parse(_projEndDateController.text)
+          .millisecondsSinceEpoch
+          .toString(),
       projectOwner: prefsObject.getString('uID')!,
       collaboratorsCoadmin: _projCollaboraorController.text,
       status: PROJECT_NOT_STARTED,

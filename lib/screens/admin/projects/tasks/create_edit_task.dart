@@ -88,9 +88,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     return Scaffold(
       appBar: CommonAppBar(context).show(
         title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
-        color: WHITE,
-        textColor: DARK_PINK_COLOR,
-        elevation: 1,
       ),
       body: body(),
     );
@@ -586,8 +583,12 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       memberRequirement: _taskMemberReqController.text,
       ageRestriction: _taskMinimumAgeController.text,
       qualification: _taskQualificationController.text,
-      startDate: _taskStartDateController.text,
-      endDate: _taskEndDateController.text,
+      startDate: DateTime.parse(_taskStartDateController.text)
+          .millisecondsSinceEpoch
+          .toString(),
+      endDate: DateTime.parse(_taskEndDateController.text)
+          .millisecondsSinceEpoch
+          .toString(),
       hours: hrsDiff,
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
