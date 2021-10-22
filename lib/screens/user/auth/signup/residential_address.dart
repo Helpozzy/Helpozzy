@@ -86,9 +86,7 @@ class ResidentialAddress extends StatelessWidget {
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  Map<String, dynamic> json;
-                  json = signUpModel.toJson();
-                  json['address'] = _houseNoController.text +
+                  signUpModel.address = _houseNoController.text +
                       ' ' +
                       _streetController.text +
                       ' ' +
@@ -98,9 +96,8 @@ class ResidentialAddress extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SchoolAndGradeScreen(
-                          signUpModel: SignUpModel.fromJson(json: json),
-                        ),
+                        builder: (context) =>
+                            SchoolAndGradeScreen(signUpModel: signUpModel),
                       ),
                     );
                   }

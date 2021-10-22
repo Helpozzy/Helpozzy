@@ -13,11 +13,14 @@ class PhoneWithParentGuardianNumber extends StatefulWidget {
 
   @override
   _PhoneWithParentGuardianNumberState createState() =>
-      _PhoneWithParentGuardianNumberState();
+      _PhoneWithParentGuardianNumberState(signUpModel: signUpModel);
 }
 
 class _PhoneWithParentGuardianNumberState
     extends State<PhoneWithParentGuardianNumber> {
+  _PhoneWithParentGuardianNumberState({required this.signUpModel});
+  final SignUpModel signUpModel;
+
   final TextEditingController _personalPhoneController =
       TextEditingController();
   static final _formKey = GlobalKey<FormState>();
@@ -118,21 +121,19 @@ class _PhoneWithParentGuardianNumberState
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  Map<String, dynamic> json;
-                  json = widget.signUpModel.toJson();
-                  json['personal_phn_no'] = countryCodePersonal!.code! +
+                  signUpModel.personalPhnNo = countryCodePersonal!.code! +
                       _personalPhoneController.text;
-                  json['parent_phn_no'] =
+                  signUpModel.parentPhnNo =
                       countryCodeParent!.code! + _parentPhoneController.text;
-                  json['relationship_with_parent'] = _relationController.text;
+                  signUpModel.relationshipWithParent = _relationController.text;
+
                   if (_formKey.currentState!.validate()) {
                     if (_relationController.text != SELECT_RELATION_HINT) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ResidentialAddress(
-                            signUpModel: SignUpModel.fromJson(json: json),
-                          ),
+                          builder: (context) =>
+                              ResidentialAddress(signUpModel: signUpModel),
                         ),
                       );
                     } else {

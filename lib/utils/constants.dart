@@ -331,6 +331,10 @@ const TASK_START_DATE_HINT = 'Start Date';
 const TASK_END_HINT = 'End Date';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 
+const NOT_STARTED_TASKS = 'Not Started Tasks';
+const COMPLETED_TASKS = 'Completed Tasks';
+const INPROGRESS_TASKS = 'In Progress Tasks';
+
 const SAMPLE_LONG_TEXT =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
     "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"

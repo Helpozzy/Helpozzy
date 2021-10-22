@@ -51,15 +51,21 @@ class LoginPage extends StatelessWidget {
           showSnakeBar(context, msg: state.message);
         }
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.15, bottom: height * 0.10),
-            child: TopAppLogo(height: height / 6),
-          ),
-          LoginInput(),
-        ],
+      child: GestureDetector(
+        onPanDown: (_) {
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+                  EdgeInsets.only(top: height * 0.15, bottom: height * 0.10),
+              child: TopAppLogo(height: height / 6),
+            ),
+            LoginInput(),
+          ],
+        ),
       ),
     );
   }

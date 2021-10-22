@@ -11,10 +11,13 @@ class PersonalInfoScreen extends StatefulWidget {
   final SignUpModel signUpModel;
 
   @override
-  _PersonalInfoScreenState createState() => _PersonalInfoScreenState();
+  _PersonalInfoScreenState createState() =>
+      _PersonalInfoScreenState(signUpModel: signUpModel);
 }
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
+  _PersonalInfoScreenState({required this.signUpModel});
+  final SignUpModel signUpModel;
   static final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -111,19 +114,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  Map<String, dynamic> json;
-                  json = widget.signUpModel.toJson();
-                  json['name'] = _firstNameController.text +
+                  signUpModel.name = _firstNameController.text +
                       ' ' +
                       _lastNameController.text;
-                  json['email'] = _emailController.text;
+                  signUpModel.email = _emailController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BirthDateScreen(
-                          signUpModel: SignUpModel.fromJson(json: json),
-                        ),
+                        builder: (context) =>
+                            BirthDateScreen(signUpModel: signUpModel),
                       ),
                     );
                   }

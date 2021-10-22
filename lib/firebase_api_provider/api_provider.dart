@@ -11,7 +11,7 @@ import 'package:helpozzy/utils/constants.dart';
 class ApiProvider {
   Future<VolunteerTypes> volunteerListAPIProvider() async {
     final DocumentReference documentRefVolunteer =
-        firestore.collection('volunteers').doc('volunteers');
+        firestore.collection('volunteers_types').doc('volunteers_types');
 
     final DocumentSnapshot volunteersJsonData =
         await documentRefVolunteer.get();
@@ -34,7 +34,7 @@ class ApiProvider {
 
   Future<bool> postCategoriesAPIProvider(List list) async {
     final DocumentReference documentRef =
-        firestore.collection('eventCategories').doc('categories');
+        firestore.collection('projects_categories').doc('categories');
     await documentRef.set({'categories': list}).catchError((onError) {
       print(onError.toString());
     });
@@ -43,7 +43,7 @@ class ApiProvider {
 
   Future<Categories> getCategoriesAPIProvider() async {
     final DocumentReference documentRef =
-        firestore.collection('eventCategories').doc('categories');
+        firestore.collection('projects_categories').doc('categories');
 
     final DocumentSnapshot categoriesDoc = await documentRef.get();
 
@@ -55,7 +55,7 @@ class ApiProvider {
 
   Future<Projects> getUserProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot =
-        await firestore.collection('events').get();
+        await firestore.collection('projects').get();
 
     List<QueryDocumentSnapshot<Object?>> projectList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];
@@ -68,7 +68,7 @@ class ApiProvider {
 
   Future<Projects> getUserCompltedProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
-        .collection('events')
+        .collection('projects')
         .where('project_owner',
             isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
@@ -84,7 +84,7 @@ class ApiProvider {
 
   Future<Projects> getCategorisedProjectsAPIProvider(int categoryId) async {
     final QuerySnapshot querySnapshot = await firestore
-        .collection('events')
+        .collection('projects')
         .where('category_id', isEqualTo: categoryId)
         .get();
 
@@ -131,7 +131,7 @@ class ApiProvider {
   Future<bool> postProjectAPIProvider(ProjectModel project) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('events').doc();
+          firestore.collection('projects').doc();
       project.projectId = documentReference.id;
       await documentReference.set(project.toJson());
       return true;
@@ -144,20 +144,20 @@ class ApiProvider {
     final QuerySnapshot querySnapshot =
         projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? await firestore
-                .collection('events')
+                .collection('projects')
                 .where('status', isEqualTo: PROJECT_NOT_STARTED)
                 .get()
             : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
                 ? await firestore
-                    .collection('events')
+                    .collection('projects')
                     .where('status', isEqualTo: PROJECT_IN_PROGRESS)
                     .get()
                 : projectTabType == ProjectTabType.PROJECT_PAST_TAB
                     ? await firestore
-                        .collection('events')
+                        .collection('projects')
                         .where('status', isEqualTo: PROJECT_COMPLTED)
                         .get()
-                    : await firestore.collection('events').get();
+                    : await firestore.collection('projects').get();
 
     List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

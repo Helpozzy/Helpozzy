@@ -10,10 +10,14 @@ class SchoolAndGradeScreen extends StatefulWidget {
   final SignUpModel signUpModel;
 
   @override
-  _SchoolAndGradeScreenState createState() => _SchoolAndGradeScreenState();
+  _SchoolAndGradeScreenState createState() =>
+      _SchoolAndGradeScreenState(signUpModel: signUpModel);
 }
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
+  _SchoolAndGradeScreenState({required this.signUpModel});
+  final SignUpModel signUpModel;
+
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
   static final _formKey = GlobalKey<FormState>();
@@ -60,17 +64,14 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  Map<String, dynamic> json;
-                  json = widget.signUpModel.toJson();
-                  json['school_name'] = _schoolController.text;
-                  json['grade_level'] = _gradeLevelController.text;
+                  signUpModel.schoolName = _schoolController.text;
+                  signUpModel.gradeLevel = _gradeLevelController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PasswordSetScreen(
-                          signUpModel: SignUpModel.fromJson(json: json),
-                        ),
+                        builder: (context) =>
+                            PasswordSetScreen(signUpModel: signUpModel),
                       ),
                     );
                   }

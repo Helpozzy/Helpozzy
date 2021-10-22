@@ -219,17 +219,17 @@ class _ProjectTileState extends State<ProjectTile> {
         children: [
           taskStatus(
               color: GREEN,
-              title: LOCATION,
+              title: COMPLETED_TASKS,
               icon: Icons.checklist_rtl_outlined,
               count: 3),
           taskStatus(
               color: AMBER_COLOR,
-              title: CONTACT,
+              title: INPROGRESS_TASKS,
               icon: Icons.access_time,
               count: 6),
           taskStatus(
               color: Colors.red,
-              title: ENROLLMENT_STATUS,
+              title: NOT_STARTED_TASKS,
               icon: Icons.warning_amber_rounded,
               count: 2),
         ],

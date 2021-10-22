@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
@@ -14,10 +13,13 @@ class BirthDateScreen extends StatefulWidget {
   final SignUpModel signUpModel;
 
   @override
-  _BirthDateScreenState createState() => _BirthDateScreenState();
+  _BirthDateScreenState createState() =>
+      _BirthDateScreenState(signUpModel: signUpModel);
 }
 
 class _BirthDateScreenState extends State<BirthDateScreen> {
+  _BirthDateScreenState({required this.signUpModel});
+  final SignUpModel signUpModel;
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _dateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -87,19 +89,15 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
 
   void onSubmit() {
     FocusScope.of(context).unfocus();
-    Map<String, dynamic> json;
-    json = widget.signUpModel.toJson();
-    json['date_of_birth'] = Timestamp.fromDate(_selectedDate).toString();
-    final selectedDate = DateFormat.yMd().format(_selectedDate);
-    final currentDate = DateFormat.yMd().format(DateTime.now());
+    signUpModel.dateOfBirth = _selectedDate.millisecondsSinceEpoch.toString();
+    final currentDate = DateTime.now();
 
-    if (selectedDate != currentDate) {
+    if (_selectedDate != currentDate) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PhoneWithParentGuardianNumber(
-            signUpModel: SignUpModel.fromJson(json: json),
-          ),
+          builder: (context) =>
+              PhoneWithParentGuardianNumber(signUpModel: signUpModel),
         ),
       );
     } else {
