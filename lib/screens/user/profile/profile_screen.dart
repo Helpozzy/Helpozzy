@@ -194,11 +194,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            user.address,
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text(
+              user.address,
+              maxLines: 2,
+              style: _theme.textTheme.bodyText2!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
+          SizedBox(width: 5),
           GestureDetector(
             onTap: () {
               CommonUrlLauncher().launchCall(user.personalPhnNo);

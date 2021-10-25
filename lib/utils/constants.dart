@@ -196,6 +196,11 @@ const MY_REWARDS_TAB = 'My Rewards';
 const REDEEM_TAB = 'Redeem';
 const TRANSFER_POINT_TAB = 'Transfer Points';
 
+//Chat
+const CHAT_TITLE = 'Chat';
+const ALL_USERS_TITLE = 'Select Person';
+const ENTER_MESSAGE_HINT = 'Enter Message';
+
 //Profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';
 const CONTACT_TEXT = 'Contact';

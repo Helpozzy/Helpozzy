@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
+import 'package:helpozzy/screens/user/chat/chat_list.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/profile/profile_screen.dart';
+import 'package:helpozzy/screens/user/projects/projects.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 
@@ -32,8 +33,8 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     ExploreScreen(),
     RewardsScreen(initialIndex: 1, fromBottomBar: true),
-    CommonSampleScreen('Projects \nComing Soon!'),
-    CommonSampleScreen('Inbox \nComing Soon!'),
+    UserProjects(),
+    ChatListScreen(),
     ProfileScreen(),
   ];
 
