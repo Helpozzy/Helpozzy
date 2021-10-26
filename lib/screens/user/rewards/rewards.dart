@@ -77,7 +77,7 @@ class _RewardsScreenState extends State<RewardsScreen>
       controller: _tabController,
       children: [
         DetailsTabScreen(),
-        PointsTabScreen(),
+        PointsTabScreen(tabController: _tabController),
         MyRewardsTabScreen(),
         CommonSampleScreen('Redeem\nComing Soon!'),
         TransferPointTabScreen(),

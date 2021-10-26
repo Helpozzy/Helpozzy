@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
+import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/user/rewards/tabs/accept_gift_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -18,46 +19,61 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
   final MembersBloc _membersBloc = MembersBloc();
 
   @override
+  void initState() {
+    _membersBloc.getMembers();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            color: LIGHT_ACCENT_GRAY,
-            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  AVAILABLE_POINT,
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
+
+    return StreamBuilder<UserRewardsDetailsHelper>(
+      stream: _membersBloc.getuserRewardDetailsStream,
+      builder: (context, rewardDetailsSnapshot) {
+        if (!rewardDetailsSnapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                color: LIGHT_ACCENT_GRAY,
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AVAILABLE_POINT,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      rewardDetailsSnapshot.data!.totalPoint.toString(),
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  '35',
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              sectionTile(text: REWARDS_RECEIVED),
+              peopleRewards(),
+              seeAllButton(),
+              sectionTile(text: REWARDS_REDEEM),
+              pointTableItem(title: USED_POINTS, data: '0'),
+              pointTableItem(title: GIFT_REDEEM, data: '0'),
+              pointTableItem(title: POINT_SENT, data: '3'),
+            ],
           ),
-          sectionTile(text: REWARDS_RECEIVED),
-          peopleRewards(),
-          seeAllButton(),
-          sectionTile(text: REWARDS_REDEEM),
-          pointTableItem(title: USED_POINTS, data: '0'),
-          pointTableItem(title: GIFT_REDEEM, data: '0'),
-          pointTableItem(title: POINT_SENT, data: '3'),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -87,6 +103,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
       stream: _membersBloc.getMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
+          _membersBloc.getMembers();
           return Center(child: LinearLoader(minheight: 12));
         }
         final peoples = snapshot.data!.peoples;

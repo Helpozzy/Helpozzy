@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
+import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
@@ -28,6 +30,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   late Animation<double> animation;
   late AnimationController controller;
   final CategoryBloc _categoryBloc = CategoryBloc();
+  final MembersBloc _membersBloc = MembersBloc();
   final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
 
   @override
@@ -35,6 +38,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     super.initState();
     _userProjectsBloc.getProjects();
     _categoryBloc.getCategories();
+    _membersBloc.getMembers();
     controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
@@ -186,48 +190,58 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget targetGoalSection() {
-    return Padding(
-      padding: EdgeInsets.only(top: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 21),
-            child: Text(
-              MSG_GOAL,
-              style: TextStyle(
-                fontSize: 15,
-                color: DARK_GRAY_FONT_COLOR,
-                fontFamily: QUICKSAND,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 21),
-            child: Row(
+    return StreamBuilder<UserRewardsDetailsHelper>(
+        stream: _membersBloc.getuserRewardDetailsStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: LinearLoader(minheight: 12),
+            );
+          }
+          return Padding(
+            padding: EdgeInsets.only(top: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '35',
-                  style: TextStyle(
-                    fontSize: 21,
-                    color: DARK_GRAY_FONT_COLOR,
-                    fontFamily: QUICKSAND,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
+                  child: Text(
+                    MSG_GOAL,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: DARK_GRAY_FONT_COLOR,
+                      fontFamily: QUICKSAND,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Icon(Icons.star),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
+                  child: Row(
+                    children: [
+                      Text(
+                        snapshot.data!.totalPoint.toString(),
+                        style: TextStyle(
+                          fontSize: 21,
+                          color: DARK_GRAY_FONT_COLOR,
+                          fontFamily: QUICKSAND,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(Icons.star),
+                    ],
+                  ),
+                ),
+                timelineProgress(snapshot.data!),
+                detailsRedeemButton(),
               ],
             ),
-          ),
-          timelineProgress(),
-          detailsRedeemButton(),
-        ],
-      ),
-    );
+          );
+        });
   }
 
-  Widget timelineProgress() {
+  Widget timelineProgress(UserRewardsDetailsHelper? rewardsDetail) {
+    _processIndex = rewardsDetail!.totalPoint;
     return Container(
       height: height / 12,
       width: double.infinity,
@@ -330,21 +344,24 @@ class _ExploreScreenState extends State<ExploreScreen>
           CommonButton(
             fontSize: 11,
             text: DETAILS,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        RewardsScreen(initialIndex: 0, fromBottomBar: false),
-                  ));
-            },
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RewardsScreen(initialIndex: 0, fromBottomBar: false),
+                )),
           ),
           SizedBox(width: 7),
           CommonButton(
             fontSize: 11,
             text: REDEEM,
             color: LIGHT_MARUN,
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RewardsScreen(initialIndex: 3, fromBottomBar: false),
+                )),
           ),
         ],
       ),

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
+import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class PointsTabScreen extends StatefulWidget {
+  PointsTabScreen({required this.tabController});
+  final TabController tabController;
   @override
-  _PointsTabScreenState createState() => _PointsTabScreenState();
+  _PointsTabScreenState createState() =>
+      _PointsTabScreenState(tabController: tabController);
 }
 
 class _PointsTabScreenState extends State<PointsTabScreen>
     with SingleTickerProviderStateMixin {
+  _PointsTabScreenState({required this.tabController});
+  final TabController tabController;
   late ThemeData _theme;
   late double height;
   late double width;
@@ -17,10 +24,12 @@ class _PointsTabScreenState extends State<PointsTabScreen>
   bool boo = true;
   late Animation<double> animation;
   late AnimationController controller;
+  final MembersBloc _membersBloc = MembersBloc();
 
   @override
   void initState() {
     super.initState();
+    _membersBloc.getMembers();
     controller =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     animation = Tween<double>(begin: 0, end: 500).animate(controller)
@@ -46,18 +55,26 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          topMemberShipSection(),
-          membershipInfo(),
-        ],
-      ),
+    return StreamBuilder<UserRewardsDetailsHelper>(
+      stream: _membersBloc.getuserRewardDetailsStream,
+      builder: (context, rewardDetailsSnapshot) {
+        if (!rewardDetailsSnapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              topMemberShipSection(rewardDetailsSnapshot.data!),
+              membershipInfo(rewardDetailsSnapshot.data!),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget topMemberShipSection() {
+  Widget topMemberShipSection(UserRewardsDetailsHelper userRewardsDetails) {
     return Container(
       height: height / 2.5,
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
@@ -68,7 +85,15 @@ class _PointsTabScreenState extends State<PointsTabScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/medal_silver.png',
+                  userRewardsDetails.totalPoint <= 50
+                      ? 'assets/images/medal_bronze.png'
+                      : userRewardsDetails.totalPoint <= 100
+                          ? 'assets/images/medal_silver.png'
+                          : userRewardsDetails.totalPoint <= 150
+                              ? 'assets/images/medal_gold.png'
+                              : userRewardsDetails.totalPoint <= 200
+                                  ? 'assets/images/trophy.png'
+                                  : 'assets/images/medal_bronze.png',
                   height: height / 5.8,
                   width: height / 5.8,
                 ),
@@ -92,7 +117,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                       ),
                     ),
                     Text(
-                      '35',
+                      userRewardsDetails.totalPoint.toString(),
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: height / 10,
                         fontWeight: FontWeight.bold,
@@ -114,7 +139,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                         text: REDEEM_MY_POINT,
                         color: LIGHT_BLACK,
                         fontSize: 12,
-                        onPressed: () {},
+                        onPressed: () => tabController.animateTo(3),
                       ),
                     ),
                   ],
@@ -125,7 +150,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     );
   }
 
-  Widget membershipInfo() {
+  Widget membershipInfo(UserRewardsDetailsHelper userRewardsDetails) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 13.0),
       child: Column(
@@ -150,7 +175,9 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                   child: LinearPercentIndicator(
                     lineHeight: 20.0,
                     animationDuration: 3000,
-                    percent: 0.35,
+                    percent:
+                        double.parse(userRewardsDetails.totalPoint.toString()) /
+                            100,
                     animateFromLastPercent: true,
                     linearStrokeCap: LinearStrokeCap.butt,
                     progressColor: BLACK,

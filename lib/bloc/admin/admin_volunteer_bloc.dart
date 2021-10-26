@@ -1,23 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MembersBloc {
   final repo = Repository();
-  final uId = 'WESDIeexsgWhWniD91XfU9XlPlD3';
-  //FirebaseAuth.instance.currentUser!.uid;
+  final uId = FirebaseAuth.instance.currentUser!.uid;
 
   final membersController = PublishSubject<Users>();
+  final userRewardDetailsController =
+      PublishSubject<UserRewardsDetailsHelper>();
   final _searchMembersList = BehaviorSubject<dynamic>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => membersController.stream;
+  Stream<UserRewardsDetailsHelper> get getuserRewardDetailsStream =>
+      userRewardDetailsController.stream;
   Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future getMembers() async {
     final Users users = await repo.usersRepo(uId);
     membersController.sink.add(users);
+    userRewardDetailsController.sink
+        .add(UserRewardsDetailsHelper.fromUsers(users));
   }
 
   dynamic searchedMembersList = [];
@@ -64,6 +71,7 @@ class MembersBloc {
 
   void dispose() {
     membersController.close();
+    userRewardDetailsController.close();
     _searchMembersList.close();
     _filteredFavContoller.close();
   }
