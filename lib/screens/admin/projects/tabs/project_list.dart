@@ -18,6 +18,7 @@ class ProjectListScreen extends StatefulWidget {
 class _ProjectListScreenState extends State<ProjectListScreen> {
   _ProjectListScreenState({required this.projectTabType});
   final ProjectTabType projectTabType;
+  late ThemeData _themeData;
   late double height;
   late double width;
   late bool isExpanded = false;
@@ -38,6 +39,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _themeData = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Column(
@@ -69,25 +71,33 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
           return Center(child: LinearLoader(minheight: 12));
         }
         final List<ProjectModel> projects = snapshot.data!.projects;
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: ScrollPhysics(),
-          itemCount: projects.length,
-          itemBuilder: (context, index) {
-            final ProjectModel project = projects[index];
-            return StreamBuilder<bool>(
-              initialData: false,
-              stream: _adminProjectsBloc.getProjectExpandStream,
-              builder: (context, snapshot) {
-                return ProjectTile(
-                  project: project,
-                  isExpanded: snapshot.data!,
-                  adminProjectsBloc: _adminProjectsBloc,
-                );
-              },
-            );
-          },
-        );
+        return projects.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
+                itemCount: projects.length,
+                itemBuilder: (context, index) {
+                  final ProjectModel project = projects[index];
+                  return StreamBuilder<bool>(
+                    initialData: false,
+                    stream: _adminProjectsBloc.getProjectExpandStream,
+                    builder: (context, snapshot) {
+                      return ProjectTile(
+                        project: project,
+                        isExpanded: snapshot.data!,
+                        adminProjectsBloc: _adminProjectsBloc,
+                      );
+                    },
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  'No Projects Available',
+                  style: _themeData.textTheme.headline6!
+                      .copyWith(color: SHADOW_GRAY),
+                ),
+              );
       },
     );
   }

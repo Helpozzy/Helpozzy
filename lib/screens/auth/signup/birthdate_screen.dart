@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/user/auth/signup/phone_with_parent_guardian_number.dart';
+import 'package:helpozzy/screens/auth/signup/phone_with_parent_guardian_number.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';

@@ -10,8 +10,8 @@ abstract class AuthState extends Equatable {
 class AuthInitial extends AuthState {}
 
 class AuthenticateState extends AuthState {
-  final User user;
-  AuthenticateState({required this.user});
+  final LoginResponseModel authResponse;
+  AuthenticateState({required this.authResponse});
 }
 
 class UnAuthenticateState extends AuthState {}

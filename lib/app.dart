@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/screens/admin/admin_selection.dart';
+import 'package:helpozzy/screens/auth/login/login.dart';
+import 'package:helpozzy/screens/auth/signup/user_selection.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/screens/intro/intro.dart';
-import 'package:helpozzy/screens/user/auth/login/login.dart';
-import 'package:helpozzy/screens/user/auth/signup/user_selection.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'screens/splash/splash.dart';
 import 'screens/user/rewards/rewards.dart';

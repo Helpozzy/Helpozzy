@@ -6,7 +6,7 @@ import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/user/auth/bloc/auth_bloc.dart';
+import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';

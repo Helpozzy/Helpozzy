@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/auth/bloc/auth_bloc.dart';
+import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -21,8 +21,13 @@ class Splash extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (ctx, state) {
         if (state is AuthenticateState) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, HOME_SCREEN, (route) => false);
+          if (state.authResponse.type == LOGIN_ADMIN) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, ADMIN_SELECTION, (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+                context, HOME_SCREEN, (route) => false);
+          }
         } else {
           Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
         }

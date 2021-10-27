@@ -169,19 +169,6 @@ class _ChatState extends State<Chat> {
         body: Stack(
           alignment: Alignment.topCenter,
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    MATE_WHITE,
-                    WHITE,
-                    BLUE_GRAY,
-                  ],
-                ),
-              ),
-            ),
             Column(
               children: <Widget>[
                 buildListMessage(),
@@ -201,7 +188,7 @@ class _ChatState extends State<Chat> {
     return AppBar(
       centerTitle: false,
       elevation: 1,
-      backgroundColor: MATE_WHITE,
+      backgroundColor: WHITE,
       leading: IconButton(
         icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
         onPressed: () => removeActiveUser(),
@@ -756,7 +743,7 @@ class _ChatState extends State<Chat> {
                     child: IconButton(
                       icon: Icon(
                         CupertinoIcons.photo_fill_on_rectangle_fill,
-                        color: BLUE_GRAY,
+                        color: PRIMARY_COLOR,
                       ),
                       onPressed: () {
                         chooseSourceOfPhoto(context);
@@ -775,7 +762,7 @@ class _ChatState extends State<Chat> {
                 iconSize: 28,
                 icon: Image.asset(
                   'assets/images/send.png',
-                  color: WHITE,
+                  color: PRIMARY_COLOR,
                   height: 35,
                   width: 35,
                 ),
@@ -797,7 +784,7 @@ class _ChatState extends State<Chat> {
   OutlineInputBorder inputDecoration() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(100),
-      borderSide: BorderSide(width: 0.3, color: GRAY),
+      borderSide: BorderSide(width: 1, color: PRIMARY_COLOR),
     );
   }
 }

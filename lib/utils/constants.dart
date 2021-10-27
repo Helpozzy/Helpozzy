@@ -67,6 +67,10 @@ const DATA = 'data';
 const IS_TOKEN_EXPIRED = 'is_token_expire';
 const HTTP_CODE = 'code';
 
+//Login types
+const LOGIN_USER = 'User';
+const LOGIN_ADMIN = 'Admin';
+
 // Routes
 const INTRO = 'intro';
 const USER_SLECTION = 'user_selection';

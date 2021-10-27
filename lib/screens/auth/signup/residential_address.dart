@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/user/auth/signup/school_and_grade_screen.dart';
+import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

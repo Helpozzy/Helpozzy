@@ -141,23 +141,28 @@ class ApiProvider {
   }
 
   Future<Projects> getProjectsAPIProvider(ProjectTabType projectTabType) async {
-    final QuerySnapshot querySnapshot =
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+    final QuerySnapshot querySnapshot = projectTabType ==
+            ProjectTabType.PROJECT_UPCOMING_TAB
+        ? await firestore
+            .collection('projects')
+            .where('status', isEqualTo: PROJECT_NOT_STARTED)
+            .where('project_owner', isEqualTo: prefsObject.getString('uID')!)
+            .get()
+        : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
             ? await firestore
                 .collection('projects')
-                .where('status', isEqualTo: PROJECT_NOT_STARTED)
+                .where('status', isEqualTo: PROJECT_IN_PROGRESS)
+                .where('project_owner',
+                    isEqualTo: prefsObject.getString('uID')!)
                 .get()
-            : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+            : projectTabType == ProjectTabType.PROJECT_PAST_TAB
                 ? await firestore
                     .collection('projects')
-                    .where('status', isEqualTo: PROJECT_IN_PROGRESS)
+                    .where('status', isEqualTo: PROJECT_COMPLTED)
+                    .where('project_owner',
+                        isEqualTo: prefsObject.getString('uID')!)
                     .get()
-                : projectTabType == ProjectTabType.PROJECT_PAST_TAB
-                    ? await firestore
-                        .collection('projects')
-                        .where('status', isEqualTo: PROJECT_COMPLTED)
-                        .get()
-                    : await firestore.collection('projects').get();
+                : await firestore.collection('projects').get();
 
     List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

@@ -2,11 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
+import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/admin/projects/projects_screen.dart';
+import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'members/members.dart';
 
@@ -20,9 +24,11 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
   late double height;
   late double width;
   late ThemeData _theme;
+  final UserInfoBloc _userInfoBloc = UserInfoBloc();
 
   @override
   void initState() {
+    _userInfoBloc.getUser(prefsObject.getString('uID')!);
     _adminTypesBloc.getCategories();
     super.initState();
   }
@@ -39,15 +45,38 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
           children: [
             TopAppLogo(height: height / 6.5),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.06),
-              child: Text(
-                'Hello, John Smith',
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.headline6!.copyWith(
-                  color: DARK_PINK_COLOR,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: StreamBuilder<UserModel>(
+                        stream: _userInfoBloc.userStream,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: LinearLoader(minheight: 12),
+                            );
+                          }
+                          return Text(
+                            'Hello, ${snapshot.data!.name}',
+                            style: _theme.textTheme.headline6!.copyWith(
+                              color: DARK_PINK_COLOR,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.logout_rounded),
+                    onPressed: () {
+                      Provider.of<AuthBloc>(context, listen: false)
+                          .add(AppLogout());
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, INTRO, (route) => false);
+                    },
+                  ),
+                ],
               ),
             ),
             Expanded(child: typeSelectionGrid()),
