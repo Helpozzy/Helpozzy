@@ -3,12 +3,18 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class Repository {
   final apiProvider = ApiProvider();
+
+  Future<Schools> getSchoolsRepo() => apiProvider.getSchoolsAPIProvider();
+
+  Future<bool> postSchoolsRepo(List schools) =>
+      apiProvider.postSchoolsAPIProvider(schools);
 
   Future<VolunteerTypes> volunteerListRepo() =>
       apiProvider.volunteerListAPIProvider();

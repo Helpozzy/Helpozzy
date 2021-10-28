@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/chat/chat_list.dart';
+import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/profile/profile_screen.dart';
 import 'package:helpozzy/screens/user/projects/projects.dart';
@@ -34,7 +34,8 @@ class _HomeState extends State<Home> {
     ExploreScreen(),
     RewardsScreen(initialIndex: 1, fromBottomBar: true),
     UserProjects(),
-    ChatListScreen(),
+    CommonSampleScreen('Inbox'),
+    // ChatListScreen(),
     ProfileScreen(),
   ];
 

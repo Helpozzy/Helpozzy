@@ -4,11 +4,35 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class ApiProvider {
+  Future<bool> postSchoolsAPIProvider(List schools) async {
+    for (int i = 0; i <= schools.length; i++) {
+      final DocumentReference documentReference =
+          firestore.collection('schools_info').doc();
+      await documentReference.set(schools[i]);
+    }
+    return true;
+  }
+
+  Future<Schools> getSchoolsAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('schools_info').get();
+
+    List<QueryDocumentSnapshot<Object?>> schoolList = querySnapshot.docs;
+    List<Map<String, dynamic>> schools = [];
+    schoolList.forEach((element) {
+      final project = element.data() as Map<String, dynamic>;
+      schools.add(project);
+    });
+
+    return Schools.fromJson(list: schools);
+  }
+
   Future<VolunteerTypes> volunteerListAPIProvider() async {
     final DocumentReference documentRefVolunteer =
         firestore.collection('volunteers_types').doc('volunteers_types');
@@ -47,10 +71,10 @@ class ApiProvider {
 
     final DocumentSnapshot categoriesDoc = await documentRef.get();
 
-    final Map<String, dynamic> categories =
+    final Map<String, dynamic> json =
         categoriesDoc.data() as Map<String, dynamic>;
 
-    return Categories.fromJson(items: categories['categories']);
+    return Categories.fromJson(items: json['categories']);
   }
 
   Future<Projects> getUserProjectsAPIProvider() async {
