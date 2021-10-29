@@ -80,6 +80,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.isDropDown = false,
   });
   final TextEditingController controller;
   final String hintText;
@@ -92,6 +93,7 @@ class CommonRoundedTextfield extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool? isDropDown;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +104,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
-      textAlign: TextAlign.center,
+      textAlign: isDropDown! ? TextAlign.left : TextAlign.center,
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,

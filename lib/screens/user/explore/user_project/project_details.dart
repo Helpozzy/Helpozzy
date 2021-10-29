@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
+import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/review_model.dart';
+import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -22,6 +27,15 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   late double width;
   late ThemeData _theme;
   TextEditingController _reviewController = TextEditingController();
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  UserInfoBloc _userInfoBloc = UserInfoBloc();
+
+  @override
+  void initState() {
+    _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    _projectTaskBloc.getProjectTasks(project.projectId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +58,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     projectDetails(),
                     scheduleTimeAndLocation(),
                     infoSection(),
+                    tasksOfProject(),
                     reviewSection(),
                     reviewCard(),
                     reviewList(),
@@ -457,6 +472,51 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     );
   }
 
+  Widget tasksOfProject() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            TASKS,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          StreamBuilder<Tasks>(
+            stream: _projectTaskBloc.getProjectTasksStream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(vertical: width * 0.04),
+                  child: LinearLoader(minheight: 12),
+                );
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(vertical: width * 0.02),
+                itemCount: snapshot.data!.tasks.length,
+                itemBuilder: (context, index) {
+                  final TaskModel task = snapshot.data!.tasks[index];
+                  return TaskCard(
+                    title: task.taskName,
+                    description: task.description,
+                    optionEnable: false,
+                    onTapItem: () {},
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget reviewSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
@@ -484,72 +544,83 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   }
 
   Widget reviewCard() {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return StreamBuilder<UserModel>(
+      stream: _userInfoBloc.userStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: LinearLoader(minheight: 12),
+          );
+        }
+        return Card(
+          elevation: 2,
+          margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: width * 0.04),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CommonUserPlaceholder(size: 30),
-                SizedBox(width: 5),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      'John Smith',
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Dublin, CA 94568',
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 12,
-                          color: DARK_GRAY,
-                          fontWeight: FontWeight.w600),
+                    CommonUserPlaceholder(size: 30),
+                    SizedBox(width: 5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapshot.data!.name,
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          snapshot.data!.address,
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontSize: 12,
+                            color: DARK_GRAY,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: RatingBar.builder(
+                    initialRating: 0,
+                    minRating: 1,
+                    itemSize: 18,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    unratedColor: LIGHT_GRAY,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                    itemBuilder: (context, _) =>
+                        Icon(Icons.star, color: AMBER_COLOR),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
+                ),
+                Container(
+                  height: 35,
+                  width: width / 2,
+                  child: TextField(
+                    style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
+                    controller: _reviewController,
+                    decoration: reviewFieldDecoration(),
+                  ),
+                ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: RatingBar.builder(
-                initialRating: 0,
-                minRating: 1,
-                itemSize: 18,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                unratedColor: LIGHT_GRAY,
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: AMBER_COLOR,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
-            ),
-            Container(
-              height: 35,
-              width: width / 2,
-              child: TextField(
-                style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
-                controller: _reviewController,
-                decoration: reviewFieldDecoration(),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

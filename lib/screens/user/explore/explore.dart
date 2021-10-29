@@ -41,7 +41,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     _membersBloc.getMembers();
     controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
-    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+    animation = Tween<double>(begin: 0, end: 350).animate(controller)
       ..addListener(() {
         setState(() {});
       });
@@ -59,7 +59,7 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   void animateTextfield() {
     setState(() {
-      if (boo == true) {
+      if (boo) {
         controller.forward();
       } else {
         controller.reverse();
@@ -103,49 +103,59 @@ class _ExploreScreenState extends State<ExploreScreen>
     return Stack(
       children: [
         Container(
-          height: height / 3,
+          height: height / 4,
           width: double.infinity,
-          child: Image.asset(
-            'assets/images/explore_img.jpg',
-            fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                MATE_WHITE,
+                BLUE_GRAY,
+                PRIMARY_COLOR,
+              ],
+            ),
           ),
         ),
         Container(
-          height: height / 3,
+          height: height / 4,
           width: double.infinity,
           color: TRANSPARENT_BLACK,
         ),
         animation.value == 0
             ? Positioned(
-                top: 20,
-                left: 19,
+                top: 25,
+                left: 20,
                 child: GestureDetector(
                   onTap: animateTextfield,
                   child: Container(
-                    height: 35,
-                    width: 35,
+                    height: 38,
+                    width: 38,
                     decoration: BoxDecoration(
                       border: Border.all(width: 0.5, color: TRANSPARENT_WHITE),
                       borderRadius: BorderRadius.circular(25),
                       color: WHITE.withOpacity(0.23),
                     ),
-                    child: Icon(CupertinoIcons.search),
+                    child: Icon(
+                      CupertinoIcons.search,
+                      color: MATE_WHITE,
+                    ),
                   ),
                 ),
               )
             : Positioned(
-                top: 20,
-                left: 19,
+                top: 25,
+                left: 20,
                 child: Container(
                   width: animation.value,
-                  height: 35,
+                  height: 38,
                   child: TextField(
                     onTap: () => SearchProject().modalBottomSheetMenu(context),
                     decoration: InputDecoration(
                       hintText: SEARCH_HINT,
                       hintStyle: TextStyle(
                         fontSize: 17,
-                        color: DARK_GRAY,
+                        color: MATE_WHITE,
                         fontFamily: QUICKSAND,
                         fontWeight: FontWeight.w500,
                       ),
@@ -154,8 +164,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                         onTap: animateTextfield,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 2.0),
-                          child: Icon(CupertinoIcons.search,
-                              color: BLACK, size: 25),
+                          child: Icon(
+                            CupertinoIcons.search,
+                            color: MATE_WHITE,
+                            size: 25,
+                          ),
                         ),
                       ),
                       enabledBorder: searchBarDecoration(),
@@ -167,12 +180,12 @@ class _ExploreScreenState extends State<ExploreScreen>
                 ),
               ),
         Positioned(
-          bottom: 30,
+          bottom: 20,
           left: 21,
           child: Text(
             MSG_DASHBOARD,
             style: TextStyle(
-              fontSize: height / 18,
+              fontSize: width / 12,
               color: WHITE,
               fontFamily: QUICKSAND,
             ),
@@ -266,7 +279,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             );
           },
           indicatorBuilder: (ctx, index) {
-            var color;
+            Color color;
             if (index == _processIndex) {
               color = AMBER_COLOR;
             } else if (index < _processIndex) {

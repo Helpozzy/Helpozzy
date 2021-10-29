@@ -149,7 +149,7 @@ class _CreateProjectState extends State<CreateProject> {
                                   builder: (context) =>
                                       CreateEditTask(fromEdit: false)),
                             );
-                            await _projectTaskBloc.getTasks();
+                            await _projectTaskBloc.getProjectTasks('');
                           },
                         ),
                         TextButton(
@@ -608,17 +608,13 @@ class _CreateProjectState extends State<CreateProject> {
     double startTime = timeConvertToDouble(selectedStartTime);
     double endTime = timeConvertToDouble(selectedEndTime);
     double hrsDiff = endTime - startTime;
-    List taskIds = [];
-    selectedTaskBloc.selectedTasksController.value.forEach((task) {
-      taskIds.add(task.id);
-    });
+
     final ProjectModel project = ProjectModel(
       projectId: '',
       categoryId: selectedCategoryId,
       aboutOrganizer: '',
       contactName: '',
       contactNumber: '',
-      taskIds: taskIds,
       imageUrl: '',
       location: '',
       organization: '',

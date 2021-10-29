@@ -14,7 +14,6 @@ class ProjectModel {
     required this.categoryId,
     required this.projectName,
     required this.description,
-    required this.taskIds,
     required this.startDate,
     required this.endDate,
     required this.hours,
@@ -36,7 +35,6 @@ class ProjectModel {
     categoryId = json['category_id'];
     projectName = json['project_name'];
     description = json['description'];
-    taskIds = json['task_ids'];
     startDate = json['start_date'];
     endDate = json['end_date'];
     hours = json['hours'];
@@ -61,7 +59,6 @@ class ProjectModel {
       'category_id': categoryId,
       'project_name': projectName,
       'description': description,
-      'task_ids': taskIds,
       'start_date': startDate,
       'end_date': endDate,
       'hours': hours,
@@ -83,7 +80,6 @@ class ProjectModel {
   late int categoryId;
   late String projectName;
   late String description;
-  late List taskIds;
   late String startDate;
   late String endDate;
   late double hours;

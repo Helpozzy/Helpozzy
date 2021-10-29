@@ -4,6 +4,7 @@ import 'package:helpozzy/bloc/school_info_bloc.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/signup_model.dart';
 import 'package:helpozzy/screens/auth/signup/password_set_screen.dart';
+import 'package:helpozzy/screens/auth/signup/search_school.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -49,7 +50,26 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             TopInfoLabel(label: SCHOOL_NAME),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-              child: selectchoolDropDown(),
+              child: CommonRoundedTextfield(
+                isDropDown: true,
+                controller: _schoolController,
+                readOnly: true,
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                hintText: SELECT_SCHOOL_HINT,
+                validator: (val) {
+                  if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
+                    return 'Please select school';
+                  }
+                  return null;
+                },
+                onTap: () async {
+                  final SchoolDetailsModel school =
+                      await SearchSchool().modalBottomSheetMenu(context);
+                  setState(() {
+                    _schoolController.text = school.schoolName;
+                  });
+                },
+              ),
             ),
             TopInfoLabel(label: GRADE_LEVEL),
             Container(
@@ -81,64 +101,6 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget selectchoolDropDown() {
-    return StreamBuilder<Schools>(
-      stream: _schoolsInfoBloc.schoolsStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: PRIMARY_COLOR,
-              strokeWidth: 0.5,
-            ),
-          );
-        }
-        return DropdownButtonFormField<SchoolDetailsModel>(
-            hint: Text(SELECT_SCHOOL_HINT),
-            icon: Icon(Icons.expand_more_outlined),
-            decoration: inputRoundedDecoration(
-                getHint: SELECT_SCHOOL_HINT, isDropDown: true),
-            isExpanded: true,
-            onChanged: (SchoolDetailsModel? newValue) {
-              setState(() {
-                _schoolController.text = newValue!.schoolName;
-              });
-            },
-            validator: (val) {
-              if (_schoolController.text.isNotEmpty &&
-                  _schoolController.text == SELECT_SCHOOL_HINT) {
-                return 'Please select school';
-              }
-              return null;
-            },
-            items: snapshot.data!.schools
-                .map<DropdownMenuItem<SchoolDetailsModel>>(
-                    (SchoolDetailsModel? value) {
-              return DropdownMenuItem<SchoolDetailsModel>(
-                value: value!,
-                child: Center(
-                  child: Text(
-                    value.schoolName +
-                        ', ' +
-                        value.streetAddress +
-                        ', ' +
-                        value.city +
-                        ', ' +
-                        value.state +
-                        '. ' +
-                        value.zip,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: _theme.textTheme.bodyText2,
-                  ),
-                ),
-              );
-            }).toList());
-      },
     );
   }
 

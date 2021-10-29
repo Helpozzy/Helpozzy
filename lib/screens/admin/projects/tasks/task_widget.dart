@@ -31,7 +31,7 @@ class TaskCard extends StatelessWidget {
           : selected
               ? GRAY
               : WHITE,
-      margin: EdgeInsets.symmetric(vertical: 6.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),

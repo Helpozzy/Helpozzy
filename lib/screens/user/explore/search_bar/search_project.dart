@@ -10,8 +10,8 @@ class SearchProject {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(35.0),
-          topRight: const Radius.circular(35.0),
+          topLeft: const Radius.circular(15.0),
+          topRight: const Radius.circular(15.0),
         ),
       ),
       isScrollControlled: true,
@@ -154,8 +154,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   InputBorder bottomSheetSearchBarDecoration() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.only(
-        topLeft: const Radius.circular(31.0),
-        topRight: const Radius.circular(31.0),
+        topLeft: const Radius.circular(15.0),
+        topRight: const Radius.circular(15.0),
       ),
       borderSide: BorderSide(
         color: DARK_GRAY,
@@ -194,7 +194,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 14),
+                              horizontal: 15.0, vertical: 14),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -231,7 +231,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 6.0),
+                                padding: const EdgeInsets.only(left: 6.0),
                                 child: Icon(
                                   Icons.search,
                                   color: PRIMARY_COLOR,

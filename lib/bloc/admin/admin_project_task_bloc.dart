@@ -5,10 +5,10 @@ import 'package:rxdart/rxdart.dart';
 class ProjectTaskBloc {
   final repo = Repository();
 
-  final tasksController = PublishSubject<Tasks>();
+  final projectTasksController = PublishSubject<Tasks>();
   final selectedTasksController = BehaviorSubject<List<TaskModel>>();
 
-  Stream<Tasks> get getTasksStream => tasksController.stream;
+  Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
   Stream<List<TaskModel>> get getSelectedTaskStream =>
       selectedTasksController.stream;
 
@@ -17,9 +17,9 @@ class ProjectTaskBloc {
     return response;
   }
 
-  Future getTasks() async {
-    final Tasks response = await repo.getTasksRepo();
-    tasksController.sink.add(response);
+  Future getProjectTasks(String projectId) async {
+    final Tasks response = await repo.getProjectTasksRepo(projectId);
+    projectTasksController.sink.add(response);
   }
 
   Future getSelectedTasks({required List<TaskModel> tasks}) async {
@@ -37,7 +37,7 @@ class ProjectTaskBloc {
   }
 
   void dispose() {
-    tasksController.close();
     selectedTasksController.close();
+    projectTasksController.close();
   }
 }

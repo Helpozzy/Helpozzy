@@ -68,7 +68,7 @@ class _UserSelectionState extends State<UserSelection> {
                 text: CONTINUE_BUTTON.toUpperCase(),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (_typeController.text == 'User') {
+                    if (_typeController.text == LOGIN_USER) {
                       final SignUpModel signUpModel =
                           SignUpModel(userType: _typeController.text);
                       Navigator.push(
@@ -78,7 +78,7 @@ class _UserSelectionState extends State<UserSelection> {
                               SignUpScreen(signUpModel: signUpModel),
                         ),
                       );
-                    } else if (_typeController.text == 'Admin') {
+                    } else if (_typeController.text == LOGIN_ADMIN) {
                       Navigator.pushNamed(context, ADMIN_SELECTION,
                           arguments: _typeController.text);
                     }

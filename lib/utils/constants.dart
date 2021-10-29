@@ -191,6 +191,7 @@ const PROJECT_DETAILS = 'Project Details';
 const SCHEDULES = 'Schedules';
 const DIRECTION = 'Direction';
 const INFO = 'Info';
+const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
 
 //Tabbar title

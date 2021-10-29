@@ -226,14 +226,16 @@ class ApiProvider {
     }
   }
 
-  Future<Tasks> getTasksAPIProvider() async {
-    final QuerySnapshot querySnapshot =
-        await firestore.collection('tasks').get();
+  Future<Tasks> getProjectTasksAPIProvider(String projectId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('tasks')
+        .where('project_id', isEqualTo: projectId)
+        .get();
 
     List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
     List<Map<String, dynamic>> tasks = [];
-    tasksList.forEach((element) {
-      final task = element.data() as Map<String, dynamic>;
+    tasksList.forEach((json) {
+      final task = json.data() as Map<String, dynamic>;
       tasks.add(task);
     });
     return Tasks.fromJson(list: tasks);

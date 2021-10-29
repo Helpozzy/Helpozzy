@@ -326,7 +326,7 @@ class _ChatState extends State<Chat> {
         maxHeight: 800,
         source: ImageSource.camera);
 
-    final File cameraImage = File(captureFile!.path);
+    final File? cameraImage = File(captureFile!.path);
     if (cameraImage != null) {
       setState(() {
         isLoading = true;
@@ -341,7 +341,7 @@ class _ChatState extends State<Chat> {
         maxWidth: 800,
         maxHeight: 800,
         source: ImageSource.gallery);
-    final File galleryImage = File(pickedFile!.path);
+    final File? galleryImage = File(pickedFile!.path);
     if (galleryImage != null) {
       setState(() {
         isLoading = true;

@@ -61,7 +61,8 @@ class Repository {
   Future<bool> updateTaskRepo(TaskModel task) =>
       apiProvider.updateTaskAPIProvider(task);
 
-  Future<Tasks> getTasksRepo() => apiProvider.getTasksAPIProvider();
+  Future<Tasks> getProjectTasksRepo(String projectId) =>
+      apiProvider.getProjectTasksAPIProvider(projectId);
 
   Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
       apiProvider.getSelectedTasksAPIProvider(taskIds);
