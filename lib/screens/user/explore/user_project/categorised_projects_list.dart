@@ -35,7 +35,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: WHITE,
-      appBar: CommonAppBar(context).show(title: PROJECT_APPBAR),
+      appBar: CommonAppBar(context).show(elevation: 0, title: PROJECT_APPBAR),
       body: projectListView(),
     );
   }

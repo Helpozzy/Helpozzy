@@ -63,7 +63,9 @@ class _CreateProjectState extends State<CreateProject> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: CREATE_PROJECT_APPBAR),
+      backgroundColor: WHITE,
+      appBar: CommonAppBar(context)
+          .show(title: CREATE_PROJECT_APPBAR, elevation: 0),
       body: body(),
     );
   }

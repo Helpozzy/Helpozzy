@@ -22,6 +22,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(context).show(
+          elevation: 1,
           title: PROJECTS_APPBAR,
           bottom: _tabBar(),
           onBackPressed: () {

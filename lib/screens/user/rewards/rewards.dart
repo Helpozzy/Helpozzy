@@ -35,6 +35,7 @@ class _RewardsScreenState extends State<RewardsScreen>
       child: Scaffold(
         backgroundColor: WHITE,
         appBar: CommonAppBar(context).show(
+          elevation: 1,
           backButton: widget.fromBottomBar ? false : true,
           title: REWARDS_APPBAR,
           bottom: _tabBar(),

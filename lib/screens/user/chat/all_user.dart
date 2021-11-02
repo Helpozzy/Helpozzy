@@ -39,7 +39,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     _textTheme = Theme.of(context).textTheme;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: ALL_USERS_TITLE),
+      appBar: CommonAppBar(context).show(elevation: 0, title: ALL_USERS_TITLE),
       body: SafeArea(
         child: usersList.isNotEmpty
             ? ListView.separated(

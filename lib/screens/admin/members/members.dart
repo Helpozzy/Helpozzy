@@ -32,12 +32,15 @@ class _MembersScreenState extends State<MembersScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: WHITE,
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(context).show(
-          title: MEMBERS_APPBAR,
-          onBackPressed: () {
-            Navigator.of(context).pop();
-          }),
+        elevation: 0,
+        title: MEMBERS_APPBAR,
+        onBackPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
       body: body(),
     );
   }
@@ -49,7 +52,6 @@ class _MembersScreenState extends State<MembersScreen> {
       },
       child: Column(
         children: [
-          SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
             child: Card(

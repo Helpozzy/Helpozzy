@@ -14,12 +14,12 @@ import 'package:provider/provider.dart';
 
 import 'members/members.dart';
 
-class AdminSelectionScreen extends StatefulWidget {
+class AdminDashboardScreen extends StatefulWidget {
   @override
-  _AdminSelectionScreenState createState() => _AdminSelectionScreenState();
+  _AdminDashboardScreenState createState() => _AdminDashboardScreenState();
 }
 
-class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final AdminCategoriesBloc _adminTypesBloc = AdminCategoriesBloc();
   late double height;
   late double width;
@@ -99,7 +99,7 @@ class _AdminSelectionScreenState extends State<AdminSelectionScreen> {
           shrinkWrap: true,
           childAspectRatio: 1,
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          children: snapshot.data!.item.map((AdminTypeModel type) {
+          children: snapshot.data!.adminTypes.map((AdminTypeModel type) {
             return GestureDetector(
               onTap: () {
                 Navigator.push(

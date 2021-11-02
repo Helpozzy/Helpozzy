@@ -679,8 +679,8 @@ class CommonDivider extends StatelessWidget {
   }
 }
 
-class CommonDividerWith extends StatelessWidget {
-  CommonDividerWith({this.height, this.color});
+class CommonDividerWithVal extends StatelessWidget {
+  CommonDividerWithVal({this.height, this.color});
   final double? height;
   final Color? color;
   @override
@@ -715,12 +715,13 @@ class CommonAppBar {
     required String title,
     Function()? onBackPressed,
     List<Widget>? actions,
+    required double elevation,
     PreferredSizeWidget? bottom,
     bool backButton = true,
   }) {
     return AppBar(
       centerTitle: true,
-      elevation: 1,
+      elevation: elevation,
       backgroundColor: WHITE,
       title: Text(
         title,

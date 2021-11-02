@@ -18,6 +18,7 @@ class UserModel {
     dateOfBirth = json['date_of_birth'];
     joiningDate = json['date_of_joining'];
     email = json['email'];
+    about = json['about'];
     gradeLevel = json['grade_level'];
     name = json['name'];
     parentPhnNo = json['parent_phn_no'];
@@ -38,6 +39,7 @@ class UserModel {
   late String uId;
   late String name;
   late String email;
+  late String about;
   late String address;
   late String city;
   late String state;

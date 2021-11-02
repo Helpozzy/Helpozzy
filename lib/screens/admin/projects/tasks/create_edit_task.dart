@@ -86,7 +86,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
+        elevation: 0,
         title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
       ),
       body: body(),

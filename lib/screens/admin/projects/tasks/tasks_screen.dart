@@ -27,7 +27,9 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
+        elevation: 0,
         title: TASKS_APPBAR,
         onBackPressed: () {
           Navigator.pop(context);

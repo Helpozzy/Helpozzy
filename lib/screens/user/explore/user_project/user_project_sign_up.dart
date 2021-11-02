@@ -19,7 +19,7 @@ class _ProjectUserSignUpScreenState extends State<ProjectUserSignUpScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: SIGN_UP),
+      appBar: CommonAppBar(context).show(title: SIGN_UP, elevation: 1),
       body: body(),
     );
   }

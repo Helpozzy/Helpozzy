@@ -561,7 +561,7 @@ class _ChatState extends State<Chat> {
                               ),
                             ),
                             errorWidget: (context, url, error) => Material(
-                              child: Text('Chat not  available'),
+                              child: Icon(Icons.error_outline_rounded),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(12.0),
                               ),

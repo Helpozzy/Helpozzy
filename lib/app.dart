@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/admin/admin_selection.dart';
+import 'package:helpozzy/screens/admin/admin_dashboard.dart';
 import 'package:helpozzy/screens/auth/login/login.dart';
 import 'package:helpozzy/screens/auth/signup/user_selection.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
@@ -159,7 +159,7 @@ class HelpozzyApp extends MaterialApp {
         '/': (context) => Splash(),
         INTRO: (context) => IntroScreen(),
         USER_SLECTION: (context) => UserTypeSelection(),
-        ADMIN_SELECTION: (context) => AdminSelectionScreen(),
+        ADMIN_SELECTION: (context) => AdminDashboardScreen(),
         LOGIN: (context) => Login(),
         HOME_SCREEN: (context) => HomeScreen(),
         EXPLORE_SCREEN: (context) => ExploreScreen(),

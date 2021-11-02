@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/profile/profile_screen.dart';
 import 'package:helpozzy/screens/user/projects/projects.dart';
-import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 import 'bloc/home_bloc.dart';
@@ -32,9 +30,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final List<Widget> _children = [
     ExploreScreen(),
-    RewardsScreen(initialIndex: 1, fromBottomBar: true),
+    // RewardsScreen(initialIndex: 1, fromBottomBar: true),
     UserProjects(),
-    CommonSampleScreen('Inbox'),
+    // CommonSampleScreen('Inbox'),
     // ChatListScreen(),
     ProfileScreen(),
   ];
@@ -48,27 +46,27 @@ class _HomeState extends State<Home> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.search),
-              label: 'Explore',
+              label: EXPLORE_TAB,
               backgroundColor: Colors.white,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.gift),
-              label: 'Rewards',
-              backgroundColor: Colors.white,
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(CupertinoIcons.gift),
+            //   label: REWARD_TAB,
+            //   backgroundColor: Colors.white,
+            // ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.rectangle_3_offgrid),
-              label: 'Projects',
+              label: PROJECTs_TAB,
               backgroundColor: Colors.white,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chat_bubble),
-              label: 'Inbox',
-              backgroundColor: Colors.white,
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(CupertinoIcons.chat_bubble),
+            //   label: INBOX_TAB,
+            //   backgroundColor: Colors.white,
+            // ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person),
-              label: 'Profile',
+              label: PROFILE_TAB,
               backgroundColor: Colors.white,
             ),
           ],

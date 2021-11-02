@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
@@ -53,135 +54,145 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
           final UserModel? user = snapshot.data;
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 10, top: 15.0),
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: PRIMARY_COLOR,
-                          ),
-                          child: CommonUserPlaceholder(size: width / 5),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          user!.name,
-                          style: _theme.textTheme.headline6!
-                              .copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.people_alt_outlined, size: 16),
-                              SizedBox(width: 2),
-                              Text(
-                                '${user.reviewsByPersons} review',
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: DARK_GRAY_FONT_COLOR,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 10, top: 15.0),
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: PRIMARY_COLOR,
+                                ),
+                                child: CommonUserPlaceholder(size: width / 5),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                user!.name,
+                                style: _theme.textTheme.headline6!
+                                    .copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.people_alt_outlined, size: 16),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      '${user.reviewsByPersons} review',
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: DARK_GRAY_FONT_COLOR,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  DateFormat('MMM yyyy').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(user.joiningDate),
+                                    ),
+                                  ),
+                                  style: _theme.textTheme.bodyText2!.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: DARK_GRAY_FONT_COLOR,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '10 Hours',
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: DARK_GRAY_FONT_COLOR,
+                                      ),
+                                    ),
+                                    SizedBox(width: 2),
+                                    Icon(Icons.arrow_forward_ios_rounded,
+                                        size: 14)
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  top: 6.0, bottom: 3.0, right: 3.0),
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CommonSampleScreen(
+                                          'Edit Profile\nComing Soon'),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  EDIT_PROFILE_TEXT,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: BLUE_GRAY,
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                          Text(
-                            DateFormat('MMM yyyy').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(user.joiningDate),
-                              ),
                             ),
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: DARK_GRAY_FONT_COLOR,
+                            CommonDividerWithVal(
+                              height: 1,
+                              color: DARK_GRAY,
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '10 Hours',
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: DARK_GRAY_FONT_COLOR,
-                                ),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(Icons.arrow_forward_ios_rounded, size: 14)
-                            ],
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.only(top: 6.0, bottom: 3.0, right: 3.0),
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CommonSampleScreen(
-                                    'Edit Profile\nComing Soon'),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            EDIT_PROFILE_TEXT,
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: BLUE_GRAY,
+                            address(user),
+                            CommonDividerWithVal(
+                              height: 1,
+                              color: DARK_GRAY,
                             ),
-                          ),
+                            aboutMe(user),
+                            CommonDividerWithVal(
+                              height: 1,
+                              color: DARK_GRAY,
+                            ),
+                            projectPref(),
+                          ],
                         ),
                       ),
-                      CommonDividerWith(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
-                      address(user),
-                      CommonDividerWith(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
-                      aboutMe(),
-                      CommonDividerWith(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
-                      projectPref(),
+                      ownProjectsList(),
                     ],
                   ),
                 ),
-                ownProjectsList(),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      vertical: 10, horizontal: width * 0.1),
-                  width: double.infinity,
-                  child: CommonButton(
-                      text: 'Logout',
-                      onPressed: () async {
-                        Provider.of<AuthBloc>(context, listen: false)
-                            .add(AppLogout());
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, INTRO, (route) => false);
-                      }),
+              ),
+              Container(
+                margin:
+                    EdgeInsets.symmetric(vertical: 10, horizontal: width * 0.1),
+                width: double.infinity,
+                child: CommonButton(
+                  text: LOGOUT_BUTTON,
+                  onPressed: () async {
+                    Provider.of<AuthBloc>(context, listen: false)
+                        .add(AppLogout());
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, INTRO, (route) => false);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
@@ -224,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget aboutMe() {
+  Widget aboutMe(UserModel user) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
@@ -238,9 +249,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              SAMPLE_LONG_TEXT,
-              style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.w600),
+              user.about.isNotEmpty ? user.about : 'Not Available add now!',
+              style: _theme.textTheme.bodyText2!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: user.about.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY),
             ),
           ),
         ],
@@ -307,11 +319,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset(
-                                  category.imgUrl,
-                                  fit: BoxFit.cover,
-                                  height: width * 0.09,
-                                  width: width * 0.09,
+                                CachedNetworkImage(
+                                  placeholder: (context, url) => Center(
+                                    child: LinearLoader(minheight: 10),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error_outline_rounded),
+                                  imageUrl: category.imgUrl,
+                                  fit: BoxFit.fill,
+                                  color: PRIMARY_COLOR,
+                                  height: width * 0.1,
+                                  width: width * 0.1,
                                 ),
                                 SizedBox(height: 5),
                                 Text(
@@ -396,7 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            vertical: 10, horizontal: width * 0.04),
+                            vertical: 10, horizontal: width * 0.05),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

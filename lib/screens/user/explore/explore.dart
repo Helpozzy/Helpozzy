@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:timelines/timelines.dart';
 import 'user_project/user_project_sign_up.dart';
 import 'user_project/project_details.dart';
+import 'dart:math' as math;
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -32,6 +34,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   final CategoryBloc _categoryBloc = CategoryBloc();
   final MembersBloc _membersBloc = MembersBloc();
   final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
+  final scrollController = ScrollController();
+  double currentPosition = 0.0;
 
   @override
   void initState() {
@@ -45,6 +49,11 @@ class _ExploreScreenState extends State<ExploreScreen>
       ..addListener(() {
         setState(() {});
       });
+    scrollController.addListener(() {
+      setState(() {
+        currentPosition = scrollController.offset;
+      });
+    });
   }
 
   Color getColor(int index) {
@@ -78,120 +87,129 @@ class _ExploreScreenState extends State<ExploreScreen>
           FocusScope.of(context).requestFocus(FocusNode());
           controller.reverse();
         },
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              topImageView(),
-              Divider(
-                color: TRANSPARENT_BLACK,
-                height: 1,
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            topImageView(),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  targetGoalSection(),
+                  categoryView(),
+                  projectListView(),
+                ],
               ),
-              targetGoalSection(),
-              CommonDivider(),
-              categoryView(),
-              CommonDivider(),
-              projectListView(),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget topImageView() {
-    return Stack(
-      children: [
-        Container(
-          height: height / 4,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                MATE_WHITE,
-                BLUE_GRAY,
-                PRIMARY_COLOR,
-              ],
-            ),
-          ),
-        ),
-        Container(
-          height: height / 4,
-          width: double.infinity,
-          color: TRANSPARENT_BLACK,
-        ),
-        animation.value == 0
-            ? Positioned(
-                top: 25,
-                left: 20,
-                child: GestureDetector(
-                  onTap: animateTextfield,
-                  child: Container(
-                    height: 38,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0.5, color: TRANSPARENT_WHITE),
-                      borderRadius: BorderRadius.circular(25),
-                      color: WHITE.withOpacity(0.23),
-                    ),
-                    child: Icon(
-                      CupertinoIcons.search,
-                      color: MATE_WHITE,
-                    ),
-                  ),
-                ),
-              )
-            : Positioned(
-                top: 25,
-                left: 20,
-                child: Container(
-                  width: animation.value,
-                  height: 38,
-                  child: TextField(
-                    onTap: () => SearchProject().modalBottomSheetMenu(context),
-                    decoration: InputDecoration(
-                      hintText: SEARCH_HINT,
-                      hintStyle: TextStyle(
-                        fontSize: 17,
-                        color: MATE_WHITE,
-                        fontFamily: QUICKSAND,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      fillColor: WHITE.withOpacity(0.23),
-                      prefixIcon: GestureDetector(
-                        onTap: animateTextfield,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 2.0),
-                          child: Icon(
-                            CupertinoIcons.search,
-                            color: MATE_WHITE,
-                            size: 25,
-                          ),
-                        ),
-                      ),
-                      enabledBorder: searchBarDecoration(),
-                      disabledBorder: searchBarDecoration(),
-                      focusedBorder: searchBarDecoration(),
-                      border: searchBarDecoration(),
-                    ),
-                  ),
+    return SliverPersistentHeader(
+      pinned: currentPosition < height / 8.5 ? true : false,
+      delegate: _SliverAppBarDelegate(
+        minHeight: height / 10,
+        maxHeight: height / 3.5,
+        child: Stack(
+          children: [
+            Container(
+              height: height / 3.5,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    MATE_WHITE,
+                    BLUE_GRAY,
+                    PRIMARY_COLOR,
+                  ],
                 ),
               ),
-        Positioned(
-          bottom: 20,
-          left: 21,
-          child: Text(
-            MSG_DASHBOARD,
-            style: TextStyle(
-              fontSize: width / 12,
-              color: WHITE,
-              fontFamily: QUICKSAND,
             ),
-          ),
+            // Container(
+            //   height: height / 3.5,
+            //   width: double.infinity,
+            //   color: TRANSPARENT_BLACK,
+            // ),
+            animation.value == 0
+                ? Positioned(
+                    top: 22,
+                    left: 20,
+                    child: GestureDetector(
+                      onTap: animateTextfield,
+                      child: Container(
+                        height: 38,
+                        width: 38,
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 0.5, color: TRANSPARENT_WHITE),
+                          borderRadius: BorderRadius.circular(25),
+                          color: WHITE.withOpacity(0.23),
+                        ),
+                        child: Icon(
+                          CupertinoIcons.search,
+                          color: MATE_WHITE,
+                        ),
+                      ),
+                    ),
+                  )
+                : Positioned(
+                    top: 22,
+                    left: 20,
+                    child: Container(
+                      width: animation.value,
+                      height: 38,
+                      child: TextField(
+                        onTap: () =>
+                            SearchProject().modalBottomSheetMenu(context),
+                        decoration: InputDecoration(
+                          hintText: SEARCH_HINT,
+                          hintStyle: TextStyle(
+                            fontSize: 17,
+                            color: MATE_WHITE,
+                            fontFamily: QUICKSAND,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          fillColor: WHITE.withOpacity(0.23),
+                          prefixIcon: GestureDetector(
+                            onTap: animateTextfield,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 2.0),
+                              child: Icon(
+                                CupertinoIcons.search,
+                                color: MATE_WHITE,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                          enabledBorder: searchBarDecoration(),
+                          disabledBorder: searchBarDecoration(),
+                          focusedBorder: searchBarDecoration(),
+                          border: searchBarDecoration(),
+                        ),
+                      ),
+                    ),
+                  ),
+            currentPosition < height / 12
+                ? Positioned(
+                    bottom: 20,
+                    left: 21,
+                    child: Text(
+                      MSG_DASHBOARD,
+                      style: TextStyle(
+                        fontSize: width / 12,
+                        color: WHITE,
+                        fontFamily: QUICKSAND,
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -204,53 +222,57 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget targetGoalSection() {
     return StreamBuilder<UserRewardsDetailsHelper>(
-        stream: _membersBloc.getuserRewardDetailsStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: LinearLoader(minheight: 12),
-            );
-          }
-          return Padding(
-            padding: EdgeInsets.only(top: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21),
-                  child: Text(
-                    MSG_GOAL,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: DARK_GRAY_FONT_COLOR,
-                      fontFamily: QUICKSAND,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21),
-                  child: Row(
-                    children: [
-                      Text(
-                        snapshot.data!.totalPoint.toString(),
-                        style: TextStyle(
-                          fontSize: 21,
-                          color: DARK_GRAY_FONT_COLOR,
-                          fontFamily: QUICKSAND,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(Icons.star),
-                    ],
-                  ),
-                ),
-                timelineProgress(snapshot.data!),
-                detailsRedeemButton(),
-              ],
-            ),
+      stream: _membersBloc.getuserRewardDetailsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          _membersBloc.getMembers();
+          return Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 5),
+            child: LinearLoader(minheight: 12),
           );
-        });
+        }
+        return Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 21),
+                child: Text(
+                  MSG_GOAL,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: DARK_GRAY_FONT_COLOR,
+                    fontFamily: QUICKSAND,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 21),
+                child: Row(
+                  children: [
+                    Text(
+                      snapshot.data!.totalPoint.toString(),
+                      style: TextStyle(
+                        fontSize: 21,
+                        color: DARK_GRAY_FONT_COLOR,
+                        fontFamily: QUICKSAND,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Icon(Icons.star),
+                  ],
+                ),
+              ),
+              timelineProgress(snapshot.data!),
+              // detailsRedeemButton(),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget timelineProgress(UserRewardsDetailsHelper? rewardsDetail) {
@@ -261,81 +283,69 @@ class _ExploreScreenState extends State<ExploreScreen>
       child: Timeline.tileBuilder(
         theme: TimelineThemeData(
           direction: Axis.horizontal,
-          connectorTheme: ConnectorThemeData(
-            thickness: 3.0,
-          ),
+          connectorTheme: ConnectorThemeData(thickness: 3.0),
         ),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.before,
           itemExtentBuilder: (ctx, index) =>
               MediaQuery.of(context).size.width / items.length,
           contentsBuilder: (ctx, index) {
-            return Text(
-              '${items[index]}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: getColor(index),
+            return Padding(
+              padding: const EdgeInsets.only(top: 6.0),
+              child: Text(
+                '${items[index]}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: getColor(items[index]),
+                ),
               ),
             );
           },
           indicatorBuilder: (ctx, index) {
             Color color;
-            if (index == _processIndex) {
+            if (items[index] == _processIndex) {
               color = AMBER_COLOR;
-            } else if (index < _processIndex) {
+            } else if (items[index] < _processIndex) {
               color = AMBER_COLOR;
             } else {
               color = LIGHT_GRAY;
             }
 
-            if (index <= _processIndex) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    height: 10,
-                    width: 10,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: color,
-                    ),
-                  ),
-                  DotIndicator(
-                    size: 10.0,
-                    color: color,
-                  ),
-                ],
+            if (items[index] <= _processIndex) {
+              return Container(
+                height: width * 0.04,
+                width: width * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: color,
+                ),
+                child: Icon(
+                  Icons.check,
+                  size: width * 0.03,
+                  color: WHITE,
+                ),
               );
             } else {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    height: 10,
-                    width: 10,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: color,
-                    ),
-                  ),
-                  DotIndicator(
-                    size: 10.0,
-                    color: color,
-                  ),
-                ],
+              return Container(
+                height: width * 0.03,
+                width: width * 0.03,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: color,
+                ),
               );
             }
           },
           connectorBuilder: (ctx, index, type) {
-            if (index > 0) {
-              if (index == _processIndex) {
-                final color = getColor(index);
+            if (items[index] > 0) {
+              if (items[index] == _processIndex) {
+                final color = getColor(items[index]);
                 return DecoratedLineConnector(
                   decoration: BoxDecoration(color: color),
                 );
               } else {
                 return SolidLineConnector(
-                  color: getColor(index),
+                  color: getColor(items[index]),
                 );
               }
             } else {
@@ -350,7 +360,7 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget detailsRedeemButton() {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top: 15, bottom: 15),
+      padding: EdgeInsets.only(left: width * 0.05, top: 15),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -370,11 +380,12 @@ class _ExploreScreenState extends State<ExploreScreen>
             text: REDEEM,
             color: LIGHT_MARUN,
             onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      RewardsScreen(initialIndex: 3, fromBottomBar: false),
-                )),
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    RewardsScreen(initialIndex: 3, fromBottomBar: false),
+              ),
+            ),
           ),
         ],
       ),
@@ -386,54 +397,64 @@ class _ExploreScreenState extends State<ExploreScreen>
         stream: _categoryBloc.getCategoriesStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
+            _categoryBloc.getCategories();
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Center(child: LinearLoader(minheight: 12)),
             );
           }
-          return GridView.count(
-            physics: NeverScrollableScrollPhysics(),
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            childAspectRatio: 0.85,
-            padding: const EdgeInsets.all(10.0),
-            children: snapshot.data!.item.map((CategoryModel category) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CategorisedProjectsScreen(categoryId: category.id),
+          return Column(
+            children: [
+              Divider(),
+              GridView.count(
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 4,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(8.0),
+                children: snapshot.data!.item.map((CategoryModel category) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategorisedProjectsScreen(
+                              categoryId: category.id),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CachedNetworkImage(
+                          placeholder: (context, url) => Center(
+                            child: LinearLoader(minheight: 10),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outline_rounded),
+                          imageUrl: category.imgUrl,
+                          fit: BoxFit.fill,
+                          color: PRIMARY_COLOR,
+                          height: width * 0.1,
+                          width: width * 0.1,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          category.label,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontFamily: QUICKSAND,
+                            color: DARK_GRAY_FONT_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
                     ),
                   );
-                },
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.asset(
-                        category.imgUrl,
-                        fit: BoxFit.fill,
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      category.label,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontFamily: QUICKSAND,
-                        color: PRIMARY_COLOR,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
+                }).toList(),
+              ),
+              Divider(),
+            ],
           );
         });
   }
@@ -474,5 +495,35 @@ class _ExploreScreenState extends State<ExploreScreen>
         );
       },
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => math.max(maxHeight, minHeight);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }

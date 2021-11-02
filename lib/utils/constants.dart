@@ -91,6 +91,13 @@ const EXPLORE_SCREEN = 'explore_screen';
 const PROJECT_DETAILS_SCREEN = 'project_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
 
+//Bottom Tabbar
+const EXPLORE_TAB = 'Explore';
+const REWARD_TAB = 'Rewards';
+const PROJECTs_TAB = 'Projects';
+const INBOX_TAB = 'Inbox';
+const PROFILE_TAB = 'Profile';
+
 //Dropdown hint
 const SELECT_RELATION_HINT = 'Select Relation';
 const SELECT_GRADE_HINT = 'Select Grade Level';
@@ -182,6 +189,7 @@ const CONTINUE_BUTTON = 'Continue';
 const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
 const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
+const LOGOUT_BUTTON = 'Logout';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
