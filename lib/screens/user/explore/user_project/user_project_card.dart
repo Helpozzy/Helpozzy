@@ -43,7 +43,7 @@ class _UserProjectCardState extends State<UserProjectCard> {
         child: Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,9 +134,9 @@ class _UserProjectCardState extends State<UserProjectCard> {
                             Row(
                               children: [
                                 RatingBar.builder(
-                                  initialRating: 3,
+                                  initialRating: project.rating,
                                   minRating: 1,
-                                  itemSize: 18,
+                                  itemSize: 16,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   unratedColor: GRAY,
@@ -151,6 +151,7 @@ class _UserProjectCardState extends State<UserProjectCard> {
                                     print(rating);
                                   },
                                 ),
+                                SizedBox(width: 5),
                                 Text(
                                   '(${project.reviewCount} Reviews)',
                                   style: _theme.textTheme.bodyText2!.copyWith(

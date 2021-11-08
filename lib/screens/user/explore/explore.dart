@@ -46,13 +46,9 @@ class _ExploreScreenState extends State<ExploreScreen>
     controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
     animation = Tween<double>(begin: 0, end: 350).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      });
+      ..addListener(() => setState(() {}));
     scrollController.addListener(() {
-      setState(() {
-        currentPosition = scrollController.offset;
-      });
+      setState(() => currentPosition = scrollController.offset);
     });
   }
 
@@ -68,11 +64,10 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   void animateTextfield() {
     setState(() {
-      if (boo) {
+      if (boo)
         controller.forward();
-      } else {
+      else
         controller.reverse();
-      }
       boo = !boo;
     });
   }
@@ -163,8 +158,9 @@ class _ExploreScreenState extends State<ExploreScreen>
                       width: animation.value,
                       height: 38,
                       child: TextField(
-                        onTap: () =>
-                            SearchProject().modalBottomSheetMenu(context),
+                        onTap: () => SearchProject()
+                            .modalBottomSheetMenu(context)
+                            .then((value) => setState(() => boo = true)),
                         decoration: InputDecoration(
                           hintText: SEARCH_HINT,
                           hintStyle: TextStyle(

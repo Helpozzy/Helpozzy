@@ -95,6 +95,6 @@ class ProjectModel {
   late String aboutOrganizer;
   late String status;
   late bool isLiked = false;
-  late bool isExpanded = false;
-  late bool isExpandStatus = false;
+  late bool isProjectDetailsExpanded = false;
+  late bool isTaskDetailsExpanded = false;
 }

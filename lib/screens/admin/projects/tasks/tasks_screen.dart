@@ -68,11 +68,9 @@ class _TasksScreenState extends State<TasksScreen> {
           itemBuilder: (context, index) {
             final TaskModel task = snapshot.data!.tasks[index];
             return TaskCard(
-              title: task.taskName,
-              description: task.description,
+              task: task,
               selected: task.isSelected! ? true : false,
               optionEnable: true,
-              onLongPressItem: () {},
               onTapItem: () {
                 setState(() {
                   task.isSelected = !task.isSelected!;
@@ -81,7 +79,6 @@ class _TasksScreenState extends State<TasksScreen> {
                   selectedItems.add(task);
                 }
               },
-              onTapEdit: () async => await onEdit(task),
               onTapDelete: () async => await onDelete(task),
             );
           },

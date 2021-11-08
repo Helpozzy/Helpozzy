@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/helper/task_Helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -31,6 +33,7 @@ class _ProjectTileState extends State<ProjectTile> {
   final AdminProjectsBloc adminProjectsBloc;
   late ThemeData _theme;
   late double width;
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -72,41 +75,57 @@ class _ProjectTileState extends State<ProjectTile> {
                       scale: 0.6,
                       child: CommonButtonWithIcon(
                         onPressed: () {
-                          project.isExpanded = !project.isExpanded;
+                          project.isProjectDetailsExpanded =
+                              !project.isProjectDetailsExpanded;
                           adminProjectsBloc.isExpanded(isExpanded);
+                          if (project.isProjectDetailsExpanded &&
+                              project.isTaskDetailsExpanded) {
+                            _projectTaskBloc
+                                .getProjectTaskDetails(project.projectId);
+                          }
                         },
-                        icon: project.isExpanded
+                        icon: project.isProjectDetailsExpanded
                             ? Icons.keyboard_arrow_up_rounded
                             : Icons.keyboard_arrow_down_rounded,
-                        borderColor: project.isExpanded ? WHITE : PRIMARY_COLOR,
+                        borderColor: project.isProjectDetailsExpanded
+                            ? WHITE
+                            : PRIMARY_COLOR,
                         fontSize: 15,
                         iconSize: 18,
-                        text: project.isExpanded
-                            ? 'Hide Details '
-                            : 'Show Details',
-                        buttonColor: project.isExpanded ? PRIMARY_COLOR : GRAY,
-                        iconColor: project.isExpanded ? WHITE : PRIMARY_COLOR,
-                        fontColor: project.isExpanded ? WHITE : PRIMARY_COLOR,
+                        text: project.isProjectDetailsExpanded
+                            ? HIDE_DETAILS_BUTTON
+                            : SHOW_DETAILS_BUTTON,
+                        buttonColor: project.isProjectDetailsExpanded
+                            ? PRIMARY_COLOR
+                            : GRAY,
+                        iconColor: project.isProjectDetailsExpanded
+                            ? WHITE
+                            : PRIMARY_COLOR,
+                        fontColor: project.isProjectDetailsExpanded
+                            ? WHITE
+                            : PRIMARY_COLOR,
                       ),
                     ),
                   ],
                 ),
-                project.isExpanded
+                project.isProjectDetailsExpanded
                     ? Padding(
                         padding: const EdgeInsets.only(right: 21.0),
                         child: CommonDivider(),
                       )
                     : SizedBox(),
-                project.isExpanded ? projectDetails(project) : SizedBox(),
-                project.isExpandStatus
+                project.isProjectDetailsExpanded
+                    ? projectDetails(project)
+                    : SizedBox(),
+                project.isTaskDetailsExpanded
                     ? Padding(
                         padding: const EdgeInsets.only(right: 21.0),
                         child: CommonDivider(),
                       )
                     : SizedBox(),
-                project.isExpanded
-                    ? project.isExpandStatus
-                        ? taskDetails(project)
+                project.isProjectDetailsExpanded
+                    ? project.isTaskDetailsExpanded
+                        ? taskDetails()
                         : SizedBox()
                     : SizedBox()
               ],
@@ -150,20 +169,23 @@ class _ProjectTileState extends State<ProjectTile> {
             scale: 0.6,
             child: CommonButtonWithIcon(
               onPressed: () {
-                setState(() {
-                  project.isExpandStatus = !project.isExpandStatus;
-                });
+                setState(() => project.isTaskDetailsExpanded =
+                    !project.isTaskDetailsExpanded);
+                if (project.isTaskDetailsExpanded) {
+                  _projectTaskBloc.getProjectTaskDetails(project.projectId);
+                }
               },
-              icon: project.isExpandStatus
+              icon: project.isTaskDetailsExpanded
                   ? Icons.keyboard_arrow_up_rounded
                   : Icons.keyboard_arrow_down_rounded,
-              borderColor: project.isExpandStatus ? WHITE : PRIMARY_COLOR,
+              borderColor:
+                  project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
               fontSize: 15,
               iconSize: 18,
               text: 'Task Details',
-              buttonColor: project.isExpandStatus ? PRIMARY_COLOR : GRAY,
-              iconColor: project.isExpandStatus ? WHITE : PRIMARY_COLOR,
-              fontColor: project.isExpandStatus ? WHITE : PRIMARY_COLOR,
+              buttonColor: project.isTaskDetailsExpanded ? PRIMARY_COLOR : GRAY,
+              iconColor: project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
+              fontColor: project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
             ),
           ),
         ],
@@ -212,33 +234,53 @@ class _ProjectTileState extends State<ProjectTile> {
     );
   }
 
-  Widget taskDetails(ProjectModel project) {
-    return Padding(
-      padding: EdgeInsets.only(top: 8.0, right: width * 0.05),
-      child: Column(
-        children: [
-          taskStatus(
-              color: GREEN,
-              title: COMPLETED_TASKS,
-              icon: Icons.checklist_rtl_outlined,
-              count: 3),
-          taskStatus(
-              color: AMBER_COLOR,
-              title: INPROGRESS_TASKS,
-              icon: Icons.access_time,
-              count: 6),
-          taskStatus(
-              color: Colors.red,
-              title: NOT_STARTED_TASKS,
-              icon: Icons.warning_amber_rounded,
-              count: 2),
-        ],
-      ),
+  Widget taskDetails() {
+    return StreamBuilder<ProjectTaskHelper>(
+      stream: _projectTaskBloc.getProjectTaskDetailsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: LinearLoader(minheight: 12),
+            ),
+          );
+        }
+        return Padding(
+          padding: EdgeInsets.only(top: 8.0, right: width * 0.05),
+          child: Column(
+            children: [
+              tasksStatusTile(
+                color: GREEN,
+                title: COMPLETED_TASKS,
+                icon: Icons.checklist_rtl_outlined,
+                count: snapshot.data!.projectCompleted,
+              ),
+              tasksStatusTile(
+                color: AMBER_COLOR,
+                title: INPROGRESS_TASKS,
+                icon: Icons.access_time,
+                count: snapshot.data!.projectInProgress,
+              ),
+              tasksStatusTile(
+                color: Colors.red,
+                title: NOT_STARTED_TASKS,
+                icon: Icons.warning_amber_rounded,
+                count: snapshot.data!.projectNotStarted,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget taskStatus(
-      {required String title, IconData? icon, Color? color, int? count}) {
+  Widget tasksStatusTile({
+    required String title,
+    IconData? icon,
+    Color? color,
+    int? count,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(

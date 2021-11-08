@@ -524,8 +524,7 @@ class _CreateProjectState extends State<CreateProject> {
                 itemBuilder: (context, index) {
                   final TaskModel task = snapshot.data![index];
                   return TaskCard(
-                    title: task.taskName,
-                    description: task.description,
+                    task: task,
                     optionEnable: false,
                   );
                 },

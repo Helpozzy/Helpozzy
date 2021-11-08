@@ -498,13 +498,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               return ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(vertical: width * 0.02),
+                padding: EdgeInsets.symmetric(vertical: 5),
                 itemCount: snapshot.data!.tasks.length,
                 itemBuilder: (context, index) {
                   final TaskModel task = snapshot.data!.tasks[index];
                   return TaskCard(
-                    title: task.taskName,
-                    description: task.description,
+                    task: task,
                     optionEnable: false,
                     onTapItem: () {},
                   );

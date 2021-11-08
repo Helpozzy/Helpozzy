@@ -55,7 +55,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
         return snapshot.data!.projects.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                 itemCount: snapshot.data!.projects.length,
                 itemBuilder: (context, index) {
                   final ProjectModel project = snapshot.data!.projects[index];

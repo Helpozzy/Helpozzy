@@ -5,19 +5,24 @@ import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Splash(),
-    );
-  }
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class Splash extends StatelessWidget {
+class _SplashScreenState extends State<SplashScreen> {
+  late double height;
+  late double width;
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: body(context),
+    );
+  }
+
+  Widget body(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (ctx, state) {
         if (state is AuthenticateState) {
@@ -33,7 +38,6 @@ class Splash extends StatelessWidget {
         }
       },
       child: Stack(
-        fit: StackFit.expand,
         alignment: Alignment.center,
         children: [
           Container(
@@ -50,6 +54,21 @@ class Splash extends StatelessWidget {
             ),
           ),
           TopAppLogo(height: height / 5),
+          Positioned(
+            top: height / 1.7,
+            child: Container(
+              width: width,
+              padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+              child: Text(
+                HELPOZZY_TAGLINE_TEXT,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6!
+                    .copyWith(color: DARK_BLACK),
+              ),
+            ),
+          ),
         ],
       ),
     );

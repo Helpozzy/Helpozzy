@@ -156,7 +156,7 @@ class HelpozzyApp extends MaterialApp {
 
   @override
   Map<String, WidgetBuilder> get routes => {
-        '/': (context) => Splash(),
+        '/': (context) => SplashScreen(),
         INTRO: (context) => IntroScreen(),
         USER_SLECTION: (context) => UserTypeSelection(),
         ADMIN_SELECTION: (context) => AdminDashboardScreen(),

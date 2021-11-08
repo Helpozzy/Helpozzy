@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:intl/intl.dart';
 
 class TaskCard extends StatelessWidget {
   TaskCard({
-    required this.title,
-    required this.description,
+    required this.task,
     this.optionEnable = false,
     this.selected = false,
-    this.onTapEdit,
     this.onTapDelete,
     this.onTapItem,
-    this.onLongPressItem,
   });
-  final String title;
-  final String description;
+  final TaskModel task;
   final bool optionEnable;
   final bool selected;
   final GestureTapCallback? onTapItem;
-  final GestureTapCallback? onLongPressItem;
-  final GestureTapCallback? onTapEdit;
   final GestureTapCallback? onTapDelete;
+
+  String timeStampConvertToDate(String date) {
+    return DateFormat('EEE, dd MMM yyyy').format(
+      DateTime.fromMillisecondsSinceEpoch(int.parse(date)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,35 +35,55 @@ class TaskCard extends StatelessWidget {
               : WHITE,
       margin: EdgeInsets.symmetric(vertical: 5.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-        title: Text(
-          title,
-          style: _themeData.textTheme.headline6!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: onTapItem,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.taskName,
+                      style: _themeData.textTheme.headline6!
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Text(
+                      task.description,
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                          color: DARK_GRAY,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      task.hours.toString(),
+                      style: _themeData.textTheme.bodyText2!
+                          .copyWith(color: DARK_GRAY, fontSize: 12),
+                    ),
+                    Text(
+                      timeStampConvertToDate(task.startDate) +
+                          ' - ' +
+                          timeStampConvertToDate(task.endDate),
+                      style: _themeData.textTheme.bodyText2!
+                          .copyWith(color: DARK_GRAY, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            optionEnable
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: DARK_GRAY,
+                    ),
+                    onPressed: onTapDelete,
+                  )
+                : SizedBox(),
+          ],
         ),
-        subtitle: Text(
-          description,
-          style: _themeData.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
-        ),
-        trailing: optionEnable
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    child: Icon(Icons.edit),
-                    onTap: onTapEdit,
-                  ),
-                  SizedBox(width: 8),
-                  InkWell(
-                    child: Icon(Icons.delete),
-                    onTap: onTapDelete,
-                  ),
-                ],
-              )
-            : SizedBox(),
-        onTap: onTapItem,
-        onLongPress: onLongPressItem,
       ),
     );
   }

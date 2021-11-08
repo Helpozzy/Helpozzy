@@ -110,6 +110,8 @@ const FAVORITE_HINT = 'Favorite';
 //Helpozzy Text
 const HELPOZZY_REMAINING_TEXT = 'elpozzy';
 const HELPOZZY_TEXT = 'Helpozzy';
+const HELPOZZY_TAGLINE_TEXT =
+    'If you see someone without a smile, Give them one of yours!';
 
 // Messages
 const MSG_SIGN_UP = 'Sign Up';
@@ -295,6 +297,8 @@ const ADD_TASK_BUTTON = 'ADD TASK';
 const ADD_NEW_TASK_BUTTON = 'Create New Task';
 const TASK_LIST_BUTTON = 'Task List';
 const MEMBERS_LIST_BUTTON = 'Members List';
+const HIDE_DETAILS_BUTTON = 'Hide Details ';
+const SHOW_DETAILS_BUTTON = 'Show Details';
 
 //Admin Hint Msg
 const ADMIN_SEARCH_HINT = 'Search';
