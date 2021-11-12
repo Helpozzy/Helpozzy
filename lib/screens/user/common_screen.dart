@@ -19,6 +19,16 @@ class _CommonSampleScreenState extends State<CommonSampleScreen> {
     return Scaffold(
       body: Column(
         children: [
+          SizedBox(height: 100),
+          Text(
+            widget.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: DARK_MARUN,
+            ),
+          ),
           Container(
             margin: EdgeInsets.all(50),
             width: double.infinity,
@@ -30,15 +40,6 @@ class _CommonSampleScreenState extends State<CommonSampleScreen> {
                   Navigator.pushNamedAndRemoveUntil(
                       context, INTRO, (route) => false);
                 }),
-          ),
-          Text(
-            widget.title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: DARK_MARUN,
-            ),
           ),
         ],
       ),

@@ -9,12 +9,15 @@ class AdminProjectsBloc {
 
   final projectDetailsExpandController = PublishSubject<bool>();
   final projectsController = PublishSubject<Projects>();
+  final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<Users>();
   final _searchUsersList = BehaviorSubject<dynamic>();
 
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
   Stream<Projects> get getProjectsStream => projectsController.stream;
+  Stream<Projects> get getOnGoingProjectsStream =>
+      onGoingProjectsController.stream;
   Stream<Users> get getOtherUsersStream => otherUserInfoController.stream;
   Stream<dynamic> get getSearchedUsersStream => _searchUsersList.stream;
 
@@ -30,6 +33,11 @@ class AdminProjectsBloc {
   Future getProjects({required ProjectTabType projectTabType}) async {
     final Projects response = await repo.getprojectsRepo(projectTabType);
     projectsController.sink.add(response);
+  }
+
+  Future getOnGoingProjects({required ProjectTabType projectTabType}) async {
+    final Projects response = await repo.getprojectsRepo(projectTabType);
+    onGoingProjectsController.sink.add(response);
   }
 
   Future getOtherUsersInfo() async {
@@ -61,5 +69,6 @@ class AdminProjectsBloc {
     projectsController.close();
     otherUserInfoController.close();
     _searchUsersList.close();
+    onGoingProjectsController.close();
   }
 }

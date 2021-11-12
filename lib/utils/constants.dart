@@ -24,7 +24,7 @@ const LIGHT_MARUN = Color(0xFF862663);
 const DIVIDER_COLOR = Color.fromRGBO(112, 112, 112, 0.3);
 const BLUR_GRAY = Color.fromRGBO(112, 112, 112, 0.1);
 const BLUE_GRAY = Color(0xFF188D88);
-const BLUE = Color(0xFF005BD8);
+const DARK_BLUE = Color(0xFF005BD8);
 const SHADOW_GRAY = Color.fromRGBO(0, 0, 0, 0.16);
 const WHITE = Color(0xFFFFFFFF);
 const DARK_PINK_COLOR = Color(0xFFD93864);
@@ -35,6 +35,9 @@ const DARK_ACCENT_GRAY = Color(0xFFF8F5F5);
 const LIGHT_ACCENT_GRAY = Color(0xFFE5DBDD);
 const TABLE_ROW_GRAY_COLOR = Color(0xFFFBFAFA);
 const PURPLE_BLUE_COLOR = Color(0xFF89C4FB);
+const BLUE_COLOR = Color(0xFF007AFF);
+const RED_COLOR = Colors.red;
+const LABEL_TILE_COLOR = Color(0xFFD8D9DD);
 
 //Splash color
 const PURPLE_COLOR = Color(0xFF445393);
@@ -51,7 +54,8 @@ late SharedPreferences prefsObject;
 enum ProjectTabType {
   PROJECT_UPCOMING_TAB,
   PROJECT_INPROGRESS_TAB,
-  PROJECT_PAST_TAB
+  PROJECT_COMPLETED_TAB,
+  PROJECT_CONTRIBUTION_TRACKER_TAB,
 }
 
 //Font family
@@ -121,7 +125,7 @@ const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
 //Hint Msg
-const SEARCH_HINT = 'Search for projects';
+const SEARCH_HINT = 'Search projects';
 const REVIEW_HINT = 'Tap to review..';
 const ENTER_STATE_HINT = 'Enter State';
 const ENTER_CITY_HINT = 'Enter City';
@@ -192,6 +196,7 @@ const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
 const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
 const LOGOUT_BUTTON = 'Logout';
+const DELETE_BUTTON = 'Delete';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -203,6 +208,9 @@ const DIRECTION = 'Direction';
 const INFO = 'Info';
 const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
+
+//Usr project task details
+const TASK_DETAILS = 'Task Details';
 
 //Tabbar title
 const DETAILS_TAB = 'Details';
@@ -234,7 +242,8 @@ const SELECT_GAURDIAN = 'Guardian';
 //Admin Project Tab
 const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
-const PROJECT_PAST_TAB = 'Past';
+const PROJECT_COMPLETED_TAB = 'Completed';
+const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';

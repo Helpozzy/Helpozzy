@@ -74,13 +74,14 @@ class CommonRoundedTextfield extends StatelessWidget {
     required this.validator,
     this.onChanged,
     this.maxLength,
+    this.fillColor,
     this.onTap,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
-    this.isDropDown = false,
+    this.textAlignCenter = false,
   });
   final TextEditingController controller;
   final String hintText;
@@ -89,11 +90,12 @@ class CommonRoundedTextfield extends StatelessWidget {
   final GestureTapCallback? onTap;
   final bool readOnly;
   final int? maxLength;
+  final Color? fillColor;
   final TextInputType keyboardType;
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final bool? isDropDown;
+  final bool? textAlignCenter;
 
   @override
   Widget build(BuildContext context) {
@@ -104,11 +106,12 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
-      textAlign: isDropDown! ? TextAlign.left : TextAlign.center,
+      textAlign: textAlignCenter! ? TextAlign.left : TextAlign.center,
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       decoration: inputRoundedDecoration(
+        fillColor: fillColor,
         getHint: hintText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
@@ -365,12 +368,13 @@ InputDecoration inputRoundedDecoration(
     {required String getHint,
     Widget? prefixIcon,
     Widget? suffixIcon,
+    Color? fillColor,
     bool isDropDown = false}) {
   return InputDecoration(
     hintText: getHint,
     hintStyle: TextStyle(color: DARK_GRAY),
     filled: true,
-    fillColor: Colors.white,
+    fillColor: fillColor == null ? Colors.white : fillColor,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     contentPadding: EdgeInsets.only(left: 30, right: isDropDown ? 15 : 30),
@@ -632,6 +636,69 @@ class CommonButtonWithIcon extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
+    );
+  }
+}
+
+class SmallCommonButtonWithIcon extends StatelessWidget {
+  SmallCommonButtonWithIcon({
+    required this.text,
+    required this.icon,
+    this.buttonColor = PRIMARY_COLOR,
+    this.fontSize = 18,
+    this.onPressed,
+    required this.width,
+    required this.height,
+    this.borderColor = BLACK,
+    this.fontColor = WHITE,
+    this.iconColor = WHITE,
+    this.iconSize,
+  });
+  final IconData icon;
+  final String text;
+  final Color buttonColor;
+  final double fontSize;
+  final double height;
+  final double width;
+  final void Function()? onPressed;
+  final Color borderColor;
+  final Color fontColor;
+  final Color iconColor;
+  final double? iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          color: buttonColor,
+          border: Border.all(width: 0.6, color: fontColor),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: iconColor,
+                size: iconSize,
+              ),
+              SizedBox(width: 6),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontFamily: QUICKSAND,
+                  color: fontColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      onTap: onPressed,
     );
   }
 }

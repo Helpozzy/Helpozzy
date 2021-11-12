@@ -1,7 +1,9 @@
 class AdminTypes {
   AdminTypes.fromJson({required List items}) {
     items.forEach((element) {
-      adminTypes.add(AdminTypeModel.fromJson(json: element));
+      if (element['id'] != 3) {
+        adminTypes.add(AdminTypeModel.fromJson(json: element));
+      }
     });
   }
   late List<AdminTypeModel> adminTypes = [];

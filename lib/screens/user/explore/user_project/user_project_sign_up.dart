@@ -49,7 +49,7 @@ class _ProjectUserSignUpScreenState extends State<ProjectUserSignUpScreen> {
           ),
           Icon(
             Icons.chat_outlined,
-            color: BLUE,
+            color: DARK_BLUE,
             size: 20,
           ),
         ],

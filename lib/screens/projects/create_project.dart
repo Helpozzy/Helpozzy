@@ -6,14 +6,14 @@ import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/tasks_screen.dart';
+import 'package:helpozzy/screens/tasks/create_edit_task.dart';
+import 'package:helpozzy/screens/tasks/task_widget.dart';
+import 'package:helpozzy/screens/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
-import 'tasks/create_edit_task.dart';
 
 class CreateProject extends StatefulWidget {
   @override
@@ -606,9 +606,6 @@ class _CreateProjectState extends State<CreateProject> {
 
   Future onAddProject() async {
     CircularLoader().show(context);
-    double startTime = timeConvertToDouble(selectedStartTime);
-    double endTime = timeConvertToDouble(selectedEndTime);
-    double hrsDiff = endTime - startTime;
 
     final ProjectModel project = ProjectModel(
       projectId: '',
@@ -621,7 +618,8 @@ class _CreateProjectState extends State<CreateProject> {
       organization: '',
       rating: 0.0,
       reviewCount: 0,
-      hours: hrsDiff,
+      startTime: selectedStartTime.format(context),
+      endTime: selectedEndTime.format(context),
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: DateTime.parse(_projStartDateController.text)

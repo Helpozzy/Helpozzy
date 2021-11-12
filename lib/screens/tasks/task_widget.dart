@@ -51,23 +51,20 @@ class TaskCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     Text(
+                      timeStampConvertToDate(task.startDate) +
+                          ' ' +
+                          task.startTime +
+                          ' - ' +
+                          task.endTime,
+                      style: _themeData.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+                    ),
+                    Text(
                       task.description,
                       style: _themeData.textTheme.bodyText2!.copyWith(
                           color: DARK_GRAY,
                           fontSize: 12,
                           fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      task.hours.toString(),
-                      style: _themeData.textTheme.bodyText2!
-                          .copyWith(color: DARK_GRAY, fontSize: 12),
-                    ),
-                    Text(
-                      timeStampConvertToDate(task.startDate) +
-                          ' - ' +
-                          timeStampConvertToDate(task.endDate),
-                      style: _themeData.textTheme.bodyText2!
-                          .copyWith(color: DARK_GRAY, fontSize: 12),
                     ),
                   ],
                 ),

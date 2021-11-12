@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
@@ -6,7 +7,8 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
+import 'package:helpozzy/screens/tasks/task_widget.dart';
+import 'package:helpozzy/screens/user/explore/user_project/project_task/task_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -95,7 +97,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           height: height / 3,
           width: double.infinity,
           child: Image.asset(
-            widget.project.imageUrl,
+            project.imageUrl,
             fit: BoxFit.cover,
           ),
         ),
@@ -108,11 +110,10 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           left: 10,
           top: 8,
           child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            iconSize: 18,
+            onPressed: () => Navigator.of(context).pop(),
             icon: Icon(
-              Icons.chevron_left_rounded,
+              CupertinoIcons.arrowshape_turn_up_left,
               color: WHITE,
             ),
           ),
@@ -121,7 +122,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           left: 16,
           bottom: 33,
           child: Text(
-            widget.project.organization,
+            project.organization,
             maxLines: 2,
             style: _theme.textTheme.headline6!
                 .copyWith(color: WHITE, fontSize: 22),
@@ -135,7 +136,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RatingBar.builder(
-                initialRating: widget.project.rating,
+                initialRating: project.rating,
                 ignoreGestures: true,
                 minRating: 1,
                 itemSize: 18,
@@ -153,7 +154,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 },
               ),
               Text(
-                '(${widget.project.reviewCount} Reviews)',
+                '(${project.reviewCount} Reviews)',
                 style: _theme.textTheme.bodyText2!.copyWith(
                   color: WHITE,
                   fontWeight: FontWeight.w600,
@@ -224,7 +225,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
-              widget.project.aboutOrganizer,
+              project.aboutOrganizer,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: 12,
                 fontFamily: QUICKSAND,
@@ -505,7 +506,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   return TaskCard(
                     task: task,
                     optionEnable: false,
-                    onTapItem: () {},
+                    onTapItem: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TaskDetails(task: task)),
+                    ),
                   );
                 },
               );

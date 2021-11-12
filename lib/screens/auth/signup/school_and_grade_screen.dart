@@ -51,7 +51,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
               child: CommonRoundedTextfield(
-                isDropDown: true,
+                textAlignCenter: true,
                 controller: _schoolController,
                 readOnly: true,
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),

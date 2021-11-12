@@ -19,7 +19,8 @@ class TaskModel {
     required this.qualification,
     required this.startDate,
     required this.endDate,
-    required this.hours,
+    required this.startTime,
+    required this.endTime,
     required this.members,
     required this.status,
     this.isSelected,
@@ -35,9 +36,8 @@ class TaskModel {
     qualification = json['qualification'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    hours = json['hours'] is double
-        ? json['hours']
-        : double.parse(json['hours'].toString());
+    startTime = json['start_time'];
+    endTime = json['end_time'];
     members = json['members'];
     status = json['status'];
   }
@@ -53,7 +53,8 @@ class TaskModel {
       'qualification': qualification,
       'start_date': startDate,
       'end_date': endDate,
-      'hours': hours,
+      'start_time': startTime,
+      'end_time': endTime,
       'members': members,
       'status': status,
     };
@@ -68,7 +69,8 @@ class TaskModel {
   late String qualification;
   late String startDate;
   late String endDate;
-  late double hours;
+  late String startTime;
+  late String endTime;
   late String members;
   late String status;
   late bool? isSelected = false;

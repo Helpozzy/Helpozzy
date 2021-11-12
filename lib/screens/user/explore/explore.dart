@@ -124,11 +124,6 @@ class _ExploreScreenState extends State<ExploreScreen>
                 ),
               ),
             ),
-            // Container(
-            //   height: height / 3.5,
-            //   width: double.infinity,
-            //   color: TRANSPARENT_BLACK,
-            // ),
             animation.value == 0
                 ? Positioned(
                     top: 22,

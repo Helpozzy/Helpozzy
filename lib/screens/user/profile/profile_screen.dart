@@ -445,7 +445,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   style: TextStyle(
                                     fontFamily: QUICKSAND,
-                                    color: BLUE,
+                                    color: DARK_BLUE,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

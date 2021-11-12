@@ -5,8 +5,8 @@ import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/admin/projects/projects_screen.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
+import 'package:helpozzy/screens/projects/projects_screen.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -106,10 +106,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => type.id == 0
-                        ? ProjectsScreen()
+                        ? ProjectsScreen(fromAdmin: true)
                         : type.id == 1
                             ? MembersScreen()
-                            : CommonSampleScreen('No Available'),
+                            : CommonSampleScreen(
+                                '${type.label} Currently Not Available'),
                   ),
                 );
               },

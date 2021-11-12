@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/create_edit_task.dart';
-import 'package:helpozzy/screens/admin/projects/tasks/task_widget.dart';
+import 'package:helpozzy/screens/tasks/create_edit_task.dart';
+import 'package:helpozzy/screens/tasks/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

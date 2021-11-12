@@ -574,9 +574,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
 
   Future addOrUpdateData() async {
     CircularLoader().show(context);
-    double startTime = timeConvertToDouble(selectedStartTime);
-    double endTime = timeConvertToDouble(selectedEndTime);
-    double hrsDiff = endTime - startTime;
     final TaskModel taskDetails = TaskModel(
       projectId: '',
       id: fromEdit ? task!.id : '',
@@ -591,7 +588,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       endDate: DateTime.parse(_taskEndDateController.text)
           .millisecondsSinceEpoch
           .toString(),
-      hours: hrsDiff,
+      startTime: selectedStartTime.format(context),
+      endTime: selectedEndTime.format(context),
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
           ? TOGGLE_NOT_STARTED

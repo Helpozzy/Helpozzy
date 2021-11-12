@@ -141,7 +141,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               CURRENT_LOCATION,
               style: _theme.textTheme.headline6!.copyWith(
                 fontSize: 16,
-                color: BLUE,
+                color: DARK_BLUE,
                 fontWeight: FontWeight.w500,
               ),
             ),
