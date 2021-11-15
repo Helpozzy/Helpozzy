@@ -1,11 +1,11 @@
 class Projects {
   Projects.fromJson({required List<Map<String, dynamic>> list}) {
     list.forEach((element) {
-      projects.add(ProjectModel.fromjson(json: element));
+      projectList.add(ProjectModel.fromjson(json: element));
     });
   }
 
-  late List<ProjectModel> projects = [];
+  late List<ProjectModel> projectList = [];
 }
 
 class ProjectModel {

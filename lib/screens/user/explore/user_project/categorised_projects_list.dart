@@ -52,13 +52,14 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
             ),
           );
         }
-        return snapshot.data!.projects.isNotEmpty
+        return snapshot.data!.projectList.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: width * 0.02),
-                itemCount: snapshot.data!.projects.length,
+                itemCount: snapshot.data!.projectList.length,
                 itemBuilder: (context, index) {
-                  final ProjectModel project = snapshot.data!.projects[index];
+                  final ProjectModel project =
+                      snapshot.data!.projectList[index];
                   return UserProjectCard(
                     project: project,
                     onTapCard: () => Navigator.push(

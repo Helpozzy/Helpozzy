@@ -1,10 +1,11 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AdminProjectsBloc {
+class ProjectsBloc {
   final repo = Repository();
 
   final projectDetailsExpandController = PublishSubject<bool>();
@@ -12,6 +13,7 @@ class AdminProjectsBloc {
   final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<Users>();
   final _searchUsersList = BehaviorSubject<dynamic>();
+  final projectsActivityStatusController = PublishSubject<ProjectHelper>();
 
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
@@ -19,6 +21,8 @@ class AdminProjectsBloc {
   Stream<Projects> get getOnGoingProjectsStream =>
       onGoingProjectsController.stream;
   Stream<Users> get getOtherUsersStream => otherUserInfoController.stream;
+  Stream<ProjectHelper> get getMonthlyProjectsStream =>
+      projectsActivityStatusController.stream;
   Stream<dynamic> get getSearchedUsersStream => _searchUsersList.stream;
 
   Future isExpanded(bool isExpanded) async {
@@ -31,12 +35,20 @@ class AdminProjectsBloc {
   }
 
   Future getProjects({required ProjectTabType projectTabType}) async {
-    final Projects response = await repo.getprojectsRepo(projectTabType);
+    final Projects response =
+        await repo.getprojectsRepo(projectTabType: projectTabType);
     projectsController.sink.add(response);
   }
 
+  Future getProjectsActivityStatus() async {
+    final Projects response = await repo.getprojectsRepo();
+    final ProjectHelper projectHelper = ProjectHelper.fromProjects(response);
+    projectsActivityStatusController.sink.add(projectHelper);
+  }
+
   Future getOnGoingProjects({required ProjectTabType projectTabType}) async {
-    final Projects response = await repo.getprojectsRepo(projectTabType);
+    final Projects response =
+        await repo.getprojectsRepo(projectTabType: projectTabType);
     onGoingProjectsController.sink.add(response);
   }
 
@@ -66,6 +78,7 @@ class AdminProjectsBloc {
 
   void dispose() {
     projectDetailsExpandController.close();
+    projectsActivityStatusController.close();
     projectsController.close();
     otherUserInfoController.close();
     _searchUsersList.close();

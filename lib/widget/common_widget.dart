@@ -891,3 +891,24 @@ class LinearLoader extends StatelessWidget {
     );
   }
 }
+
+class ListDividerLabel extends StatelessWidget {
+  const ListDividerLabel({required this.label});
+  final String label;
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
+      color: LABEL_TILE_COLOR,
+      child: Text(
+        label,
+        style: Theme.of(context)
+            .textTheme
+            .bodyText2!
+            .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}

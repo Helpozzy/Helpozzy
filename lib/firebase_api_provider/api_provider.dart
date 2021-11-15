@@ -164,36 +164,32 @@ class ApiProvider {
     }
   }
 
-  Future<Projects> getProjectsAPIProvider(ProjectTabType projectTabType) async {
-    final QuerySnapshot querySnapshot = projectTabType ==
-            ProjectTabType.PROJECT_UPCOMING_TAB
-        ? await firestore
-            .collection('projects')
-            .where('status', isEqualTo: PROJECT_NOT_STARTED)
-            .where('project_owner', isEqualTo: prefsObject.getString('uID')!)
-            .get()
-        : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+  Future<Projects> getProjectsAPIProvider(
+      {ProjectTabType? projectTabType}) async {
+    final QuerySnapshot querySnapshot =
+        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? await firestore
                 .collection('projects')
-                .where('status', isEqualTo: PROJECT_IN_PROGRESS)
-                .where('project_owner',
-                    isEqualTo: prefsObject.getString('uID')!)
+                .where('status', isEqualTo: PROJECT_NOT_STARTED)
                 .get()
-            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
                 ? await firestore
                     .collection('projects')
-                    .where('status', isEqualTo: PROJECT_COMPLTED)
-                    .where('project_owner',
-                        isEqualTo: prefsObject.getString('uID')!)
+                    .where('status', isEqualTo: PROJECT_IN_PROGRESS)
                     .get()
-                : projectTabType ==
-                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                     ? await firestore
                         .collection('projects')
-                        .where('project_owner',
-                            isEqualTo: prefsObject.getString('uID')!)
+                        .where('status', isEqualTo: PROJECT_COMPLTED)
                         .get()
-                    : await firestore.collection('projects').get();
+                    : projectTabType ==
+                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                        ? await firestore.collection('projects').get()
+                        : await firestore
+                            .collection('projects')
+                            // .where('project_owner',
+                            //     isNotEqualTo: prefsObject.getString('uID')!)
+                            .get();
 
     List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

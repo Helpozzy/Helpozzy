@@ -464,9 +464,9 @@ class _ExploreScreenState extends State<ExploreScreen>
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.all(5),
-          itemCount: snapshot.data!.projects.length,
+          itemCount: snapshot.data!.projectList.length,
           itemBuilder: (context, index) {
-            final ProjectModel project = snapshot.data!.projects[index];
+            final ProjectModel project = snapshot.data!.projectList[index];
             return UserProjectCard(
               project: project,
               onTapCard: () => Navigator.push(

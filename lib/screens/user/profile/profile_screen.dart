@@ -294,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
                     late List<CategoryModel> availCategory = [];
                     snapshot.data!.item.forEach((category) {
-                      projectSnapshot.data!.projects.forEach((project) {
+                      projectSnapshot.data!.projectList.forEach((project) {
                         if (project.categoryId == category.id) {
                           availCategory.add(category);
                         }
@@ -369,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Center(child: LinearLoader(minheight: 12)),
           );
         }
-        final List<ProjectModel> projects = snapshot.data!.projects;
+        final List<ProjectModel> projects = snapshot.data!.projectList;
         return Column(
           children: [
             Container(

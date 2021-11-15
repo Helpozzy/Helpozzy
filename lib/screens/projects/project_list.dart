@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/screens/projects/create_project.dart';
-import 'package:helpozzy/screens/projects/project_tile.dart';
+import 'package:helpozzy/screens/projects/project_and_activity_tile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -26,23 +28,21 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   late double width;
   late bool isExpanded = false;
 
-  AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
+  ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
-    if (projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
-      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
-      if (!fromAdmin) {
-        _adminProjectsBloc.getOnGoingProjects(
-            projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB);
-      }
-    } else if (projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB) {
-      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
-    } else if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
-      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
-    } else if (projectTabType ==
-        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
-      _adminProjectsBloc.getProjects(projectTabType: projectTabType);
+    _projectsBloc.getProjects(projectTabType: projectTabType);
+    if (!fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
+      _projectsBloc.getOnGoingProjects(
+          projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB);
+    }
+    if (!fromAdmin && projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
+      _projectsBloc.getProjectsActivityStatus();
+    }
+    if (!fromAdmin &&
+        projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
+      _projectsBloc.getProjectsActivityStatus();
     }
     super.initState();
   }
@@ -54,17 +54,38 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-            ? labelTile('New Projects')
-            : SizedBox(),
-        Expanded(child: projectList(_adminProjectsBloc.getProjectsStream)),
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-            ? labelTile('Ongoing Projects')
-            : SizedBox(),
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+            ? ListDividerLabel(label: NEW_PROJECT_LABEL)
+            : !fromAdmin &&
+                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                ? ListDividerLabel(label: RECENTLY_COMPLETED_LABEL)
+                : !fromAdmin &&
+                        projectTabType ==
+                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                    ? ListDividerLabel(label: LATEST_CONTRIBUTION_HOURS_LABEL)
+                    : SizedBox(),
+        Expanded(child: projectList(_projectsBloc.getProjectsStream)),
+        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+            ? ListDividerLabel(label: ONGOING_PROJECT_LABEL)
+            : !fromAdmin &&
+                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                ? ListDividerLabel(label: DateTime.now().year.toString())
+                : !fromAdmin &&
+                        projectTabType ==
+                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                    ? ListDividerLabel(label: DateTime.now().year.toString())
+                    : SizedBox(),
+        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? Expanded(
-                child: projectList(_adminProjectsBloc.getOnGoingProjectsStream))
-            : SizedBox(),
+                child: projectList(_projectsBloc.getOnGoingProjectsStream))
+            : !fromAdmin &&
+                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                ? Expanded(child: monthlyProjectsStatus())
+                : !fromAdmin &&
+                        projectTabType ==
+                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                    ? Expanded(child: monthlyProjectsStatus())
+                    : SizedBox(),
         fromAdmin
             ? Container(
                 padding: EdgeInsets.symmetric(vertical: width * 0.02),
@@ -85,21 +106,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     );
   }
 
-  Widget labelTile(String label) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
-      color: LABEL_TILE_COLOR,
-      child: Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .bodyText2!
-            .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
   Widget projectList(Stream<Projects>? stream) {
     return StreamBuilder<Projects>(
       stream: stream,
@@ -107,7 +113,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader(minheight: 12));
         }
-        final List<ProjectModel> projects = snapshot.data!.projects;
+        final List<ProjectModel> projects = snapshot.data!.projectList;
         return projects.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
@@ -117,13 +123,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                   final ProjectModel project = projects[index];
                   return StreamBuilder<bool>(
                     initialData: false,
-                    stream: _adminProjectsBloc.getProjectExpandStream,
+                    stream: _projectsBloc.getProjectExpandStream,
                     builder: (context, snapshot) {
                       return ProjectTile(
+                        projectTabType: projectTabType,
                         fromAdmin: fromAdmin,
                         project: project,
                         isExpanded: snapshot.data!,
-                        adminProjectsBloc: _adminProjectsBloc,
+                        adminProjectsBloc: _projectsBloc,
                       );
                     },
                   );
@@ -132,6 +139,42 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             : Center(
                 child: Text(
                   'No Projects Available',
+                  style: _themeData.textTheme.headline6!
+                      .copyWith(color: SHADOW_GRAY),
+                ),
+              );
+      },
+    );
+  }
+
+  Widget monthlyProjectsStatus() {
+    return StreamBuilder<ProjectHelper>(
+      stream: _projectsBloc.getMonthlyProjectsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: LinearLoader(minheight: 12));
+        }
+        final List<ProjectActivityModel> monthlyList =
+            snapshot.data!.monthlyList;
+        return monthlyList.isNotEmpty
+            ? ListView.separated(
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: WHITE,
+                  height: 2,
+                ),
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
+                itemCount: monthlyList.length,
+                itemBuilder: (context, index) {
+                  return ActivityTrackerListItem(
+                    projectTabType: projectTabType,
+                    projectActivity: monthlyList[index],
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  'No Records Available',
                   style: _themeData.textTheme.headline6!
                       .copyWith(color: SHADOW_GRAY),
                 ),

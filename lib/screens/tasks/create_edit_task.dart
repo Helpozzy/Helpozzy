@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
-import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/screens/admin/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -49,7 +49,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late ThemeData _themeData;
   late double width;
   late double height;
-  AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
+  ProjectsBloc _projectsBloc = ProjectsBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   int _selectedIndexValue = 0;
   bool postOnLocalCheck = false;
@@ -59,8 +59,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   @override
   void initState() {
     if (fromEdit) retriveTaskDetails();
-    _adminProjectsBloc.getOtherUsersInfo();
-    _adminProjectsBloc.searchUsers('');
+    _projectsBloc.getOtherUsersInfo();
+    _projectsBloc.searchUsers('');
     super.initState();
   }
 
@@ -300,7 +300,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                 hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
                 validator: (val) {},
                 onChanged: (val) {
-                  _adminProjectsBloc.searchUsers(val);
+                  _projectsBloc.searchUsers(val);
                 },
               ),
             ),
@@ -369,7 +369,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
 
   Widget expandSearchUserList() {
     return StreamBuilder<dynamic>(
-      stream: _adminProjectsBloc.getSearchedUsersStream,
+      stream: _projectsBloc.getSearchedUsersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -396,7 +396,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     return InkWell(
                       onTap: () {
                         _searchEmailController.text = users[index].email;
-                        _adminProjectsBloc.searchUsers('');
+                        _projectsBloc.searchUsers('');
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

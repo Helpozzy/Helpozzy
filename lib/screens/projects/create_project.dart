@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
-import 'package:helpozzy/bloc/admin/admin_projects_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
@@ -22,7 +22,7 @@ class CreateProject extends StatefulWidget {
 
 class _CreateProjectState extends State<CreateProject> {
   final _formKey = GlobalKey<FormState>();
-  AdminProjectsBloc _adminProjectsBloc = AdminProjectsBloc();
+  ProjectsBloc _projectsBloc = ProjectsBloc();
   ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   ProjectTaskBloc selectedTaskBloc = ProjectTaskBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
@@ -52,8 +52,8 @@ class _CreateProjectState extends State<CreateProject> {
   @override
   void initState() {
     _categoryBloc.getCategories();
-    _adminProjectsBloc.getOtherUsersInfo();
-    _adminProjectsBloc.searchUsers('');
+    _projectsBloc.getOtherUsersInfo();
+    _projectsBloc.searchUsers('');
     super.initState();
   }
 
@@ -427,7 +427,7 @@ class _CreateProjectState extends State<CreateProject> {
                 hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
                 validator: (val) {},
                 onChanged: (val) {
-                  _adminProjectsBloc.searchUsers(val);
+                  _projectsBloc.searchUsers(val);
                 },
               ),
             ),
@@ -440,7 +440,7 @@ class _CreateProjectState extends State<CreateProject> {
 
   Widget expandSearchUserList() {
     return StreamBuilder<dynamic>(
-      stream: _adminProjectsBloc.getSearchedUsersStream,
+      stream: _projectsBloc.getSearchedUsersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -467,7 +467,7 @@ class _CreateProjectState extends State<CreateProject> {
                     return InkWell(
                       onTap: () {
                         _searchEmailController.text = users[index].email;
-                        _adminProjectsBloc.searchUsers('');
+                        _projectsBloc.searchUsers('');
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -633,7 +633,7 @@ class _CreateProjectState extends State<CreateProject> {
       status: PROJECT_NOT_STARTED,
     );
 
-    final bool isUploaded = await _adminProjectsBloc.postProject(project);
+    final bool isUploaded = await _projectsBloc.postProject(project);
     if (isUploaded) {
       await clearFields();
       CircularLoader().hide(context);

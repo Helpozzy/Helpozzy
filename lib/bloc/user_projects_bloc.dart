@@ -33,9 +33,9 @@ class UserProjectsBloc {
     final Projects response = await repo.getuserProjectsRepo();
     searchedProjectList = [];
     if (searchText.isEmpty) {
-      _searchProjectsList.sink.add(response.projects);
+      _searchProjectsList.sink.add(response.projectList);
     } else {
-      response.projects.forEach((project) {
+      response.projectList.forEach((project) {
         if (project.projectName
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||

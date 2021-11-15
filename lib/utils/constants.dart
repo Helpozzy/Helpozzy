@@ -38,6 +38,8 @@ const PURPLE_BLUE_COLOR = Color(0xFF89C4FB);
 const BLUE_COLOR = Color(0xFF007AFF);
 const RED_COLOR = Colors.red;
 const LABEL_TILE_COLOR = Color(0xFFD8D9DD);
+const ACCENT_GREEN = Color(0xFF34C759);
+const ACCENT_GRAY_COLOR = Color(0xFFF7F4F4);
 
 //Splash color
 const PURPLE_COLOR = Color(0xFF445393);
@@ -162,6 +164,12 @@ const ANIMAL_CARE = 'Animal\nCare';
 const SENIOR_CENTER = 'Senior\nCenter';
 const CHILDREN_AND_YOUTH = 'Children\nand Youth';
 const MORE = 'More..';
+
+//Project list labels
+const NEW_PROJECT_LABEL = 'New Projects';
+const RECENTLY_COMPLETED_LABEL = 'Recently Completed';
+const LATEST_CONTRIBUTION_HOURS_LABEL = 'Latest Contribution Hours';
+const ONGOING_PROJECT_LABEL = 'Ongoing Projects';
 
 //Sign-UP screen
 const SELECT_CATEGORY = 'Select your volunteering choice?';
