@@ -9,14 +9,14 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/explore/search_bar/search_project.dart';
+import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:timelines/timelines.dart';
 import 'user_project/user_project_sign_up.dart';
-import 'user_project/project_details.dart';
-import 'dart:math' as math;
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -104,7 +104,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget topImageView() {
     return SliverPersistentHeader(
       pinned: currentPosition < height / 8.5 ? true : false,
-      delegate: _SliverAppBarDelegate(
+      delegate: SliverAppBarDelegate(
         minHeight: height / 10,
         maxHeight: height / 3.5,
         child: Stack(
@@ -310,11 +310,6 @@ class _ExploreScreenState extends State<ExploreScreen>
                   borderRadius: BorderRadius.circular(100),
                   color: color,
                 ),
-                child: Icon(
-                  Icons.check,
-                  size: width * 0.03,
-                  color: WHITE,
-                ),
               );
             } else {
               return Container(
@@ -486,35 +481,5 @@ class _ExploreScreenState extends State<ExploreScreen>
         );
       },
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new SizedBox.expand(child: child);
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
   }
 }

@@ -217,7 +217,13 @@ const INFO = 'Info';
 const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
 
-//Usr project task details
+//User project tabbar title
+const TASKS_TAB = 'Tasks';
+const MEMBERS_TAB = 'Members';
+const MESSENGER_TAB = 'Messenger';
+const ATTACHMENTS_TAB = 'Attachments';
+
+//User project task details
 const TASK_DETAILS = 'Task Details';
 
 //Tabbar title

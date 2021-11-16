@@ -6,6 +6,7 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/screens/projects/create_project.dart';
 import 'package:helpozzy/screens/projects/project_and_activity_tile.dart';
+import 'package:helpozzy/screens/projects/project_details_info.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -125,12 +126,19 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     initialData: false,
                     stream: _projectsBloc.getProjectExpandStream,
                     builder: (context, snapshot) {
-                      return ProjectTile(
-                        projectTabType: projectTabType,
-                        fromAdmin: fromAdmin,
-                        project: project,
-                        isExpanded: snapshot.data!,
-                        adminProjectsBloc: _projectsBloc,
+                      return InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProjectDetailsInfo(project: project))),
+                        child: ProjectTile(
+                          projectTabType: projectTabType,
+                          fromAdmin: fromAdmin,
+                          project: project,
+                          isExpanded: snapshot.data!,
+                          adminProjectsBloc: _projectsBloc,
+                        ),
                       );
                     },
                   );
