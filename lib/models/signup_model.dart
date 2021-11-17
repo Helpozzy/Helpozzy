@@ -4,8 +4,9 @@ class SignUpModel {
     this.name,
     this.email,
     this.dateOfBirth,
+    this.gender,
     this.personalPhnNo,
-    this.parentPhnNo,
+    this.parentEmail,
     this.relationshipWithParent,
     this.address,
     this.city,
@@ -15,13 +16,15 @@ class SignUpModel {
     this.gradeLevel,
     this.userType,
   });
+
   SignUpModel.fromJson({required Map<String, dynamic> json}) {
     volunteerType = json['volunteer_type'];
     name = json['name'];
     email = json['email'];
     dateOfBirth = json['date_of_birth'];
+    gender = json['gender'];
     personalPhnNo = json['personal_phn_no'];
-    parentPhnNo = json['parent_phn_no'];
+    parentEmail = json['parent_email'];
     relationshipWithParent = json['relationship_with_parent'];
     address = json['address'];
     city = json['city'];
@@ -38,8 +41,9 @@ class SignUpModel {
       'name': name,
       'email': email,
       'date_of_birth': dateOfBirth,
+      'gender': gender,
       'personal_phn_no': personalPhnNo,
-      'parent_phn_no': parentPhnNo,
+      'parent_email': parentEmail,
       'relationship_with_parent': relationshipWithParent,
       'address': address,
       'city': city,
@@ -55,8 +59,9 @@ class SignUpModel {
   late String? name;
   late String? email;
   late String? dateOfBirth;
+  late String? gender;
   late String? personalPhnNo;
-  late String? parentPhnNo;
+  late String? parentEmail;
   late String? relationshipWithParent;
   late String? address;
   late String? city;

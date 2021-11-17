@@ -1,11 +1,11 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/residential_address.dart';
+import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class PhoneWithParentGuardianNumber extends StatefulWidget {
   PhoneWithParentGuardianNumber({required this.signUpModel});
@@ -24,19 +24,31 @@ class _PhoneWithParentGuardianNumberState
   final TextEditingController _personalPhoneController =
       TextEditingController();
   static final _formKey = GlobalKey<FormState>();
-  final GlobalKey<State> _dialogKey = GlobalKey<State>();
-  final TextEditingController _parentPhoneController = TextEditingController();
+  final TextEditingController _parentEmailController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
-  CountryCode? countryCodePersonal;
-  CountryCode? countryCodeParent;
+  CountryCode? countryCode;
   late double width;
   late double height;
+  late bool showParentFields = false;
 
   @override
   void initState() {
-    countryCodePersonal = CountryCode(code: '+1', name: 'US');
-    countryCodeParent = CountryCode(code: '+1', name: 'US');
+    countryCode = CountryCode(code: '+1', name: 'US');
+    getAgeFromDOB();
     super.initState();
+  }
+
+  Future getAgeFromDOB() async {
+    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(signUpModel.dateOfBirth!));
+    final currentDate = DateTime.now();
+    final Duration duration = currentDate.difference(dateOfBirth);
+    final int diff = (duration.inDays / 365).floor();
+    if (diff > 18) {
+      showParentFields = false;
+    } else {
+      showParentFields = true;
+    }
   }
 
   @override
@@ -55,12 +67,12 @@ class _PhoneWithParentGuardianNumberState
                 child: Column(
                   children: [
                     CommonWidget(context).showBackButton(),
-                    TopInfoLabel(label: DO_YOU_HAVE_NUMBER),
+                    TopInfoLabel(label: ENTER_PERSONAL_PHONE_NUMBER),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                       child: CommonRoundedTextfield(
                         controller: _personalPhoneController,
-                        prefixIcon: countryCodePicker(true),
+                        prefixIcon: countryCodePicker(),
                         hintText: ENTER_PHONE_NUMBER_HINT,
                         maxLength: 10,
                         keyboardType: TextInputType.number,
@@ -75,37 +87,44 @@ class _PhoneWithParentGuardianNumberState
                         },
                       ),
                     ),
-                    TopInfoLabel(label: ENTER_PARENT_NUMBER),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _parentPhoneController,
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        hintText: ENTER_PHONE_NUMBER_HINT,
-                        prefixIcon: countryCodePicker(false),
-                        validator: (parentPhone) {
-                          if (parentPhone!.isEmpty) {
-                            return 'Please enter parents/guardian phone number';
-                          } else if (parentPhone.isNotEmpty &&
-                              parentPhone.length != 10) {
-                            return 'Please enter 10 digit number';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.19, vertical: 4.0),
-                      child: TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: width * 0.10),
-                      child: selectRelationshipDropdown(),
-                    ),
+                    showParentFields
+                        ? TopInfoLabel(label: ENTER_PARENT_EMAIL)
+                        : SizedBox(),
+                    showParentFields
+                        ? Padding(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * 0.1),
+                            child: CommonRoundedTextfield(
+                              controller: _parentEmailController,
+                              hintText: ENTER_EMAIL_HINT,
+                              validator: (parentEmail) {
+                                if (parentEmail!.isEmpty) {
+                                  return 'Please enter parents/guardian email';
+                                } else if (parentEmail.isNotEmpty &&
+                                    !EmailValidator.validate(parentEmail)) {
+                                  return 'Please enter valid email';
+                                }
+                                return null;
+                              },
+                            ),
+                          )
+                        : SizedBox(),
+                    showParentFields ? SizedBox(height: 10) : SizedBox(),
+                    showParentFields
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width * 0.16, vertical: 4.0),
+                            child:
+                                TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+                          )
+                        : SizedBox(),
+                    showParentFields
+                        ? Container(
+                            margin:
+                                EdgeInsets.symmetric(horizontal: width * 0.10),
+                            child: selectRelationshipDropdown(),
+                          )
+                        : SizedBox(),
                     SizedBox(height: 10),
                   ],
                 ),
@@ -121,26 +140,21 @@ class _PhoneWithParentGuardianNumberState
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  signUpModel.personalPhnNo = countryCodePersonal!.code! +
-                      _personalPhoneController.text;
-                  signUpModel.parentPhnNo =
-                      countryCodeParent!.code! + _parentPhoneController.text;
-                  signUpModel.relationshipWithParent = _relationController.text;
+                  signUpModel.personalPhnNo =
+                      countryCode!.code! + _personalPhoneController.text;
+
+                  signUpModel.parentEmail =
+                      showParentFields ? _parentEmailController.text : '';
+                  signUpModel.relationshipWithParent =
+                      showParentFields ? _relationController.text : '';
 
                   if (_formKey.currentState!.validate()) {
-                    if (_relationController.text != SELECT_RELATION_HINT) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
                           builder: (context) =>
-                              ResidentialAddress(signUpModel: signUpModel),
-                        ),
-                      );
-                    } else {
-                      PlatformAlertDialog().show(context, _dialogKey,
-                          title: ALERT,
-                          content: 'Please select relationship status');
-                    }
+                              SchoolAndGradeScreen(signUpModel: signUpModel)),
+                    );
                   }
                 },
               ),
@@ -151,19 +165,18 @@ class _PhoneWithParentGuardianNumberState
     );
   }
 
-  Widget countryCodePicker(bool fromPersonal) {
+  Widget countryCodePicker() {
     return CountryCodePicker(
       onChanged: (CountryCode code) {
-        if (fromPersonal) {
-          countryCodePersonal = code;
-        } else {
-          countryCodeParent = code;
-        }
+        countryCode = code;
       },
       boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       initialSelection: 'US',
-      padding: EdgeInsets.only(left: width * 0.05),
+      backgroundColor: WHITE,
+      padding: EdgeInsets.only(left: width * 0.03),
       showCountryOnly: false,
+      dialogSize: Size(width, height - 30),
+      showFlagMain: true,
       dialogTextStyle: Theme.of(context).textTheme.bodyText2,
       flagWidth: 25.0,
       showOnlyCountryWhenClosed: false,
@@ -178,7 +191,6 @@ class _PhoneWithParentGuardianNumberState
 
   Widget selectRelationshipDropdown() {
     return Container(
-      padding: EdgeInsets.only(left: 20, right: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(50.0)),

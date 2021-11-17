@@ -17,7 +17,6 @@ class _MembersScreenState extends State<MembersScreen> {
   late double width;
   late double height;
   late ThemeData _theme;
-  late Stream volunteerStream;
   late bool favVolunteers = false;
 
   @override
@@ -54,25 +53,21 @@ class _MembersScreenState extends State<MembersScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: Card(
-              elevation: 2,
-              color: PRIMARY_COLOR,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)),
-              child: CommonRoundedTextfield(
-                controller: _searchController,
-                hintText: ADMIN_SEARCH_HINT,
-                prefixIcon: Icon(
-                  CupertinoIcons.search,
-                  color: PRIMARY_COLOR,
-                ),
-                validator: (val) {
-                  return null;
-                },
-                onChanged: (val) {
-                  _membersBloc.searchMembers(searchText: val);
-                },
+            child: CommonRoundedTextfield(
+              fillColor: GRAY,
+              controller: _searchController,
+              hintText: SEARCH_MEMBERS_HINT,
+              textAlignCenter: false,
+              prefixIcon: Icon(
+                CupertinoIcons.search,
+                color: PRIMARY_COLOR,
               ),
+              validator: (val) {
+                return null;
+              },
+              onChanged: (val) {
+                _membersBloc.searchMembers(searchText: val);
+              },
             ),
           ),
           volunteerFilteringSection(),

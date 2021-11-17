@@ -74,7 +74,7 @@ const IS_TOKEN_EXPIRED = 'is_token_expire';
 const HTTP_CODE = 'code';
 
 //Login types
-const LOGIN_USER = 'User';
+const LOGIN_VOLUNTEER = 'Volunteer';
 const LOGIN_ADMIN = 'Admin';
 
 // Routes
@@ -117,7 +117,7 @@ const FAVORITE_HINT = 'Favorite';
 const HELPOZZY_REMAINING_TEXT = 'elpozzy';
 const HELPOZZY_TEXT = 'Helpozzy';
 const HELPOZZY_TAGLINE_TEXT =
-    'If you see someone without a smile, Give them one of yours!';
+    'Connecting Volunteers, Donors and Organizations to build a strong community !!';
 
 // Messages
 const MSG_SIGN_UP = 'Sign Up';
@@ -127,7 +127,7 @@ const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
 //Hint Msg
-const SEARCH_HINT = 'Search projects';
+const SEARCH_HINT = 'Search for projects..';
 const REVIEW_HINT = 'Tap to review..';
 const ENTER_STATE_HINT = 'Enter State';
 const ENTER_CITY_HINT = 'Enter City';
@@ -135,14 +135,15 @@ const ENTER_ZIP_CODE_HINT = 'Enter Zip Code';
 const ENTER_FIRST_NAME_HINT = 'Enter first name';
 const ENTER_LAST_NAME_HINT = 'Enter last name';
 const ENTER_EMAIL_HINT = 'Enter email';
+const BIRTH_DATE_HINT = 'MM/DD/YYYY';
+const SELCT_GENDER_HINT = 'Select gender';
 const ENTER_PASSWORD_HINT = 'Enter password';
 const ENTER_CONFIRM_PASSWORD_HINT = 'Enter confirm password';
-const BIRTH_DATE_HINT = 'MM/DD/YYYY';
 const ENTER_PHONE_NUMBER_HINT = 'Enter phone number';
 const SELECT_SCHOOL_HINT = 'Select your school';
 const SELECT_YOUR_GRADE = 'Select your grade';
-const HOUSE_NO_HINT = 'House/Apt. Number';
-const STREET_NAME_HINT = 'Street Name';
+const HOUSE_NO_HINT = 'Enter House/Apt. Number';
+const STREET_NAME_HINT = 'Enter Street Name';
 const CITY_HINT = 'City';
 const SEARCH_COUNTRY_HINT = 'Search Here';
 
@@ -152,8 +153,8 @@ const RESER_PASS_MSG =
     "That's okay, it happens!\nEnter your email and Click on button below to reset your password.";
 
 // Explore Screen
-const MSG_DASHBOARD = 'Let’s do it\ntogether';
-const MSG_GOAL = 'Your target goal for 2021';
+const MSG_DASHBOARD = 'Changing the World,\nOne Project At a Time';
+const MSG_GOAL = 'My hours for ';
 const DETAILS = 'Details';
 const REDEEM = 'Redeem';
 const FOOD_BANK = 'Food\nBank';
@@ -172,6 +173,7 @@ const LATEST_CONTRIBUTION_HOURS_LABEL = 'Latest Contribution Hours';
 const ONGOING_PROJECT_LABEL = 'Ongoing Projects';
 
 //Sign-UP screen
+const SELECT_USER_TYPE = 'Select your type';
 const SELECT_CATEGORY = 'Select your volunteering choice?';
 const WHICH_STATE = 'Which state are you from?';
 const WHICH_CITY = 'Which city are you from?';
@@ -179,9 +181,10 @@ const ENTER_ZIP_CODE = 'Enter your ZIP code';
 const ENTER_YOUR_NAME = 'Enter your name';
 const ENTER_YOUR_EMAIL = 'Enter your email address';
 const CHOOSE_YOUR_PASSWORD = 'Choose your password';
-const SELECT_BIRTH_DATE = 'Date of Birth';
-const DO_YOU_HAVE_NUMBER = 'Do you have a phone number?';
-const ENTER_PARENT_NUMBER = 'Enter your parents/guardian number';
+const SELECT_BIRTH_DATE = 'Select your Date of Birth';
+const SELECT_GENDER = 'Select Your Gender';
+const ENTER_PERSONAL_PHONE_NUMBER = 'Enter your personal phone number';
+const ENTER_PARENT_EMAIL = 'Enter your parents/guardian email';
 const FIRST_NAME = 'First Name';
 const LAST_NAME = 'Last Name';
 const PASSWORD = 'Password';
@@ -190,7 +193,6 @@ const CHANGE_COUNTRY_CODE = 'Change country code';
 const RELATIONSHIP_STATUS = 'Relationship';
 const SCHOOL_NAME = 'School Name';
 const GRADE_LEVEL = 'Grade Level';
-const SELECT_USER_TYPE = 'Select user type';
 
 //Alert Text
 const ALERT = 'Alert';
@@ -218,7 +220,7 @@ const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
 
 //User project tabbar title
-const TASKS_TAB = 'Tasks';
+const TASK_TAB = 'Task';
 const MEMBERS_TAB = 'Members';
 const MESSENGER_TAB = 'Messenger';
 const ATTACHMENTS_TAB = 'Attachments';
@@ -246,10 +248,13 @@ const PROJECT_PREFRENCES_TEXT = 'Project Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 
 //Drop Down items
-const SELECT_USER = 'User';
+const SELECT_VOLUNTEER = 'Volunteer';
 const SELECT_ADMIN = 'Admin';
 const SELECT_PARENT = 'Parent';
 const SELECT_GAURDIAN = 'Guardian';
+const SELECT_MALE = 'Male';
+const SELECT_FEMALE = 'Female';
+const SELECT_OTHER = 'Other';
 
 //Admin Module
 
@@ -323,8 +328,7 @@ const MEMBERS_LIST_BUTTON = 'Members List';
 const HIDE_DETAILS_BUTTON = 'Hide Details ';
 const SHOW_DETAILS_BUTTON = 'Show Details';
 
-//Admin Hint Msg
-const ADMIN_SEARCH_HINT = 'Search';
+const SEARCH_MEMBERS_HINT = 'Search Members';
 
 //Admin create project
 const PROJECT_NAME_LABEL = 'Project Name';
@@ -390,7 +394,8 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> loginModes = [SELECT_USER, SELECT_ADMIN];
+List<String> loginModes = [SELECT_VOLUNTEER, SELECT_ADMIN];
+List<String> gendersItems = [SELECT_MALE, SELECT_FEMALE, SELECT_OTHER];
 
 List<String> relationShips = [SELECT_PARENT, SELECT_GAURDIAN];
 

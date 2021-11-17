@@ -28,8 +28,6 @@ class _ExploreScreenState extends State<ExploreScreen>
   late double height;
   late double width;
   int _processIndex = 2;
-  bool boo = true;
-  late Animation<double> animation;
   late AnimationController controller;
   final CategoryBloc _categoryBloc = CategoryBloc();
   final MembersBloc _membersBloc = MembersBloc();
@@ -43,10 +41,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     _userProjectsBloc.getProjects();
     _categoryBloc.getCategories();
     _membersBloc.getMembers();
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
-    animation = Tween<double>(begin: 0, end: 350).animate(controller)
-      ..addListener(() => setState(() {}));
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -60,16 +54,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     } else {
       return LIGHT_GRAY;
     }
-  }
-
-  void animateTextfield() {
-    setState(() {
-      if (boo)
-        controller.forward();
-      else
-        controller.reverse();
-      boo = !boo;
-    });
   }
 
   @override
@@ -91,6 +75,10 @@ class _ExploreScreenState extends State<ExploreScreen>
                 [
                   targetGoalSection(),
                   categoryView(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: SmallInfoLabel(label: 'Current Project'),
+                  ),
                   projectListView(),
                 ],
               ),
@@ -103,16 +91,17 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget topImageView() {
     return SliverPersistentHeader(
-      pinned: currentPosition < height / 8.5 ? true : false,
+      pinned: true,
       delegate: SliverAppBarDelegate(
-        minHeight: height / 10,
-        maxHeight: height / 3.5,
+        minHeight: height / 11,
+        maxHeight: height / 4,
         child: Stack(
           children: [
             Container(
-              height: height / 3.5,
+              height: height / 4,
               width: double.infinity,
               decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: GRAY)),
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
@@ -124,74 +113,49 @@ class _ExploreScreenState extends State<ExploreScreen>
                 ),
               ),
             ),
-            animation.value == 0
-                ? Positioned(
-                    top: 22,
-                    left: 20,
-                    child: GestureDetector(
-                      onTap: animateTextfield,
-                      child: Container(
-                        height: 38,
-                        width: 38,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 0.5, color: TRANSPARENT_WHITE),
-                          borderRadius: BorderRadius.circular(25),
-                          color: WHITE.withOpacity(0.23),
-                        ),
-                        child: Icon(
-                          CupertinoIcons.search,
-                          color: MATE_WHITE,
-                        ),
+            Positioned(
+              bottom: width * 0.04,
+              left: 0,
+              child: Container(
+                width: width / 1,
+                padding: EdgeInsets.symmetric(horizontal: width * 0.15),
+                height: 37,
+                child: TextField(
+                  onTap: () => SearchProject().modalBottomSheetMenu(context),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
+                    hintText: SEARCH_HINT,
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: MATE_WHITE,
+                      fontFamily: QUICKSAND,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    fillColor: WHITE.withOpacity(0.23),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Icon(
+                        CupertinoIcons.search,
+                        color: MATE_WHITE,
+                        size: 20,
                       ),
                     ),
-                  )
-                : Positioned(
-                    top: 22,
-                    left: 20,
-                    child: Container(
-                      width: animation.value,
-                      height: 38,
-                      child: TextField(
-                        onTap: () => SearchProject()
-                            .modalBottomSheetMenu(context)
-                            .then((value) => setState(() => boo = true)),
-                        decoration: InputDecoration(
-                          hintText: SEARCH_HINT,
-                          hintStyle: TextStyle(
-                            fontSize: 17,
-                            color: MATE_WHITE,
-                            fontFamily: QUICKSAND,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          fillColor: WHITE.withOpacity(0.23),
-                          prefixIcon: GestureDetector(
-                            onTap: animateTextfield,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 2.0),
-                              child: Icon(
-                                CupertinoIcons.search,
-                                color: MATE_WHITE,
-                                size: 25,
-                              ),
-                            ),
-                          ),
-                          enabledBorder: searchBarDecoration(),
-                          disabledBorder: searchBarDecoration(),
-                          focusedBorder: searchBarDecoration(),
-                          border: searchBarDecoration(),
-                        ),
-                      ),
-                    ),
+                    enabledBorder: searchBarDecoration(),
+                    disabledBorder: searchBarDecoration(),
+                    focusedBorder: searchBarDecoration(),
+                    border: searchBarDecoration(),
                   ),
-            currentPosition < height / 12
+                ),
+              ),
+            ),
+            currentPosition < height / 30
                 ? Positioned(
-                    bottom: 20,
+                    top: width * 0.1,
                     left: 21,
                     child: Text(
                       MSG_DASHBOARD,
                       style: TextStyle(
-                        fontSize: width / 12,
+                        fontSize: width / 14,
                         color: WHITE,
                         fontFamily: QUICKSAND,
                       ),
@@ -231,7 +195,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 21),
                 child: Text(
-                  MSG_GOAL,
+                  MSG_GOAL + '${DateTime.now().year}',
                   style: TextStyle(
                     fontSize: 15,
                     color: DARK_GRAY_FONT_COLOR,
@@ -269,7 +233,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget timelineProgress(UserRewardsDetailsHelper? rewardsDetail) {
     _processIndex = rewardsDetail!.totalPoint;
     return Container(
-      height: height / 12,
+      height: height / 16,
       width: double.infinity,
       child: Timeline.tileBuilder(
         theme: TimelineThemeData(
@@ -287,6 +251,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 '${items[index]}',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
+                  fontSize: 12,
                   color: getColor(items[index]),
                 ),
               ),
@@ -304,8 +269,8 @@ class _ExploreScreenState extends State<ExploreScreen>
 
             if (items[index] <= _processIndex) {
               return Container(
-                height: width * 0.04,
-                width: width * 0.04,
+                height: width * 0.025,
+                width: width * 0.025,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: color,
@@ -313,8 +278,8 @@ class _ExploreScreenState extends State<ExploreScreen>
               );
             } else {
               return Container(
-                height: width * 0.03,
-                width: width * 0.03,
+                height: width * 0.025,
+                width: width * 0.025,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: color,
@@ -396,18 +361,16 @@ class _ExploreScreenState extends State<ExploreScreen>
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 4,
                 shrinkWrap: true,
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 children: snapshot.data!.item.map((CategoryModel category) {
                   return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategorisedProjectsScreen(
-                              categoryId: category.id),
-                        ),
-                      );
-                    },
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CategorisedProjectsScreen(categoryId: category.id),
+                      ),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/projects/user_project_tabs/members_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
@@ -48,7 +49,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                 [
                   _tabBar(),
                   Container(width: width, height: 1, color: GRAY),
-                  body(),
+                  _getPage(),
                 ],
               ),
             ),
@@ -227,7 +228,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 3.0,
         tabs: [
-          _tab(text: TASKS_TAB),
+          _tab(text: TASK_TAB),
           _tab(text: MEMBERS_TAB),
           _tab(text: MESSENGER_TAB),
           _tab(text: ATTACHMENTS_TAB),
@@ -247,11 +248,18 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         ),
       );
 
-  Widget body() {
+  Widget _getPage() {
     return Container(
-      height: height / 3,
-      alignment: Alignment.center,
-      child: Text('Coming Soon!'),
+      height: height,
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          Text('Coming Soon!'),
+          ProjectMembersTab(),
+          Text('Coming Soon!'),
+          Text('Coming Soon!')
+        ],
+      ),
     );
   }
 }

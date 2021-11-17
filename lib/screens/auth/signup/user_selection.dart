@@ -68,7 +68,7 @@ class _UserSelectionState extends State<UserSelection> {
                 text: CONTINUE_BUTTON.toUpperCase(),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (_typeController.text == LOGIN_USER) {
+                    if (_typeController.text == LOGIN_VOLUNTEER) {
                       final SignUpModel signUpModel =
                           SignUpModel(userType: _typeController.text);
                       Navigator.push(
@@ -79,8 +79,15 @@ class _UserSelectionState extends State<UserSelection> {
                         ),
                       );
                     } else if (_typeController.text == LOGIN_ADMIN) {
-                      Navigator.pushNamed(context, ADMIN_SELECTION,
-                          arguments: _typeController.text);
+                      final SignUpModel signUpModel =
+                          SignUpModel(userType: _typeController.text);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SignUpScreen(signUpModel: signUpModel),
+                        ),
+                      );
                     }
                   }
                 },
@@ -96,7 +103,6 @@ class _UserSelectionState extends State<UserSelection> {
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.1),
-      padding: EdgeInsets.only(left: 20, right: 10),
       child: DropdownButtonFormField<String>(
           decoration: inputRoundedDecoration(
               getHint: SELECT_TYPE_HINT, isDropDown: true),

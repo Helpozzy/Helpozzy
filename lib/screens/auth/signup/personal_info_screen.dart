@@ -2,9 +2,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/birthdate_screen.dart';
+import 'package:helpozzy/screens/auth/signup/phone_with_parent_guardian_number.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:intl/intl.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({required this.signUpModel});
@@ -22,10 +24,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  DateTime _selectedBirthDate = DateTime.now();
+  late double width;
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
@@ -41,7 +47,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     TopInfoLabel(label: ENTER_YOUR_NAME),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.19, vertical: 4.0),
+                          horizontal: width * 0.16, vertical: 4.0),
                       child: TextfieldLabelSmall(label: FIRST_NAME),
                     ),
                     Padding(
@@ -63,7 +69,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     SizedBox(height: 10),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.19, vertical: 4.0),
+                          horizontal: width * 0.16, vertical: 4.0),
                       child: TextfieldLabelSmall(label: LAST_NAME),
                     ),
                     Padding(
@@ -100,6 +106,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         },
                       ),
                     ),
+                    TopInfoLabel(label: SELECT_BIRTH_DATE),
+                    dateOfBirthField(),
+                    TopInfoLabel(label: SELECT_GENDER),
+                    genderDropDown(),
                   ],
                 ),
               ),
@@ -118,12 +128,15 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       ' ' +
                       _lastNameController.text;
                   signUpModel.email = _emailController.text;
+                  signUpModel.dateOfBirth =
+                      _selectedBirthDate.millisecondsSinceEpoch.toString();
+                  signUpModel.gender = _genderController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            BirthDateScreen(signUpModel: signUpModel),
+                        builder: (context) => PhoneWithParentGuardianNumber(
+                            signUpModel: signUpModel),
                       ),
                     );
                   }
@@ -133,6 +146,73 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget dateOfBirthField() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: CommonRoundedTextfield(
+        controller: _dateController,
+        hintText: BIRTH_DATE_HINT,
+        readOnly: true,
+        keyboardType: TextInputType.number,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          CommonDatepicker()
+              .showDatePickerDialog(context, initialDate: _selectedBirthDate)
+              .then((pickedDate) {
+            if (pickedDate != null && pickedDate != _selectedBirthDate)
+              setState(() {
+                _selectedBirthDate = pickedDate;
+              });
+            _dateController.value = TextEditingValue(
+                text: '${DateFormat.yMd().format(_selectedBirthDate)}');
+          });
+        },
+        validator: (state) {
+          if (state!.isEmpty) {
+            return 'Please enter date of birth';
+          } else {
+            return null;
+          }
+        },
+        onChanged: (state) {},
+      ),
+    );
+  }
+
+  Widget genderDropDown() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: DropdownButtonFormField<String>(
+          decoration: inputRoundedDecoration(
+              getHint: SELCT_GENDER_HINT, isDropDown: true),
+          icon: Icon(Icons.expand_more_outlined),
+          validator: (val) {
+            if (_genderController.text.isEmpty) {
+              return 'Select gender want to continue';
+            }
+            return null;
+          },
+          isExpanded: true,
+          onTap: () => FocusScope.of(context).unfocus(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _genderController.text = newValue!;
+            });
+          },
+          items: gendersItems.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Center(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }).toList()),
     );
   }
 }

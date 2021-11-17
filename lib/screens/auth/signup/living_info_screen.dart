@@ -21,6 +21,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
+  final TextEditingController _houseNoController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +39,36 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    CommonWidget(context).showCloseButton(),
-                    TextFieldWithLabel(
-                      controller: _stateController,
-                      label: WHICH_STATE,
-                      hintText: ENTER_STATE_HINT,
-                      validator: (state) {
-                        if (state!.isEmpty) {
-                          return 'Please enter state';
-                        } else {
-                          return null;
-                        }
-                      },
+                    CommonWidget(context).showBackButton(),
+                    TopInfoLabel(label: 'Residential Address'),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonRoundedTextfield(
+                        controller: _houseNoController,
+                        hintText: HOUSE_NO_HINT,
+                        validator: (address) {
+                          if (address!.isEmpty) {
+                            return 'Please enter your house/apt number';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 25),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                      child: CommonRoundedTextfield(
+                        controller: _streetController,
+                        hintText: STREET_NAME_HINT,
+                        validator: (address) {
+                          if (address!.isEmpty) {
+                            return 'Please enter your street name';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                     TextFieldWithLabel(
                       controller: _cityController,
@@ -57,6 +77,18 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                       validator: (city) {
                         if (city!.isEmpty) {
                           return 'Please enter city';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFieldWithLabel(
+                      controller: _stateController,
+                      label: WHICH_STATE,
+                      hintText: ENTER_STATE_HINT,
+                      validator: (state) {
+                        if (state!.isEmpty) {
+                          return 'Please enter state';
                         } else {
                           return null;
                         }
@@ -78,6 +110,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                         }
                       },
                     ),
+                    SizedBox(height: 25),
                   ],
                 ),
               ),
@@ -93,7 +126,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                   signUpModel.state = _stateController.text;
                   signUpModel.city = _cityController.text;
                   signUpModel.zipCode = _zipCodeController.text;
-
+                  signUpModel.address =
+                      _houseNoController.text + ', ' + _streetController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,

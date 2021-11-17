@@ -56,7 +56,7 @@ class TopInfoLabel extends StatelessWidget {
     final _theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.only(top: height * 0.05, bottom: height * 0.04),
+      margin: EdgeInsets.only(top: height * 0.04, bottom: height * 0.02),
       child: Text(
         label,
         textAlign: TextAlign.center,
@@ -106,7 +106,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
-      textAlign: textAlignCenter! ? TextAlign.left : TextAlign.center,
+      textAlign: textAlignCenter! ? TextAlign.center : TextAlign.left,
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
