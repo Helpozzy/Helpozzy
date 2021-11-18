@@ -68,18 +68,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget volunteerList() {
-    return Expanded(
-      child: StreamBuilder<VolunteerTypes>(
-        stream: _airportDetailBloc.volunteersListStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-                child: CircularProgressIndicator(color: PRIMARY_COLOR));
-          }
-          return ListView.builder(
+    return StreamBuilder<VolunteerTypes>(
+      stream: _airportDetailBloc.volunteersListStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator(color: PRIMARY_COLOR);
+        }
+        return Expanded(
+          child: ListView.builder(
             itemCount: snapshot.data!.volunteers.length,
             itemBuilder: (context, index) {
-              final _item = snapshot.data!.volunteers[index];
+              final VolunteerModel _item = snapshot.data!.volunteers[index];
               return Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: 10.0,
@@ -102,9 +101,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

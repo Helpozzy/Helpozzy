@@ -8,7 +8,6 @@ import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
-import 'package:helpozzy/screens/user/explore/search_bar/search_project.dart';
 import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
@@ -27,20 +26,21 @@ class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
   late double height;
   late double width;
-  int _processIndex = 2;
-  late AnimationController controller;
+  late ThemeData _themeData;
+  late int _processIndex = 2;
   final CategoryBloc _categoryBloc = CategoryBloc();
   final MembersBloc _membersBloc = MembersBloc();
   final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
-  final scrollController = ScrollController();
-  double currentPosition = 0.0;
+  final ScrollController scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  late double currentPosition = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _userProjectsBloc.getProjects();
     _categoryBloc.getCategories();
     _membersBloc.getMembers();
+    _userProjectsBloc.searchProjects('');
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -52,7 +52,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     } else if (index < _processIndex) {
       return AMBER_COLOR;
     } else {
-      return LIGHT_GRAY;
+      return MATE_WHITE;
     }
   }
 
@@ -60,11 +60,11 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
+    _themeData = Theme.of(context);
     return SafeArea(
       child: GestureDetector(
         onPanDown: (_) {
           FocusScope.of(context).requestFocus(FocusNode());
-          controller.reverse();
         },
         child: CustomScrollView(
           controller: scrollController,
@@ -73,11 +73,20 @@ class _ExploreScreenState extends State<ExploreScreen>
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  targetGoalSection(),
+                  searchField(),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.02),
+                    child: SmallInfoLabel(label: 'Go through categories'),
+                  ),
                   categoryView(),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SmallInfoLabel(label: 'Current Project'),
+                    child: SmallInfoLabel(
+                        label: 'Current open projects in your area'),
                   ),
                   projectListView(),
                 ],
@@ -93,12 +102,12 @@ class _ExploreScreenState extends State<ExploreScreen>
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-        minHeight: height / 11,
-        maxHeight: height / 4,
+        minHeight: height / 6,
+        maxHeight: height / 3.5,
         child: Stack(
           children: [
             Container(
-              height: height / 4,
+              height: height / 3.5,
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: GRAY)),
@@ -113,128 +122,98 @@ class _ExploreScreenState extends State<ExploreScreen>
                 ),
               ),
             ),
-            Positioned(
-              bottom: width * 0.04,
-              left: 0,
-              child: Container(
-                width: width / 1,
-                padding: EdgeInsets.symmetric(horizontal: width * 0.15),
-                height: 37,
-                child: TextField(
-                  onTap: () => SearchProject().modalBottomSheetMenu(context),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
-                    hintText: SEARCH_HINT,
-                    hintStyle: TextStyle(
-                      fontSize: 16,
-                      color: MATE_WHITE,
-                      fontFamily: QUICKSAND,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    fillColor: WHITE.withOpacity(0.23),
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Icon(
-                        CupertinoIcons.search,
-                        color: MATE_WHITE,
-                        size: 20,
-                      ),
-                    ),
-                    enabledBorder: searchBarDecoration(),
-                    disabledBorder: searchBarDecoration(),
-                    focusedBorder: searchBarDecoration(),
-                    border: searchBarDecoration(),
-                  ),
-                ),
-              ),
-            ),
             currentPosition < height / 30
                 ? Positioned(
-                    top: width * 0.1,
+                    top: width * 0.05,
                     left: 21,
                     child: Text(
                       MSG_DASHBOARD,
-                      style: TextStyle(
+                      style: _themeData.textTheme.bodyText2!.copyWith(
                         fontSize: width / 14,
                         color: WHITE,
-                        fontFamily: QUICKSAND,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   )
                 : SizedBox(),
+            Positioned(
+              bottom: width * 0.05,
+              left: 0,
+              child: targetGoalSection(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  InputBorder searchBarDecoration() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(25),
-      borderSide: BorderSide(color: TRANSPARENT_WHITE),
-    );
-  }
-
   Widget targetGoalSection() {
     return StreamBuilder<UserRewardsDetailsHelper>(
-      stream: _membersBloc.getuserRewardDetailsStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          _membersBloc.getMembers();
-          return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(top: 5),
-            child: LinearLoader(minheight: 12),
-          );
-        }
-        return Padding(
-          padding: EdgeInsets.only(top: 12),
-          child: Column(
+        stream: _membersBloc.getuserRewardDetailsStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            _membersBloc.getMembers();
+            return SizedBox();
+          }
+          final UserRewardsDetailsHelper userReward = snapshot.data!;
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 21),
-                child: Text(
-                  MSG_GOAL + '${DateTime.now().year}',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: DARK_GRAY_FONT_COLOR,
-                    fontFamily: QUICKSAND,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Divider(
+                color: WHITE,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 21),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: Row(
                   children: [
                     Text(
-                      snapshot.data!.totalPoint.toString(),
-                      style: TextStyle(
-                        fontSize: 21,
-                        color: DARK_GRAY_FONT_COLOR,
-                        fontFamily: QUICKSAND,
+                      MY_VOLUNTEER_HOURS_LABEL,
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontSize: 16,
+                        color: MATE_WHITE,
+                      ),
+                    ),
+                    Text(
+                      '${DateTime.now().year}',
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontSize: 18,
+                        color: MATE_WHITE,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Icon(Icons.star),
                   ],
                 ),
               ),
-              timelineProgress(snapshot.data!),
-              // detailsRedeemButton(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                child: Row(
+                  children: [
+                    Text(
+                      userReward.totalPoint.toString(),
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontSize: 21,
+                        color: MATE_WHITE,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: AMBER_COLOR,
+                    ),
+                  ],
+                ),
+              ),
+              timelineProgress(userReward),
             ],
-          ),
-        );
-      },
-    );
+          );
+        });
   }
 
   Widget timelineProgress(UserRewardsDetailsHelper? rewardsDetail) {
     _processIndex = rewardsDetail!.totalPoint;
     return Container(
-      height: height / 16,
-      width: double.infinity,
+      height: height / 16.5,
+      width: width,
       child: Timeline.tileBuilder(
         theme: TimelineThemeData(
           direction: Axis.horizontal,
@@ -249,7 +228,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               padding: const EdgeInsets.only(top: 6.0),
               child: Text(
                 '${items[index]}',
-                style: TextStyle(
+                style: _themeData.textTheme.bodyText2!.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   color: getColor(items[index]),
@@ -264,7 +243,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             } else if (items[index] < _processIndex) {
               color = AMBER_COLOR;
             } else {
-              color = LIGHT_GRAY;
+              color = MATE_WHITE;
             }
 
             if (items[index] <= _processIndex) {
@@ -306,6 +285,69 @@ class _ExploreScreenState extends State<ExploreScreen>
           itemCount: items.length,
         ),
       ),
+    );
+  }
+
+  Widget searchField() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: width * 0.05, vertical: width * 0.02),
+      child: Column(
+        children: [
+          SmallInfoLabel(label: SEARCH_PROJECT_LABEL),
+          SizedBox(height: width * 0.02),
+          Container(
+            width: width / 1,
+            height: 37,
+            child: TextField(
+              controller: _searchController,
+              onChanged: (val) {
+                _userProjectsBloc.searchProjects(val);
+              },
+              // onTap: () => SearchProject().modalBottomSheetMenu(context),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
+                hintText: TYPE_KEYWORD_HINT,
+                hintStyle: _themeData.textTheme.bodyText2!.copyWith(
+                  fontSize: 14,
+                  color: LABEL_TILE_COLOR,
+                ),
+                fillColor: WHITE.withOpacity(0.23),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Icon(
+                    CupertinoIcons.search,
+                    color: LABEL_TILE_COLOR,
+                    size: 20,
+                  ),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _searchController.clear();
+                    _userProjectsBloc.searchProjects('');
+                  },
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: LABEL_TILE_COLOR,
+                    size: 22,
+                  ),
+                ),
+                enabledBorder: searchBarDecoration(),
+                disabledBorder: searchBarDecoration(),
+                focusedBorder: searchBarDecoration(),
+                border: searchBarDecoration(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  InputBorder searchBarDecoration() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(25),
+      borderSide: BorderSide(color: LABEL_TILE_COLOR),
     );
   }
 
@@ -356,13 +398,13 @@ class _ExploreScreenState extends State<ExploreScreen>
           }
           return Column(
             children: [
-              Divider(),
               GridView.count(
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 4,
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                children: snapshot.data!.item.map((CategoryModel category) {
+                children:
+                    snapshot.data!.categories.map((CategoryModel category) {
                   return InkWell(
                     onTap: () => Navigator.push(
                       context,
@@ -390,9 +432,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                         Text(
                           category.label,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: _themeData.textTheme.bodyText2!.copyWith(
                             fontSize: 10,
-                            fontFamily: QUICKSAND,
                             color: DARK_GRAY_FONT_COLOR,
                             fontWeight: FontWeight.bold,
                           ),
@@ -409,8 +450,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget projectListView() {
-    return StreamBuilder<Projects>(
-      stream: _userProjectsBloc.getProjectsStream,
+    return StreamBuilder<dynamic>(
+      stream: _userProjectsBloc.getSearchedProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Padding(
@@ -418,30 +459,38 @@ class _ExploreScreenState extends State<ExploreScreen>
             child: Center(child: LinearLoader(minheight: 12)),
           );
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.all(5),
-          itemCount: snapshot.data!.projectList.length,
-          itemBuilder: (context, index) {
-            final ProjectModel project = snapshot.data!.projectList[index];
-            return UserProjectCard(
-              project: project,
-              onTapCard: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProjectDetailsScreen(project: project),
+        return snapshot.data.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.all(5),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final ProjectModel project = snapshot.data[index];
+                  return UserProjectCard(
+                    project: project,
+                    onTapCard: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProjectDetailsScreen(project: project),
+                      ),
+                    ),
+                    onPressedSignUpButton: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProjectUserSignUpScreen(),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  'Not available..',
+                  style: _themeData.textTheme.bodyText2,
                 ),
-              ),
-              onPressedSignUpButton: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProjectUserSignUpScreen(),
-                ),
-              ),
-            );
-          },
-        );
+              );
       },
     );
   }

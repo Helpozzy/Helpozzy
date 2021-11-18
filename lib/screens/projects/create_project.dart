@@ -341,7 +341,7 @@ class _CreateProjectState extends State<CreateProject> {
                   selectedCategoryId = newValue.id;
                 });
               },
-              items: snapshot.data!.item
+              items: snapshot.data!.categories
                   .map<DropdownMenuItem<CategoryModel>>((CategoryModel value) {
                 return DropdownMenuItem<CategoryModel>(
                   value: value,

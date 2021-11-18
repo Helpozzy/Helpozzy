@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/phone_with_parent_guardian_number.dart';
+import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -135,8 +135,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PhoneWithParentGuardianNumber(
-                            signUpModel: signUpModel),
+                        builder: (context) =>
+                            LivingInfoScreen(signUpModel: signUpModel),
                       ),
                     );
                   }

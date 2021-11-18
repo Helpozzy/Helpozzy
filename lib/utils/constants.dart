@@ -154,7 +154,9 @@ const RESER_PASS_MSG =
 
 // Explore Screen
 const MSG_DASHBOARD = 'Changing the World,\nOne Project At a Time';
-const MSG_GOAL = 'My hours for ';
+const SEARCH_PROJECT_LABEL = 'Search Project';
+const TYPE_KEYWORD_HINT = 'Type keyword...';
+const MY_VOLUNTEER_HOURS_LABEL = 'My volunteer hours for - ';
 const DETAILS = 'Details';
 const REDEEM = 'Redeem';
 const FOOD_BANK = 'Food\nBank';
@@ -175,18 +177,19 @@ const ONGOING_PROJECT_LABEL = 'Ongoing Projects';
 //Sign-UP screen
 const SELECT_USER_TYPE = 'Select your type';
 const SELECT_CATEGORY = 'Select your volunteering choice?';
+const FIRST_NAME = 'First Name';
+const LAST_NAME = 'Last Name';
 const WHICH_STATE = 'Which state are you from?';
 const WHICH_CITY = 'Which city are you from?';
 const ENTER_ZIP_CODE = 'Enter your ZIP code';
 const ENTER_YOUR_NAME = 'Enter your name';
 const ENTER_YOUR_EMAIL = 'Enter your email address';
-const CHOOSE_YOUR_PASSWORD = 'Choose your password';
 const SELECT_BIRTH_DATE = 'Select your Date of Birth';
 const SELECT_GENDER = 'Select Your Gender';
 const ENTER_PERSONAL_PHONE_NUMBER = 'Enter your personal phone number';
 const ENTER_PARENT_EMAIL = 'Enter your parents/guardian email';
-const FIRST_NAME = 'First Name';
-const LAST_NAME = 'Last Name';
+const CHOOSE_YOUR_AREA_OF_INTEREST = 'Choose your area of interest';
+const CHOOSE_YOUR_PASSWORD = 'Choose your password';
 const PASSWORD = 'Password';
 const CONFIRM_PASSWORD = 'Confirm Password';
 const CHANGE_COUNTRY_CODE = 'Change country code';

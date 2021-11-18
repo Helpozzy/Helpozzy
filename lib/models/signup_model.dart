@@ -15,6 +15,7 @@ class SignUpModel {
     this.schoolName,
     this.gradeLevel,
     this.userType,
+    this.areaOfInterests,
   });
 
   SignUpModel.fromJson({required Map<String, dynamic> json}) {
@@ -33,6 +34,7 @@ class SignUpModel {
     schoolName = json['school_name'];
     gradeLevel = json['grade_level'];
     userType = json['user_type'];
+    areaOfInterests = json['area_of_interests'];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,7 +53,8 @@ class SignUpModel {
       'zip_code': zipCode,
       'school_name': schoolName,
       'grade_level': gradeLevel,
-      'user_type': userType
+      'user_type': userType,
+      'area_of_interests': areaOfInterests,
     };
   }
 
@@ -70,4 +73,5 @@ class SignUpModel {
   late String? schoolName;
   late String? gradeLevel;
   late String? userType;
+  late List<int>? areaOfInterests = [];
 }

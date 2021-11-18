@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/school_info_bloc.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/password_set_screen.dart';
+import 'package:helpozzy/screens/auth/signup/area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/search_school.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -51,7 +51,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
               child: CommonRoundedTextfield(
-                textAlignCenter: true,
+                textAlignCenter: false,
                 controller: _schoolController,
                 readOnly: true,
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
@@ -91,7 +91,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            PasswordSetScreen(signUpModel: signUpModel),
+                            AreaOfInterest(signUpModel: signUpModel),
                       ),
                     );
                   }
@@ -126,12 +126,10 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
-            child: Center(
-              child: Text(
-                value,
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.bodyText2,
-              ),
+            child: Text(
+              value,
+              textAlign: TextAlign.center,
+              style: _theme.textTheme.bodyText2,
             ),
           );
         }).toList());

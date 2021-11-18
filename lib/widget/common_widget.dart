@@ -56,7 +56,7 @@ class TopInfoLabel extends StatelessWidget {
     final _theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.only(top: height * 0.04, bottom: height * 0.02),
+      margin: EdgeInsets.symmetric(vertical: height * 0.03),
       child: Text(
         label,
         textAlign: TextAlign.center,
@@ -81,7 +81,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
-    this.textAlignCenter = false,
+    this.textAlignCenter = true,
   });
   final TextEditingController controller;
   final String hintText;

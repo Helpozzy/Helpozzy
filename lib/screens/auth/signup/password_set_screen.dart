@@ -6,8 +6,8 @@ import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class PasswordSetScreen extends StatelessWidget {
-  PasswordSetScreen({required this.signUpModel});
+class SetPasswordScreen extends StatelessWidget {
+  SetPasswordScreen({required this.signUpModel});
   final SignUpModel signUpModel;
 
   static final _formKey = GlobalKey<FormState>();

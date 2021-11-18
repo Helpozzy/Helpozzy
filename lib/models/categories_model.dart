@@ -1,10 +1,10 @@
 class Categories {
   Categories.fromJson({required List items}) {
     items.forEach((element) {
-      item.add(CategoryModel.fromJson(json: element));
+      categories.add(CategoryModel.fromJson(json: element));
     });
   }
-  late List<CategoryModel> item = [];
+  late List<CategoryModel> categories = [];
 }
 
 class CategoryModel {
@@ -16,4 +16,5 @@ class CategoryModel {
   late int id;
   late String imgUrl;
   late String label;
+  late bool isSelected = false;
 }

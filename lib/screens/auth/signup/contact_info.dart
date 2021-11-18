@@ -3,22 +3,22 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/signup_model.dart';
+import 'package:helpozzy/screens/auth/signup/area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class PhoneWithParentGuardianNumber extends StatefulWidget {
-  PhoneWithParentGuardianNumber({required this.signUpModel});
+class ContactInfoScreen extends StatefulWidget {
+  ContactInfoScreen({required this.signUpModel});
   final SignUpModel signUpModel;
 
   @override
-  _PhoneWithParentGuardianNumberState createState() =>
-      _PhoneWithParentGuardianNumberState(signUpModel: signUpModel);
+  _ContactInfoScreenState createState() =>
+      _ContactInfoScreenState(signUpModel: signUpModel);
 }
 
-class _PhoneWithParentGuardianNumberState
-    extends State<PhoneWithParentGuardianNumber> {
-  _PhoneWithParentGuardianNumberState({required this.signUpModel});
+class _ContactInfoScreenState extends State<ContactInfoScreen> {
+  _ContactInfoScreenState({required this.signUpModel});
   final SignUpModel signUpModel;
 
   final TextEditingController _personalPhoneController =
@@ -149,11 +149,19 @@ class _PhoneWithParentGuardianNumberState
                       showParentFields ? _relationController.text : '';
 
                   if (_formKey.currentState!.validate()) {
+                    if (signUpModel.volunteerType == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SchoolAndGradeScreen(signUpModel: signUpModel)),
+                      );
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              SchoolAndGradeScreen(signUpModel: signUpModel)),
+                              AreaOfInterest(signUpModel: signUpModel)),
                     );
                   }
                 },

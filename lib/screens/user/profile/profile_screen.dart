@@ -293,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     }
                     late List<CategoryModel> availCategory = [];
-                    snapshot.data!.item.forEach((category) {
+                    snapshot.data!.categories.forEach((category) {
                       projectSnapshot.data!.projectList.forEach((project) {
                         if (project.categoryId == category.id) {
                           availCategory.add(category);
