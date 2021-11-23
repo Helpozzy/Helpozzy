@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/school_info_bloc.dart';
 import 'package:helpozzy/models/school_model.dart';
-import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/area_of_interest.dart';
+import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/search_school.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class SchoolAndGradeScreen extends StatefulWidget {
   SchoolAndGradeScreen({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
 
   @override
   _SchoolAndGradeScreenState createState() =>
@@ -19,7 +19,7 @@ class SchoolAndGradeScreen extends StatefulWidget {
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   _SchoolAndGradeScreenState({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
 
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
@@ -91,7 +91,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            AreaOfInterest(signUpModel: signUpModel),
+                            TargetAndAreaOfInterest(signUpModel: signUpModel),
                       ),
                     );
                   }

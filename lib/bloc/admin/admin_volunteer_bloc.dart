@@ -36,8 +36,8 @@ class MembersBloc {
       _searchMembersList.sink.add(users.peoples);
     } else {
       users.peoples.forEach((project) {
-        if (project.name.toLowerCase().contains(searchText.toLowerCase()) ||
-            project.address.toLowerCase().contains(searchText.toLowerCase())) {
+        if (project.name!.toLowerCase().contains(searchText.toLowerCase()) ||
+            project.address!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedMembersList.add(project);
         }
       });
@@ -48,20 +48,20 @@ class MembersBloc {
   Future sortMembersByName() async {
     final Users users = await repo.usersRepo(uId);
     users.peoples
-        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        .sort((a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
     _searchMembersList.sink.add(users.peoples);
   }
 
   Future sortMembersByReviewedPersons() async {
     final Users users = await repo.usersRepo(uId);
     users.peoples
-        .sort((a, b) => a.reviewsByPersons.compareTo(b.reviewsByPersons));
+        .sort((a, b) => a.reviewsByPersons!.compareTo(b.reviewsByPersons!));
     _searchMembersList.sink.add(users.peoples);
   }
 
   Future sortMembersByRating() async {
     final Users users = await repo.usersRepo(uId);
-    users.peoples.sort((a, b) => b.rating.compareTo(a.rating));
+    users.peoples.sort((a, b) => b.rating!.compareTo(a.rating!));
     _searchMembersList.sink.add(users.peoples);
   }
 

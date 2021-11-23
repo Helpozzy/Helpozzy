@@ -112,7 +112,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: expanded ? peoples.length : 2,
           itemBuilder: (context, index) {
-            final UserModel people = peoples[index];
+            final SignUpAndUserModel people = peoples[index];
             return rewardItem(people);
           },
         );
@@ -150,7 +150,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
     );
   }
 
-  Widget rewardItem(UserModel people) {
+  Widget rewardItem(SignUpAndUserModel people) {
     return Column(
       children: [
         Padding(
@@ -163,7 +163,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    people.name,
+                    people.name!,
                     style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -180,9 +180,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
               ),
               Spacer(),
               IconButton(
-                onPressed: () {
-                  showAcceptDialog(people);
-                },
+                onPressed: () async => await showAcceptDialog(people),
                 icon: Icon(Icons.wallet_giftcard_rounded),
               )
             ],
@@ -193,7 +191,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
     );
   }
 
-  Future showAcceptDialog(UserModel people) {
+  Future showAcceptDialog(SignUpAndUserModel people) {
     return showDialog(
       context: context,
       barrierDismissible: false,

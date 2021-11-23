@@ -78,7 +78,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
           shrinkWrap: true,
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
-            final UserModel volunteer = snapshot.data[index];
+            final SignUpAndUserModel volunteer = snapshot.data[index];
             return memberItem(volunteer: volunteer);
           },
         );
@@ -86,7 +86,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
     );
   }
 
-  Widget memberItem({required UserModel volunteer}) {
+  Widget memberItem({required SignUpAndUserModel volunteer}) {
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: width * 0.035, horizontal: width * 0.04),
@@ -102,14 +102,14 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  volunteer.name,
+                  volunteer.name!,
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  volunteer.address,
+                  volunteer.address!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
@@ -120,7 +120,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                       padding: const EdgeInsets.only(
                           top: 3.0, bottom: 3.0, right: 5.0),
                       child: RatingBar.builder(
-                        initialRating: volunteer.rating,
+                        initialRating: volunteer.rating!,
                         ignoreGestures: true,
                         minRating: 1,
                         itemSize: 15,

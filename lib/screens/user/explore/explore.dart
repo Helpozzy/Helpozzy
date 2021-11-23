@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
+import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
-import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
@@ -28,8 +28,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   late double width;
   late ThemeData _themeData;
   late int _processIndex = 2;
+  final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
-  final MembersBloc _membersBloc = MembersBloc();
   final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
   final ScrollController scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -38,8 +38,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   @override
   void initState() {
     super.initState();
+    _userInfoBloc.getUser(prefsObject.getString('uID')!);
     _categoryBloc.getCategories();
-    _membersBloc.getMembers();
     _userProjectsBloc.searchProjects('');
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
@@ -80,7 +80,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                         left: width * 0.05,
                         right: width * 0.05,
                         bottom: width * 0.02),
-                    child: SmallInfoLabel(label: 'Go through categories'),
+                    child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
                   ),
                   categoryView(),
                   Padding(
@@ -100,136 +100,147 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget topImageView() {
     return SliverPersistentHeader(
-      pinned: true,
       delegate: SliverAppBarDelegate(
         minHeight: height / 6,
         maxHeight: height / 3.5,
-        child: Stack(
-          children: [
-            Container(
-              height: height / 3.5,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: GRAY)),
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    MATE_WHITE,
-                    BLUE_GRAY,
-                    PRIMARY_COLOR,
-                  ],
-                ),
-              ),
-            ),
-            currentPosition < height / 30
-                ? Positioned(
-                    top: width * 0.05,
-                    left: 21,
-                    child: Text(
-                      MSG_DASHBOARD,
-                      style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontSize: width / 14,
-                        color: WHITE,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child: StreamBuilder<SignUpAndUserModel>(
+          stream: _userInfoBloc.userStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return SizedBox();
+            }
+            final SignUpAndUserModel user = snapshot.data!;
+            return Stack(
+              children: [
+                Container(
+                  height: height / 3.5,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: GRAY)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        MATE_WHITE,
+                        BLUE_GRAY,
+                        PRIMARY_COLOR,
+                      ],
                     ),
-                  )
-                : SizedBox(),
-            Positioned(
-              bottom: width * 0.05,
-              left: 0,
-              child: targetGoalSection(),
-            ),
-          ],
+                  ),
+                ),
+                currentPosition < height / 30
+                    ? Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Text(
+                            MSG_DASHBOARD,
+                            textAlign: TextAlign.center,
+                            style: _themeData.textTheme.bodyText2!.copyWith(
+                              fontSize: width / 16,
+                              color: WHITE,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
+                Positioned(
+                  bottom: width * 0.17,
+                  left: 0,
+                  child: targetGoalSection(user),
+                ),
+                Positioned(
+                  bottom: width * 0.02,
+                  left: 0,
+                  child: timelineProgress(user),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget targetGoalSection() {
-    return StreamBuilder<UserRewardsDetailsHelper>(
-        stream: _membersBloc.getuserRewardDetailsStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            _membersBloc.getMembers();
-            return SizedBox();
-          }
-          final UserRewardsDetailsHelper userReward = snapshot.data!;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget targetGoalSection(SignUpAndUserModel user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Row(
             children: [
-              Divider(
-                color: WHITE,
+              Text(
+                YOUR_HOURS_1,
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                    fontSize: 16,
+                    color: MATE_WHITE,
+                    fontWeight: FontWeight.bold),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                child: Row(
-                  children: [
-                    Text(
-                      MY_VOLUNTEER_HOURS_LABEL,
-                      style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontSize: 16,
-                        color: MATE_WHITE,
-                      ),
-                    ),
-                    Text(
-                      '${DateTime.now().year}',
-                      style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontSize: 18,
-                        color: MATE_WHITE,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+              Text(
+                '50',
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                    fontSize: width * 0.1,
+                    color: AMBER_COLOR,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                YOUR_HOURS_2,
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                    fontSize: 16,
+                    color: MATE_WHITE,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '${DateTime.now().year}',
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                  fontSize: 20,
+                  color: MATE_WHITE,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                child: Row(
-                  children: [
-                    Text(
-                      userReward.totalPoint.toString(),
-                      style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontSize: 21,
-                        color: MATE_WHITE,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: AMBER_COLOR,
-                    ),
-                  ],
-                ),
-              ),
-              timelineProgress(userReward),
             ],
-          );
-        });
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget timelineProgress(UserRewardsDetailsHelper? rewardsDetail) {
-    _processIndex = rewardsDetail!.totalPoint;
+  Widget timelineProgress(SignUpAndUserModel user) {
+    _processIndex = 50;
+    List<int> items =
+        List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
+            .take((user.currentYearTargetHours! / 23).round())
+            .toList();
+
+    print(items);
     return Container(
-      height: height / 16.5,
+      height: height / 9,
       width: width,
+      alignment: Alignment.topCenter,
       child: Timeline.tileBuilder(
+        padding: EdgeInsets.symmetric(vertical: 2.0),
+        shrinkWrap: true,
         theme: TimelineThemeData(
           direction: Axis.horizontal,
           connectorTheme: ConnectorThemeData(thickness: 3.0),
         ),
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.before,
-          itemExtentBuilder: (ctx, index) =>
-              MediaQuery.of(context).size.width / items.length,
+          itemExtentBuilder: (ctx, index) => width / 9.5,
           contentsBuilder: (ctx, index) {
             return Padding(
-              padding: const EdgeInsets.only(top: 6.0),
+              padding: const EdgeInsets.only(top: 5.0),
               child: Text(
-                '${items[index]}',
+                index == items.length - 1
+                    ? '${items[index]}\nTarget'
+                    : '${items[index]}',
+                textAlign: TextAlign.center,
                 style: _themeData.textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: index == items.length - 1
+                      ? FontWeight.bold
+                      : FontWeight.w600,
                   fontSize: 12,
                   color: getColor(items[index]),
                 ),
@@ -402,7 +413,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 4,
                 shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 children:
                     snapshot.data!.categories.map((CategoryModel category) {
                   return InkWell(
@@ -432,6 +443,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                         Text(
                           category.label,
                           textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: _themeData.textTheme.bodyText2!.copyWith(
                             fontSize: 10,
                             color: DARK_GRAY_FONT_COLOR,

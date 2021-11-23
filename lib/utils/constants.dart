@@ -129,22 +129,23 @@ const MSG_RESET_IT = 'Reset it';
 //Hint Msg
 const SEARCH_HINT = 'Search for projects..';
 const REVIEW_HINT = 'Tap to review..';
-const ENTER_STATE_HINT = 'Enter State';
-const ENTER_CITY_HINT = 'Enter City';
+const SELECT_STATE_HINT = 'Select State';
+const SELECT_CITY_HINT = 'Select City';
+const HOUSE_NO_HINT = 'Enter House/Apt. Number';
+const STREET_NAME_HINT = 'Enter Street Name';
 const ENTER_ZIP_CODE_HINT = 'Enter Zip Code';
 const ENTER_FIRST_NAME_HINT = 'Enter first name';
 const ENTER_LAST_NAME_HINT = 'Enter last name';
+const ENTER_ABOUT_HINT = 'Enter about';
 const ENTER_EMAIL_HINT = 'Enter email';
-const BIRTH_DATE_HINT = 'MM/DD/YYYY';
+const SELECT_DATE_OF_BIRTH_HINT = 'MM/DD/YYYY';
 const SELCT_GENDER_HINT = 'Select gender';
-const ENTER_PASSWORD_HINT = 'Enter password';
-const ENTER_CONFIRM_PASSWORD_HINT = 'Enter confirm password';
 const ENTER_PHONE_NUMBER_HINT = 'Enter phone number';
 const SELECT_SCHOOL_HINT = 'Select your school';
 const SELECT_YOUR_GRADE = 'Select your grade';
-const HOUSE_NO_HINT = 'Enter House/Apt. Number';
-const STREET_NAME_HINT = 'Enter Street Name';
-const CITY_HINT = 'City';
+const ENTER_TARGET_HOURS_HINT = 'Enter target hours';
+const ENTER_PASSWORD_HINT = 'Enter password';
+const ENTER_CONFIRM_PASSWORD_HINT = 'Enter confirm password';
 const SEARCH_COUNTRY_HINT = 'Search Here';
 
 //Reset password
@@ -154,9 +155,11 @@ const RESER_PASS_MSG =
 
 // Explore Screen
 const MSG_DASHBOARD = 'Changing the World,\nOne Project At a Time';
-const SEARCH_PROJECT_LABEL = 'Search Project';
-const TYPE_KEYWORD_HINT = 'Type keyword...';
-const MY_VOLUNTEER_HOURS_LABEL = 'My volunteer hours for - ';
+const SEARCH_PROJECT_LABEL = 'Find volunteering opportunities';
+const TYPE_KEYWORD_HINT = 'Look-up active projects';
+const SEARCH_BY_CATEGORY = 'Search by category';
+const YOUR_HOURS_1 = 'You have ';
+const YOUR_HOURS_2 = ' hours for - ';
 const DETAILS = 'Details';
 const REDEEM = 'Redeem';
 const FOOD_BANK = 'Food\nBank';
@@ -189,6 +192,7 @@ const SELECT_GENDER = 'Select Your Gender';
 const ENTER_PERSONAL_PHONE_NUMBER = 'Enter your personal phone number';
 const ENTER_PARENT_EMAIL = 'Enter your parents/guardian email';
 const CHOOSE_YOUR_AREA_OF_INTEREST = 'Choose your area of interest';
+const CURRENT_YEAR_TARGET_HOURS = 'Target hours for current year';
 const CHOOSE_YOUR_PASSWORD = 'Choose your password';
 const PASSWORD = 'Password';
 const CONFIRM_PASSWORD = 'Confirm Password';
@@ -413,215 +417,6 @@ List<String> gradeLevels = [
   'College',
 ];
 
-//Temp Data
-List<int> items = [25, 50, 75, 100, 125, 150, 175, 200];
-
-List<Map<String, dynamic>> schools = [
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-  {
-    'nces_school_id': '454551225896',
-    'state_school_id': 'CA-8976542-4564112',
-    'state_district_id': 'CA-9658457',
-    'low_grade': '03',
-    'high_grade': '05',
-    'school_name': '138th street',
-    'district': 'Wiseburn unified',
-    'county_name': 'Los Angles county',
-    'street_address': '5403 W. 138th st.',
-    'city': 'Hawthrone',
-    'state': 'CA',
-    'zip': '90250',
-    'phone': '310725-2151',
-    'students': '443.00000',
-  },
-];
-
-List<Map<String, dynamic>> categories = [
-  {
-    'id': 0,
-    'img_url': 'assets/images/groceries.png',
-    'label': FOOD_BANK,
-  },
-  {
-    'id': 1,
-    'img_url': 'assets/images/volunteer.png',
-    'label': VOLUNTEER_WITH_CHILDREN,
-  },
-  {
-    'id': 2,
-    'img_url': 'assets/images/teach.png',
-    'label': TEACH,
-  },
-  {
-    'id': 3,
-    'img_url': 'assets/images/animal_shelter.png',
-    'label': HOMELESS_SHELTER,
-  },
-  {
-    'id': 4,
-    'img_url': 'assets/images/animal_care.png',
-    'label': ANIMAL_CARE,
-  },
-  {
-    'id': 5,
-    'img_url': 'assets/images/senior.png',
-    'label': SENIOR_CENTER,
-  },
-  {
-    'id': 6,
-    'img_url': 'assets/images/youth.png',
-    'label': CHILDREN_AND_YOUTH,
-  },
-  {
-    'id': 7,
-    'img_url': 'assets/images/more.png',
-    'label': MORE,
-  },
-];
-
 List<Map<String, dynamic>> reviewData = [
   {
     'image_url': 'assets/images/event1.jpg',
@@ -743,63 +538,3 @@ Map<String, dynamic> rewardsList = {
     ],
   },
 };
-
-List<Map<String, dynamic>> peoplesList = [
-  {
-    'image_url': '',
-    'rating': 4.7,
-    'review_by_persons': 50,
-    'address': 'Dublin, CA 94568',
-    'user_name': 'John Smith',
-    'point_gifted': 0,
-    'mail': 'Sample123@gmail.com',
-  },
-  {
-    'image_url': '',
-    'rating': 3,
-    'review_by_persons': 20,
-    'address': 'Sacrdmento, CA 94203',
-    'user_name': 'Abdul Iqbal',
-    'point_gifted': 3,
-    'mail': 'Sample123@gmail.com',
-  },
-  {
-    'image_url': '',
-    'rating': 3.5,
-    'review_by_persons': 32,
-    'user_name': 'Smith Andda',
-    'address': 'Dublin, CA 94568',
-    'point_gifted': 1,
-    'mail': 'Sample123@gmail.com',
-  },
-  {
-    'image_url': '',
-    'fav': true,
-    'rating': 5,
-    'review_by_persons': 45,
-    'user_name': 'John Smith',
-    'address': 'Dublin, CA 94568',
-    'point_gifted': 7,
-    'mail': 'Sample123@gmail.com',
-  },
-  {
-    'image_url': '',
-    'fav': true,
-    'rating': 4,
-    'review_by_persons': 11,
-    'user_name': 'John Carter',
-    'address': 'Sacrdmento, CA 94203',
-    'point_gifted': 5,
-    'mail': 'Sample123@gmail.com',
-  },
-  {
-    'image_url': '',
-    'fav': false,
-    'rating': 4.5,
-    'review_by_persons': 21,
-    'address': 'Dublin, CA 94568',
-    'user_name': 'Bob Jons',
-    'point_gifted': 2,
-    'mail': 'Sample123@gmail.com',
-  },
-];

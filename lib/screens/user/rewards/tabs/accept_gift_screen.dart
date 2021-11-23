@@ -4,7 +4,7 @@ import 'package:helpozzy/utils/constants.dart';
 
 class AcceptGiftScreen extends StatefulWidget {
   AcceptGiftScreen({required this.people});
-  final UserModel people;
+  final SignUpAndUserModel people;
   @override
   _AcceptGiftScreenState createState() => _AcceptGiftScreenState();
 }

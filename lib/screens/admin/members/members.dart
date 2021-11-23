@@ -195,13 +195,13 @@ class _MembersScreenState extends State<MembersScreen> {
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
-            final UserModel volunteer = snapshot.data[index];
+            final SignUpAndUserModel volunteer = snapshot.data[index];
             return StreamBuilder<bool>(
               initialData: favVolunteers,
               stream: _membersBloc.getFavVolunteersStream,
               builder: (context, snapshot) {
                 return snapshot.data!
-                    ? volunteer.favorite
+                    ? volunteer.favorite!
                         ? memberItem(volunteer: volunteer)
                         : SizedBox()
                     : memberItem(volunteer: volunteer);
@@ -213,7 +213,7 @@ class _MembersScreenState extends State<MembersScreen> {
     );
   }
 
-  Widget memberItem({required UserModel volunteer}) {
+  Widget memberItem({required SignUpAndUserModel volunteer}) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
@@ -229,14 +229,14 @@ class _MembersScreenState extends State<MembersScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    volunteer.name,
+                    volunteer.name!,
                     style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    volunteer.address,
+                    volunteer.address!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: _theme.textTheme.bodyText2!,
@@ -247,7 +247,7 @@ class _MembersScreenState extends State<MembersScreen> {
                         padding: const EdgeInsets.only(
                             top: 3.0, bottom: 3.0, right: 5.0),
                         child: RatingBar.builder(
-                          initialRating: volunteer.rating,
+                          initialRating: volunteer.rating!,
                           ignoreGestures: true,
                           minRating: 1,
                           itemSize: 15,
@@ -281,14 +281,14 @@ class _MembersScreenState extends State<MembersScreen> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      volunteer.favorite = !volunteer.favorite;
+                      volunteer.favorite = !volunteer.favorite!;
                     });
                   },
                   child: Icon(
-                    volunteer.favorite
+                    volunteer.favorite!
                         ? Icons.favorite_rounded
                         : Icons.favorite_border_rounded,
-                    color: volunteer.favorite ? PINK_COLOR : BLACK,
+                    color: volunteer.favorite! ? PINK_COLOR : BLACK,
                     size: 16,
                   ),
                 ),

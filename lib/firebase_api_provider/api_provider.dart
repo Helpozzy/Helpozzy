@@ -4,12 +4,38 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class ApiProvider {
+  Future<bool> postCitiesAPIProvider(List cities) async {
+    for (int i = 0; i <= cities.length; i++) {
+      final DocumentReference documentReference =
+          firestore.collection('cities_info').doc();
+      await documentReference.set(cities[i]);
+    }
+    return true;
+  }
+
+  Future<Cities> getCitiesAPIProvider() async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('cities_info')
+        .where('state_id', isEqualTo: 'CA')
+        .get();
+
+    List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
+    List<Map<String, dynamic>> cities = [];
+    cityList.forEach((element) {
+      final city = element.data() as Map<String, dynamic>;
+      cities.add(city);
+    });
+
+    return Cities.fromJson(items: cities);
+  }
+
   Future<bool> postSchoolsAPIProvider(List schools) async {
     for (int i = 0; i <= schools.length; i++) {
       final DocumentReference documentReference =
@@ -121,12 +147,12 @@ class ApiProvider {
     return Projects.fromJson(list: projects);
   }
 
-  Future<UserModel> userInfoAPIProvider(String uId) async {
+  Future<SignUpAndUserModel> userInfoAPIProvider(String uId) async {
     final DocumentReference documentRef =
         firestore.collection('users').doc(uId);
     final DocumentSnapshot doc = await documentRef.get();
     final json = doc.data() as Map<String, dynamic>;
-    return UserModel.fromjson(json: json);
+    return SignUpAndUserModel.fromJson(json: json);
   }
 
   Future<Users> usersAPIProvider(String uId) async {

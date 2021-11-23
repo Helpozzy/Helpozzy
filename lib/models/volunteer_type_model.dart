@@ -1,7 +1,9 @@
 class VolunteerTypes {
   VolunteerTypes.fromJson(List<dynamic> json) {
     json.forEach((element) {
-      volunteers.add(VolunteerModel.fromjson(json: element));
+      if (element['id'] != 2) {
+        volunteers.add(VolunteerModel.fromjson(json: element));
+      }
     });
   }
   late List<VolunteerModel> volunteers = [];

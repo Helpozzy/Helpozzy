@@ -58,7 +58,7 @@ class ProjectsBloc {
     otherUserInfoController.sink.add(response);
   }
 
-  List<UserModel> usersFromAPI = [];
+  List<SignUpAndUserModel> usersFromAPI = [];
   dynamic searchedUserList = [];
 
   Future searchUsers(String searchText) async {
@@ -67,8 +67,8 @@ class ProjectsBloc {
       _searchUsersList.sink.add([]);
     } else {
       usersFromAPI.forEach((project) {
-        if (project.email.toLowerCase().contains(searchText.toLowerCase()) ||
-            project.name.toLowerCase().contains(searchText.toLowerCase())) {
+        if (project.email!.toLowerCase().contains(searchText.toLowerCase()) ||
+            project.name!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedUserList.add(project);
         }
       });

@@ -2,29 +2,31 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/signup_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class AreaOfInterest extends StatefulWidget {
-  AreaOfInterest({required this.signUpModel});
-  final SignUpModel signUpModel;
+class TargetAndAreaOfInterest extends StatefulWidget {
+  TargetAndAreaOfInterest({required this.signUpModel});
+  final SignUpAndUserModel signUpModel;
 
   @override
-  State<AreaOfInterest> createState() =>
-      _AreaOfInterestState(signUpModel: signUpModel);
+  State<TargetAndAreaOfInterest> createState() =>
+      _TargetAndAreaOfInterestState(signUpModel: signUpModel);
 }
 
-class _AreaOfInterestState extends State<AreaOfInterest> {
-  _AreaOfInterestState({required this.signUpModel});
-  final SignUpModel signUpModel;
+class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
+  _TargetAndAreaOfInterestState({required this.signUpModel});
+  final SignUpAndUserModel signUpModel;
 
+  static final _formKey = GlobalKey<FormState>();
   final CategoryBloc _categoryBloc = CategoryBloc();
   late double width;
   late double height;
   late ThemeData _theme;
   late List<int> selectedAreaOfInterests = [];
+  final TextEditingController _targetHoursController = TextEditingController();
 
   @override
   void initState() {
@@ -56,12 +58,32 @@ class _AreaOfInterestState extends State<AreaOfInterest> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CommonWidget(context).showBackButton(),
-                      TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
-                      categoryView(categories),
-                    ],
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CommonWidget(context).showBackButton(),
+                        TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * 0.1),
+                          child: CommonRoundedTextfield(
+                            controller: _targetHoursController,
+                            hintText: ENTER_TARGET_HOURS_HINT,
+                            keyboardType: TextInputType.number,
+                            validator: (phone) {
+                              if (phone!.isEmpty) {
+                                return 'Please enter target hours';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                        TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
+                        categoryView(categories),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -70,8 +92,11 @@ class _AreaOfInterestState extends State<AreaOfInterest> {
                 width: double.infinity,
                 child: CommonButton(
                   text: CONTINUE_BUTTON,
-                  onPressed: () async =>
-                      await getSelectedCategories(categories),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await getSelectedCategories(categories);
+                    }
+                  },
                 ),
               ),
             ],

@@ -3,6 +3,7 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -10,6 +11,11 @@ import 'package:helpozzy/utils/constants.dart';
 
 class Repository {
   final apiProvider = ApiProvider();
+
+  Future<Cities> getCitiesRepo() => apiProvider.getCitiesAPIProvider();
+
+  Future<bool> postCitiesRepo(List cities) =>
+      apiProvider.postCitiesAPIProvider(cities);
 
   Future<Schools> getSchoolsRepo() => apiProvider.getSchoolsAPIProvider();
 
@@ -37,7 +43,7 @@ class Repository {
   Future<Projects> getCategorisedProjectsRepo(int categoryId) =>
       apiProvider.getCategorisedProjectsAPIProvider(categoryId);
 
-  Future<UserModel> userInfoRepo(String uId) =>
+  Future<SignUpAndUserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
 
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);

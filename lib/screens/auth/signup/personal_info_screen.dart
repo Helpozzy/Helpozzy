@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/signup_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
 
   @override
   _PersonalInfoScreenState createState() =>
@@ -19,7 +19,7 @@ class PersonalInfoScreen extends StatefulWidget {
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   _PersonalInfoScreenState({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
   static final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -154,7 +154,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: CommonRoundedTextfield(
         controller: _dateController,
-        hintText: BIRTH_DATE_HINT,
+        hintText: SELECT_DATE_OF_BIRTH_HINT,
         readOnly: true,
         keyboardType: TextInputType.number,
         onTap: () {
@@ -177,7 +177,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             return null;
           }
         },
-        onChanged: (state) {},
       ),
     );
   }

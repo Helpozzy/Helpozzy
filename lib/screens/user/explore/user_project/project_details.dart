@@ -548,7 +548,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   }
 
   Widget reviewCard() {
-    return StreamBuilder<UserModel>(
+    return StreamBuilder<SignUpAndUserModel>(
       stream: _userInfoBloc.userStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -575,14 +575,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          snapshot.data!.name,
+                          snapshot.data!.name!,
                           style: _theme.textTheme.bodyText2!.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          snapshot.data!.address,
+                          snapshot.data!.address!,
                           style: _theme.textTheme.bodyText2!.copyWith(
                             fontSize: 12,
                             color: DARK_GRAY,

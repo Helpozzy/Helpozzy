@@ -49,7 +49,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: StreamBuilder<UserModel>(
+                    child: StreamBuilder<SignUpAndUserModel>(
                         stream: _userInfoBloc.userStream,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {

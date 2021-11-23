@@ -5,12 +5,12 @@ import 'package:rxdart/rxdart.dart';
 class UserInfoBloc {
   final repo = Repository();
 
-  final userController = PublishSubject<UserModel>();
+  final userController = PublishSubject<SignUpAndUserModel>();
 
-  Stream<UserModel> get userStream => userController.stream;
+  Stream<SignUpAndUserModel> get userStream => userController.stream;
 
   Future getUser(String uId) async {
-    final UserModel response = await repo.userInfoRepo(uId);
+    final SignUpAndUserModel response = await repo.userInfoRepo(uId);
     userController.sink.add(response);
   }
 

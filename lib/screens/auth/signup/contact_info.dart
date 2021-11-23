@@ -2,15 +2,15 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/signup_model.dart';
-import 'package:helpozzy/screens/auth/signup/area_of_interest.dart';
+import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ContactInfoScreen extends StatefulWidget {
   ContactInfoScreen({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
 
   @override
   _ContactInfoScreenState createState() =>
@@ -19,7 +19,7 @@ class ContactInfoScreen extends StatefulWidget {
 
 class _ContactInfoScreenState extends State<ContactInfoScreen> {
   _ContactInfoScreenState({required this.signUpModel});
-  final SignUpModel signUpModel;
+  final SignUpAndUserModel signUpModel;
 
   final TextEditingController _personalPhoneController =
       TextEditingController();
@@ -160,8 +160,8 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              AreaOfInterest(signUpModel: signUpModel)),
+                          builder: (context) => TargetAndAreaOfInterest(
+                              signUpModel: signUpModel)),
                     );
                   }
                 },

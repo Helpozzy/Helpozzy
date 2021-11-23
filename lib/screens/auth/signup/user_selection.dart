@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/signup_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/volunteering_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -69,8 +69,8 @@ class _UserSelectionState extends State<UserSelection> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (_typeController.text == LOGIN_VOLUNTEER) {
-                      final SignUpModel signUpModel =
-                          SignUpModel(userType: _typeController.text);
+                      final SignUpAndUserModel signUpModel =
+                          SignUpAndUserModel(userType: _typeController.text);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -79,8 +79,8 @@ class _UserSelectionState extends State<UserSelection> {
                         ),
                       );
                     } else if (_typeController.text == LOGIN_ADMIN) {
-                      final SignUpModel signUpModel =
-                          SignUpModel(userType: _typeController.text);
+                      final SignUpAndUserModel signUpModel =
+                          SignUpAndUserModel(userType: _typeController.text);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

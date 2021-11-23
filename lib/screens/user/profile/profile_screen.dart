@@ -8,11 +8,12 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
+import 'package:helpozzy/screens/user/profile/edit_profile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     width = MediaQuery.of(context).size.width;
     _theme = Theme.of(context);
     return SafeArea(
-      child: StreamBuilder<UserModel>(
+      child: StreamBuilder<SignUpAndUserModel>(
         stream: _userInfoBloc.userStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -53,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: LinearLoader(minheight: 15),
             );
           }
-          final UserModel? user = snapshot.data;
+          final SignUpAndUserModel? user = snapshot.data;
           return Column(
             children: [
               Expanded(
@@ -66,19 +67,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Center(
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 10, top: 15.0),
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: PRIMARY_COLOR,
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenView(
+                                        imgUrl: user!.profileUrl!),
+                                  ),
                                 ),
-                                child: CommonUserPlaceholder(size: width / 5),
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.only(bottom: 10, top: 15.0),
+                                  padding: EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: PRIMARY_COLOR.withOpacity(0.8),
+                                  ),
+                                  child: CommonUserPlaceholder(size: width / 5),
+                                ),
                               ),
                             ),
                             Center(
                               child: Text(
-                                user!.name,
+                                user!.name!,
                                 style: _theme.textTheme.headline6!
                                     .copyWith(fontWeight: FontWeight.w600),
                               ),
@@ -104,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   DateFormat('MMM yyyy').format(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(user.joiningDate),
+                                      int.parse(user.joiningDate!),
                                     ),
                                   ),
                                   style: _theme.textTheme.bodyText2!.copyWith(
@@ -133,15 +144,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Container(
                               padding: EdgeInsets.only(
-                                  top: 6.0, bottom: 3.0, right: 3.0),
+                                  top: 6.0, bottom: 6.0, right: 3.0),
                               alignment: Alignment.centerRight,
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CommonSampleScreen(
-                                          'Edit Profile\nComing Soon'),
+                                      builder: (context) =>
+                                          EditProfileScreen(user: user),
                                     ),
                                   );
                                 },
@@ -199,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget address(UserModel user) {
+  Widget address(SignUpAndUserModel user) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -207,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Expanded(
             child: Text(
-              user.address,
+              user.address!,
               maxLines: 2,
               style: _theme.textTheme.bodyText2!
                   .copyWith(fontWeight: FontWeight.bold),
@@ -216,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(width: 5),
           GestureDetector(
             onTap: () {
-              CommonUrlLauncher().launchCall(user.personalPhnNo);
+              CommonUrlLauncher().launchCall(user.personalPhnNo!);
             },
             child: Row(
               children: [
@@ -235,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget aboutMe(UserModel user) {
+  Widget aboutMe(SignUpAndUserModel user) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
@@ -249,10 +260,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              user.about.isNotEmpty ? user.about : 'Not Available add now!',
+              user.about!.isNotEmpty ? user.about! : 'Not Available add now!',
               style: _theme.textTheme.bodyText2!.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: user.about.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY),
+                  color: user.about!.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY),
             ),
           ),
         ],
@@ -313,7 +324,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             );
                           },
-                          child: Padding(
+                          child: Container(
+                            width: width / 5.7,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 10.0),
                             child: Column(
@@ -335,9 +347,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   category.label,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  maxLines: 2,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
                                     fontSize: 10,
-                                    fontFamily: QUICKSAND,
                                     color: PRIMARY_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -424,16 +436,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 Text(
                                   project.projectName,
-                                  style: TextStyle(
-                                    fontFamily: QUICKSAND,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
                                     color: BLUE_GRAY,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   project.organization,
-                                  style: TextStyle(
-                                    fontFamily: QUICKSAND,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
                                     color: DARK_GRAY,
                                   ),
                                 ),
@@ -443,8 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       int.parse(project.startDate),
                                     ),
                                   ),
-                                  style: TextStyle(
-                                    fontFamily: QUICKSAND,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
                                     color: DARK_BLUE,
                                     fontWeight: FontWeight.bold,
                                   ),
