@@ -12,10 +12,13 @@ import 'package:helpozzy/utils/constants.dart';
 class Repository {
   final apiProvider = ApiProvider();
 
-  Future<Cities> getCitiesRepo() => apiProvider.getCitiesAPIProvider();
-
   Future<bool> postCitiesRepo(List cities) =>
       apiProvider.postCitiesAPIProvider(cities);
+
+  Future<Cities> getCitiesByStateRepo() => apiProvider.getCitiesAPIProvider();
+
+  Future<Cities> getCitiesByStateNameRepo(String stateName) =>
+      apiProvider.getCitiesByStateNameAPIProvider(stateName);
 
   Future<Schools> getSchoolsRepo() => apiProvider.getSchoolsAPIProvider();
 

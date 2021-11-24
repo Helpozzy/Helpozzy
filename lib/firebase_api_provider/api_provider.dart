@@ -21,15 +21,29 @@ class ApiProvider {
   }
 
   Future<Cities> getCitiesAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('cities_info').get();
+
+    List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
+    List<Map<String, dynamic>> cities = [];
+    cityList.forEach((element) {
+      final Map<String, dynamic> city = element.data() as Map<String, dynamic>;
+      cities.add(city);
+    });
+
+    return Cities.fromJson(items: cities);
+  }
+
+  Future<Cities> getCitiesByStateNameAPIProvider(String stateName) async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('cities_info')
-        .where('state_id', isEqualTo: 'CA')
+        .where('state_name', isEqualTo: stateName)
         .get();
 
     List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
     List<Map<String, dynamic>> cities = [];
     cityList.forEach((element) {
-      final city = element.data() as Map<String, dynamic>;
+      final Map<String, dynamic> city = element.data() as Map<String, dynamic>;
       cities.add(city);
     });
 

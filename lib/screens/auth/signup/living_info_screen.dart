@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
+import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -29,11 +30,24 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   late ThemeData _theme;
   late double width;
   late double height;
+  late List<String>? states = [];
+  late List<CityModel>? cities = [];
 
   @override
   void initState() {
-    _cityInfoBloc.getSchools();
+    _cityInfoBloc.getStates();
+    listenState();
     super.initState();
+  }
+
+  Future listenState() async {
+    final StatesHelper statesHelper = await _cityInfoBloc.getStates();
+    setState(() => states = statesHelper.states);
+  }
+
+  Future listenCities(String stateName) async {
+    final Cities citiesList = await _cityInfoBloc.getCities(stateName);
+    setState(() => cities = citiesList.cities);
   }
 
   @override
@@ -83,30 +97,11 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                         },
                       ),
                     ),
-                    TopInfoLabel(label: WHICH_CITY),
-                    StreamBuilder<Cities>(
-                      stream: _cityInfoBloc.citiesStream,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return CircularProgressIndicator(
-                              color: PRIMARY_COLOR);
-                        }
-                        final List<CityModel> cities = snapshot.data!.cities;
-                        return selectCityGradeDropDown(cities);
-                      },
-                    ),
                     TopInfoLabel(label: WHICH_STATE),
-                    StreamBuilder<Cities>(
-                      stream: _cityInfoBloc.citiesStream,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return CircularProgressIndicator(
-                              color: PRIMARY_COLOR);
-                        }
-                        final List<CityModel> cities = snapshot.data!.cities;
-                        return selectStateGradeDropDown(cities);
-                      },
-                    ),
+                    selectStateDropDown(states!),
+                    // TopInfoLabel(label: WHICH_CITY),
+                    cities!.isNotEmpty ? SizedBox(height: 10) : SizedBox(),
+                    selectCitiesDropDown(cities!),
                     TextFieldWithLabel(
                       controller: _zipCodeController,
                       keyboardType: TextInputType.number,
@@ -159,54 +154,19 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     );
   }
 
-  Widget selectCityGradeDropDown(List<CityModel> cities) {
+  Widget selectStateDropDown(List<String> states) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-      child: DropdownButtonFormField<CityModel>(
-          hint: Text(SELECT_CITY_HINT),
+      child: DropdownButtonFormField<String>(
+          hint: Text(states.isEmpty ? 'Loading..' : SELECT_STATE_HINT),
           icon: Icon(Icons.expand_more_outlined),
-          decoration: inputRoundedDecoration(
-              getHint: SELECT_CITY_HINT, isDropDown: true),
-          isExpanded: true,
-          onChanged: (CityModel? newValue) {
-            setState(() {
-              _cityController.text = newValue!.stateName!;
-            });
-          },
-          validator: (val) {
-            if (_cityController.text.isNotEmpty &&
-                _cityController.text == SELECT_CITY_HINT) {
-              return 'Please select city';
-            }
-            return null;
-          },
-          items: cities.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-            return DropdownMenuItem<CityModel>(
-              value: value,
-              child: Text(
-                value!.city!,
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.bodyText2,
-              ),
-            );
-          }).toList()),
-    );
-  }
-
-  Widget selectStateGradeDropDown(List<CityModel> cities) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-      child: DropdownButtonFormField<CityModel>(
-          hint: Text(SELECT_STATE_HINT),
-          icon: Icon(Icons.expand_more_outlined),
-          style: TextStyle(),
           decoration: inputRoundedDecoration(
               getHint: SELECT_STATE_HINT, isDropDown: true),
           isExpanded: true,
-          onChanged: (CityModel? newValue) {
-            setState(() {
-              _stateController.text = newValue!.stateName!;
-            });
+          onChanged: (String? newValue) async {
+            setState(() => _stateController.text = newValue!);
+            cities!.clear();
+            listenCities(newValue!);
           },
           validator: (val) {
             if (_stateController.text.isNotEmpty &&
@@ -215,16 +175,59 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             }
             return null;
           },
-          items: cities.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-            return DropdownMenuItem<CityModel>(
+          items: states.map<DropdownMenuItem<String>>((String? value) {
+            return DropdownMenuItem<String>(
               value: value,
               child: Text(
-                value!.stateName!,
+                value!,
                 textAlign: TextAlign.center,
                 style: _theme.textTheme.bodyText2,
               ),
             );
           }).toList()),
+    );
+  }
+
+  Widget selectCitiesDropDown(List<CityModel> cities) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: cities.isNotEmpty
+          ? DropdownButtonFormField<CityModel>(
+              hint: Text(_stateController.text.isEmpty
+                  ? SELECT_CITY_HINT
+                  : cities.isEmpty
+                      ? 'Loading..'
+                      : SELECT_CITY_HINT),
+              icon: Icon(Icons.expand_more_outlined),
+              decoration: inputRoundedDecoration(
+                getHint: SELECT_CITY_HINT,
+                isDropDown: true,
+              ),
+              isExpanded: true,
+              onChanged: (CityModel? newValue) {
+                setState(() {
+                  _cityController.text = newValue!.city!;
+                });
+              },
+              validator: (val) {
+                if (_cityController.text.isNotEmpty &&
+                    _cityController.text == SELECT_CITY_HINT) {
+                  return 'Please select city';
+                }
+                return null;
+              },
+              items:
+                  cities.map<DropdownMenuItem<CityModel>>((CityModel? value) {
+                return DropdownMenuItem<CityModel>(
+                  value: value,
+                  child: Text(
+                    value!.city!,
+                    textAlign: TextAlign.center,
+                    style: _theme.textTheme.bodyText2,
+                  ),
+                );
+              }).toList())
+          : SizedBox(),
     );
   }
 }
