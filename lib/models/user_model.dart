@@ -47,7 +47,7 @@ class SignUpAndUserModel {
     dateOfBirth = json['date_of_birth'];
     gender = json['gender'];
     personalPhnNo = json['personal_phn_no'];
-    parentEmail = json['parent_email'];
+    parentEmail = json['parents_email'];
     relationshipWithParent = json['relationship_with_parent'];
     address = json['address'];
     city = json['city'];
@@ -76,7 +76,7 @@ class SignUpAndUserModel {
       'date_of_birth': dateOfBirth,
       'gender': gender,
       'personal_phn_no': personalPhnNo,
-      'parent_email': parentEmail,
+      'parents_email': parentEmail,
       'relationship_with_parent': relationshipWithParent,
       'address': address,
       'city': city,

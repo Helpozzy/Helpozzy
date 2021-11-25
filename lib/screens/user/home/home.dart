@@ -69,9 +69,8 @@ class _HomeState extends State<Home> {
               backgroundColor: Colors.white,
             ),
           ],
-          onTap: (position) => ctx.read<HomeBloc>().add(
-                HomeUpdateTab(tabIndex: position),
-              ),
+          onTap: (position) =>
+              ctx.read<HomeBloc>().add(HomeUpdateTab(tabIndex: position)),
           currentIndex: state.currentIndex,
           selectedItemColor: DARK_MARUN,
           unselectedItemColor: PRIMARY_COLOR,

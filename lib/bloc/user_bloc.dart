@@ -9,9 +9,10 @@ class UserInfoBloc {
 
   Stream<SignUpAndUserModel> get userStream => userController.stream;
 
-  Future getUser(String uId) async {
+  Future<SignUpAndUserModel> getUser(String uId) async {
     final SignUpAndUserModel response = await repo.userInfoRepo(uId);
     userController.sink.add(response);
+    return response;
   }
 
   void dispose() {

@@ -218,6 +218,7 @@ class CommonSimpleTextfield extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.maxLines = 1,
   });
   final TextEditingController controller;
   final String hintText;
@@ -230,6 +231,7 @@ class CommonSimpleTextfield extends StatelessWidget {
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +241,8 @@ class CommonSimpleTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
-      style: _theme.textTheme.bodyText1,
+      maxLines: maxLines,
+      style: _theme.textTheme.bodyText2,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       decoration: inputSimpleDecoration(
@@ -404,7 +407,7 @@ InputDecoration inputSimpleDecoration(
     hintStyle: TextStyle(color: DARK_GRAY),
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    contentPadding: EdgeInsets.zero,
+    contentPadding: EdgeInsets.only(top: 15),
     fillColor: Colors.transparent,
     focusedErrorBorder: UnderlineInputBorder(),
     errorBorder: UnderlineInputBorder(),
