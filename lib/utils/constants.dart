@@ -107,6 +107,7 @@ const PROFILE_TAB = 'Profile';
 //Dropdown hint
 const SELECT_RELATION_HINT = 'Select Relation';
 const SELECT_GRADE_HINT = 'Select Grade Level';
+const GRADE_HINT = 'Grade Level';
 const SELECT_TYPE_HINT = 'Select Type';
 const SELECT_CATEGORY_HINT = 'Select Category';
 const FILTERS_HINT = 'Filters';

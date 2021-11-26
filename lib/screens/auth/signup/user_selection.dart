@@ -69,23 +69,23 @@ class _UserSelectionState extends State<UserSelection> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (_typeController.text == LOGIN_VOLUNTEER) {
-                      final SignUpAndUserModel signUpModel =
+                      final SignUpAndUserModel signupAndUserModel =
                           SignUpAndUserModel(userType: _typeController.text);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              SignUpScreen(signUpModel: signUpModel),
+                          builder: (context) => SignUpScreen(
+                              signupAndUserModel: signupAndUserModel),
                         ),
                       );
                     } else if (_typeController.text == LOGIN_ADMIN) {
-                      final SignUpAndUserModel signUpModel =
+                      final SignUpAndUserModel signupAndUserModel =
                           SignUpAndUserModel(userType: _typeController.text);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              SignUpScreen(signUpModel: signUpModel),
+                          builder: (context) => SignUpScreen(
+                              signupAndUserModel: signupAndUserModel),
                         ),
                       );
                     }

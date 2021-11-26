@@ -9,17 +9,17 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'contact_info.dart';
 
 class LivingInfoScreen extends StatefulWidget {
-  LivingInfoScreen({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  LivingInfoScreen({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   @override
   _LivingInfoScreenState createState() =>
-      _LivingInfoScreenState(signUpModel: signUpModel);
+      _LivingInfoScreenState(signupAndUserModel: signupAndUserModel);
 }
 
 class _LivingInfoScreenState extends State<LivingInfoScreen> {
-  _LivingInfoScreenState({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  _LivingInfoScreenState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
   final _formKey = GlobalKey<FormState>();
   final CityInfoBloc _cityInfoBloc = CityInfoBloc();
   final TextEditingController _stateController = TextEditingController();
@@ -130,18 +130,19 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
-                  signUpModel.volunteerType = signUpModel.volunteerType;
-                  signUpModel.state = _stateController.text;
-                  signUpModel.city = _cityController.text;
-                  signUpModel.zipCode = _zipCodeController.text;
-                  signUpModel.address =
+                  signupAndUserModel.volunteerType =
+                      signupAndUserModel.volunteerType;
+                  signupAndUserModel.state = _stateController.text;
+                  signupAndUserModel.city = _cityController.text;
+                  signupAndUserModel.zipCode = _zipCodeController.text;
+                  signupAndUserModel.address =
                       _houseNoController.text + ', ' + _streetController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ContactInfoScreen(signUpModel: signUpModel),
+                        builder: (context) => ContactInfoScreen(
+                            signupAndUserModel: signupAndUserModel),
                       ),
                     );
                   }

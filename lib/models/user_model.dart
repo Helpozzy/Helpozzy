@@ -19,6 +19,7 @@ class SignUpAndUserModel {
     this.about,
     this.dateOfBirth,
     this.gender,
+    this.countryCode,
     this.personalPhnNo,
     this.parentEmail,
     this.relationshipWithParent,
@@ -46,6 +47,7 @@ class SignUpAndUserModel {
     about = json['about'];
     dateOfBirth = json['date_of_birth'];
     gender = json['gender'];
+    countryCode = json['country_code'];
     personalPhnNo = json['personal_phn_no'];
     parentEmail = json['parents_email'];
     relationshipWithParent = json['relationship_with_parent'];
@@ -56,7 +58,14 @@ class SignUpAndUserModel {
     schoolName = json['school_name'];
     gradeLevel = json['grade_level'];
     userType = json['user_type'];
-    areaOfInterests = json['area_of_interests'];
+    if (json['area_of_interests'] != null &&
+        json['area_of_interests'].isNotEmpty) {
+      List<int> areaOfInterestids = [];
+      json['area_of_interests'].forEach((element) {
+        areaOfInterestids.add(element);
+      });
+      areaOfInterests = areaOfInterestids;
+    }
     currentYearTargetHours = json['current_year_target_hours'];
     rating = json['rating'] is double
         ? json['rating']
@@ -75,6 +84,7 @@ class SignUpAndUserModel {
       'about': about,
       'date_of_birth': dateOfBirth,
       'gender': gender,
+      'country_code': countryCode,
       'personal_phn_no': personalPhnNo,
       'parents_email': parentEmail,
       'relationship_with_parent': relationshipWithParent,
@@ -98,6 +108,7 @@ class SignUpAndUserModel {
   late String? about;
   late String? dateOfBirth;
   late String? gender;
+  late String? countryCode;
   late String? personalPhnNo;
   late String? parentEmail;
   late String? relationshipWithParent;

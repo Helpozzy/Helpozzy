@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
+import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
+import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/search_school.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -36,6 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final CommonPicker _commonPicker = CommonPicker();
   final CityInfoBloc _cityInfoBloc = CityInfoBloc();
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final EditProfileBloc _editProfileBloc = EditProfileBloc();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
@@ -50,37 +55,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       TextEditingController();
   final TextEditingController _parentEmailController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
+  final TextEditingController _schoolController = TextEditingController();
+  final TextEditingController _gradeLevelController = TextEditingController();
   late List<String>? states = [];
   late List<CityModel>? cities = [];
-  CountryCode? countryCode;
+  late CountryCode? countryCode;
+  late SignUpAndUserModel? userModel;
 
   @override
   void initState() {
-    countryCode = CountryCode(code: '+1', name: 'US');
     listenUser();
+    countryCode = _personalPhoneController.text.isNotEmpty
+        ? CountryCode(code: countryCode!.dialCode!)
+        : CountryCode(code: '+1', name: 'US');
     _cityInfoBloc.getStates();
     listenState();
     super.initState();
   }
 
   Future listenUser() async {
-    final SignUpAndUserModel userModel =
-        await _userInfoBloc.getUser(prefsObject.getString('uID')!);
-    _firstNameController.text = userModel.name!.split(' ')[0];
-    _lastNameController.text = userModel.name!.split(' ')[1];
-    _aboutController.text = userModel.about!;
-    _addressController.text = userModel.address!;
-    _emailController.text = userModel.email!;
+    userModel = await _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    _firstNameController.text = userModel!.name!.split(' ')[0];
+    _lastNameController.text = userModel!.name!.split(' ')[1];
+    _aboutController.text = userModel!.about!;
+    _addressController.text = userModel!.address!;
+    _emailController.text = userModel!.email!;
     _dateOfBirthController.text = DateFormat.yMd().format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(userModel.dateOfBirth!)));
-    _genderController.text = userModel.gender!;
-    _stateController.text = userModel.state!;
-    _cityController.text = userModel.city!;
-    _zipCodeController.text = userModel.zipCode!;
-    _personalPhoneController.text =
-        userModel.personalPhnNo!.characters.takeLast(10).string;
-    _parentEmailController.text = userModel.parentEmail!;
-    _relationController.text = userModel.relationshipWithParent!;
+        DateTime.fromMillisecondsSinceEpoch(
+            int.parse(userModel!.dateOfBirth!)));
+    _genderController.text = userModel!.gender!;
+    _stateController.text = userModel!.state!;
+    _cityController.text = userModel!.city!;
+    _zipCodeController.text = userModel!.zipCode!;
+    countryCode = CountryCode(code: userModel!.countryCode!);
+    _personalPhoneController.text = userModel!.personalPhnNo!;
+    _parentEmailController.text = userModel!.parentEmail!;
+    _relationController.text = userModel!.relationshipWithParent!;
+    _schoolController.text = userModel!.schoolName!;
+    _gradeLevelController.text = userModel!.gradeLevel!;
   }
 
   Future listenState() async {
@@ -91,6 +103,75 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future listenCities(String stateName) async {
     final Cities citiesList = await _cityInfoBloc.getCities(stateName);
     setState(() => cities = citiesList.cities);
+  }
+
+  Future postModifiedData() async {
+    CircularLoader().show(context);
+    late String profileUrl = '';
+    if (_imageFile != null) {
+      profileUrl = await convertAndUpload(_imageFile!);
+    }
+    final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
+      name: _firstNameController.text + ' ' + _lastNameController.text,
+      about: _aboutController.text,
+      email: _emailController.text,
+      gender: _genderController.text,
+      address: _addressController.text,
+      state: _stateController.text,
+      city: _cityController.text,
+      zipCode: _zipCodeController.text,
+      countryCode: countryCode!.dialCode!,
+      personalPhnNo: _personalPhoneController.text,
+      parentEmail: _parentEmailController.text,
+      relationshipWithParent: _relationController.text,
+      schoolName: _schoolController.text,
+      gradeLevel: _gradeLevelController.text,
+      areaOfInterests: userModel!.areaOfInterests,
+      currentYearTargetHours: userModel!.currentYearTargetHours,
+      dateOfBirth: userModel!.dateOfBirth,
+      joiningDate: userModel!.joiningDate,
+      pointGifted: userModel!.pointGifted,
+      profileUrl: profileUrl.isEmpty ? userModel!.profileUrl : profileUrl,
+      rating: userModel!.rating,
+      reviewsByPersons: userModel!.reviewsByPersons,
+      userType: userModel!.userType,
+      volunteerType: userModel!.volunteerType,
+    );
+    final bool response =
+        await _editProfileBloc.editProfile(signUpAndUserModel);
+    if (response) {
+      CircularLoader().hide(context);
+      showSnakeBar(context, msg: 'Profile Updated');
+      Navigator.of(context).pop();
+    } else {
+      CircularLoader().hide(context);
+      showSnakeBar(context, msg: 'Technical issue! Profile not updated');
+    }
+  }
+
+  Future convertAndUpload(XFile pickedFile) async {
+    final File convertedFile = File(pickedFile.path);
+    final String imgUrl = await uploadImage(convertedFile);
+    return imgUrl;
+  }
+
+  Future<String> uploadImage(File selectedImage) async {
+    late String downloadUrl;
+    try {
+      final String imageName =
+          userModel!.name! + DateTime.now().millisecondsSinceEpoch.toString();
+
+      final storageUploadTask = await FirebaseStorage.instance
+          .ref()
+          .child('user_profile')
+          .child(imageName)
+          .putFile(selectedImage);
+
+      downloadUrl = await storageUploadTask.ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      e.toString();
+    }
+    return downloadUrl;
   }
 
   @override
@@ -104,8 +185,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                await postModifiedData();
+              }
             },
             icon: Icon(
               CupertinoIcons.checkmark_alt,
@@ -136,26 +219,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               Center(child: userProfilePic()),
               SizedBox(height: width * 0.04),
+              Divider(),
               Padding(
                 padding: EdgeInsets.only(
                   left: width * 0.05,
                   right: width * 0.05,
+                  bottom: width * 0.04,
                 ),
                 child: personalDetails(),
               ),
+              Divider(),
               Padding(
                 padding: EdgeInsets.only(
                   left: width * 0.05,
                   right: width * 0.05,
+                  bottom: width * 0.04,
                 ),
                 child: livingInfo(),
               ),
+              Divider(),
               Padding(
                 padding: EdgeInsets.only(
                   left: width * 0.05,
                   right: width * 0.05,
+                  bottom: width * 0.04,
                 ),
                 child: contactInfo(),
+              ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: width * 0.05,
+                  right: width * 0.05,
+                  bottom: width * 0.04,
+                ),
+                child: schoolInfo(),
               ),
             ],
           ),
@@ -238,14 +336,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           hintText: ADDRESS_HINT,
           validator: (val) => null,
         ),
-        Row(
-          children: [
-            Expanded(child: selectStateDropDown(states!)),
-            cities!.isNotEmpty ? SizedBox(width: 10) : SizedBox(),
-            cities!.isNotEmpty
-                ? Expanded(child: selectCitiesDropDown(cities!))
-                : SizedBox(),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          child: Row(
+            children: [
+              Expanded(child: selectStateDropDown(states!)),
+              cities!.isNotEmpty ? SizedBox(width: 10) : SizedBox(),
+              cities!.isNotEmpty
+                  ? Expanded(child: selectCitiesDropDown(cities!))
+                  : SizedBox(),
+            ],
+          ),
         ),
         CommonSimpleTextfield(
           controller: _zipCodeController,
@@ -276,18 +377,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
           },
         ),
-        CommonSimpleTextfield(
-          controller: _parentEmailController,
-          hintText: ENTER_PARENTS_EMAIL_HINT,
-          validator: (parentEmail) {
-            if (parentEmail!.isEmpty) {
-              return 'Please enter parents/guardian email';
-            } else if (parentEmail.isNotEmpty &&
-                !EmailValidator.validate(parentEmail)) {
-              return 'Please enter valid email';
-            }
-            return null;
-          },
+        Padding(
+          padding: const EdgeInsets.only(bottom: 15.0),
+          child: CommonSimpleTextfield(
+            controller: _parentEmailController,
+            hintText: ENTER_PARENTS_EMAIL_HINT,
+            validator: (parentEmail) {
+              if (parentEmail!.isEmpty) {
+                return 'Please enter parents/guardian email';
+              } else if (parentEmail.isNotEmpty &&
+                  !EmailValidator.validate(parentEmail)) {
+                return 'Please enter valid email';
+              }
+              return null;
+            },
+          ),
         ),
         selectRelationshipDropdown(),
       ],
@@ -296,9 +400,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget countryCodePicker() {
     return CountryCodePicker(
-      onChanged: (CountryCode code) {
-        countryCode = code;
-      },
+      onChanged: (CountryCode code) => countryCode = code,
       boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       initialSelection: 'US',
       backgroundColor: WHITE,
@@ -319,7 +421,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget labelWithTopPadding(String label) {
     return Padding(
-      padding: EdgeInsets.only(top: width * 0.05),
+      padding: EdgeInsets.only(top: width * 0.03),
       child: SmallInfoLabel(label: label),
     );
   }
@@ -570,5 +672,74 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         );
       }).toList(),
     );
+  }
+
+  Widget schoolInfo() {
+    return Column(
+      children: [
+        labelWithTopPadding('School Info'),
+        Row(
+          children: [
+            Expanded(flex: 2, child: schoolField()),
+            SizedBox(width: 10),
+            Expanded(flex: 1, child: selectGradeDropDown()),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget schoolField() {
+    return CommonSimpleTextfield(
+      controller: _schoolController,
+      readOnly: true,
+      suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+      hintText: SELECT_SCHOOL_HINT,
+      validator: (val) {
+        if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
+          return 'Please select school';
+        }
+        return null;
+      },
+      onTap: () async {
+        final SchoolDetailsModel school =
+            await SearchSchool().modalBottomSheetMenu(context);
+        setState(() {
+          _schoolController.text = school.schoolName;
+        });
+      },
+    );
+  }
+
+  Widget selectGradeDropDown() {
+    return DropdownButtonFormField<String>(
+        hint: Text(_gradeLevelController.text.isNotEmpty
+            ? _gradeLevelController.text
+            : GRADE_HINT),
+        icon: Icon(Icons.expand_more_outlined),
+        decoration: inputSimpleDecoration(getHint: GRADE_HINT),
+        isExpanded: true,
+        onChanged: (String? newValue) {
+          setState(() {
+            _gradeLevelController.text = newValue!;
+          });
+        },
+        validator: (val) {
+          if (_gradeLevelController.text.isNotEmpty &&
+              _gradeLevelController.text == GRADE_HINT) {
+            return 'Please select grade level';
+          }
+          return null;
+        },
+        items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              textAlign: TextAlign.center,
+              style: _theme.textTheme.bodyText2,
+            ),
+          );
+        }).toList());
   }
 }

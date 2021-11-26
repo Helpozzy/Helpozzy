@@ -8,17 +8,17 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class TargetAndAreaOfInterest extends StatefulWidget {
-  TargetAndAreaOfInterest({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  TargetAndAreaOfInterest({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   @override
   State<TargetAndAreaOfInterest> createState() =>
-      _TargetAndAreaOfInterestState(signUpModel: signUpModel);
+      _TargetAndAreaOfInterestState(signupAndUserModel: signupAndUserModel);
 }
 
 class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
-  _TargetAndAreaOfInterestState({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  _TargetAndAreaOfInterestState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   static final _formKey = GlobalKey<FormState>();
   final CategoryBloc _categoryBloc = CategoryBloc();
@@ -173,11 +173,12 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
         selectedAreaOfInterests.add(category.id);
       }
     });
-    signUpModel.areaOfInterests = selectedAreaOfInterests;
+    signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SetPasswordScreen(signUpModel: signUpModel),
+        builder: (context) =>
+            SetPasswordScreen(signupAndUserModel: signupAndUserModel),
       ),
     );
   }

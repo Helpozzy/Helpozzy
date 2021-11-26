@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/utils/constants.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class FullScreenView extends StatefulWidget {
@@ -44,8 +45,9 @@ class _FullScreenViewState extends State<FullScreenView> {
             width: double.infinity,
             alignment: Alignment.center,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
-                CircularProgressIndicator(value: downloadProgress.progress),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+                Center(child: CircularProgressIndicator(color: PRIMARY_COLOR)),
+            errorWidget: (context, url, error) =>
+                Center(child: Icon(Icons.error)),
           ),
         ),
       ),

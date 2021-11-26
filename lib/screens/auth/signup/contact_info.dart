@@ -9,17 +9,17 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ContactInfoScreen extends StatefulWidget {
-  ContactInfoScreen({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  ContactInfoScreen({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   @override
   _ContactInfoScreenState createState() =>
-      _ContactInfoScreenState(signUpModel: signUpModel);
+      _ContactInfoScreenState(signupAndUserModel: signupAndUserModel);
 }
 
 class _ContactInfoScreenState extends State<ContactInfoScreen> {
-  _ContactInfoScreenState({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  _ContactInfoScreenState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   final TextEditingController _personalPhoneController =
       TextEditingController();
@@ -40,7 +40,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
   Future getAgeFromDOB() async {
     final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(signUpModel.dateOfBirth!));
+        int.parse(signupAndUserModel.dateOfBirth!));
     final currentDate = DateTime.now();
     final Duration duration = currentDate.difference(dateOfBirth);
     final int diff = (duration.inDays / 365).floor();
@@ -140,28 +140,29 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  signUpModel.personalPhnNo =
-                      countryCode!.code! + _personalPhoneController.text;
+                  signupAndUserModel.countryCode = countryCode!.code!;
+                  signupAndUserModel.personalPhnNo =
+                      _personalPhoneController.text;
 
-                  signUpModel.parentEmail =
+                  signupAndUserModel.parentEmail =
                       showParentFields ? _parentEmailController.text : '';
-                  signUpModel.relationshipWithParent =
+                  signupAndUserModel.relationshipWithParent =
                       showParentFields ? _relationController.text : '';
 
                   if (_formKey.currentState!.validate()) {
-                    if (signUpModel.volunteerType == 1) {
+                    if (signupAndUserModel.volunteerType == 1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                SchoolAndGradeScreen(signUpModel: signUpModel)),
+                            builder: (context) => SchoolAndGradeScreen(
+                                signupAndUserModel: signupAndUserModel)),
                       );
                     }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => TargetAndAreaOfInterest(
-                              signUpModel: signUpModel)),
+                              signupAndUserModel: signupAndUserModel)),
                     );
                   }
                 },

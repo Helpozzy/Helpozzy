@@ -7,8 +7,8 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class SetPasswordScreen extends StatelessWidget {
-  SetPasswordScreen({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  SetPasswordScreen({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   static final _formKey = GlobalKey<FormState>();
   final TextEditingController _passController = TextEditingController();
@@ -93,7 +93,8 @@ class SetPasswordScreen extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
                     _signUpBloc
-                        .registerUser(signUpModel, _confirmPassController.text)
+                        .registerUser(
+                            signupAndUserModel, _confirmPassController.text)
                         .then((response) {
                       CircularLoader().hide(context);
                       if (response)

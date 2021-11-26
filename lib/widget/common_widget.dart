@@ -383,19 +383,19 @@ InputDecoration inputRoundedDecoration(
     contentPadding: EdgeInsets.only(left: 30, right: isDropDown ? 15 : 30),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: Colors.white, width: 1),
+      borderSide: BorderSide(color: WHITE, width: 1),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: Colors.white, width: 1),
+      borderSide: BorderSide(color: RED_COLOR, width: 1),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: Colors.white, width: 1),
+      borderSide: BorderSide(color: WHITE, width: 1),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: Colors.white, width: 1),
+      borderSide: BorderSide(color: WHITE, width: 1),
     ),
   );
 }
@@ -407,12 +407,15 @@ InputDecoration inputSimpleDecoration(
     hintStyle: TextStyle(color: DARK_GRAY),
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    contentPadding: EdgeInsets.only(top: 15),
+    contentPadding: EdgeInsets.only(top: 15, bottom: 8),
     fillColor: Colors.transparent,
-    focusedErrorBorder: UnderlineInputBorder(),
-    errorBorder: UnderlineInputBorder(),
-    enabledBorder: UnderlineInputBorder(),
-    focusedBorder: UnderlineInputBorder(),
+    focusedErrorBorder:
+        UnderlineInputBorder(borderSide: BorderSide(color: DARK_GRAY)),
+    errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: RED_COLOR)),
+    enabledBorder:
+        UnderlineInputBorder(borderSide: BorderSide(color: DARK_GRAY)),
+    focusedBorder:
+        UnderlineInputBorder(borderSide: BorderSide(color: DARK_GRAY)),
   );
 }
 

@@ -13,11 +13,11 @@ class SignUpBloc {
   Stream<bool> get signUpDetailsStream => signUpController.stream;
 
   Future<bool> registerUser(
-      SignUpAndUserModel signUpModel, String password) async {
-    final User? result = await auth.signUp(signUpModel.email!, password);
+      SignUpAndUserModel signupAndUserModel, String password) async {
+    final User? result = await auth.signUp(signupAndUserModel.email!, password);
 
-    final bool response =
-        await repo.postSignUpDetailsRepo(result!.uid, signUpModel.toJson());
+    final bool response = await repo.postSignUpDetailsRepo(
+        result!.uid, signupAndUserModel.toJson());
 
     return response;
   }

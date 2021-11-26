@@ -83,13 +83,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(100),
                                     color: PRIMARY_COLOR.withOpacity(0.8),
                                   ),
-                                  child: CommonUserPlaceholder(size: width / 5),
+                                  child: user!.profileUrl!.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: CachedNetworkImage(
+                                            imageUrl: user.profileUrl!,
+                                            fit: BoxFit.cover,
+                                            height: width / 5,
+                                            width: width / 5,
+                                            alignment: Alignment.center,
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
+                                                Center(
+                                              child: CircularProgressIndicator(
+                                                  color: PRIMARY_COLOR),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) => Center(
+                                                    child: Icon(Icons.error)),
+                                          ),
+                                        )
+                                      : CommonUserPlaceholder(size: width / 5),
                                 ),
                               ),
                             ),
                             Center(
                               child: Text(
-                                user!.name!,
+                                user.name!,
                                 style: _theme.textTheme.headline6!
                                     .copyWith(fontWeight: FontWeight.w600),
                               ),

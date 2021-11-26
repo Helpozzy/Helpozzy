@@ -8,16 +8,16 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  SignUpScreen({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
   @override
   _SignUpScreenState createState() =>
-      _SignUpScreenState(signUpModel: signUpModel);
+      _SignUpScreenState(signupAndUserModel: signupAndUserModel);
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  _SignUpScreenState({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  _SignUpScreenState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
   late double width;
   late double height;
   late ThemeData _theme;
@@ -89,12 +89,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: LIGHT_BLACK,
                   text: _item.type,
                   onPressed: () {
-                    signUpModel.volunteerType = index;
+                    signupAndUserModel.volunteerType = index;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            PersonalInfoScreen(signUpModel: signUpModel),
+                        builder: (context) => PersonalInfoScreen(
+                            signupAndUserModel: signupAndUserModel),
                       ),
                     );
                   },

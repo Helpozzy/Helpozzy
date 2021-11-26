@@ -9,23 +9,25 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class SchoolAndGradeScreen extends StatefulWidget {
-  SchoolAndGradeScreen({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  SchoolAndGradeScreen({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   @override
   _SchoolAndGradeScreenState createState() =>
-      _SchoolAndGradeScreenState(signUpModel: signUpModel);
+      _SchoolAndGradeScreenState(signupAndUserModel: signupAndUserModel);
 }
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
-  _SchoolAndGradeScreenState({required this.signUpModel});
-  final SignUpAndUserModel signUpModel;
+  _SchoolAndGradeScreenState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
 
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
   static final _formKey = GlobalKey<FormState>();
   final SchoolsInfoBloc _schoolsInfoBloc = SchoolsInfoBloc();
   late ThemeData _theme;
+  late double height;
+  late double width;
 
   @override
   void initState() {
@@ -37,8 +39,8 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
@@ -48,29 +50,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           children: [
             CommonWidget(context).showBackButton(),
             TopInfoLabel(label: SCHOOL_NAME),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-              child: CommonRoundedTextfield(
-                textAlignCenter: false,
-                controller: _schoolController,
-                readOnly: true,
-                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-                hintText: SELECT_SCHOOL_HINT,
-                validator: (val) {
-                  if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
-                    return 'Please select school';
-                  }
-                  return null;
-                },
-                onTap: () async {
-                  final SchoolDetailsModel school =
-                      await SearchSchool().modalBottomSheetMenu(context);
-                  setState(() {
-                    _schoolController.text = school.schoolName;
-                  });
-                },
-              ),
-            ),
+            schoolField(),
             TopInfoLabel(label: GRADE_LEVEL),
             Container(
               margin: EdgeInsets.symmetric(horizontal: width * 0.10),
@@ -84,14 +64,14 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 text: CONTINUE_BUTTON,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  signUpModel.schoolName = _schoolController.text;
-                  signUpModel.gradeLevel = _gradeLevelController.text;
+                  signupAndUserModel.schoolName = _schoolController.text;
+                  signupAndUserModel.gradeLevel = _gradeLevelController.text;
                   if (_formKey.currentState!.validate()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            TargetAndAreaOfInterest(signUpModel: signUpModel),
+                        builder: (context) => TargetAndAreaOfInterest(
+                            signupAndUserModel: signupAndUserModel),
                       ),
                     );
                   }
@@ -100,6 +80,32 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget schoolField() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: CommonRoundedTextfield(
+        textAlignCenter: false,
+        controller: _schoolController,
+        readOnly: true,
+        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+        hintText: SELECT_SCHOOL_HINT,
+        validator: (val) {
+          if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
+            return 'Please select school';
+          }
+          return null;
+        },
+        onTap: () async {
+          final SchoolDetailsModel school =
+              await SearchSchool().modalBottomSheetMenu(context);
+          setState(() {
+            _schoolController.text = school.schoolName;
+          });
+        },
       ),
     );
   }

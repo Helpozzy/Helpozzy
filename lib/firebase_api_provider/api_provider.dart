@@ -96,6 +96,15 @@ class ApiProvider {
     return true;
   }
 
+  Future<bool> editProfileAPIProvider(Map<String, dynamic> json) async {
+    final DocumentReference documentRef =
+        firestore.collection('users').doc(prefsObject.getString('uID'));
+    await documentRef.update(json).catchError((onError) {
+      print(onError.toString());
+    });
+    return true;
+  }
+
   Future<bool> postCategoriesAPIProvider(List list) async {
     final DocumentReference documentRef =
         firestore.collection('projects_categories').doc('categories');

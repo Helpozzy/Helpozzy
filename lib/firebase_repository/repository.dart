@@ -31,6 +31,9 @@ class Repository {
   Future<bool> postSignUpDetailsRepo(String uId, Map<String, dynamic> json) =>
       apiProvider.postSignUpAPIProvider(uId, json);
 
+  Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
+      apiProvider.editProfileAPIProvider(json);
+
   Future<bool> postCategoriesRepo(List categories) =>
       apiProvider.postCategoriesAPIProvider(categories);
 
