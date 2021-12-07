@@ -13,7 +13,7 @@ import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/search_school.dart';
+import 'package:helpozzy/screens/auth/signup/search_bottomsheets/common_search_bottomsheet.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -57,7 +57,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _relationController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
-  late List<String>? states = [];
+  late List<CityModel>? states = [];
   late List<CityModel>? cities = [];
   late CountryCode? countryCode;
   late SignUpAndUserModel? userModel;
@@ -215,7 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   left: width * 0.05,
                   right: width * 0.05,
                 ),
-                child: labelWithTopPadding('Profile Image'),
+                child: labelWithTopPadding(PROFILE_IMAGE_LABEL),
               ),
               Center(child: userProfilePic()),
               SizedBox(height: width * 0.04),
@@ -265,7 +265,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget personalDetails() {
     return Column(
       children: [
-        labelWithTopPadding('Personal Details'),
+        labelWithTopPadding(PERSONAL_DETAILS_LABEL),
         Row(
           children: [
             Expanded(
@@ -307,21 +307,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return null;
           },
         ),
-        labelWithTopPadding('Email'),
+        labelWithTopPadding(EMAIL_LABEL),
         CommonSimpleTextfield(
           readOnly: true,
           controller: _emailController,
           hintText: ENTER_EMAIL_HINT,
           validator: (val) => null,
         ),
-        labelWithTopPadding('Date of Birth'),
+        labelWithTopPadding(DATE_OF_BIRTH_LABEL),
         CommonSimpleTextfield(
           readOnly: true,
           controller: _dateOfBirthController,
           hintText: SELECT_DATE_OF_BIRTH_HINT,
           validator: (val) => null,
         ),
-        labelWithTopPadding('Gender'),
+        labelWithTopPadding(GENDER_LABEL),
         genderDropDown(),
       ],
     );
@@ -330,7 +330,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget livingInfo() {
     return Column(
       children: [
-        labelWithTopPadding('Living Info'),
+        labelWithTopPadding(LIVING_INFO_LABEL),
+        SizedBox(height: 10),
+        TextfieldLabelSmall(label: ADDRESS_LABEL),
         CommonSimpleTextfield(
           controller: _addressController,
           hintText: ADDRESS_HINT,
@@ -348,6 +350,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           ),
         ),
+        TextfieldLabelSmall(label: ZIPCODE_LABEL),
         CommonSimpleTextfield(
           controller: _zipCodeController,
           hintText: ENTER_ZIP_CODE,
@@ -360,7 +363,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget contactInfo() {
     return Column(
       children: [
-        labelWithTopPadding('Contact Info'),
+        labelWithTopPadding(CONTACT_INFO_LABEL),
+        SizedBox(height: 10),
+        TextfieldLabelSmall(label: PERSONAL_PHN_LABEL),
         CommonSimpleTextfield(
           controller: _personalPhoneController,
           prefixIcon: countryCodePicker(),
@@ -377,6 +382,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
           },
         ),
+        TextfieldLabelSmall(label: PARENT_GUARDIAN_EMAIL_LABEL),
         Padding(
           padding: const EdgeInsets.only(bottom: 15.0),
           child: CommonSimpleTextfield(
@@ -393,6 +399,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             },
           ),
         ),
+        TextfieldLabelSmall(label: RELATION_LABEL),
         selectRelationshipDropdown(),
       ],
     );
@@ -566,78 +573,89 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }).toList());
   }
 
-  Widget selectStateDropDown(List<String> states) {
-    return DropdownButtonFormField<String>(
-      hint: Text(
-        _stateController.text.isNotEmpty
-            ? _stateController.text
-            : states.isEmpty
-                ? 'Loading..'
-                : SELECT_STATE_HINT,
-      ),
-      icon: Icon(Icons.expand_more_outlined),
-      decoration: inputSimpleDecoration(getHint: SELECT_STATE_HINT),
-      isExpanded: true,
-      onChanged: (String? newValue) async {
-        setState(() => _stateController.text = newValue!);
-        cities!.clear();
-        listenCities(newValue!);
-      },
-      validator: (val) {
-        if (_stateController.text.isNotEmpty &&
-            _stateController.text == SELECT_STATE_HINT) {
-          return 'Please select state';
-        }
-        return null;
-      },
-      items: states.map<DropdownMenuItem<String>>((String? value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value!,
-            textAlign: TextAlign.center,
-            style: _theme.textTheme.bodyText2,
+  Widget selectStateDropDown(List<CityModel> states) {
+    return Column(
+      children: [
+        TextfieldLabelSmall(label: STATE_LABEL),
+        DropdownButtonFormField<CityModel>(
+          hint: Text(
+            _stateController.text.isNotEmpty
+                ? _stateController.text
+                : states.isEmpty
+                    ? 'Loading..'
+                    : SELECT_STATE_HINT,
           ),
-        );
-      }).toList(),
+          icon: Icon(Icons.expand_more_outlined),
+          decoration: inputSimpleDecoration(getHint: SELECT_STATE_HINT),
+          isExpanded: true,
+          onChanged: (CityModel? newValue) async {
+            setState(() => _stateController.text = newValue!.stateName!);
+            cities!.clear();
+            listenCities(newValue!.stateName!);
+          },
+          validator: (val) {
+            if (_stateController.text.isNotEmpty &&
+                _stateController.text == SELECT_STATE_HINT) {
+              return 'Please select state';
+            }
+            return null;
+          },
+          items: states.map<DropdownMenuItem<CityModel>>((CityModel? value) {
+            return DropdownMenuItem<CityModel>(
+              value: value,
+              child: Text(
+                value!.stateName!,
+                textAlign: TextAlign.center,
+                style: _theme.textTheme.bodyText2,
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
   Widget selectCitiesDropDown(List<CityModel> cities) {
     return cities.isNotEmpty
-        ? DropdownButtonFormField<CityModel>(
-            hint: Text(_stateController.text.isEmpty
-                ? _cityController.text.isNotEmpty
-                    ? _cityController.text
-                    : SELECT_CITY_HINT
-                : cities.isEmpty
-                    ? 'Loading..'
-                    : SELECT_CITY_HINT),
-            icon: Icon(Icons.expand_more_outlined),
-            decoration: inputSimpleDecoration(getHint: SELECT_CITY_HINT),
-            isExpanded: true,
-            onChanged: (CityModel? newValue) {
-              setState(() {
-                _cityController.text = newValue!.city!;
-              });
-            },
-            validator: (val) {
-              if (_cityController.text.isNotEmpty &&
-                  _cityController.text == SELECT_CITY_HINT) {
-                return 'Please select city';
-              }
-              return null;
-            },
-            items: cities.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-              return DropdownMenuItem<CityModel>(
-                value: value,
-                child: Text(
-                  value!.city!,
-                  textAlign: TextAlign.center,
-                  style: _theme.textTheme.bodyText2,
-                ),
-              );
-            }).toList())
+        ? Column(
+            children: [
+              TextfieldLabelSmall(label: CITY_LABEL),
+              DropdownButtonFormField<CityModel>(
+                  hint: Text(_stateController.text.isEmpty
+                      ? _cityController.text.isNotEmpty
+                          ? _cityController.text
+                          : SELECT_CITY_HINT
+                      : cities.isEmpty
+                          ? 'Loading..'
+                          : SELECT_CITY_HINT),
+                  icon: Icon(Icons.expand_more_outlined),
+                  decoration: inputSimpleDecoration(getHint: SELECT_CITY_HINT),
+                  isExpanded: true,
+                  onChanged: (CityModel? newValue) {
+                    setState(() {
+                      _cityController.text = newValue!.city!;
+                    });
+                  },
+                  validator: (val) {
+                    if (_cityController.text.isNotEmpty &&
+                        _cityController.text == SELECT_CITY_HINT) {
+                      return 'Please select city';
+                    }
+                    return null;
+                  },
+                  items: cities
+                      .map<DropdownMenuItem<CityModel>>((CityModel? value) {
+                    return DropdownMenuItem<CityModel>(
+                      value: value,
+                      child: Text(
+                        value!.city!,
+                        textAlign: TextAlign.center,
+                        style: _theme.textTheme.bodyText2,
+                      ),
+                    );
+                  }).toList()),
+            ],
+          )
         : SizedBox();
   }
 
@@ -677,12 +695,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget schoolInfo() {
     return Column(
       children: [
-        labelWithTopPadding('School Info'),
-        Row(
+        labelWithTopPadding(SCHOOL_INFO_LABEL),
+        Column(
           children: [
-            Expanded(flex: 2, child: schoolField()),
+            schoolField(),
             SizedBox(width: 10),
-            Expanded(flex: 1, child: selectGradeDropDown()),
+            selectGradeDropDown(),
           ],
         ),
       ],
@@ -690,56 +708,73 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget schoolField() {
-    return CommonSimpleTextfield(
-      controller: _schoolController,
-      readOnly: true,
-      suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-      hintText: SELECT_SCHOOL_HINT,
-      validator: (val) {
-        if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
-          return 'Please select school';
-        }
-        return null;
-      },
-      onTap: () async {
-        final SchoolDetailsModel school =
-            await SearchSchool().modalBottomSheetMenu(context);
-        setState(() {
-          _schoolController.text = school.schoolName;
-        });
-      },
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
+        CommonSimpleTextfield(
+          controller: _schoolController,
+          readOnly: true,
+          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+          hintText: SELECT_SCHOOL_HINT,
+          validator: (val) {
+            if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
+              return 'Please select school';
+            }
+            return null;
+          },
+          onTap: () async {
+            final SchoolDetailsModel school =
+                await SearchBottomSheet().modalBottomSheetMenu(
+              context: context,
+              searchBottomSheetType: SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
+              state: '',
+              city: '',
+            );
+            setState(() {
+              _schoolController.text = school.schoolName;
+            });
+          },
+        ),
+      ],
     );
   }
 
   Widget selectGradeDropDown() {
-    return DropdownButtonFormField<String>(
-        hint: Text(_gradeLevelController.text.isNotEmpty
-            ? _gradeLevelController.text
-            : GRADE_HINT),
-        icon: Icon(Icons.expand_more_outlined),
-        decoration: inputSimpleDecoration(getHint: GRADE_HINT),
-        isExpanded: true,
-        onChanged: (String? newValue) {
-          setState(() {
-            _gradeLevelController.text = newValue!;
-          });
-        },
-        validator: (val) {
-          if (_gradeLevelController.text.isNotEmpty &&
-              _gradeLevelController.text == GRADE_HINT) {
-            return 'Please select grade level';
-          }
-          return null;
-        },
-        items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              textAlign: TextAlign.center,
-              style: _theme.textTheme.bodyText2,
-            ),
-          );
-        }).toList());
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        TextfieldLabelSmall(label: GRADE_LEVEL_LABEL),
+        DropdownButtonFormField<String>(
+            hint: Text(_gradeLevelController.text.isNotEmpty
+                ? _gradeLevelController.text
+                : GRADE_HINT),
+            icon: Icon(Icons.expand_more_outlined),
+            decoration: inputSimpleDecoration(getHint: GRADE_HINT),
+            isExpanded: true,
+            onChanged: (String? newValue) {
+              setState(() {
+                _gradeLevelController.text = newValue!;
+              });
+            },
+            validator: (val) {
+              if (_gradeLevelController.text.isNotEmpty &&
+                  _gradeLevelController.text == GRADE_HINT) {
+                return 'Please select grade level';
+              }
+              return null;
+            },
+            items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: _theme.textTheme.bodyText2,
+                ),
+              );
+            }).toList()),
+      ],
+    );
   }
 }

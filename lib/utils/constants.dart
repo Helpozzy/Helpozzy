@@ -60,6 +60,12 @@ enum ProjectTabType {
   PROJECT_CONTRIBUTION_TRACKER_TAB,
 }
 
+enum SearchBottomSheetType {
+  STATE_BOTTOMSHEET,
+  CITY_BOTTOMSHEET,
+  SCHOOL_BOTTOMSHEET,
+}
+
 //Font family
 const QUICKSAND = 'Quicksand';
 
@@ -128,7 +134,10 @@ const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
 //Hint Msg
-const SEARCH_HINT = 'Search for projects..';
+const SEARCH_PROJECT_HINT = 'Search for projects..';
+const SEARCH_SCHOOL_HINT = 'Search for school..';
+const SEARCH_STATE_NAME_HINT = 'Search for state..';
+const SEARCH_CITY_NAME_HINT = 'Search for city..';
 const REVIEW_HINT = 'Tap to review..';
 const SELECT_STATE_HINT = 'Select State';
 const SELECT_CITY_HINT = 'Select City';
@@ -140,6 +149,7 @@ const ENTER_FIRST_NAME_HINT = 'Enter first name';
 const ENTER_LAST_NAME_HINT = 'Enter last name';
 const ENTER_ABOUT_HINT = 'Enter about';
 const ENTER_EMAIL_HINT = 'Enter email';
+const ENTER_OTP_HINT = 'Enter OTP';
 const ENTER_PARENTS_EMAIL_HINT = 'Enter parents email';
 const SELECT_DATE_OF_BIRTH_HINT = 'MM/DD/YYYY';
 const SELCT_GENDER_HINT = 'Select gender';
@@ -201,8 +211,15 @@ const PASSWORD = 'Password';
 const CONFIRM_PASSWORD = 'Confirm Password';
 const CHANGE_COUNTRY_CODE = 'Change country code';
 const RELATIONSHIP_STATUS = 'Relationship';
+const SCHOOL_STATE = 'State of School';
+const SCHOOL_CITY = 'City of School';
 const SCHOOL_NAME = 'School Name';
 const GRADE_LEVEL = 'Grade Level';
+
+//School search type
+const STATE_BOTTOMSHEET = 'State Bottomsheet';
+const CITY_BOTTOMSHEET = 'City Bottomsheet';
+const SCHOOL_BOTTOMSHEET = 'School Bottomsheet';
 
 //Alert Text
 const ALERT = 'Alert';
@@ -217,6 +234,7 @@ const SEND_MAIL_BUTTON = 'Send Email';
 const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
 const LOGOUT_BUTTON = 'Logout';
 const DELETE_BUTTON = 'Delete';
+const SENT_OTP_BUTTON = 'Sent OTP';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -230,7 +248,7 @@ const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
 
 //User project tabbar title
-const TASK_TAB = 'Task';
+const TASKS_TAB = 'Tasks';
 const MEMBERS_TAB = 'Members';
 const MESSENGER_TAB = 'Messenger';
 const ATTACHMENTS_TAB = 'Attachments';
@@ -251,11 +269,30 @@ const ALL_USERS_TITLE = 'Select Person';
 const ENTER_MESSAGE_HINT = 'Enter Message';
 
 //Profile
-const EDIT_PROFILE_TEXT = 'Edit Profile';
 const CONTACT_TEXT = 'Contact';
 const ABOUT_TEXT = 'About';
 const PROJECT_PREFRENCES_TEXT = 'Project Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
+
+//Edit profile
+const EDIT_PROFILE_TEXT = 'Edit Profile';
+const PROFILE_IMAGE_LABEL = 'Profile Image';
+const PERSONAL_DETAILS_LABEL = 'Personal Details';
+const EMAIL_LABEL = 'Email';
+const DATE_OF_BIRTH_LABEL = 'Date of Birth';
+const GENDER_LABEL = 'Gender';
+const LIVING_INFO_LABEL = 'Living Info';
+const ADDRESS_LABEL = 'Address';
+const ZIPCODE_LABEL = 'Zip Code';
+const CONTACT_INFO_LABEL = 'Contact Info';
+const PERSONAL_PHN_LABEL = 'Personal Phone Number';
+const PARENT_GUARDIAN_EMAIL_LABEL = 'Parent/Gaurdian Email';
+const RELATION_LABEL = 'Relation with Parent/Guardian';
+const STATE_LABEL = 'State';
+const CITY_LABEL = 'City';
+const SCHOOL_INFO_LABEL = 'School Info';
+const SCHOOL_NAME_LABEL = 'School Name';
+const GRADE_LEVEL_LABEL = 'Grade Level';
 
 //Drop Down items
 const SELECT_VOLUNTEER = 'Volunteer';

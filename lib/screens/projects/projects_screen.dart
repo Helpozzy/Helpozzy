@@ -50,15 +50,16 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
               child: CommonRoundedTextfield(
-                  textAlignCenter: true,
-                  prefixIcon: Icon(
-                    CupertinoIcons.search,
-                    color: DARK_GRAY,
-                  ),
-                  fillColor: GRAY,
-                  controller: _searchController,
-                  hintText: SEARCH_HINT,
-                  validator: (val) {}),
+                textAlignCenter: true,
+                prefixIcon: Icon(
+                  CupertinoIcons.search,
+                  color: DARK_GRAY,
+                ),
+                fillColor: GRAY,
+                controller: _searchController,
+                hintText: SEARCH_PROJECT_HINT,
+                validator: (val) {},
+              ),
             ),
             _tabBar(),
           ],

@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/members_tab.dart';
+import 'package:helpozzy/screens/projects/user_project_tabs/tasks_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
@@ -29,7 +31,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
+    _tabController = TabController(length: 5, initialIndex: 0, vsync: this);
     super.initState();
   }
 
@@ -47,6 +49,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
             SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  scheduleTiming(),
+                  contactPersontile(),
                   _tabBar(),
                   Container(width: width, height: 1, color: GRAY),
                   _getPage(),
@@ -96,12 +100,12 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               left: 16,
               bottom: 45,
               child: Container(
-                width: width,
+                width: width - 30,
                 child: Text(
                   project.projectName,
                   maxLines: 2,
                   style: _theme.textTheme.headline6!
-                      .copyWith(color: WHITE, fontSize: 34),
+                      .copyWith(color: WHITE, fontSize: 28),
                 ),
               ),
             ),
@@ -228,10 +232,11 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 3.0,
         tabs: [
-          _tab(text: TASK_TAB),
+          _tab(text: TASKS_TAB),
           _tab(text: MEMBERS_TAB),
           _tab(text: MESSENGER_TAB),
           _tab(text: ATTACHMENTS_TAB),
+          _tab(text: DETAILS_TAB),
         ],
       );
 
@@ -254,10 +259,11 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
       child: TabBarView(
         controller: _tabController,
         children: [
-          Text('Coming Soon!'),
+          TaskTab(project: project),
           ProjectMembersTab(),
           Text('Coming Soon!'),
-          Text('Coming Soon!')
+          Text('Coming Soon!'),
+          ProjectOtherDetailsScreen(project: project),
         ],
       ),
     );

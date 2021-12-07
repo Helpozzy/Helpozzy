@@ -30,7 +30,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   late ThemeData _theme;
   late double width;
   late double height;
-  late List<String>? states = [];
+  late List<CityModel>? states = [];
   late List<CityModel>? cities = [];
 
   @override
@@ -99,20 +99,19 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                     ),
                     TopInfoLabel(label: WHICH_STATE),
                     selectStateDropDown(states!),
-                    // TopInfoLabel(label: WHICH_CITY),
                     cities!.isNotEmpty ? SizedBox(height: 10) : SizedBox(),
                     selectCitiesDropDown(cities!),
                     TextFieldWithLabel(
                       controller: _zipCodeController,
                       keyboardType: TextInputType.number,
                       label: ENTER_ZIP_CODE,
-                      maxLength: 6,
+                      maxLength: 5,
                       hintText: ENTER_ZIP_CODE_HINT,
                       validator: (code) {
                         if (code!.isEmpty) {
                           return 'Please enter ZIP code';
-                        } else if (code.isNotEmpty && code.length != 6) {
-                          return 'Please enter 6 digit code';
+                        } else if (code.isNotEmpty && code.length != 5) {
+                          return 'Please enter 5 digit code';
                         } else {
                           return null;
                         }
@@ -155,19 +154,20 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     );
   }
 
-  Widget selectStateDropDown(List<String> states) {
+  Widget selectStateDropDown(List<CityModel> states) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<CityModel>(
           hint: Text(states.isEmpty ? 'Loading..' : SELECT_STATE_HINT),
           icon: Icon(Icons.expand_more_outlined),
           decoration: inputRoundedDecoration(
               getHint: SELECT_STATE_HINT, isDropDown: true),
           isExpanded: true,
-          onChanged: (String? newValue) async {
-            setState(() => _stateController.text = newValue!);
+          onTap: () => FocusScope.of(context).unfocus(),
+          onChanged: (CityModel? newValue) async {
+            setState(() => _stateController.text = newValue!.stateName!);
             cities!.clear();
-            listenCities(newValue!);
+            listenCities(newValue!.stateName!);
           },
           validator: (val) {
             if (_stateController.text.isNotEmpty &&
@@ -176,11 +176,11 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             }
             return null;
           },
-          items: states.map<DropdownMenuItem<String>>((String? value) {
-            return DropdownMenuItem<String>(
+          items: states.map<DropdownMenuItem<CityModel>>((CityModel? value) {
+            return DropdownMenuItem<CityModel>(
               value: value,
               child: Text(
-                value!,
+                value!.stateName!,
                 textAlign: TextAlign.center,
                 style: _theme.textTheme.bodyText2,
               ),
@@ -205,6 +205,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 isDropDown: true,
               ),
               isExpanded: true,
+              onTap: () => FocusScope.of(context).unfocus(),
               onChanged: (CityModel? newValue) {
                 setState(() {
                   _cityController.text = newValue!.city!;

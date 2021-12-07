@@ -576,6 +576,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     CircularLoader().show(context);
     final TaskModel taskDetails = TaskModel(
       projectId: '',
+      ownerId: prefsObject.getString('uID')!,
       id: fromEdit ? task!.id : '',
       taskName: _taskNameController.text,
       description: _taskDesController.text,

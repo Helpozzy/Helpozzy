@@ -2,13 +2,17 @@ import 'package:helpozzy/models/cities_model.dart';
 
 class StatesHelper {
   StatesHelper.fromCities(Cities citiesList) {
-    citiesList.cities.forEach((city) {
-      if (!states.contains(city.stateName)) {
-        states.add(city.stateName!);
+    for (int i = 0; i < citiesList.cities.length; i++) {
+      if (!states.any(
+          (element) => element.stateName == citiesList.cities[i].stateName)) {
+        states.add(CityModel(
+          stateId: citiesList.cities[i].stateId,
+          stateName: citiesList.cities[i].stateName,
+        ));
       }
-    });
-    states.sort((a, b) => a.compareTo(b));
+    }
+    states.sort((a, b) =>
+        a.stateName!.toLowerCase().compareTo(b.stateName!.toLowerCase()));
   }
-
-  List<String> states = <String>[];
+  List<CityModel> states = <CityModel>[];
 }

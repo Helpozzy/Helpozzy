@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/school_info_bloc.dart';
+import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class SearchSchool {
-  Future<SchoolDetailsModel> modalBottomSheetMenu(BuildContext context) async {
-    SchoolDetailsModel? school = await showModalBottomSheet<SchoolDetailsModel>(
+class SearchBottomSheet {
+  Future<dynamic> modalBottomSheetMenu(
+      {required BuildContext context,
+      required SearchBottomSheetType searchBottomSheetType,
+      required String state,
+      required String city}) async {
+    dynamic response = await showModalBottomSheet<dynamic>(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -16,19 +21,39 @@ class SearchSchool {
       ),
       isScrollControlled: true,
       builder: (builder) {
-        return SearchSchoolWidget();
+        return SearchBottomSheetWidget(
+          searchBottomSheetType: searchBottomSheetType,
+          state: state,
+          city: city,
+        );
       },
     );
-    return school!;
+    return response;
   }
 }
 
-class SearchSchoolWidget extends StatefulWidget {
+class SearchBottomSheetWidget extends StatefulWidget {
+  SearchBottomSheetWidget(
+      {required this.searchBottomSheetType,
+      required this.state,
+      required this.city});
+  final SearchBottomSheetType searchBottomSheetType;
+  final String state;
+  final String city;
+
   @override
-  _SearchSchoolWidgetState createState() => _SearchSchoolWidgetState();
+  _SearchBottomSheetWidgetState createState() => _SearchBottomSheetWidgetState(
+      searchBottomSheetType: searchBottomSheetType, state: state, city: city);
 }
 
-class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
+class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
+  _SearchBottomSheetWidgetState(
+      {required this.searchBottomSheetType,
+      required this.state,
+      required this.city});
+  final SearchBottomSheetType searchBottomSheetType;
+  final String state;
+  final String city;
   final TextEditingController _searchController = TextEditingController();
   SchoolsInfoBloc _schoolsInfoBloc = SchoolsInfoBloc();
   late ThemeData _theme;
@@ -36,7 +61,23 @@ class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
 
   @override
   void initState() {
-    _schoolsInfoBloc.searchSchool('');
+    if (searchBottomSheetType == SearchBottomSheetType.STATE_BOTTOMSHEET) {
+      _schoolsInfoBloc.searchItem(
+          searchBottomSheetType: searchBottomSheetType, searchText: '');
+    } else if (searchBottomSheetType ==
+        SearchBottomSheetType.CITY_BOTTOMSHEET) {
+      _schoolsInfoBloc.searchItem(
+          searchBottomSheetType: searchBottomSheetType,
+          state: state,
+          searchText: '');
+    } else {
+      _schoolsInfoBloc.searchItem(
+        searchBottomSheetType: searchBottomSheetType,
+        state: state,
+        city: city,
+        searchText: '',
+      );
+    }
     super.initState();
   }
 
@@ -71,10 +112,16 @@ class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
     return TextField(
       controller: _searchController,
       onChanged: (val) {
-        _schoolsInfoBloc.searchSchool(val);
+        _schoolsInfoBloc.searchItem(
+            searchBottomSheetType: searchBottomSheetType, searchText: '');
       },
       decoration: InputDecoration(
-        hintText: SEARCH_HINT,
+        hintText: searchBottomSheetType ==
+                SearchBottomSheetType.STATE_BOTTOMSHEET
+            ? SEARCH_STATE_NAME_HINT
+            : searchBottomSheetType == SearchBottomSheetType.CITY_BOTTOMSHEET
+                ? SEARCH_CITY_NAME_HINT
+                : SEARCH_SCHOOL_HINT,
         hintStyle: _theme.textTheme.headline6!.copyWith(
           color: DARK_GRAY,
           fontSize: 18,
@@ -98,7 +145,25 @@ class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
           child: IconButton(
             onPressed: () {
               _searchController.clear();
-              _schoolsInfoBloc.searchSchool('');
+              if (searchBottomSheetType ==
+                  SearchBottomSheetType.STATE_BOTTOMSHEET) {
+                _schoolsInfoBloc.searchItem(
+                    searchBottomSheetType: searchBottomSheetType,
+                    searchText: '');
+              } else if (searchBottomSheetType ==
+                  SearchBottomSheetType.CITY_BOTTOMSHEET) {
+                _schoolsInfoBloc.searchItem(
+                    searchBottomSheetType: searchBottomSheetType,
+                    state: state,
+                    searchText: '');
+              } else {
+                _schoolsInfoBloc.searchItem(
+                  searchBottomSheetType: searchBottomSheetType,
+                  state: state,
+                  city: city,
+                  searchText: '',
+                );
+              }
             },
             icon: Icon(
               Icons.close_rounded,
@@ -130,7 +195,11 @@ class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
 
   Widget searchList() {
     return StreamBuilder<dynamic>(
-      stream: _schoolsInfoBloc.searchedSchoolsStream,
+      stream: searchBottomSheetType == SearchBottomSheetType.STATE_BOTTOMSHEET
+          ? _schoolsInfoBloc.statesStream
+          : searchBottomSheetType == SearchBottomSheetType.CITY_BOTTOMSHEET
+              ? _schoolsInfoBloc.citiesStream
+              : _schoolsInfoBloc.searchedSchoolsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader(minheight: 12));
@@ -140,17 +209,64 @@ class _SearchSchoolWidgetState extends State<SearchSchoolWidget> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  final SchoolDetailsModel school = snapshot.data[index];
-                  return schoolItem(school);
+                  if (searchBottomSheetType ==
+                      SearchBottomSheetType.STATE_BOTTOMSHEET) {
+                    final CityModel state = snapshot.data[index];
+                    return textItem(false, state);
+                  } else if (searchBottomSheetType ==
+                      SearchBottomSheetType.CITY_BOTTOMSHEET) {
+                    final String city = snapshot.data[index];
+                    return textItem(true, city);
+                  } else {
+                    final SchoolDetailsModel school = snapshot.data[index];
+                    return schoolItem(school);
+                  }
                 },
               )
             : Center(
                 child: Text(
-                  'Search School..',
+                  searchBottomSheetType ==
+                          SearchBottomSheetType.STATE_BOTTOMSHEET
+                      ? 'Search State..'
+                      : searchBottomSheetType ==
+                              SearchBottomSheetType.CITY_BOTTOMSHEET
+                          ? 'Search City..'
+                          : 'Search School..',
                   style: _theme.textTheme.headline6,
                 ),
               );
       },
+    );
+  }
+
+  Widget textItem(bool isText, dynamic data) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pop(data);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding:
+                EdgeInsets.symmetric(horizontal: width * 0.04, vertical: 14),
+            child: Text(
+              isText ? data : data.stateName,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 16,
+                color: DARK_GRAY_FONT_COLOR,
+              ),
+            ),
+          ),
+          Divider(
+            color: DIVIDER_COLOR,
+            height: 0.3,
+            endIndent: 5,
+            indent: 5,
+          ),
+        ],
+      ),
     );
   }
 

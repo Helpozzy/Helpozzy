@@ -4,7 +4,7 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'project_details.dart';
+import '../../../projects/user_project_tabs/other_details_tab.dart';
 import 'user_project_sign_up.dart';
 
 class CategorisedProjectsScreen extends StatefulWidget {
@@ -66,7 +66,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectDetailsScreen(project: project),
+                            ProjectOtherDetailsScreen(project: project),
                       ),
                     ),
                     onPressedSignUpButton: () => Navigator.push(

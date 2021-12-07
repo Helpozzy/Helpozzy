@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/screens/user/explore/user_project/project_details.dart';
+import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class SearchProject {
@@ -71,7 +71,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         _userProjectsBloc.searchProjects(val);
       },
       decoration: InputDecoration(
-        hintText: SEARCH_HINT,
+        hintText: SEARCH_PROJECT_HINT,
         hintStyle: _theme.textTheme.headline6!.copyWith(
           color: DARK_GRAY,
           fontSize: 18,
@@ -187,7 +187,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectDetailsScreen(project: project),
+                            ProjectOtherDetailsScreen(project: project),
                       ),
                     ),
                     child: Column(

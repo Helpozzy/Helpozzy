@@ -1,41 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/tasks/task_widget.dart';
-import 'package:helpozzy/screens/user/explore/user_project/project_task/task_details.dart';
-import 'package:helpozzy/screens/user/explore/user_project/user_project_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
-class ProjectDetailsScreen extends StatefulWidget {
-  ProjectDetailsScreen({required this.project});
+class ProjectOtherDetailsScreen extends StatefulWidget {
+  ProjectOtherDetailsScreen({required this.project});
   final ProjectModel project;
   @override
-  _ProjectDetailsScreenState createState() =>
-      _ProjectDetailsScreenState(project: project);
+  _ProjectOtherDetailsScreenState createState() =>
+      _ProjectOtherDetailsScreenState(project: project);
 }
 
-class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
-  _ProjectDetailsScreenState({required this.project});
+class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
+  _ProjectOtherDetailsScreenState({required this.project});
   final ProjectModel project;
   late double height;
   late double width;
   late ThemeData _theme;
   TextEditingController _reviewController = TextEditingController();
-  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   UserInfoBloc _userInfoBloc = UserInfoBloc();
 
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString('uID')!);
-    _projectTaskBloc.getProjectTasks(project.projectId);
+
     super.initState();
   }
 
@@ -44,143 +38,17 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    projectOrganizer(),
-                    aboutOraganizer(),
-                    overviewDetails(),
-                    projectDetails(),
-                    scheduleTimeAndLocation(),
-                    infoSection(),
-                    tasksOfProject(),
-                    reviewSection(),
-                    reviewCard(),
-                    reviewList(),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              height: 43,
-              width: width,
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: width / 4),
-              child: CommonButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProjectUserSignUpScreen(),
-                    ),
-                  );
-                },
-                text: SIGN_UP,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget projectOrganizer() {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: height / 3,
-          width: double.infinity,
-          child: Image.asset(
-            project.imageUrl,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-          height: height / 3,
-          width: double.infinity,
-          color: BLUR_GRAY,
-        ),
-        Positioned(
-          left: 10,
-          top: 8,
-          child: IconButton(
-            iconSize: 18,
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              CupertinoIcons.arrowshape_turn_up_left,
-              color: WHITE,
-            ),
-          ),
-        ),
-        Positioned(
-          left: 16,
-          bottom: 33,
-          child: Text(
-            project.organization,
-            maxLines: 2,
-            style: _theme.textTheme.headline6!
-                .copyWith(color: WHITE, fontSize: 22),
-          ),
-        ),
-        Positioned(
-          bottom: 15,
-          left: 18,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              RatingBar.builder(
-                initialRating: project.rating,
-                ignoreGestures: true,
-                minRating: 1,
-                itemSize: 18,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                unratedColor: WHITE,
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: AMBER_COLOR,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
-              Text(
-                '(${project.reviewCount} Reviews)',
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  color: WHITE,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          right: 17,
-          bottom: 11,
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                project.isLiked = !project.isLiked;
-              });
-            },
-            child: Icon(
-              project.isLiked
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border_rounded,
-              color: project.isLiked ? Colors.red : DARK_GRAY,
-              size: 19,
-            ),
-          ),
-        )
+        aboutOraganizer(),
+        overviewDetails(),
+        projectDetails(),
+        scheduleTimeAndLocation(),
+        infoSection(),
+        // reviewSection(),
+        // reviewCard(),
+        // reviewList(),
       ],
     );
   }
@@ -203,14 +71,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            project.projectName,
-            style: _theme.textTheme.headline6!.copyWith(
-              color: BLUE_GRAY,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.only(bottom: 2.0),
             child: Text(
@@ -323,72 +184,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            SCHEDULES,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            'Thu , Dec 31 2020 10:30 AM - 4:30 PM',
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            '(Schedules are allocated on slots basics)',
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: DARK_GRAY,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            DIRECTION,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Row(
-            children: [
-              Icon(
-                Icons.directions_car_filled_outlined,
-                size: 15,
-                color: DARK_GRAY,
-              ),
-              SizedBox(width: 5),
-              Text(
-                '12 mins drive',
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: DARK_GRAY,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Spacer(),
-              Text(
-                '3.2 mil',
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: DARK_GRAY,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '7600 Amador Valley Blvd, Dublin, CA 94568',
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: DARK_GRAY,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 10),
           CommonDivider(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -467,54 +262,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             icon,
             size: 16,
             color: DARK_GRAY,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget tasksOfProject() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            TASKS,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          StreamBuilder<Tasks>(
-            stream: _projectTaskBloc.getProjectTasksStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: width * 0.04),
-                  child: LinearLoader(minheight: 12),
-                );
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(vertical: 5),
-                itemCount: snapshot.data!.tasks.length,
-                itemBuilder: (context, index) {
-                  final TaskModel task = snapshot.data!.tasks[index];
-                  return TaskCard(
-                    task: task,
-                    optionEnable: false,
-                    onTapItem: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TaskDetails(task: task)),
-                    ),
-                  );
-                },
-              );
-            },
           ),
         ],
       ),
@@ -650,6 +397,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     final snapShot = Reviews(list: reviewData);
     return ListView.builder(
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 12.0),
       itemCount: snapShot.reviews.length,
       itemBuilder: (context, index) {

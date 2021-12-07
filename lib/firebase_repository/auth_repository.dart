@@ -102,4 +102,14 @@ class AuthRepository {
           success: false, error: "Auth failed. Please retry.");
     }
   }
+
+  Future<bool> verifyEmail() async {
+    User? user = firebaseAuth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

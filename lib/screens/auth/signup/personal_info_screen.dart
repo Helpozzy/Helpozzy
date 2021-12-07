@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -24,14 +25,19 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
-  DateTime _selectedBirthDate = DateTime.now();
+  final SignUpBloc _signUpBloc = SignUpBloc();
+  late DateTime _selectedBirthDate = DateTime.now();
+
   late double width;
+  late ThemeData _theme;
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+    _theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
@@ -89,23 +95,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       ),
                     ),
                     TopInfoLabel(label: ENTER_YOUR_EMAIL),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _emailController,
-                        hintText: ENTER_EMAIL_HINT,
-                        validator: (email) {
-                          if (email!.isEmpty) {
-                            return 'Please enter email';
-                          } else if (email.isNotEmpty &&
-                              !EmailValidator.validate(email)) {
-                            return 'Please enter valid email';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
+                    emailSection(),
                     TopInfoLabel(label: SELECT_BIRTH_DATE),
                     dateOfBirthField(),
                     TopInfoLabel(label: SELECT_GENDER),
@@ -120,31 +110,137 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 horizontal: width * 0.15,
               ),
               width: double.infinity,
-              child: CommonButton(
-                text: CONTINUE_BUTTON,
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  signupAndUserModel.name = _firstNameController.text +
-                      ' ' +
-                      _lastNameController.text;
-                  signupAndUserModel.email = _emailController.text;
-                  signupAndUserModel.dateOfBirth =
-                      _selectedBirthDate.millisecondsSinceEpoch.toString();
-                  signupAndUserModel.gender = _genderController.text;
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LivingInfoScreen(
-                            signupAndUserModel: signupAndUserModel),
-                      ),
+              child: StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.emailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return CommonButton(
+                      text: CONTINUE_BUTTON,
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        signupAndUserModel.name = _firstNameController.text +
+                            ' ' +
+                            _lastNameController.text;
+                        signupAndUserModel.email = _emailController.text;
+                        signupAndUserModel.dateOfBirth = _selectedBirthDate
+                            .millisecondsSinceEpoch
+                            .toString();
+                        signupAndUserModel.gender = _genderController.text;
+                        if (_formKey.currentState!.validate()) {
+                          if (snapshot.data!) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LivingInfoScreen(
+                                    signupAndUserModel: signupAndUserModel),
+                              ),
+                            );
+                          } else {
+                            showAlertDialog(context,
+                                title: ALERT,
+                                content:
+                                    'Email is not verified, Please verify your email.');
+                          }
+                        }
+                      },
                     );
-                  }
-                },
-              ),
+                  }),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget emailSection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          StreamBuilder<bool>(
+              initialData: false,
+              stream: _signUpBloc.emailVerifiedStream,
+              builder: (context, snapshotEmailVerified) {
+                return CommonRoundedTextfield(
+                  controller: _emailController,
+                  suffixIcon: Icon(
+                      snapshotEmailVerified.data!
+                          ? CupertinoIcons.checkmark_seal_fill
+                          : CupertinoIcons.checkmark_seal,
+                      size: 18,
+                      color: snapshotEmailVerified.data!
+                          ? ACCENT_GREEN
+                          : DARK_GRAY),
+                  hintText: ENTER_EMAIL_HINT,
+                  validator: (email) {
+                    if (email!.isEmpty) {
+                      return 'Please enter email';
+                    } else if (email.isNotEmpty &&
+                        !EmailValidator.validate(email)) {
+                      return 'Please enter valid email';
+                    } else {
+                      return null;
+                    }
+                  },
+                );
+              }),
+          InkWell(
+            onTap: () async {
+              FocusScope.of(context).unfocus();
+              if (_emailController.text.trim().isNotEmpty) {
+                final bool response =
+                    await _signUpBloc.sentOtp(_emailController.text);
+                if (response) {
+                  showSnakeBar(context,
+                      msg: 'OTP sent to ${_emailController.text}!');
+                } else {
+                  showSnakeBar(context, msg: 'Failed!');
+                }
+              } else {
+                showAlertDialog(context,
+                    title: 'Alert', content: 'Email is empty');
+              }
+            },
+            child: Container(
+              alignment: Alignment.centerRight,
+              padding:
+                  EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+              child: Text(
+                SENT_OTP_BUTTON,
+                style:
+                    _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
+              ),
+            ),
+          ),
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _signUpBloc.otpSentStream,
+            builder: (context, snapshotSentOtp) {
+              return snapshotSentOtp.data!
+                  ? CommonRoundedTextfield(
+                      hintText: ENTER_OTP_HINT,
+                      controller: _otpController,
+                      maxLength: 6,
+                      onChanged: (val) {
+                        if (val.isNotEmpty && val.length == 6)
+                          _signUpBloc.verifyEmail(
+                              _emailController.text, _otpController.text);
+                      },
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please enter OTP';
+                        } else if (val.isNotEmpty && val.length != 6) {
+                          return 'Please enter 6 digit OTP';
+                        } else {
+                          return null;
+                        }
+                      },
+                    )
+                  : SizedBox();
+            },
+          ),
+        ],
       ),
     );
   }

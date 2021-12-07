@@ -828,11 +828,17 @@ double timeConvertToDouble(TimeOfDay myTime) =>
 showAlertDialog(BuildContext context,
     {required String title, required String content}) {
   Widget okButton = TextButton(
-    child: Text(OK_BUTTON),
-    onPressed: () {},
+    child: Text(
+      OK_BUTTON,
+      style:
+          Theme.of(context).textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
+    ),
+    onPressed: () => Navigator.of(context).pop(),
   );
 
   AlertDialog alert = AlertDialog(
+    backgroundColor: GRAY,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     title: Text(
       title,
       style: Theme.of(context)

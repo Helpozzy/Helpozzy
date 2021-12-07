@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
@@ -26,10 +27,13 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
   static final _formKey = GlobalKey<FormState>();
   final TextEditingController _parentEmailController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+  final SignUpBloc _signUpBloc = SignUpBloc();
   CountryCode? countryCode;
+  late ThemeData _theme;
   late double width;
   late double height;
-  late bool showParentFields = false;
+  late bool showParentFields = true;
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -90,25 +95,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                     showParentFields
                         ? TopInfoLabel(label: ENTER_PARENT_EMAIL)
                         : SizedBox(),
-                    showParentFields
-                        ? Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: width * 0.1),
-                            child: CommonRoundedTextfield(
-                              controller: _parentEmailController,
-                              hintText: ENTER_EMAIL_HINT,
-                              validator: (parentEmail) {
-                                if (parentEmail!.isEmpty) {
-                                  return 'Please enter parents/guardian email';
-                                } else if (parentEmail.isNotEmpty &&
-                                    !EmailValidator.validate(parentEmail)) {
-                                  return 'Please enter valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                          )
-                        : SizedBox(),
+                    showParentFields ? emailSection() : SizedBox(),
                     showParentFields ? SizedBox(height: 10) : SizedBox(),
                     showParentFields
                         ? Padding(
@@ -136,35 +123,49 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                   right: width * 0.15,
                   bottom: height * 0.03),
               width: double.infinity,
-              child: CommonButton(
-                text: CONTINUE_BUTTON,
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  signupAndUserModel.countryCode = countryCode!.code!;
-                  signupAndUserModel.personalPhnNo =
-                      _personalPhoneController.text;
+              child: StreamBuilder<bool>(
+                initialData: false,
+                stream: _signUpBloc.parentEmailVerifiedStream,
+                builder: (context, snapshot) {
+                  return CommonButton(
+                    text: CONTINUE_BUTTON,
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      signupAndUserModel.countryCode = countryCode!.code!;
+                      signupAndUserModel.personalPhnNo =
+                          _personalPhoneController.text;
 
-                  signupAndUserModel.parentEmail =
-                      showParentFields ? _parentEmailController.text : '';
-                  signupAndUserModel.relationshipWithParent =
-                      showParentFields ? _relationController.text : '';
+                      signupAndUserModel.parentEmail =
+                          showParentFields ? _parentEmailController.text : '';
+                      signupAndUserModel.relationshipWithParent =
+                          showParentFields ? _relationController.text : '';
 
-                  if (_formKey.currentState!.validate()) {
-                    if (signupAndUserModel.volunteerType == 1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SchoolAndGradeScreen(
-                                signupAndUserModel: signupAndUserModel)),
-                      );
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TargetAndAreaOfInterest(
-                              signupAndUserModel: signupAndUserModel)),
-                    );
-                  }
+                      if (_formKey.currentState!.validate()) {
+                        if (snapshot.data!) {
+                          if (signupAndUserModel.volunteerType == 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SchoolAndGradeScreen(
+                                      signupAndUserModel: signupAndUserModel)),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TargetAndAreaOfInterest(
+                                      signupAndUserModel: signupAndUserModel)),
+                            );
+                          }
+                        } else {
+                          showAlertDialog(context,
+                              title: ALERT,
+                              content:
+                                  'Parent/Guardian email is not verified, Please verify your email.');
+                        }
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -176,9 +177,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
   Widget countryCodePicker() {
     return CountryCodePicker(
-      onChanged: (CountryCode code) {
-        countryCode = code;
-      },
+      onChanged: (CountryCode code) => countryCode = code,
       boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       initialSelection: 'US',
       backgroundColor: WHITE,
@@ -198,39 +197,118 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
     );
   }
 
-  Widget selectRelationshipDropdown() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      ),
-      child: DropdownButtonFormField<String>(
-          icon: Icon(Icons.expand_more_outlined),
-          isExpanded: true,
-          decoration: inputRoundedDecoration(
-              getHint: SELECT_RELATION_HINT, isDropDown: true),
-          onChanged: (String? newValue) {
-            setState(() {
-              _relationController.text = newValue!;
-            });
-          },
-          validator: (val) {
-            if (_relationController.text.isEmpty) {
-              return 'Select relationship status';
-            }
-            return null;
-          },
-          items: relationShips.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Center(
-                child: Text(
-                  value,
-                  textAlign: TextAlign.center,
-                ),
+  Widget emailSection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          StreamBuilder<bool>(
+              initialData: false,
+              stream: _signUpBloc.parentEmailVerifiedStream,
+              builder: (context, snapshotEmailVerified) {
+                return CommonRoundedTextfield(
+                  controller: _parentEmailController,
+                  hintText: ENTER_EMAIL_HINT,
+                  suffixIcon: Icon(
+                      snapshotEmailVerified.data!
+                          ? CupertinoIcons.checkmark_seal_fill
+                          : CupertinoIcons.checkmark_seal,
+                      size: 18,
+                      color: snapshotEmailVerified.data!
+                          ? ACCENT_GREEN
+                          : DARK_GRAY),
+                  validator: (parentEmail) {
+                    if (parentEmail!.isEmpty) {
+                      return 'Please enter parents/guardian email';
+                    } else if (parentEmail.isNotEmpty &&
+                        !EmailValidator.validate(parentEmail)) {
+                      return 'Please enter valid email';
+                    }
+                    return null;
+                  },
+                );
+              }),
+          InkWell(
+            onTap: () async {
+              FocusScope.of(context).unfocus();
+              if (_parentEmailController.text.trim().isNotEmpty)
+                _signUpBloc.sentOtpOfParentEmail(_parentEmailController.text);
+              else
+                showAlertDialog(context,
+                    title: 'Alert', content: 'Parent/Guardian email is empty');
+            },
+            child: Container(
+              alignment: Alignment.centerRight,
+              padding:
+                  EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+              child: Text(
+                SENT_OTP_BUTTON,
+                style:
+                    _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
               ),
-            );
-          }).toList()),
+            ),
+          ),
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _signUpBloc.parentOtpSentStream,
+            builder: (context, snapshotSentOtp) {
+              return snapshotSentOtp.data!
+                  ? CommonRoundedTextfield(
+                      hintText: ENTER_OTP_HINT,
+                      controller: _otpController,
+                      maxLength: 6,
+                      onChanged: (val) {
+                        if (val.isNotEmpty && val.length == 6)
+                          _signUpBloc.verifyParentEmail(
+                              _parentEmailController.text, _otpController.text);
+                      },
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please enter OTP';
+                        } else if (val.isNotEmpty && val.length != 6) {
+                          return 'Please enter 6 digit OTP';
+                        } else {
+                          return null;
+                        }
+                      },
+                    )
+                  : SizedBox();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget selectRelationshipDropdown() {
+    return DropdownButtonFormField<String>(
+      icon: Icon(Icons.expand_more_outlined),
+      isExpanded: true,
+      decoration: inputRoundedDecoration(
+          getHint: SELECT_RELATION_HINT, isDropDown: true),
+      onChanged: (String? newValue) {
+        setState(() {
+          _relationController.text = newValue!;
+        });
+      },
+      validator: (val) {
+        if (_relationController.text.isEmpty) {
+          return 'Select relationship status';
+        }
+        return null;
+      },
+      items: relationShips.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Center(
+            child: Text(
+              value,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

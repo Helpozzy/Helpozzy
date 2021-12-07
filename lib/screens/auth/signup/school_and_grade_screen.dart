@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/school_info_bloc.dart';
+import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/search_bottomsheets/common_search_bottomsheet.dart';
 import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
-import 'package:helpozzy/screens/auth/signup/search_school.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -20,21 +20,15 @@ class SchoolAndGradeScreen extends StatefulWidget {
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   _SchoolAndGradeScreenState({required this.signupAndUserModel});
   final SignUpAndUserModel signupAndUserModel;
-
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
   static final _formKey = GlobalKey<FormState>();
-  final SchoolsInfoBloc _schoolsInfoBloc = SchoolsInfoBloc();
   late ThemeData _theme;
+  late String stateId = '';
   late double height;
   late double width;
-
-  @override
-  void initState() {
-    // _schoolsInfoBloc.postSchools(schools);
-    _schoolsInfoBloc.getSchools();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +43,10 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         child: Column(
           children: [
             CommonWidget(context).showBackButton(),
+            TopInfoLabel(label: SCHOOL_STATE),
+            selectStateDropdown(),
+            TopInfoLabel(label: SCHOOL_CITY),
+            selectCityDropdown(),
             TopInfoLabel(label: SCHOOL_NAME),
             schoolField(),
             TopInfoLabel(label: GRADE_LEVEL),
@@ -84,6 +82,68 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
     );
   }
 
+  Widget selectStateDropdown() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: CommonRoundedTextfield(
+        textAlignCenter: false,
+        controller: _stateController,
+        readOnly: true,
+        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+        hintText: SELECT_STATE_HINT,
+        validator: (val) {
+          if (val!.isNotEmpty && val == SELECT_STATE_HINT) {
+            return 'Please select state';
+          }
+          return null;
+        },
+        onTap: () async {
+          final CityModel model =
+              await SearchBottomSheet().modalBottomSheetMenu(
+            context: context,
+            searchBottomSheetType: SearchBottomSheetType.STATE_BOTTOMSHEET,
+            state: '',
+            city: '',
+          );
+          setState(() {
+            _stateController.text = model.stateName!;
+            stateId = model.stateId!;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget selectCityDropdown() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: CommonRoundedTextfield(
+        textAlignCenter: false,
+        controller: _cityController,
+        readOnly: true,
+        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+        hintText: SELECT_CITY_HINT,
+        validator: (val) {
+          if (val!.isNotEmpty && val == SELECT_CITY_HINT) {
+            return 'Please select city';
+          }
+          return null;
+        },
+        onTap: () async {
+          final String city = await SearchBottomSheet().modalBottomSheetMenu(
+            context: context,
+            searchBottomSheetType: SearchBottomSheetType.CITY_BOTTOMSHEET,
+            state: stateId,
+            city: '',
+          );
+          setState(() {
+            _cityController.text = city;
+          });
+        },
+      ),
+    );
+  }
+
   Widget schoolField() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
@@ -100,8 +160,13 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           return null;
         },
         onTap: () async {
-          final SchoolDetailsModel school =
-              await SearchSchool().modalBottomSheetMenu(context);
+          final SchoolDetailsModel school = await SearchBottomSheet()
+              .modalBottomSheetMenu(
+                  context: context,
+                  searchBottomSheetType:
+                      SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
+                  state: stateId,
+                  city: _cityController.text);
           setState(() {
             _schoolController.text = school.schoolName;
           });

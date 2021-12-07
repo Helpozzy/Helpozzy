@@ -59,9 +59,21 @@ class ApiProvider {
     return true;
   }
 
-  Future<Schools> getSchoolsAPIProvider() async {
+  Future<Schools> getSchoolsAPIProvider({String? state, String? city}) async {
+    firestore.settings.copyWith(persistenceEnabled: false, sslEnabled: true);
+
     final QuerySnapshot querySnapshot =
-        await firestore.collection('schools_info').get();
+        (state != null && state.isNotEmpty) && (city != null && city.isNotEmpty)
+            ? await firestore
+                .collection('schools_info')
+                .where('state', isEqualTo: state)
+                .get()
+            : (state != null && state.isNotEmpty)
+                ? await firestore
+                    .collection('schools_info')
+                    .where('state', isEqualTo: state)
+                    .get()
+                : await firestore.collection('schools_info').get();
 
     List<QueryDocumentSnapshot<Object?>> schoolList = querySnapshot.docs;
     List<Map<String, dynamic>> schools = [];
@@ -69,7 +81,6 @@ class ApiProvider {
       final project = element.data() as Map<String, dynamic>;
       schools.add(project);
     });
-
     return Schools.fromJson(list: schools);
   }
 
