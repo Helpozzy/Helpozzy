@@ -49,13 +49,13 @@ class SignUpBloc {
 
   Future sentOtpOfParentEmail(String email) async {
     final bool result = await _emailVerificationProvider.sendOtp(email);
-    otpSentController.sink.add(result);
+    parentsOtpSentController.sink.add(result);
   }
 
   Future verifyParentEmail(String email, String otp) async {
     final bool result =
         await _emailVerificationProvider.validateOTP(email: email, otp: otp);
-    emailVerifiedController.sink.add(result);
+    parentsEmailVerifiedController.sink.add(result);
   }
 
   void dispose() {

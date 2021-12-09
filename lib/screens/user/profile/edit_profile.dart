@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
@@ -54,6 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _personalPhoneController =
       TextEditingController();
   final TextEditingController _parentEmailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
@@ -184,16 +184,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: 'Edit Profile',
         elevation: 0,
         actions: [
-          IconButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await postModifiedData();
-              }
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _editProfileBloc.parentEmailVerifiedStream,
+            builder: (context, snapshot) {
+              return IconButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    if (snapshot.data!)
+                      await postModifiedData();
+                    else
+                      showAlertDialog(context,
+                          title: ALERT,
+                          content:
+                              'Parent/Guardian email is not verified, Please verify your email.');
+                  }
+                },
+                icon: Icon(
+                  CupertinoIcons.checkmark_alt,
+                  color: DARK_PINK_COLOR,
+                ),
+              );
             },
-            icon: Icon(
-              CupertinoIcons.checkmark_alt,
-              color: DARK_PINK_COLOR,
-            ),
           ),
         ],
       ),
@@ -310,6 +322,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         labelWithTopPadding(EMAIL_LABEL),
         CommonSimpleTextfield(
           readOnly: true,
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Icon(
+              CupertinoIcons.checkmark_seal_fill,
+              color: ACCENT_GREEN,
+              size: 18,
+            ),
+          ),
           controller: _emailController,
           hintText: ENTER_EMAIL_HINT,
           validator: (val) => null,
@@ -383,24 +403,89 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
         TextfieldLabelSmall(label: PARENT_GUARDIAN_EMAIL_LABEL),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          child: CommonSimpleTextfield(
-            controller: _parentEmailController,
-            hintText: ENTER_PARENTS_EMAIL_HINT,
-            validator: (parentEmail) {
-              if (parentEmail!.isEmpty) {
-                return 'Please enter parents/guardian email';
-              } else if (parentEmail.isNotEmpty &&
-                  !EmailValidator.validate(parentEmail)) {
-                return 'Please enter valid email';
-              }
-              return null;
-            },
-          ),
-        ),
+        parentEmailSection(),
         TextfieldLabelSmall(label: RELATION_LABEL),
         selectRelationshipDropdown(),
+      ],
+    );
+  }
+
+  Widget parentEmailSection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        StreamBuilder<bool>(
+            initialData: false,
+            stream: _editProfileBloc.parentEmailVerifiedStream,
+            builder: (context, snapshotEmailVerified) {
+              return CommonSimpleTextfield(
+                controller: _parentEmailController,
+                hintText: ENTER_EMAIL_HINT,
+                suffixIcon: Icon(
+                    snapshotEmailVerified.data!
+                        ? CupertinoIcons.checkmark_seal_fill
+                        : CupertinoIcons.checkmark_seal,
+                    size: 18,
+                    color:
+                        snapshotEmailVerified.data! ? ACCENT_GREEN : DARK_GRAY),
+                validator: (parentEmail) {
+                  if (parentEmail!.isEmpty) {
+                    return 'Please enter parents/guardian email';
+                  } else if (parentEmail.isNotEmpty &&
+                      !EmailValidator.validate(parentEmail)) {
+                    return 'Please enter valid email';
+                  }
+                  return null;
+                },
+              );
+            }),
+        InkWell(
+          onTap: () async {
+            FocusScope.of(context).unfocus();
+            if (_parentEmailController.text.trim().isNotEmpty)
+              _editProfileBloc
+                  .sentOtpOfParentEmail(_parentEmailController.text);
+            else
+              showAlertDialog(context,
+                  title: 'Alert', content: 'Parent/Guardian email is empty');
+          },
+          child: Container(
+            alignment: Alignment.centerRight,
+            padding:
+                EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+            child: Text(
+              SENT_OTP_BUTTON,
+              style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
+            ),
+          ),
+        ),
+        StreamBuilder<bool>(
+          initialData: false,
+          stream: _editProfileBloc.parentOtpSentStream,
+          builder: (context, snapshotSentOtp) {
+            return snapshotSentOtp.data!
+                ? CommonSimpleTextfield(
+                    hintText: ENTER_OTP_HINT,
+                    controller: _otpController,
+                    maxLength: 6,
+                    onChanged: (val) {
+                      if (val.isNotEmpty && val.length == 6)
+                        _editProfileBloc.verifyParentEmail(
+                            _parentEmailController.text, _otpController.text);
+                    },
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'Please enter OTP';
+                      } else if (val.isNotEmpty && val.length != 6) {
+                        return 'Please enter 6 digit OTP';
+                      } else {
+                        return null;
+                      }
+                    },
+                  )
+                : SizedBox();
+          },
+        ),
       ],
     );
   }

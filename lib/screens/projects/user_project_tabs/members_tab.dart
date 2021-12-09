@@ -29,7 +29,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return body();
+    return Scaffold(body: body());
   }
 
   Widget body() {
@@ -41,7 +41,10 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
         children: [
           Container(
             height: 34,
-            margin: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 5),
+            margin: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+              vertical: 5.0,
+            ),
             child: CommonRoundedTextfield(
               fillColor: GRAY,
               controller: _searchController,

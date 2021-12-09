@@ -46,15 +46,24 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           controller: scrollController,
           slivers: <Widget>[
             projectOrganizer(),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  scheduleTiming(),
-                  contactPersontile(),
-                  _tabBar(),
-                  Container(width: width, height: 1, color: GRAY),
-                  _getPage(),
-                ],
+            SliverPersistentHeader(
+              pinned: false,
+              delegate: SliverAppBarDelegate(
+                minHeight: height / 8.5,
+                maxHeight: height / 8.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    scheduleTiming(),
+                    contactPersontile(),
+                  ],
+                ),
+              ),
+            ),
+            SliverFillRemaining(
+              child: Scaffold(
+                appBar: _tabBar(),
+                body: _getPage(),
               ),
             ),
           ],
@@ -254,18 +263,15 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
       );
 
   Widget _getPage() {
-    return Container(
-      height: height,
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          TaskTab(project: project),
-          ProjectMembersTab(),
-          Text('Coming Soon!'),
-          Text('Coming Soon!'),
-          ProjectOtherDetailsScreen(project: project),
-        ],
-      ),
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        TaskTab(project: project),
+        ProjectMembersTab(),
+        Text('Coming Soon!'),
+        Text('Coming Soon!'),
+        ProjectOtherDetailsScreen(project: project),
+      ],
     );
   }
 }

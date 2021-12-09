@@ -27,14 +27,14 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData _themeData = Theme.of(context);
     return Card(
-      elevation: 2,
+      elevation: 3,
       color: !optionEnable
           ? WHITE
           : selected
               ? GRAY
               : WHITE,
       margin: EdgeInsets.symmetric(vertical: 5.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(

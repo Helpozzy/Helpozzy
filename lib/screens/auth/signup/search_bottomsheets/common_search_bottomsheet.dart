@@ -62,21 +62,12 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
   @override
   void initState() {
     if (searchBottomSheetType == SearchBottomSheetType.STATE_BOTTOMSHEET) {
-      _schoolsInfoBloc.searchItem(
-          searchBottomSheetType: searchBottomSheetType, searchText: '');
+      _schoolsInfoBloc.getStates();
     } else if (searchBottomSheetType ==
         SearchBottomSheetType.CITY_BOTTOMSHEET) {
-      _schoolsInfoBloc.searchItem(
-          searchBottomSheetType: searchBottomSheetType,
-          state: state,
-          searchText: '');
+      _schoolsInfoBloc.getCities(state: state);
     } else {
-      _schoolsInfoBloc.searchItem(
-        searchBottomSheetType: searchBottomSheetType,
-        state: state,
-        city: city,
-        searchText: '',
-      );
+      _schoolsInfoBloc.getSchools(state: state, city: city);
     }
     super.initState();
   }
@@ -113,7 +104,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
       controller: _searchController,
       onChanged: (val) {
         _schoolsInfoBloc.searchItem(
-            searchBottomSheetType: searchBottomSheetType, searchText: '');
+            searchBottomSheetType: searchBottomSheetType, searchText: val);
       },
       decoration: InputDecoration(
         hintText: searchBottomSheetType ==
@@ -147,22 +138,12 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               _searchController.clear();
               if (searchBottomSheetType ==
                   SearchBottomSheetType.STATE_BOTTOMSHEET) {
-                _schoolsInfoBloc.searchItem(
-                    searchBottomSheetType: searchBottomSheetType,
-                    searchText: '');
+                _schoolsInfoBloc.getStates();
               } else if (searchBottomSheetType ==
                   SearchBottomSheetType.CITY_BOTTOMSHEET) {
-                _schoolsInfoBloc.searchItem(
-                    searchBottomSheetType: searchBottomSheetType,
-                    state: state,
-                    searchText: '');
+                _schoolsInfoBloc.getCities(state: state);
               } else {
-                _schoolsInfoBloc.searchItem(
-                  searchBottomSheetType: searchBottomSheetType,
-                  state: state,
-                  city: city,
-                  searchText: '',
-                );
+                _schoolsInfoBloc.getSchools(state: state, city: city);
               }
             },
             icon: Icon(

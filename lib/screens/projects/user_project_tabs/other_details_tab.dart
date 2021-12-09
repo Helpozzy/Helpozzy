@@ -38,18 +38,22 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
     _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        aboutOraganizer(),
-        overviewDetails(),
-        projectDetails(),
-        scheduleTimeAndLocation(),
-        infoSection(),
-        // reviewSection(),
-        // reviewCard(),
-        // reviewList(),
-      ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            aboutOraganizer(),
+            overviewDetails(),
+            projectDetails(),
+            scheduleTimeAndLocation(),
+            infoSection(),
+            reviewSection(),
+            reviewCard(),
+            reviewList(),
+          ],
+        ),
+      ),
     );
   }
 

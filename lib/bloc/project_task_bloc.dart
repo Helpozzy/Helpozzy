@@ -6,15 +6,21 @@ import 'package:rxdart/rxdart.dart';
 class ProjectTaskBloc {
   final repo = Repository();
 
+  final myTaskExpandController = PublishSubject<bool>();
   final projectTasksController = PublishSubject<Tasks>();
   final projectTasksDetailsController = PublishSubject<ProjectTaskHelper>();
   final selectedTasksController = BehaviorSubject<List<TaskModel>>();
 
+  Stream<bool> get getMyTaskExpandedStream => myTaskExpandController.stream;
   Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
   Stream<ProjectTaskHelper> get getProjectTaskDetailsStream =>
       projectTasksDetailsController.stream;
   Stream<List<TaskModel>> get getSelectedTaskStream =>
       selectedTasksController.stream;
+
+  Future isExpanded(bool expand) async {
+    myTaskExpandController.sink.add(expand);
+  }
 
   Future<bool> postTasks(TaskModel task) async {
     final bool response = await repo.postTaskRepo(task);
@@ -23,7 +29,6 @@ class ProjectTaskBloc {
 
   Future getProjectTasks(String projectId) async {
     final Tasks response = await repo.getProjectTasksRepo(projectId);
-
     projectTasksController.sink.add(response);
   }
 
@@ -49,6 +54,7 @@ class ProjectTaskBloc {
   }
 
   void dispose() {
+    myTaskExpandController.close();
     selectedTasksController.close();
     projectTasksController.close();
     projectTasksDetailsController.close();

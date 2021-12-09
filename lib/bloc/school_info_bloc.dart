@@ -9,12 +9,10 @@ import 'package:rxdart/rxdart.dart';
 class SchoolsInfoBloc {
   final repo = Repository();
 
-  final schoolsController = BehaviorSubject<Schools>();
-  final statesController = BehaviorSubject<List<CityModel>>();
-  final citiesController = BehaviorSubject<List<String>>();
-  final _searchSchoolController = BehaviorSubject<List<SchoolDetailsModel>>();
+  final statesController = PublishSubject<List<CityModel>>();
+  final citiesController = PublishSubject<List<String>>();
+  final _searchSchoolController = PublishSubject<List<SchoolDetailsModel>>();
 
-  Stream<Schools> get schoolsStream => schoolsController.stream;
   Stream<List<CityModel>> get statesStream => statesController.stream;
   Stream<List<String>> get citiesStream => citiesController.stream;
   Stream<List<SchoolDetailsModel>> get searchedSchoolsStream =>
@@ -25,6 +23,34 @@ class SchoolsInfoBloc {
     return posted;
   }
 
+  List<CityModel> statesFromAPI = [];
+
+  Future getStates() async {
+    final Cities citiesList = await repo.getCitiesByStateRepo();
+    final StatesHelper statesList = StatesHelper.fromCities(citiesList);
+    statesFromAPI = statesList.states;
+    statesController.sink.add(statesFromAPI);
+  }
+
+  List<String> citiesOfStateFromAPI = [];
+
+  Future getCities({String? state}) async {
+    final Schools response = await repo.getSchoolsRepo(state: state);
+    final List<String> cities =
+        await SchoolHelper().schoolCitiesByState(response);
+    citiesOfStateFromAPI = cities;
+    citiesController.sink.add(citiesOfStateFromAPI);
+  }
+
+  List<SchoolDetailsModel> schoolsFromAPI = [];
+
+  Future getSchools({String? state, String? city}) async {
+    final Schools response =
+        await repo.getSchoolsRepo(state: state, city: city);
+    schoolsFromAPI = response.schools;
+    _searchSchoolController.sink.add(schoolsFromAPI);
+  }
+
   List<CityModel> searchedStateList = [];
   List<String> searchedCityList = [];
   List<SchoolDetailsModel> searchedSchoolsList = [];
@@ -32,17 +58,13 @@ class SchoolsInfoBloc {
   Future searchItem({
     required SearchBottomSheetType searchBottomSheetType,
     required String searchText,
-    String? state,
-    String? city,
   }) async {
     if (searchBottomSheetType == SearchBottomSheetType.STATE_BOTTOMSHEET) {
-      final Cities citiesList = await repo.getCitiesByStateRepo();
-      final StatesHelper statesList = StatesHelper.fromCities(citiesList);
       searchedStateList = [];
       if (searchText.isEmpty) {
-        statesController.sink.add(statesList.states);
+        statesController.sink.add(statesFromAPI);
       } else {
-        statesList.states.forEach((state) {
+        statesFromAPI.forEach((state) {
           if (state.stateName!
               .toLowerCase()
               .contains(searchText.toLowerCase())) {
@@ -53,15 +75,11 @@ class SchoolsInfoBloc {
       }
     } else if (searchBottomSheetType ==
         SearchBottomSheetType.CITY_BOTTOMSHEET) {
-      final Schools response =
-          await repo.getSchoolsRepo(state: state, city: city);
-      final List<String> cities =
-          await SchoolHelper().schoolCitiesByState(response);
       searchedCityList = [];
       if (searchText.isEmpty) {
-        citiesController.sink.add(cities);
+        citiesController.sink.add(citiesOfStateFromAPI);
       } else {
-        cities.forEach((city) {
+        citiesOfStateFromAPI.forEach((city) {
           if (city.toLowerCase().contains(searchText.toLowerCase())) {
             searchedCityList.add(city);
           }
@@ -69,14 +87,18 @@ class SchoolsInfoBloc {
         citiesController.sink.add(searchedCityList);
       }
     } else {
-      final Schools response =
-          await repo.getSchoolsRepo(state: state, city: city);
       searchedSchoolsList = [];
       if (searchText.isEmpty) {
-        _searchSchoolController.sink.add(response.schools);
+        _searchSchoolController.sink.add(schoolsFromAPI);
       } else {
-        response.schools.forEach((school) {
-          if (school.zip.toLowerCase().contains(searchText.toLowerCase())) {
+        schoolsFromAPI.forEach((school) {
+          if (school.countyName
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              school.schoolName
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              school.zip.toLowerCase().contains(searchText.toLowerCase())) {
             searchedSchoolsList.add(school);
           }
         });
@@ -86,7 +108,6 @@ class SchoolsInfoBloc {
   }
 
   void dispose() {
-    schoolsController.close();
     statesController.close();
     citiesController.close();
     _searchSchoolController.close();

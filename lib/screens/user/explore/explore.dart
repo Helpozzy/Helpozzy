@@ -214,7 +214,6 @@ class _ExploreScreenState extends State<ExploreScreen>
             .take((user.currentYearTargetHours! / 23).round())
             .toList();
 
-    print(items);
     return Container(
       height: height / 9,
       width: width,

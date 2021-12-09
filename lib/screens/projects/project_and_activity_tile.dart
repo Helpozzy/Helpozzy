@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:helpozzy/bloc/admin/admin_project_task_bloc.dart';
+import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/task_Helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
