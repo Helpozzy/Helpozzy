@@ -7,7 +7,6 @@ import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class ProjectOtherDetailsScreen extends StatefulWidget {
   ProjectOtherDetailsScreen({required this.project});
@@ -63,19 +62,6 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            DateFormat('EEE, dd MMM - yyyy').format(
-              DateTime.fromMillisecondsSinceEpoch(
-                int.parse(project.startDate),
-              ),
-            ),
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 16,
-              color: PRIMARY_COLOR,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.only(bottom: 2.0),
             child: Text(

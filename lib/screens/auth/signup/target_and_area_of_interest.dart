@@ -25,6 +25,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
   late double width;
   late double height;
   late ThemeData _theme;
+  late double trackerVal = 0.0;
   late List<int> selectedAreaOfInterests = [];
   final TextEditingController _targetHoursController = TextEditingController();
 
@@ -64,22 +65,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                       children: [
                         CommonWidget(context).showBackButton(),
                         TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * 0.1),
-                          child: CommonRoundedTextfield(
-                            controller: _targetHoursController,
-                            hintText: ENTER_TARGET_HOURS_HINT,
-                            keyboardType: TextInputType.number,
-                            validator: (phone) {
-                              if (phone!.isEmpty) {
-                                return 'Please enter target hours';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                        ),
+                        targetFields(),
                         TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
                         categoryView(categories),
                       ],
@@ -102,6 +88,59 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget targetFields() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: width * 0.06, right: width * 0.04),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '0',
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '200',
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Slider(
+            min: 0,
+            max: 200,
+            label: trackerVal.round().toString(),
+            value: trackerVal,
+            activeColor: PRIMARY_COLOR,
+            divisions: 10,
+            onChanged: (value) {
+              setState(() => trackerVal = value);
+            },
+          ),
+          trackerVal >= 200.0
+              ? CommonRoundedTextfield(
+                  controller: _targetHoursController,
+                  hintText: ENTER_TARGET_HOURS_HINT,
+                  keyboardType: TextInputType.number,
+                  validator: (phone) {
+                    if (phone!.isEmpty) {
+                      return 'Please enter target hours';
+                    } else {
+                      return null;
+                    }
+                  },
+                )
+              : SizedBox(),
+        ],
       ),
     );
   }
@@ -173,6 +212,9 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
         selectedAreaOfInterests.add(category.id);
       }
     });
+    signupAndUserModel.currentYearTargetHours = trackerVal <= 200
+        ? trackerVal.round()
+        : int.parse(_targetHoursController.text);
     signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
     await Navigator.push(
       context,

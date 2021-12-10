@@ -1,6 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/school_helper.dart';
-import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -9,11 +8,11 @@ import 'package:rxdart/rxdart.dart';
 class SchoolsInfoBloc {
   final repo = Repository();
 
-  final statesController = PublishSubject<List<CityModel>>();
+  final statesController = PublishSubject<List<StateModel>>();
   final citiesController = PublishSubject<List<String>>();
   final _searchSchoolController = PublishSubject<List<SchoolDetailsModel>>();
 
-  Stream<List<CityModel>> get statesStream => statesController.stream;
+  Stream<List<StateModel>> get statesStream => statesController.stream;
   Stream<List<String>> get citiesStream => citiesController.stream;
   Stream<List<SchoolDetailsModel>> get searchedSchoolsStream =>
       _searchSchoolController.stream;
@@ -23,11 +22,10 @@ class SchoolsInfoBloc {
     return posted;
   }
 
-  List<CityModel> statesFromAPI = [];
+  List<StateModel> statesFromAPI = [];
 
   Future getStates() async {
-    final Cities citiesList = await repo.getCitiesByStateRepo();
-    final StatesHelper statesList = StatesHelper.fromCities(citiesList);
+    final States statesList = await repo.getStateRepo();
     statesFromAPI = statesList.states;
     statesController.sink.add(statesFromAPI);
   }
@@ -48,10 +46,12 @@ class SchoolsInfoBloc {
     final Schools response =
         await repo.getSchoolsRepo(state: state, city: city);
     schoolsFromAPI = response.schools;
+    schoolsFromAPI.sort((a, b) =>
+        a.schoolName.toLowerCase().compareTo(b.schoolName.toLowerCase()));
     _searchSchoolController.sink.add(schoolsFromAPI);
   }
 
-  List<CityModel> searchedStateList = [];
+  List<StateModel> searchedStateList = [];
   List<String> searchedCityList = [];
   List<SchoolDetailsModel> searchedSchoolsList = [];
 

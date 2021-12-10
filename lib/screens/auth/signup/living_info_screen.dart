@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
-import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -30,7 +29,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   late ThemeData _theme;
   late double width;
   late double height;
-  late List<CityModel>? states = [];
+  late List<StateModel>? states = [];
   late List<CityModel>? cities = [];
 
   @override
@@ -41,8 +40,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   }
 
   Future listenState() async {
-    final StatesHelper statesHelper = await _cityInfoBloc.getStates();
-    setState(() => states = statesHelper.states);
+    final States statesList = await _cityInfoBloc.getStates();
+    setState(() => states = statesList.states);
   }
 
   Future listenCities(String stateName) async {
@@ -154,17 +153,17 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     );
   }
 
-  Widget selectStateDropDown(List<CityModel> states) {
+  Widget selectStateDropDown(List<StateModel> states) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-      child: DropdownButtonFormField<CityModel>(
+      child: DropdownButtonFormField<StateModel>(
           hint: Text(states.isEmpty ? 'Loading..' : SELECT_STATE_HINT),
           icon: Icon(Icons.expand_more_outlined),
           decoration: inputRoundedDecoration(
               getHint: SELECT_STATE_HINT, isDropDown: true),
           isExpanded: true,
           onTap: () => FocusScope.of(context).unfocus(),
-          onChanged: (CityModel? newValue) async {
+          onChanged: (StateModel? newValue) async {
             setState(() => _stateController.text = newValue!.stateName!);
             cities!.clear();
             listenCities(newValue!.stateName!);
@@ -176,8 +175,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             }
             return null;
           },
-          items: states.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-            return DropdownMenuItem<CityModel>(
+          items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
+            return DropdownMenuItem<StateModel>(
               value: value,
               child: Text(
                 value!.stateName!,

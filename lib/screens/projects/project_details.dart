@@ -241,11 +241,11 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 3.0,
         tabs: [
+          _tab(text: DETAILS_TAB),
           _tab(text: TASKS_TAB),
           _tab(text: MEMBERS_TAB),
           _tab(text: MESSENGER_TAB),
           _tab(text: ATTACHMENTS_TAB),
-          _tab(text: DETAILS_TAB),
         ],
       );
 
@@ -266,11 +266,11 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     return TabBarView(
       controller: _tabController,
       children: [
+        ProjectOtherDetailsScreen(project: project),
         TaskTab(project: project),
         ProjectMembersTab(),
         Text('Coming Soon!'),
         Text('Coming Soon!'),
-        ProjectOtherDetailsScreen(project: project),
       ],
     );
   }

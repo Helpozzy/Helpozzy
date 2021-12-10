@@ -15,7 +15,7 @@ class Repository {
   Future<bool> postCitiesRepo(List cities) =>
       apiProvider.postCitiesAPIProvider(cities);
 
-  Future<Cities> getCitiesByStateRepo() => apiProvider.getCitiesAPIProvider();
+  Future<States> getStateRepo() => apiProvider.getCitiesAPIProvider();
 
   Future<Cities> getCitiesByStateNameRepo(String stateName) =>
       apiProvider.getCitiesByStateNameAPIProvider(stateName);

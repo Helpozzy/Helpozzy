@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
-import 'package:helpozzy/helper/state_city_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -57,7 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _relationController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
-  late List<CityModel>? states = [];
+  late List<StateModel>? states = [];
   late List<CityModel>? cities = [];
   late CountryCode? countryCode;
   late SignUpAndUserModel? userModel;
@@ -96,8 +95,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future listenState() async {
-    final StatesHelper statesHelper = await _cityInfoBloc.getStates();
-    setState(() => states = statesHelper.states);
+    final States statesList = await _cityInfoBloc.getStates();
+    setState(() => states = statesList.states);
   }
 
   Future listenCities(String stateName) async {
@@ -658,11 +657,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }).toList());
   }
 
-  Widget selectStateDropDown(List<CityModel> states) {
+  Widget selectStateDropDown(List<StateModel> states) {
     return Column(
       children: [
         TextfieldLabelSmall(label: STATE_LABEL),
-        DropdownButtonFormField<CityModel>(
+        DropdownButtonFormField<StateModel>(
           hint: Text(
             _stateController.text.isNotEmpty
                 ? _stateController.text
@@ -673,7 +672,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           icon: Icon(Icons.expand_more_outlined),
           decoration: inputSimpleDecoration(getHint: SELECT_STATE_HINT),
           isExpanded: true,
-          onChanged: (CityModel? newValue) async {
+          onChanged: (StateModel? newValue) async {
             setState(() => _stateController.text = newValue!.stateName!);
             cities!.clear();
             listenCities(newValue!.stateName!);
@@ -685,8 +684,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             return null;
           },
-          items: states.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-            return DropdownMenuItem<CityModel>(
+          items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
+            return DropdownMenuItem<StateModel>(
               value: value,
               child: Text(
                 value!.stateName!,

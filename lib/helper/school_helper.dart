@@ -8,7 +8,7 @@ class SchoolHelper {
         states.add(schoolsList.schools[i].state);
       }
     }
-    states.sort((a, b) => a.compareTo(b));
+    states.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
     return states;
   }
 
@@ -19,7 +19,7 @@ class SchoolHelper {
         cities.add(schoolsList.schools[i].city);
       }
     }
-    cities.sort((a, b) => a.compareTo(b));
+    cities.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
     return cities;
   }
 }

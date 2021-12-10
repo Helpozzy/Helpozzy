@@ -20,9 +20,9 @@ class ApiProvider {
     return true;
   }
 
-  Future<Cities> getCitiesAPIProvider() async {
+  Future<States> getCitiesAPIProvider() async {
     final QuerySnapshot querySnapshot =
-        await firestore.collection('cities_info').get();
+        await firestore.collection('states').get();
 
     List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
     List<Map<String, dynamic>> cities = [];
@@ -31,7 +31,7 @@ class ApiProvider {
       cities.add(city);
     });
 
-    return Cities.fromJson(items: cities);
+    return States.fromJson(items: cities);
   }
 
   Future<Cities> getCitiesByStateNameAPIProvider(String stateName) async {

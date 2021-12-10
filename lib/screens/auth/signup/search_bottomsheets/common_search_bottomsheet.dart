@@ -192,7 +192,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                 itemBuilder: (context, index) {
                   if (searchBottomSheetType ==
                       SearchBottomSheetType.STATE_BOTTOMSHEET) {
-                    final CityModel state = snapshot.data[index];
+                    final StateModel state = snapshot.data[index];
                     return textItem(false, state);
                   } else if (searchBottomSheetType ==
                       SearchBottomSheetType.CITY_BOTTOMSHEET) {

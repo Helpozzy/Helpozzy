@@ -92,13 +92,13 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
         hintText: SELECT_STATE_HINT,
         validator: (val) {
-          if (val!.isNotEmpty && val == SELECT_STATE_HINT) {
+          if (val!.isEmpty) {
             return 'Please select state';
           }
           return null;
         },
         onTap: () async {
-          final CityModel model =
+          final StateModel model =
               await SearchBottomSheet().modalBottomSheetMenu(
             context: context,
             searchBottomSheetType: SearchBottomSheetType.STATE_BOTTOMSHEET,
@@ -124,7 +124,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
         hintText: SELECT_CITY_HINT,
         validator: (val) {
-          if (val!.isNotEmpty && val == SELECT_CITY_HINT) {
+          if (val!.isEmpty) {
             return 'Please select city';
           }
           return null;
@@ -154,7 +154,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
         hintText: SELECT_SCHOOL_HINT,
         validator: (val) {
-          if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
+          if (val!.isEmpty) {
             return 'Please select school';
           }
           return null;
@@ -188,8 +188,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           });
         },
         validator: (val) {
-          if (_gradeLevelController.text.isNotEmpty &&
-              _gradeLevelController.text == SELECT_GRADE_HINT) {
+          if (_gradeLevelController.text.isEmpty) {
             return 'Please select grade level';
           }
           return null;
