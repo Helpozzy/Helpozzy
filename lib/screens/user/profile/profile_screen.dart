@@ -33,8 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    final uId = prefsObject.getString('uID');
-    _userInfoBloc.getUser(uId!);
+    _userInfoBloc.getUser(prefsObject.getString('uID')!);
     _categoryBloc.getCategories();
     _userProjectsBloc.getOwnCompletedProjects();
     super.initState();
@@ -78,33 +77,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Container(
                                   margin:
                                       EdgeInsets.only(bottom: 10, top: 15.0),
-                                  padding: EdgeInsets.all(3),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     color: PRIMARY_COLOR.withOpacity(0.8),
                                   ),
-                                  child: user!.profileUrl!.isNotEmpty
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: CachedNetworkImage(
-                                            imageUrl: user.profileUrl!,
-                                            fit: BoxFit.cover,
-                                            height: width / 5,
-                                            width: width / 5,
-                                            alignment: Alignment.center,
-                                            progressIndicatorBuilder: (context,
-                                                    url, downloadProgress) =>
-                                                Center(
-                                              child: CircularProgressIndicator(
-                                                  color: PRIMARY_COLOR),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) => Center(
-                                                    child: Icon(Icons.error)),
-                                          ),
-                                        )
-                                      : CommonUserPlaceholder(size: width / 5),
+                                  child: CommonUserProfileOrPlaceholder(
+                                    size: width / 5,
+                                    imgUrl: user!.profileUrl!,
+                                  ),
                                 ),
                               ),
                             ),

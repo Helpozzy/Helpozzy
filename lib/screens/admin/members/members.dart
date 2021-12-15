@@ -222,7 +222,7 @@ class _MembersScreenState extends State<MembersScreen> {
             vertical: width * 0.035, horizontal: width * 0.04),
         child: Row(
           children: [
-            CommonUserPlaceholder(size: width * 0.14),
+            CommonUserProfileOrPlaceholder(size: width * 0.14),
             SizedBox(width: 10),
             Expanded(
               child: Column(

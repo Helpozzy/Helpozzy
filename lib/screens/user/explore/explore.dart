@@ -15,7 +15,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:timelines/timelines.dart';
-import 'user_project/user_project_sign_up.dart';
+import '../../projects/user_project_sign_up.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -314,7 +314,6 @@ class _ExploreScreenState extends State<ExploreScreen>
               onChanged: (val) {
                 _userProjectsBloc.searchProjects(val);
               },
-              // onTap: () => SearchProject().modalBottomSheetMenu(context),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
                 hintText: TYPE_KEYWORD_HINT,

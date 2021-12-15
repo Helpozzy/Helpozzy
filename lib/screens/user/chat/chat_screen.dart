@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -17,7 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Chat extends StatefulWidget {
   const Chat({required this.peerUser});
-
   final ChatListItem peerUser;
 
   @override

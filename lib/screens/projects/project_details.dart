@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/screens/projects/user_project_sign_up.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/members_tab.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/tasks_tab.dart';
@@ -191,30 +192,46 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   Widget scheduleTiming() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            DateFormat('EEEE, MMMM dd, yyyy').format(
-              DateTime.fromMillisecondsSinceEpoch(
-                int.parse(project.startDate),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                DateFormat('EEEE, MMMM dd, yyyy').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(project.startDate),
+                  ),
+                ),
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 12,
+                  color: BLUE_COLOR,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: BLUE_COLOR,
-              fontWeight: FontWeight.w600,
-            ),
+              SizedBox(height: 3),
+              Text(
+                project.startTime + ' - ' + project.endTime,
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 12,
+                  color: BLUE_COLOR,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 3),
-          Text(
-            project.startTime + ' - ' + project.endTime,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: BLUE_COLOR,
-              fontWeight: FontWeight.w600,
+          Container(
+            height: 33,
+            child: CommonButton(
+              fontSize: 10,
+              text: SIGN_UP,
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProjectUserSignUpScreen())),
             ),
-          ),
+          )
         ],
       ),
     );

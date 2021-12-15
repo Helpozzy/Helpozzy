@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
@@ -28,7 +27,6 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString('uID')!);
-
     super.initState();
   }
 
@@ -306,7 +304,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
               children: [
                 Row(
                   children: [
-                    CommonUserPlaceholder(size: 30),
+                    CommonUserProfileOrPlaceholder(size: 30),
                     SizedBox(width: 5),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +397,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
             children: [
               Row(
                 children: [
-                  CommonUserPlaceholder(size: 30),
+                  CommonUserProfileOrPlaceholder(size: 30),
                   SizedBox(width: 5),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -37,7 +37,10 @@ class _TaskTabState extends State<TaskTab> {
       child: Column(
         children: [
           tasksCategoriesCard(
-            prefixWidget: CommonUserPlaceholder(size: width / 10),
+            prefixWidget: CommonUserProfileOrPlaceholder(
+              imgUrl: prefsObject.getString('profileImage')!,
+              size: width / 10,
+            ),
             label: 'My Tasks',
             counter: '3',
             isMyTask: true,
@@ -63,77 +66,78 @@ class _TaskTabState extends State<TaskTab> {
       required String counter,
       required bool isMyTask}) {
     return StreamBuilder<bool>(
-        initialData: isMyTask ? myTaskIsExpanded : false,
-        stream: _projectTaskBloc.getMyTaskExpandedStream,
-        builder: (context, myTaskExpandedSnapshot) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
-            child: InkWell(
-              onTap: () {
-                if (isMyTask) {
-                  setState(() => myTaskIsExpanded = !myTaskIsExpanded);
-                  _projectTaskBloc.isExpanded(myTaskIsExpanded);
-                  _projectTaskBloc.getProjectTasks(project.projectId);
-                } else {}
-              },
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                elevation: 3,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              prefixWidget,
-                              SizedBox(width: 8),
-                              Text(
-                                label,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  color: DARK_PINK_COLOR,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                counter,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  color: DARK_PINK_COLOR,
-                                  fontWeight: FontWeight.w600,
-                                ),
+      initialData: isMyTask ? myTaskIsExpanded : false,
+      stream: _projectTaskBloc.getMyTaskExpandedStream,
+      builder: (context, myTaskExpandedSnapshot) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
+          child: InkWell(
+            onTap: () {
+              if (isMyTask) {
+                setState(() => myTaskIsExpanded = !myTaskIsExpanded);
+                _projectTaskBloc.isExpanded(myTaskIsExpanded);
+                _projectTaskBloc.getProjectTasks(project.projectId);
+              } else {}
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              elevation: 3,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            prefixWidget,
+                            SizedBox(width: 8),
+                            Text(
+                              label,
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                color: DARK_PINK_COLOR,
+                                fontWeight: FontWeight.w600,
                               ),
-                              SizedBox(width: 6),
-                              Icon(
-                                isMyTask
-                                    ? myTaskExpandedSnapshot.data!
-                                        ? Icons.keyboard_arrow_up_rounded
-                                        : Icons.keyboard_arrow_down_rounded
-                                    : Icons.keyboard_arrow_down_rounded,
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              counter,
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                color: DARK_PINK_COLOR,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      isMyTask
-                          ? myTaskExpandedSnapshot.data!
-                              ? tasksOfProject()
-                              : SizedBox()
-                          : SizedBox(),
-                    ],
-                  ),
+                            ),
+                            SizedBox(width: 6),
+                            Icon(
+                              isMyTask
+                                  ? myTaskExpandedSnapshot.data!
+                                      ? Icons.keyboard_arrow_up_rounded
+                                      : Icons.keyboard_arrow_down_rounded
+                                  : Icons.keyboard_arrow_down_rounded,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    isMyTask
+                        ? myTaskExpandedSnapshot.data!
+                            ? tasksOfProject()
+                            : SizedBox()
+                        : SizedBox(),
+                  ],
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Widget tasksOfProject() {
@@ -156,15 +160,35 @@ class _TaskTabState extends State<TaskTab> {
             itemCount: snapshot.data!.tasks.length,
             itemBuilder: (context, index) {
               final TaskModel task = snapshot.data!.tasks[index];
-              return TaskCard(
-                task: task,
-                optionEnable: false,
-                onTapItem: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskDetails(task: task),
+              return Row(
+                children: [
+                  Container(
+                    height: 15,
+                    width: 15,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: task.status == TOGGLE_NOT_STARTED
+                          ? LIGHT_GRAY
+                          : task.status == TOGGLE_INPROGRESS
+                              ? AMBER_COLOR
+                              : GREEN,
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: PRIMARY_COLOR, width: 1),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: TaskCard(
+                      task: task,
+                      optionEnable: false,
+                      onTapItem: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskDetails(task: task),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           );

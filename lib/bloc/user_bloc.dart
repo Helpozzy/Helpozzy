@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserInfoBloc {
@@ -11,6 +12,7 @@ class UserInfoBloc {
 
   Future<SignUpAndUserModel> getUser(String uId) async {
     final SignUpAndUserModel response = await repo.userInfoRepo(uId);
+    prefsObject.setString('profileImage', response.profileUrl!);
     userController.sink.add(response);
     return response;
   }

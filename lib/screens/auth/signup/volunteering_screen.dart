@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/volunteer_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';

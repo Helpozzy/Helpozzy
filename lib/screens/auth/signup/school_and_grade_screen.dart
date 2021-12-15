@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';

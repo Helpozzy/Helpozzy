@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class CommonWidget {
@@ -709,6 +708,44 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
   }
 }
 
+class SmallCommonButton extends StatelessWidget {
+  SmallCommonButton({
+    required this.text,
+    this.buttonColor = PRIMARY_COLOR,
+    this.fontSize = 18,
+    required this.onPressed,
+    this.fontColor = WHITE,
+  });
+  final String text;
+  final Color buttonColor;
+  final double fontSize;
+  final void Function()? onPressed;
+  final Color fontColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          color: buttonColor,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 12.0),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontFamily: QUICKSAND,
+            fontWeight: FontWeight.w600,
+            color: fontColor,
+          ),
+        ),
+      ),
+      onTap: onPressed,
+    );
+  }
+}
+
 class CustomSeparator extends StatelessWidget {
   final double height;
   final Color color;
@@ -767,15 +804,40 @@ class CommonDividerWithVal extends StatelessWidget {
 }
 
 //Placer Holder
-class CommonUserPlaceholder extends StatelessWidget {
-  CommonUserPlaceholder({required this.size});
+class CommonUserProfileOrPlaceholder extends StatelessWidget {
+  CommonUserProfileOrPlaceholder({this.imgUrl, required this.size});
+  final String? imgUrl;
   final double size;
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/user_placeholder.png',
-      height: size,
-      width: size,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          width: 2,
+          color: PRIMARY_COLOR,
+        ),
+      ),
+      child: imgUrl != null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: CachedNetworkImage(
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error_outline_rounded),
+                imageUrl: imgUrl!,
+                fit: BoxFit.cover,
+                height: size,
+                width: size,
+              ),
+            )
+          : Image.asset(
+              'assets/images/user_placeholder.png',
+              height: size,
+              width: size,
+            ),
     );
   }
 }

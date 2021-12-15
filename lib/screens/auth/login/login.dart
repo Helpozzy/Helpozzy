@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -10,7 +9,6 @@ import 'package:helpozzy/screens/auth/login/bloc/login_state.dart';
 import 'package:helpozzy/screens/auth/reset_pass/reset_pass.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:provider/provider.dart';
 
 final GlobalKey<State> _dialogKey = GlobalKey<State>();
 

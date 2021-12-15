@@ -43,16 +43,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   LoginState _mapPasswordChangedToState(
-    LoginPasswordChanged event,
-    LoginState state,
-  ) {
+      LoginPasswordChanged event, LoginState state) {
     return state.copyWith(state, password: event.password);
   }
 
-  LoginState _mapTypeChangedToState(
-    LoginTypeChanged event,
-    LoginState state,
-  ) {
+  LoginState _mapTypeChangedToState(LoginTypeChanged event, LoginState state) {
     return state.copyWith(state, type: event.type);
   }
 }

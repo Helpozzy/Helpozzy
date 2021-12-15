@@ -554,7 +554,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           children: {
             0: segmentItem(TOGGLE_NOT_STARTED),
             1: segmentItem(TOGGLE_INPROGRESS),
-            2: segmentItem(TOGGLE_COMPLE),
+            2: segmentItem(TOGGLE_COMPLETE),
           },
           onValueChanged: (value) {
             setState(() {
@@ -596,7 +596,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ? TOGGLE_NOT_STARTED
           : _selectedIndexValue == 1
               ? TOGGLE_INPROGRESS
-              : TOGGLE_COMPLE,
+              : TOGGLE_COMPLETE,
     );
     final bool isUploaded = fromEdit
         ? await _projectTaskBloc.updateTasks(taskDetails)

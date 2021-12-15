@@ -97,7 +97,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: CommonUserPlaceholder(size: width * 0.10),
+            child: CommonUserProfileOrPlaceholder(size: width * 0.10),
           ),
           SizedBox(width: 10),
           Expanded(

@@ -119,7 +119,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       state: _stateController.text,
       city: _cityController.text,
       zipCode: _zipCodeController.text,
-      countryCode: countryCode!.dialCode!,
+      countryCode: countryCode!.code!,
       personalPhnNo: _personalPhoneController.text,
       parentEmail: _parentEmailController.text,
       relationshipWithParent: _relationController.text,
@@ -190,13 +190,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               return IconButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (snapshot.data!)
+                    if (snapshot.data!) {
                       await postModifiedData();
-                    else
-                      showAlertDialog(context,
-                          title: ALERT,
-                          content:
-                              'Parent/Guardian email is not verified, Please verify your email.');
+                    } else {
+                      if (userModel!.parentEmail ==
+                          _parentEmailController.text) {
+                        await postModifiedData();
+                      } else {
+                        showAlertDialog(context,
+                            title: ALERT,
+                            content:
+                                'Parent/Guardian email is not verified, Please verify your email.');
+                      }
+                    }
                   }
                 },
                 icon: Icon(
@@ -421,12 +427,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: _parentEmailController,
                 hintText: ENTER_EMAIL_HINT,
                 suffixIcon: Icon(
-                    snapshotEmailVerified.data!
-                        ? CupertinoIcons.checkmark_seal_fill
-                        : CupertinoIcons.checkmark_seal,
-                    size: 18,
-                    color:
-                        snapshotEmailVerified.data! ? ACCENT_GREEN : DARK_GRAY),
+                  snapshotEmailVerified.data!
+                      ? CupertinoIcons.checkmark_seal_fill
+                      : userModel!.parentEmail == _parentEmailController.text
+                          ? CupertinoIcons.checkmark_seal_fill
+                          : CupertinoIcons.checkmark_seal,
+                  size: 18,
+                  color: snapshotEmailVerified.data!
+                      ? ACCENT_GREEN
+                      : userModel!.parentEmail == _parentEmailController.text
+                          ? ACCENT_GREEN
+                          : DARK_GRAY,
+                ),
+                onChanged: (val) {
+                  setState(() => _parentEmailController.selection =
+                      TextSelection.fromPosition(
+                          TextPosition(offset: val.length)));
+                },
                 validator: (parentEmail) {
                   if (parentEmail!.isEmpty) {
                     return 'Please enter parents/guardian email';
@@ -547,8 +564,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         (context, url, downloadProgress) =>
                             CircularProgressIndicator(
                                 value: downloadProgress.progress, color: WHITE),
-                    errorWidget: (context, url, error) =>
-                        Center(child: CommonUserPlaceholder(size: width / 4.5)),
+                    errorWidget: (context, url, error) => Center(
+                        child:
+                            CommonUserProfileOrPlaceholder(size: width / 4.5)),
                   ),
           ),
         ),
@@ -812,8 +830,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 await SearchBottomSheet().modalBottomSheetMenu(
               context: context,
               searchBottomSheetType: SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
-              state: '',
-              city: '',
+              state: _stateController.text,
+              city: _cityController.text,
             );
             setState(() {
               _schoolController.text = school.schoolName;
