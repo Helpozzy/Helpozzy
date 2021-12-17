@@ -5,6 +5,7 @@ import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
+import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -196,6 +197,19 @@ class ApiProvider {
         .get();
     List<QueryDocumentSnapshot<Object?>> userList = querySnapshot.docs;
     return Users.fromJson(list: userList);
+  }
+
+  Future<bool> postProjectSignupAPIProvider(
+      ProjectSignUpModel projectSignUpVal) async {
+    try {
+      await firestore
+          .collection('project_signed_up')
+          .doc()
+          .set(projectSignUpVal.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   //Admin API Provider

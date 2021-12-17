@@ -143,6 +143,9 @@ const SEARCH_CITY_NAME_HINT = 'Search for city..';
 const REVIEW_HINT = 'Tap to review..';
 const SELECT_STATE_HINT = 'Select State';
 const SELECT_CITY_HINT = 'Select City';
+const ENTER_NAME_HINT = 'Enter name';
+const ENTER_STATE_HINT = 'Enter State';
+const ENTER_CITY_HINT = 'Enter City';
 const ADDRESS_HINT = 'Enter address';
 const HOUSE_NO_HINT = 'Enter House/Apt. Number';
 const STREET_NAME_HINT = 'Enter Street Name';
@@ -230,6 +233,7 @@ const SUCCESSFULL = 'Successful';
 //Button Text
 const SIGN_UP = 'Sign-Up';
 const REDEEM_MY_POINT = 'Redeem my points';
+const ENROLL_BUTTON = 'Enroll';
 const CONTINUE_BUTTON = 'Continue';
 const OK_BUTTON = 'OK';
 const SEND_MAIL_BUTTON = 'Send Email';
@@ -237,6 +241,9 @@ const ADD_NEW_PROJECT_BUTTON = 'Add New Project';
 const LOGOUT_BUTTON = 'Logout';
 const DELETE_BUTTON = 'Delete';
 const SENT_OTP_BUTTON = 'Sent OTP';
+const START_BUTTON = 'START';
+const DECLINE_BUTTON = 'DECLINE';
+const LOG_HOURS_BUTTON = 'Thank you! Click to log your hours';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -316,6 +323,7 @@ const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';
 const PROJECT_APPBAR = 'Projects';
+const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
 
 //Details Tab
 const COLUMN_ONE = 'Age\nGroup\n(Yrs old)';
@@ -387,7 +395,7 @@ const PROJECT_CATEGORY_LABEL = 'Project Category';
 const PROJECT_COLLABORATOR_LABEL = 'Collaborators/Co-Admin';
 const MEMBERS_LABEL = 'Members';
 const TASKS_LABEL = 'Tasks';
-const HOURS_LABEL = 'Hours';
+const HOURS_LABEL = 'Estimated Hours';
 const STATUS_LABEL = 'Status';
 const TIMELINE_LABEL = 'Timeline';
 const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';

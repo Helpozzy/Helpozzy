@@ -36,10 +36,6 @@ class _CreateProjectState extends State<CreateProject> {
   final TextEditingController _projCollaboraorController =
       TextEditingController();
   final TextEditingController _searchEmailController = TextEditingController();
-  final TextEditingController _projTaskStartHrsController =
-      TextEditingController();
-  final TextEditingController _projTaskEndHrsController =
-      TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
   TimeOfDay selectedStartTime = TimeOfDay(hour: 00, minute: 00);
@@ -47,6 +43,7 @@ class _CreateProjectState extends State<CreateProject> {
   late ThemeData _themeData;
   late double width;
   late double height;
+  late double trackerVal = 0.0;
   late int selectedCategoryId;
 
   @override
@@ -215,7 +212,7 @@ class _CreateProjectState extends State<CreateProject> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: projectHours(),
+                    child: hoursSlider(),
                   ),
                   Divider(),
                   SizedBox(height: 10)
@@ -242,71 +239,48 @@ class _CreateProjectState extends State<CreateProject> {
     );
   }
 
-  Widget projectHours() {
-    return Row(
+  Widget hoursSlider() {
+    return Column(
       children: [
-        Expanded(
-          child: CommonSimpleTextfield(
-            readOnly: true,
-            controller: _projTaskStartHrsController,
-            hintText: PROJECT_START_TIME_HINT,
-            validator: (val) {
-              if (val!.isEmpty && _projTaskStartHrsController.text.isEmpty) {
-                return 'Select start time';
-              }
-              return null;
-            },
-            onTap: () {
-              CommonDatepicker()
-                  .showTimePickerDialog(context,
-                      selectedTime: selectedStartTime)
-                  .then((selectedTimeVal) {
-                if (selectedTimeVal != null)
-                  setState(() {
-                    selectedStartTime = selectedTimeVal;
-                  });
-                _projTaskStartHrsController.value = TextEditingValue(
-                    text:
-                        '${selectedStartTime.hour}.${selectedStartTime.minute}');
-              });
-            },
-          ),
-        ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: Text(
-            TO,
-            style: _themeData.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w600),
+          padding: EdgeInsets.only(left: width * 0.06, right: width * 0.05),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '0',
+                style: _themeData.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '20',
+                style: _themeData.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
-        Expanded(
-          child: CommonSimpleTextfield(
-            readOnly: true,
-            controller: _projTaskEndHrsController,
-            hintText: PROJECT_END_TIME_HINT,
-            validator: (val) {
-              if (val!.isEmpty && _projTaskEndHrsController.text.isEmpty) {
-                return 'Select end time';
-              }
-              return null;
-            },
-            onTap: () {
-              CommonDatepicker()
-                  .showTimePickerDialog(context, selectedTime: selectedEndTime)
-                  .then((selectedTimeVal) {
-                if (selectedTimeVal != null)
-                  setState(() {
-                    selectedEndTime = selectedTimeVal;
-                  });
-                _projTaskEndHrsController.value = TextEditingValue(
-                    text: '${selectedEndTime.hour}.${selectedEndTime.minute}');
-              });
-            },
-          ),
+        Slider(
+          min: 0,
+          max: 20,
+          label: trackerVal.round().toString(),
+          value: trackerVal,
+          activeColor: PRIMARY_COLOR,
+          onChanged: (value) {
+            setState(() => trackerVal = value);
+          },
         ),
-        SizedBox(width: 10),
-        Icon(Icons.watch_later_outlined)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextfieldLabelSmall(label: 'Selected Hours : '),
+            Text(
+              trackerVal.round().toString(),
+              style: _themeData.textTheme.bodyText2!
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -618,8 +592,7 @@ class _CreateProjectState extends State<CreateProject> {
       organization: '',
       rating: 0.0,
       reviewCount: 0,
-      startTime: selectedStartTime.format(context),
-      endTime: selectedEndTime.format(context),
+      estimatedHours: trackerVal.round().toString(),
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: DateTime.parse(_projStartDateController.text)
@@ -655,7 +628,6 @@ class _CreateProjectState extends State<CreateProject> {
     _projCollaboraorController.clear();
     _searchEmailController.clear();
     _projLocationController.clear();
-    _projTaskStartHrsController.clear();
     _projEndDateController.clear();
   }
 }

@@ -65,7 +65,9 @@ class _TaskCardState extends State<TaskCard> {
               ? GRAY
               : WHITE,
       margin: EdgeInsets.symmetric(vertical: 5.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -78,9 +80,7 @@ class _TaskCardState extends State<TaskCard> {
                   Text(
                     timeStampConvertToDate(task.startDate) +
                         ' ' +
-                        task.startTime +
-                        ' - ' +
-                        task.endTime,
+                        task.estimatedHrs,
                     style: _themeData.textTheme.bodyText2!
                         .copyWith(fontSize: 12, color: UNSELECTED_TAB_COLOR),
                   ),
@@ -145,7 +145,7 @@ class _TaskCardState extends State<TaskCard> {
                             key: 'status',
                             val: TOGGLE_COMPLETE);
                     if (response)
-                      showSnakeBar(context, msg: 'Task completed.');
+                      showSnakeBar(context, msg: 'Task completed');
                     else
                       showSnakeBar(context,
                           msg: 'Technical issue! Task not updated');
@@ -156,7 +156,7 @@ class _TaskCardState extends State<TaskCard> {
                   children: [
                     SmallCommonButton(
                       fontSize: 12,
-                      text: 'START',
+                      text: START_BUTTON,
                       buttonColor: GRAY,
                       onPressed: () async {
                         final bool response =
@@ -165,7 +165,7 @@ class _TaskCardState extends State<TaskCard> {
                                 key: 'status',
                                 val: TOGGLE_INPROGRESS);
                         if (response)
-                          showSnakeBar(context, msg: 'Task started.');
+                          showSnakeBar(context, msg: 'Task started');
                         else
                           showSnakeBar(context,
                               msg: 'Technical issue! Task not updated');
@@ -176,7 +176,7 @@ class _TaskCardState extends State<TaskCard> {
                       fontSize: 12,
                       fontColor: BLACK,
                       buttonColor: SILVER_GRAY,
-                      text: 'DECLINE',
+                      text: DECLINE_BUTTON,
                       onPressed: () {},
                     ),
                   ],
@@ -191,7 +191,7 @@ class _TaskCardState extends State<TaskCard> {
       width: width / 1.35,
       alignment: Alignment.center,
       child: SmallCommonButton(
-        text: 'Thank you! Click to log your hours',
+        text: LOG_HOURS_BUTTON,
         buttonColor: BUTTON_GRAY_COLOR,
         fontSize: 12,
         onPressed: () {},

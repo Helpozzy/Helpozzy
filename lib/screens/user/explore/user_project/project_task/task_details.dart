@@ -100,11 +100,7 @@ class _TaskDetailsState extends State<TaskDetails> {
           child: CommonDivider(),
         ),
         Text(
-          timeStampConvertToDate(task.startDate) +
-              ' ' +
-              task.startTime +
-              ' - ' +
-              task.endTime,
+          timeStampConvertToDate(task.startDate) + ' ' + task.estimatedHrs,
           style: _theme.textTheme.bodyText2!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
         ),

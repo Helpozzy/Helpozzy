@@ -16,8 +16,7 @@ class ProjectModel {
     required this.description,
     required this.startDate,
     required this.endDate,
-    required this.startTime,
-    required this.endTime,
+    required this.estimatedHours,
     required this.projectOwner,
     required this.collaboratorsCoadmin,
     required this.imageUrl,
@@ -38,8 +37,7 @@ class ProjectModel {
     description = json['description'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    startTime = json['start_time'];
-    endTime = json['end_time'];
+    estimatedHours = json['start_time'];
     projectOwner = json['project_owner'];
     collaboratorsCoadmin = json['collaborators_or_co_admin'];
     imageUrl = json['image_url'];
@@ -63,8 +61,7 @@ class ProjectModel {
       'description': description,
       'start_date': startDate,
       'end_date': endDate,
-      'start_time': startTime,
-      'end_time': endTime,
+      'start_time': estimatedHours,
       'project_owner': projectOwner,
       'collaborators_or_co_admin': collaboratorsCoadmin,
       'image_url': imageUrl,
@@ -85,8 +82,7 @@ class ProjectModel {
   late String description;
   late String startDate;
   late String endDate;
-  late String startTime;
-  late String endTime;
+  late String estimatedHours;
   late String projectOwner;
   late String collaboratorsCoadmin;
   late String imageUrl;

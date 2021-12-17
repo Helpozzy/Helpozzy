@@ -5,7 +5,7 @@ import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dar
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import '../../../projects/user_project_tabs/other_details_tab.dart';
-import '../../../projects/user_project_sign_up.dart';
+import '../../../projects/volunteer_project_sign_up.dart';
 
 class CategorisedProjectsScreen extends StatefulWidget {
   const CategorisedProjectsScreen({required this.categoryId});
@@ -72,7 +72,8 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                     onPressedSignUpButton: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProjectUserSignUpScreen(),
+                        builder: (context) =>
+                            ProjectVolunteerSignUp(project: project),
                       ),
                     ),
                   );

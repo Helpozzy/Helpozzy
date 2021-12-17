@@ -126,7 +126,7 @@ class _ProjectTileState extends State<ProjectTile> {
                             ),
                             SizedBox(height: 3),
                             Text(
-                              project.startTime + ' - ' + project.endTime,
+                              project.estimatedHours,
                               style: _theme.textTheme.bodyText2!.copyWith(
                                 fontSize: 12,
                                 color: BLUE_COLOR,

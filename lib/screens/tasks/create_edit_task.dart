@@ -38,9 +38,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       TextEditingController();
   final TextEditingController _taskEndDateController = TextEditingController();
   final TextEditingController _taskMembersController = TextEditingController();
-  final TextEditingController _taskStartTimeController =
-      TextEditingController();
-  final TextEditingController _taskEndTimeController = TextEditingController();
   final TextEditingController _searchEmailController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
@@ -51,10 +48,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double height;
   ProjectsBloc _projectsBloc = ProjectsBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  late double trackerVal = 0.0;
   int _selectedIndexValue = 0;
   bool postOnLocalCheck = false;
-  TimeOfDay selectedStartTime = TimeOfDay(hour: 00, minute: 00);
-  TimeOfDay selectedEndTime = TimeOfDay(hour: 00, minute: 00);
 
   @override
   void initState() {
@@ -155,7 +151,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: projectTaskHours(),
+                      child: hoursSlider(),
                     ),
                     Divider(),
                     Padding(
@@ -214,71 +210,48 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     );
   }
 
-  Widget projectTaskHours() {
-    return Row(
+  Widget hoursSlider() {
+    return Column(
       children: [
-        Expanded(
-          child: CommonSimpleTextfield(
-            readOnly: true,
-            controller: _taskStartTimeController,
-            hintText: PROJECT_START_TIME_HINT,
-            validator: (val) {
-              if (val!.isEmpty && _taskStartTimeController.text.isEmpty) {
-                return 'Select start time';
-              }
-              return null;
-            },
-            onTap: () {
-              CommonDatepicker()
-                  .showTimePickerDialog(context,
-                      selectedTime: selectedStartTime)
-                  .then((selectedTimeVal) {
-                if (selectedTimeVal != null)
-                  setState(() {
-                    selectedStartTime = selectedTimeVal;
-                  });
-                _taskStartTimeController.value = TextEditingValue(
-                    text:
-                        '${selectedStartTime.hour}.${selectedStartTime.minute}');
-              });
-            },
-          ),
-        ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: Text(
-            TO,
-            style: _themeData.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w600),
+          padding: EdgeInsets.only(left: width * 0.06, right: width * 0.05),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '0',
+                style: _themeData.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '20',
+                style: _themeData.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
-        Expanded(
-          child: CommonSimpleTextfield(
-            readOnly: true,
-            controller: _taskEndTimeController,
-            hintText: PROJECT_END_TIME_HINT,
-            validator: (val) {
-              if (val!.isEmpty && _taskEndTimeController.text.isEmpty) {
-                return 'Select end time';
-              }
-              return null;
-            },
-            onTap: () {
-              CommonDatepicker()
-                  .showTimePickerDialog(context, selectedTime: selectedEndTime)
-                  .then((selectedTimeVal) {
-                if (selectedTimeVal != null)
-                  setState(() {
-                    selectedEndTime = selectedTimeVal;
-                  });
-                _taskEndTimeController.value = TextEditingValue(
-                    text: '${selectedEndTime.hour}.${selectedEndTime.minute}');
-              });
-            },
-          ),
+        Slider(
+          min: 0,
+          max: 20,
+          label: trackerVal.round().toString(),
+          value: trackerVal,
+          activeColor: PRIMARY_COLOR,
+          onChanged: (value) {
+            setState(() => trackerVal = value);
+          },
         ),
-        SizedBox(width: 10),
-        Icon(Icons.watch_later_outlined)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextfieldLabelSmall(label: 'Selected Hours : '),
+            Text(
+              trackerVal.round().toString(),
+              style: _themeData.textTheme.bodyText2!
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -288,10 +261,14 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              CupertinoIcons.search,
-              color: BLACK,
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Icon(
+                CupertinoIcons.search,
+                color: BLACK,
+              ),
             ),
             SizedBox(width: 10),
             Expanded(
@@ -589,8 +566,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       endDate: DateTime.parse(_taskEndDateController.text)
           .millisecondsSinceEpoch
           .toString(),
-      startTime: selectedStartTime.format(context),
-      endTime: selectedEndTime.format(context),
+      estimatedHrs: trackerVal.round().toString(),
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
           ? TOGGLE_NOT_STARTED
@@ -628,6 +604,5 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     _taskStartDateController.clear();
     _taskEndDateController.clear();
     _taskMembersController.clear();
-    _taskStartTimeController.clear();
   }
 }

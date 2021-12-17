@@ -199,6 +199,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () async {
                     Provider.of<AuthBloc>(context, listen: false)
                         .add(AppLogout());
+                    prefsObject.clear();
+                    prefsObject.reload();
                     Navigator.pushNamedAndRemoveUntil(
                         context, INTRO, (route) => false);
                   },

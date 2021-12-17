@@ -98,6 +98,9 @@ class SignUpAndUserModel {
       'area_of_interests': areaOfInterests,
       'current_year_target_hours': currentYearTargetHours,
       'date_of_joining': joiningDate,
+      'rating': rating,
+      'review_by_persons': reviewsByPersons,
+      'point_gifted': pointGifted,
     };
   }
 

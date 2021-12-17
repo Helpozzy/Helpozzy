@@ -98,7 +98,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: width * 0.06, right: width * 0.04),
+            padding: EdgeInsets.only(left: width * 0.06, right: width * 0.05),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -107,39 +107,72 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                   style: _theme.textTheme.bodyText2!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  '200',
-                  style: _theme.textTheme.bodyText2!
-                      .copyWith(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      '200',
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: width * 0.03),
+                    Text(
+                      '+',
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           Slider(
             min: 0,
-            max: 200,
+            max: 225,
             label: trackerVal.round().toString(),
             value: trackerVal,
             activeColor: PRIMARY_COLOR,
-            divisions: 10,
+            divisions: 9,
             onChanged: (value) {
               setState(() => trackerVal = value);
+              if (trackerVal.round() == 225) {
+                showSnakeBar(context, msg: 'Enter your hrs in field');
+              }
             },
           ),
-          trackerVal >= 200.0
-              ? CommonRoundedTextfield(
-                  controller: _targetHoursController,
-                  hintText: ENTER_TARGET_HOURS_HINT,
-                  keyboardType: TextInputType.number,
-                  validator: (phone) {
-                    if (phone!.isEmpty) {
-                      return 'Please enter target hours';
-                    } else {
-                      return null;
-                    }
-                  },
-                )
-              : SizedBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              trackerVal >= 225.0
+                  ? Expanded(
+                      child: CommonRoundedTextfield(
+                        controller: _targetHoursController,
+                        hintText: ENTER_TARGET_HOURS_HINT,
+                        keyboardType: TextInputType.number,
+                        validator: (phone) {
+                          if (phone!.isEmpty) {
+                            return 'Please enter target hours';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(width: 15),
+              Column(
+                children: [
+                  TextfieldLabelSmall(label: 'Selected Hours'),
+                  Text(
+                    trackerVal.round() == 225
+                        ? '200+'
+                        : trackerVal.round().toString(),
+                    style: _theme.textTheme.bodyText2!
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+                ],
+              )
+            ],
+          ),
         ],
       ),
     );
@@ -212,7 +245,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
         selectedAreaOfInterests.add(category.id);
       }
     });
-    signupAndUserModel.currentYearTargetHours = trackerVal <= 200
+    signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
         ? trackerVal.round()
         : int.parse(_targetHoursController.text);
     signupAndUserModel.areaOfInterests = selectedAreaOfInterests;

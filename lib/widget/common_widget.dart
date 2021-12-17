@@ -823,7 +823,10 @@ class CommonUserProfileOrPlaceholder extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
               child: CachedNetworkImage(
                 placeholder: (context, url) => Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: PRIMARY_COLOR,
+                    strokeWidth: 0.7,
+                  ),
                 ),
                 errorWidget: (context, url, error) =>
                     Icon(Icons.error_outline_rounded),

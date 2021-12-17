@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/screens/projects/user_project_sign_up.dart';
+import 'package:helpozzy/screens/projects/volunteer_project_sign_up.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/members_tab.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/tasks_tab.dart';
@@ -28,7 +28,6 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   late double width;
   late ThemeData _theme;
   late TabController _tabController;
-  final scrollController = ScrollController();
 
   @override
   void initState() {
@@ -44,7 +43,6 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
-          controller: scrollController,
           slivers: <Widget>[
             projectOrganizer(),
             SliverPersistentHeader(
@@ -212,7 +210,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               ),
               SizedBox(height: 3),
               Text(
-                project.startTime + ' - ' + project.endTime,
+                project.estimatedHours,
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,
@@ -227,9 +225,12 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               fontSize: 10,
               text: SIGN_UP,
               onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProjectUserSignUpScreen())),
+                context,
+                CupertinoPageRoute(
+                  builder: (context) =>
+                      ProjectVolunteerSignUp(project: project),
+                ),
+              ),
             ),
           )
         ],

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -13,6 +15,8 @@ class UserInfoBloc {
   Future<SignUpAndUserModel> getUser(String uId) async {
     final SignUpAndUserModel response = await repo.userInfoRepo(uId);
     prefsObject.setString('profileImage', response.profileUrl!);
+    final String userData = jsonEncode(response.toJson());
+    prefsObject.setString('currentUser', userData);
     userController.sink.add(response);
     return response;
   }
