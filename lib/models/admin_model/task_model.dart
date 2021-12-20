@@ -70,7 +70,7 @@ class TaskModel {
   late String qualification;
   late String startDate;
   late String endDate;
-  late String estimatedHrs;
+  late int estimatedHrs;
   late String members;
   late String status;
   late bool? isSelected = false;

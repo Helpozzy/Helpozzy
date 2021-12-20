@@ -255,6 +255,7 @@ const DIRECTION = 'Direction';
 const INFO = 'Info';
 const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
+const ESTIMATED_HRS = 'Estimated Hrs : ';
 
 //User project tabbar title
 const TASKS_TAB = 'Tasks';

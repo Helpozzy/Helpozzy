@@ -77,14 +77,41 @@ class _TaskCardState extends State<TaskCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    timeStampConvertToDate(task.startDate) +
-                        ' ' +
-                        task.estimatedHrs,
-                    style: _themeData.textTheme.bodyText2!
-                        .copyWith(fontSize: 12, color: UNSELECTED_TAB_COLOR),
+                  Container(
+                    width: width / 1.35,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          timeStampConvertToDate(task.startDate),
+                          style: _themeData.textTheme.bodyText2!.copyWith(
+                              fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              ESTIMATED_HRS,
+                              style: _themeData.textTheme.bodyText2!.copyWith(
+                                fontSize: 10,
+                                color: PRIMARY_COLOR,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              task.estimatedHrs.toString(),
+                              style: _themeData.textTheme.bodyText2!.copyWith(
+                                fontSize: 10,
+                                color: UNSELECTED_TAB_COLOR,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 5),
+                  CommonDivider(),
                   Text(
                     task.taskName,
                     style: _themeData.textTheme.headline6!.copyWith(

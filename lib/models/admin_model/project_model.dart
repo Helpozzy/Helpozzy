@@ -37,7 +37,7 @@ class ProjectModel {
     description = json['description'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    estimatedHours = json['start_time'];
+    estimatedHours = json['estimated_hrs'];
     projectOwner = json['project_owner'];
     collaboratorsCoadmin = json['collaborators_or_co_admin'];
     imageUrl = json['image_url'];
@@ -61,7 +61,7 @@ class ProjectModel {
       'description': description,
       'start_date': startDate,
       'end_date': endDate,
-      'start_time': estimatedHours,
+      'estimated_hrs': estimatedHours,
       'project_owner': projectOwner,
       'collaborators_or_co_admin': collaboratorsCoadmin,
       'image_url': imageUrl,
@@ -82,7 +82,7 @@ class ProjectModel {
   late String description;
   late String startDate;
   late String endDate;
-  late String estimatedHours;
+  late int estimatedHours;
   late String projectOwner;
   late String collaboratorsCoadmin;
   late String imageUrl;

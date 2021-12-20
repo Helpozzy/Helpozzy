@@ -10,6 +10,7 @@ import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 import 'package:intl/intl.dart';
 
 class ProjectVolunteerSignUp extends StatefulWidget {
@@ -70,190 +71,221 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
   }
 
   Widget signUpForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          projectOrganizer(),
-          contactProjectLeadSection(),
-          scheduleTiming(),
-          title(),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    labelWithTopPadding('Volunteer Name'),
-                    CommonSimpleTextfield(
-                      controller: _nameController,
-                      hintText: ENTER_NAME_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter your name';
-                        } else if (val.length < 3) {
-                          return 'Enter more than 3 char';
-                        }
-                        return null;
-                      },
+    return GestureDetector(
+      onPanDown: (_) {
+        FocusScope.of(context).unfocus();
+      },
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            projectOrganizer(),
+            titleWithIcon(
+              hasIcon: true,
+              title: CONTACT_PRO_LEAD,
+              icons: Row(
+                children: [
+                  InkWell(
+                    onTap: () async => await CommonUrlLauncher()
+                        .launchCall(project.contactNumber),
+                    child: Icon(
+                      CupertinoIcons.phone,
+                      color: PRIMARY_COLOR,
+                      size: 18,
                     ),
-                    labelWithTopPadding('Volunteer Email'),
-                    CommonSimpleTextfield(
-                      controller: _emailController,
-                      hintText: ENTER_EMAIL_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter your email';
-                        } else if (val.isNotEmpty &&
-                            !EmailValidator.validate(val)) {
-                          return 'Enter valid email';
-                        }
-                        return null;
-                      },
+                  ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    onTap: () {},
+                    child: Icon(
+                      CupertinoIcons.chat_bubble,
+                      color: PRIMARY_COLOR,
+                      size: 18,
                     ),
-                    labelWithTopPadding('Volunteer Phone'),
-                    CommonSimpleTextfield(
-                      controller: _phnController,
-                      maxLength: 10,
-                      hintText: ENTER_PHONE_NUMBER_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter your phone number';
-                        } else if (val.isNotEmpty && val.length < 10) {
-                          return 'Enter 10 digit number';
-                        }
-                        return null;
-                      },
-                    ),
-                    labelWithTopPadding('Address'),
-                    CommonSimpleTextfield(
-                      controller: _addressController,
-                      hintText: ADDRESS_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter your address';
-                        }
-                        return null;
-                      },
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              labelWithTopPadding('City'),
-                              CommonSimpleTextfield(
-                                controller: _cityController,
-                                hintText: ENTER_CITY_HINT,
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return 'Enter your city';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
+                  ),
+                ],
+              ),
+            ),
+            scheduleTiming(),
+            titleWithIcon(title: PROJECT_SIGNUP_APPBAR),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      labelWithTopPadding('Volunteer Name'),
+                      CommonSimpleTextfield(
+                        controller: _nameController,
+                        hintText: ENTER_NAME_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Enter your name';
+                          } else if (val.length < 3) {
+                            return 'Enter more than 3 char';
+                          }
+                          return null;
+                        },
+                      ),
+                      labelWithTopPadding('Volunteer Email'),
+                      CommonSimpleTextfield(
+                        controller: _emailController,
+                        hintText: ENTER_EMAIL_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Enter your email';
+                          } else if (val.isNotEmpty &&
+                              !EmailValidator.validate(val)) {
+                            return 'Enter valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      labelWithTopPadding('Volunteer Phone'),
+                      CommonSimpleTextfield(
+                        controller: _phnController,
+                        maxLength: 10,
+                        hintText: ENTER_PHONE_NUMBER_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Enter your phone number';
+                          } else if (val.isNotEmpty && val.length < 10) {
+                            return 'Enter 10 digit number';
+                          }
+                          return null;
+                        },
+                      ),
+                      labelWithTopPadding('Address'),
+                      CommonSimpleTextfield(
+                        controller: _addressController,
+                        hintText: ADDRESS_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Enter your address';
+                          }
+                          return null;
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                labelWithTopPadding('City'),
+                                CommonSimpleTextfield(
+                                  controller: _cityController,
+                                  hintText: ENTER_CITY_HINT,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return 'Enter your city';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              labelWithTopPadding('State'),
-                              CommonSimpleTextfield(
-                                controller: _stateController,
-                                hintText: ENTER_STATE_HINT,
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return 'Enter your state';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                labelWithTopPadding('State'),
+                                CommonSimpleTextfield(
+                                  controller: _stateController,
+                                  hintText: ENTER_STATE_HINT,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return 'Enter your state';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    labelWithTopPadding('Zip Code'),
-                    CommonSimpleTextfield(
-                      controller: _zipCodeController,
-                      maxLength: 5,
-                      hintText: ENTER_ZIP_CODE_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty && val.length < 5) {
-                          return 'Enter your zip code';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
+                        ],
+                      ),
+                      labelWithTopPadding('Zip Code'),
+                      CommonSimpleTextfield(
+                        controller: _zipCodeController,
+                        maxLength: 5,
+                        hintText: ENTER_ZIP_CODE_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty && val.length < 5) {
+                            return 'Enter your zip code';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: CommonButton(
-                    text: ENROLL_BUTTON,
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
+            Container(
+              margin:
+                  EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CommonButton(
+                      text: ENROLL_BUTTON,
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
 
-                      if (_formKey.currentState!.validate()) {
-                        final projectSignUpVal = ProjectSignUpModel(
-                          ownerId: prefsObject.getString('uID'),
-                          projectId: project.projectId,
-                          name: _nameController.text,
-                          email: _emailController.text,
-                          address: _addressController.text,
-                          city: _cityController.text,
-                          state: _stateController.text,
-                          personalPhnNo: _phnController.text,
-                          zipCode: _zipCodeController.text,
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          final projectSignUpVal = ProjectSignUpModel(
+                            ownerId: prefsObject.getString('uID'),
+                            projectId: project.projectId,
+                            name: _nameController.text,
+                            email: _emailController.text,
+                            address: _addressController.text,
+                            city: _cityController.text,
+                            state: _stateController.text,
+                            personalPhnNo: _phnController.text,
+                            zipCode: _zipCodeController.text,
+                          );
 
-                        final bool response = await _projectSignUpBloc
-                            .postVolunteerProjectSignUp(projectSignUpVal);
+                          final bool response = await _projectSignUpBloc
+                              .postVolunteerProjectSignUp(projectSignUpVal);
 
-                        if (response) {
-                          await showSnakeBar(context,
-                              msg: 'Project enroll successfully');
-                          Navigator.of(context).pop();
-                        } else {
-                          await showSnakeBar(context,
-                              msg: 'Project enrollment failed');
+                          if (response) {
+                            await showSnakeBar(context,
+                                msg: 'Project enroll successfully');
+                            Navigator.of(context).pop();
+                          } else {
+                            await showSnakeBar(context,
+                                msg: 'Project enrollment failed');
+                          }
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(width: 15),
-                Expanded(
-                  child: CommonButton(
-                    text: 'Cancel',
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
+                  SizedBox(width: 15),
+                  Expanded(
+                    child: CommonButton(
+                      text: 'Cancel',
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget contactProjectLeadSection() {
+  Widget titleWithIcon({bool hasIcon = false, String? title, Widget? icons}) {
     return Container(
       color: SCREEN_BACKGROUND,
       width: double.infinity,
@@ -262,33 +294,14 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            CONTACT_PRO_LEAD,
+            title!,
             style: _theme.textTheme.bodyText2!.copyWith(
               color: PRIMARY_COLOR,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Icon(
-            Icons.chat_outlined,
-            color: PRIMARY_COLOR,
-            size: 18,
-          ),
+          hasIcon ? icons! : SizedBox(),
         ],
-      ),
-    );
-  }
-
-  Widget title() {
-    return Container(
-      color: SCREEN_BACKGROUND,
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 6, horizontal: width * 0.04),
-      child: Text(
-        PROJECT_SIGNUP_APPBAR,
-        style: _theme.textTheme.bodyText2!.copyWith(
-          color: PRIMARY_COLOR,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }

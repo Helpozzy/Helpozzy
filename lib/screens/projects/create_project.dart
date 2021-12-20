@@ -592,7 +592,7 @@ class _CreateProjectState extends State<CreateProject> {
       organization: '',
       rating: 0.0,
       reviewCount: 0,
-      estimatedHours: trackerVal.round().toString(),
+      estimatedHours: trackerVal.round(),
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: DateTime.parse(_projStartDateController.text)

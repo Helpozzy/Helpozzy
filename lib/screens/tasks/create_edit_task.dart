@@ -566,7 +566,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       endDate: DateTime.parse(_taskEndDateController.text)
           .millisecondsSinceEpoch
           .toString(),
-      estimatedHrs: trackerVal.round().toString(),
+      estimatedHrs: trackerVal.round(),
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
           ? TOGGLE_NOT_STARTED

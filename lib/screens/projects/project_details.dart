@@ -209,13 +209,25 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                 ),
               ),
               SizedBox(height: 3),
-              Text(
-                project.estimatedHours,
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: BLUE_COLOR,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                children: [
+                  Text(
+                    ESTIMATED_HRS,
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontSize: 12,
+                      color: PRIMARY_COLOR,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    project.estimatedHours.toString(),
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontSize: 12,
+                      color: BLUE_COLOR,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
