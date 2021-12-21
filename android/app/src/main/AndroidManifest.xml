@@ -18,7 +18,7 @@
             android:windowSoftInputMode="adjustResize">
             <!-- TODO: Add your Google Maps API key here -->
             <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBFI4Zz8Y8p0jX4EetNn1plqiCKrlhxkdU"/>
+               android:value="YOUR-API-KEY"/>
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
