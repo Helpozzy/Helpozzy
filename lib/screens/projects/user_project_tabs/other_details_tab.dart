@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
@@ -24,6 +27,13 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   TextEditingController _reviewController = TextEditingController();
   UserInfoBloc _userInfoBloc = UserInfoBloc();
 
+  Completer<GoogleMapController> _controller = Completer();
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString('uID')!);
@@ -43,6 +53,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
             aboutOraganizer(),
             overviewDetails(),
             projectDetails(),
+            locationMap(),
             scheduleTimeAndLocation(),
             infoSection(),
             reviewSection(),
@@ -460,6 +471,20 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget locationMap() {
+    return Container(
+      height: height / 4,
+      width: width,
+      child: GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
     );
   }
 }

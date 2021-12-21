@@ -25,6 +25,7 @@ class ProjectModel {
     required this.organization,
     required this.location,
     required this.reviewCount,
+    required this.enrollmentCount,
     required this.rating,
     required this.aboutOrganizer,
     required this.status,
@@ -46,6 +47,7 @@ class ProjectModel {
     contactName = json['contact_person_name'];
     contactNumber = json['contact_number'];
     reviewCount = json['review_count'];
+    enrollmentCount = json['enrollment_count'];
     rating = json['rating'] is double
         ? json['rating']
         : double.parse(json['rating'].toString());
@@ -70,6 +72,7 @@ class ProjectModel {
       'contact_person_name': contactName,
       'contact_number': contactNumber,
       'review_count': reviewCount,
+      'enrollment_count': enrollmentCount,
       'rating': rating,
       'about_organizer': aboutOrganizer,
       'status': status,
@@ -94,6 +97,7 @@ class ProjectModel {
   late double rating;
   late String aboutOrganizer;
   late String status;
+  late int enrollmentCount;
   late bool isLiked = false;
   late bool isProjectDetailsExpanded = false;
   late bool isTaskDetailsExpanded = false;

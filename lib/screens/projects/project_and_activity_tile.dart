@@ -252,7 +252,7 @@ class _ProjectTileState extends State<ProjectTile> {
           ),
           projectExpandDetails(
             title: ENROLLMENT_STATUS,
-            detail: '27 Member signed up',
+            detail: project.enrollmentCount.toString() + MEMBERS_SIGNED_UP,
             hasIcon: false,
           ),
           SizedBox(height: 3),

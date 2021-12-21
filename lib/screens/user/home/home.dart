@@ -42,6 +42,11 @@ class _HomeState extends State<Home> {
       return Scaffold(
         body: Center(child: _children[state.currentIndex]),
         bottomNavigationBar: BottomNavigationBar(
+          selectedLabelStyle:
+              TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          unselectedLabelStyle: TextStyle(fontSize: 13),
+          unselectedIconTheme: IconThemeData(color: DARK_GRAY),
+          type: BottomNavigationBarType.shifting,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.search),

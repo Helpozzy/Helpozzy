@@ -6,6 +6,7 @@ import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -199,17 +200,60 @@ class ApiProvider {
     return Users.fromJson(list: userList);
   }
 
-  Future<bool> postProjectSignupAPIProvider(
+  Future<ResponseModel> postProjectSignupProvider(
       ProjectSignUpModel projectSignUpVal) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('project_signed_up')
+        .where('owner_id', isEqualTo: projectSignUpVal.ownerId)
+        .where('project_id', isEqualTo: projectSignUpVal.projectId)
+        .get();
+    late ResponseModel responseModel;
+    if (querySnapshot.docs.isEmpty) {
+      responseModel = await projectSignUpAPIProvider(projectSignUpVal);
+    } else {
+      for (int i = 0; i < querySnapshot.docs.length; i++) {
+        if (querySnapshot.docs[i].exists) {
+          responseModel =
+              ResponseModel(message: 'Already enrolled', success: true);
+        } else {
+          responseModel = await projectSignUpAPIProvider(projectSignUpVal);
+        }
+      }
+    }
+    return responseModel;
+  }
+
+  Future<ResponseModel> projectSignUpAPIProvider(
+      ProjectSignUpModel projectSignUpVal) async {
+    late ResponseModel responseModel;
     try {
       await firestore
           .collection('project_signed_up')
           .doc()
-          .set(projectSignUpVal.toJson());
-      return true;
+          .set(projectSignUpVal.toJson())
+          .whenComplete(() async {
+        final DocumentSnapshot documentSnapshot = await firestore
+            .collection('projects')
+            .doc(projectSignUpVal.projectId)
+            .get();
+
+        final ProjectModel projectModel = ProjectModel.fromjson(
+            json: documentSnapshot.data() as Map<String, dynamic>);
+
+        await firestore
+            .collection('projects')
+            .doc(projectSignUpVal.projectId)
+            .update(<String, dynamic>{
+          'enrollment_count': projectModel.enrollmentCount + 1
+        });
+      });
+      responseModel =
+          ResponseModel(message: 'Enrolled successfully', success: true);
     } catch (e) {
-      return false;
+      responseModel =
+          ResponseModel(error: 'Project enrollment failed', success: false);
     }
+    return responseModel;
   }
 
   //Admin API Provider

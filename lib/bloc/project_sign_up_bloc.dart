@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectSignUpBloc {
@@ -10,9 +11,10 @@ class ProjectSignUpBloc {
   Stream<ProjectSignedUpUsers> get getProjectSignUpStream =>
       projectSignUpController.stream;
 
-  Future<bool> postVolunteerProjectSignUp(
+  Future<ResponseModel> postVolunteerProjectSignUp(
       ProjectSignUpModel projectSignUpVal) async {
-    final bool response = await repo.postProjectSignupRepo(projectSignUpVal);
+    final ResponseModel response =
+        await repo.postProjectSignupRepo(projectSignUpVal);
     return response;
   }
 

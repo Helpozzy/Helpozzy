@@ -5,6 +5,7 @@ import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -56,8 +57,9 @@ class Repository {
 
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
 
-  Future<bool> postProjectSignupRepo(ProjectSignUpModel projectSignUpVal) =>
-      apiProvider.postProjectSignupAPIProvider(projectSignUpVal);
+  Future<ResponseModel> postProjectSignupRepo(
+          ProjectSignUpModel projectSignUpVal) =>
+      apiProvider.postProjectSignupProvider(projectSignUpVal);
 
   //Admin Repo
   Future<AdminTypes> getAdminCategoriesRepo() =>

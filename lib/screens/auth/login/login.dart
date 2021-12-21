@@ -51,7 +51,7 @@ class LoginPage extends StatelessWidget {
           }
         } else if (state is LoginFailed) {
           CircularLoader().hide(context);
-          showSnakeBar(context, msg: state.loginResponse.error!);
+          showSnakeBar(context, msg: state.loginResponse.error!.split('] ')[1]);
         }
       },
       child: GestureDetector(

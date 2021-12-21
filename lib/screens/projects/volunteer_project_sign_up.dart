@@ -7,6 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -237,6 +238,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                         FocusScope.of(context).unfocus();
 
                         if (_formKey.currentState!.validate()) {
+                          CircularLoader().show(context);
                           final projectSignUpVal = ProjectSignUpModel(
                             ownerId: prefsObject.getString('uID'),
                             projectId: project.projectId,
@@ -249,16 +251,17 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                             zipCode: _zipCodeController.text,
                           );
 
-                          final bool response = await _projectSignUpBloc
-                              .postVolunteerProjectSignUp(projectSignUpVal);
+                          final ResponseModel response =
+                              await _projectSignUpBloc
+                                  .postVolunteerProjectSignUp(projectSignUpVal);
 
-                          if (response) {
-                            await showSnakeBar(context,
-                                msg: 'Project enroll successfully');
+                          if (response.success!) {
+                            CircularLoader().hide(context);
+                            await showSnakeBar(context, msg: response.message!);
                             Navigator.of(context).pop();
                           } else {
-                            await showSnakeBar(context,
-                                msg: 'Project enrollment failed');
+                            CircularLoader().hide(context);
+                            await showSnakeBar(context, msg: response.error!);
                           }
                         }
                       },
@@ -420,6 +423,27 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.04),
       child: Column(
         children: [
+          Row(
+            children: [
+              Text(
+                ESTIMATED_HRS,
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 12,
+                  color: PRIMARY_COLOR,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                project.estimatedHours.toString(),
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 12,
+                  color: BLUE_COLOR,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 5),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
