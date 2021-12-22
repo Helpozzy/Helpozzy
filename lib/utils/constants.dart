@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -590,3 +592,10 @@ Map<String, dynamic> rewardsList = {
     ],
   },
 };
+
+int generateIds() {
+  final rng = Random();
+  int randomInt;
+  randomInt = rng.nextInt(100);
+  return randomInt;
+}

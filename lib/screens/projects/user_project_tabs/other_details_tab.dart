@@ -1,7 +1,8 @@
-import 'dart:async';
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
@@ -27,17 +28,48 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   TextEditingController _reviewController = TextEditingController();
   UserInfoBloc _userInfoBloc = UserInfoBloc();
 
-  Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  late GoogleMapController mapController;
+  late double? addressLat = 0.0;
+  late double? addressLong = 0.0;
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    getLatLong();
     super.initState();
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future getLatLong() async {
+    final Position position = await _determinePosition();
+
+    addressLat = position.latitude;
+    addressLong = position.longitude;
+    setState(() {});
   }
 
   @override
@@ -53,8 +85,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
             aboutOraganizer(),
             overviewDetails(),
             projectDetails(),
-            locationMap(),
             scheduleTimeAndLocation(),
+            locationMap(),
             infoSection(),
             reviewSection(),
             reviewCard(),
@@ -189,7 +221,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
             child: Row(
               children: [
                 Text(
-                  'Contact Dublin Senior Center',
+                  'Contact ' + project.organization,
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -477,13 +509,53 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   Widget locationMap() {
     return Container(
       height: height / 4,
-      width: width,
-      child: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: GoogleMap(
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+            Factory<OneSequenceGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          },
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          myLocationEnabled: true,
+          scrollGesturesEnabled: true,
+          zoomGesturesEnabled: true,
+          tiltGesturesEnabled: true,
+          onMapCreated: (GoogleMapController controller) async {
+            mapController = controller;
+            final int markerIdVal1 = generateIds();
+            final MarkerId markerId = MarkerId(markerIdVal1.toString());
+            final Marker marker1 = Marker(
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen),
+              markerId: markerId,
+              onTap: () {},
+              position: LatLng(addressLat!, addressLong!),
+              infoWindow: InfoWindow(
+                  title: project.projectName, snippet: project.location),
+            );
+            _markers.add(marker1);
+            setState(
+              () {
+                mapController.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                        target: LatLng(addressLat!, addressLong!), zoom: 8.0),
+                  ),
+                );
+              },
+            );
+          },
+          mapToolbarEnabled: false,
+          markers: _markers,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(addressLat!, addressLong!),
+            zoom: 10.0,
+          ),
+        ),
       ),
     );
   }

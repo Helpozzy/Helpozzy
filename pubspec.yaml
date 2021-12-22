@@ -36,6 +36,7 @@ dependencies:
   firebase_storage: ^10.0.6
   email_auth: ^1.0.0
   google_maps_flutter: ^2.1.1
+  geolocator: ^8.0.1
   provider: ^5.0.0
   email_validator: ^2.0.1
   equatable: ^2.0.3
@@ -50,7 +51,6 @@ dependencies:
   intl: ^0.17.0
   span_builder: ^0.1.0
   timelines: ^0.1.0
-  geolocator: ^7.4.0
   flutter_rating_bar: ^4.0.0
   percent_indicator: ^3.0.1
   country_code_picker: ^2.0.2
