@@ -259,6 +259,8 @@ const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
 const ESTIMATED_HRS = 'Estimated Hrs : ';
 const MEMBERS_SIGNED_UP = ' Members signed up';
+const PROJECT_CREATED_ON = 'Project created on : ';
+const ESTIMATED_END_DATE = 'Estimated end date : ';
 
 //User project tabbar title
 const TASKS_TAB = 'Tasks';
@@ -440,6 +442,8 @@ const TASK_QUALIFICATION_HINT = 'Enter Qualification';
 const TASK_START_DATE_HINT = 'Start Date';
 const TASK_END_HINT = 'End Date';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
+const SELECTED_HOURS_LABEL = 'Selected Hours';
+const ENTER_ESTIMATED_HOURS_HINT = 'Enter estimated hours';
 
 const NOT_STARTED_TASKS = 'Not Started Tasks';
 const COMPLETED_TASKS = 'Completed Tasks';

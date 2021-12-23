@@ -43,7 +43,6 @@ class _CreateProjectState extends State<CreateProject> {
   late ThemeData _themeData;
   late double width;
   late double height;
-  late double trackerVal = 0.0;
   late int selectedCategoryId;
 
   @override
@@ -205,16 +204,6 @@ class _CreateProjectState extends State<CreateProject> {
                     child: startDateAndEndDateSection(),
                   ),
                   Divider(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: width * 0.03, horizontal: width * 0.05),
-                    child: SmallInfoLabel(label: HOURS_LABEL),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: hoursSlider(),
-                  ),
-                  Divider(),
                   SizedBox(height: 10)
                 ],
               ),
@@ -236,52 +225,6 @@ class _CreateProjectState extends State<CreateProject> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget hoursSlider() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: width * 0.06, right: width * 0.05),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '0',
-                style: _themeData.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '20',
-                style: _themeData.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-        Slider(
-          min: 0,
-          max: 20,
-          label: trackerVal.round().toString(),
-          value: trackerVal,
-          activeColor: PRIMARY_COLOR,
-          onChanged: (value) {
-            setState(() => trackerVal = value);
-          },
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextfieldLabelSmall(label: 'Selected Hours : '),
-            Text(
-              trackerVal.round().toString(),
-              style: _themeData.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ],
-        )
-      ],
     );
   }
 
@@ -593,7 +536,6 @@ class _CreateProjectState extends State<CreateProject> {
       rating: 0.0,
       reviewCount: 0,
       enrollmentCount: 0,
-      estimatedHours: trackerVal.round(),
       projectName: _projNameController.text,
       description: _projDesController.text,
       startDate: DateTime.parse(_projStartDateController.text)

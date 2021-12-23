@@ -97,47 +97,35 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: width * 0.06, right: width * 0.05),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '0',
-                  style: _theme.textTheme.bodyText2!
-                      .copyWith(fontWeight: FontWeight.bold),
+          Row(
+            children: [
+              Text(
+                '0',
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: Slider(
+                  min: 0,
+                  max: 225,
+                  label: trackerVal.round().toString(),
+                  value: trackerVal,
+                  activeColor: PRIMARY_COLOR,
+                  divisions: 9,
+                  onChanged: (value) {
+                    setState(() => trackerVal = value);
+                    if (trackerVal.round() == 225) {
+                      showSnakeBar(context, msg: 'Enter your hrs in field');
+                    }
+                  },
                 ),
-                Row(
-                  children: [
-                    Text(
-                      '200',
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(width: width * 0.03),
-                    Text(
-                      '+',
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Slider(
-            min: 0,
-            max: 225,
-            label: trackerVal.round().toString(),
-            value: trackerVal,
-            activeColor: PRIMARY_COLOR,
-            divisions: 9,
-            onChanged: (value) {
-              setState(() => trackerVal = value);
-              if (trackerVal.round() == 225) {
-                showSnakeBar(context, msg: 'Enter your hrs in field');
-              }
-            },
+              ),
+              Text(
+                '200 +',
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -148,9 +136,14 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                         controller: _targetHoursController,
                         hintText: ENTER_TARGET_HOURS_HINT,
                         keyboardType: TextInputType.number,
+                        onChanged: (val) {
+                          setState(() => _targetHoursController.selection =
+                              TextSelection.fromPosition(
+                                  TextPosition(offset: val.length)));
+                        },
                         validator: (phone) {
                           if (phone!.isEmpty) {
-                            return 'Please enter target hours';
+                            return 'Please enter estimated hours';
                           } else {
                             return null;
                           }
@@ -158,10 +151,10 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                       ),
                     )
                   : SizedBox(),
-              SizedBox(width: 15),
+              trackerVal >= 225.0 ? SizedBox(width: 15) : SizedBox(),
               Column(
                 children: [
-                  TextfieldLabelSmall(label: 'Selected Hours'),
+                  TextfieldLabelSmall(label: SELECTED_HOURS_LABEL),
                   Text(
                     trackerVal.round() == 225
                         ? '200+'

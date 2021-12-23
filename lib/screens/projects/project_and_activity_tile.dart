@@ -109,43 +109,17 @@ class _ProjectTileState extends State<ProjectTile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              DateFormat('EEEE, MMMM dd, yyyy').format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(project.startDate),
-                                ),
-                              ),
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                fontSize: 12,
-                                color: BLUE_COLOR,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        Text(
+                          DateFormat('EEEE, MMMM dd, yyyy').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(project.startDate),
                             ),
-                            SizedBox(height: 3),
-                            Row(
-                              children: [
-                                Text(
-                                  ESTIMATED_HRS,
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 12,
-                                    color: PRIMARY_COLOR,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  project.estimatedHours.toString(),
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 12,
-                                    color: BLUE_COLOR,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontSize: 12,
+                            color: BLUE_COLOR,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         fromAdmin
                             ? SmallCommonButtonWithIcon(

@@ -538,15 +538,13 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   title: project.projectName, snippet: project.location),
             );
             _markers.add(marker1);
-            setState(
-              () {
-                mapController.moveCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                        target: LatLng(addressLat!, addressLong!), zoom: 8.0),
-                  ),
-                );
-              },
+            mapController.moveCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: LatLng(addressLat!, addressLong!),
+                  zoom: 8.0,
+                ),
+              ),
             );
           },
           mapToolbarEnabled: false,

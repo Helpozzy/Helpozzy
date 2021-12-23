@@ -424,31 +424,10 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
       child: Column(
         children: [
           Row(
-            children: [
-              Text(
-                ESTIMATED_HRS,
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: PRIMARY_COLOR,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                project.estimatedHours.toString(),
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: BLUE_COLOR,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 5),
-          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Project created on : ',
+                PROJECT_CREATED_ON,
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: PRIMARY_COLOR,
@@ -474,7 +453,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Estimated end date : ',
+                ESTIMATED_END_DATE,
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: PRIMARY_COLOR,

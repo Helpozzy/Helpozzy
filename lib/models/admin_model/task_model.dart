@@ -65,8 +65,8 @@ class TaskModel {
   late String id;
   late String taskName;
   late String description;
-  late String memberRequirement;
-  late String ageRestriction;
+  late int memberRequirement;
+  late int ageRestriction;
   late String qualification;
   late String startDate;
   late String endDate;
