@@ -49,6 +49,8 @@
 	<string>Allow permission to attach Photo/Video in app</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Allow permission to use Music in app</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This application requires location services to show location</string>
 	<key>UIBackgroundModes</key>
 	<array>
    		<string>fetch</string>

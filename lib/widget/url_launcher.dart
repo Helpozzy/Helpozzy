@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:share/share.dart';
@@ -19,6 +21,30 @@ class CommonUrlLauncher {
       await launch(url);
     } else {
       throw 'Could not launch Map $url';
+    }
+  }
+
+  Future openSystemMap(double lat, double lng) async {
+    String url = '';
+    String urlAppleMaps = '';
+    if (Platform.isAndroid) {
+      url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+    } else {
+      urlAppleMaps = 'https://maps.apple.com/?q=$lat,$lng';
+      url = 'comgooglemaps://?saddr=&daddr=$lat,$lng&directionsmode=driving';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else if (await canLaunch(urlAppleMaps)) {
+      await launch(urlAppleMaps);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 

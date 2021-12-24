@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
@@ -10,6 +10,7 @@ import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectOtherDetailsScreen extends StatefulWidget {
   ProjectOtherDetailsScreen({required this.project});
@@ -27,6 +28,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   late ThemeData _theme;
   TextEditingController _reviewController = TextEditingController();
   UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final CommonUrlLauncher _commonUrlLauncher = CommonUrlLauncher();
 
   late GoogleMapController mapController;
   late double? addressLat = 0.0;
@@ -40,35 +42,10 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
     super.initState();
   }
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition();
-  }
-
   Future getLatLong() async {
-    final Position position = await _determinePosition();
-
-    addressLat = position.latitude;
-    addressLong = position.longitude;
+    List<Location> locations = await locationFromAddress(project.location);
+    addressLat = locations[0].latitude;
+    addressLong = locations[0].longitude;
     setState(() {});
   }
 
@@ -508,52 +485,74 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
 
   Widget locationMap() {
     return Container(
-      height: height / 4,
+      height: height / 3.5,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: GoogleMap(
-          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-            Factory<OneSequenceGestureRecognizer>(
-              () => EagerGestureRecognizer(),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: GoogleMap(
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer()),
+              },
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: false,
+              myLocationEnabled: true,
+              scrollGesturesEnabled: true,
+              zoomGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              indoorViewEnabled: true,
+              onMapCreated: (GoogleMapController controller) async {
+                mapController = controller;
+                final int markerIdVal1 = generateIds();
+                final MarkerId markerId = MarkerId(markerIdVal1.toString());
+                final Marker marker1 = Marker(
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueGreen),
+                  markerId: markerId,
+                  onTap: () {},
+                  position: LatLng(addressLat!, addressLong!),
+                  infoWindow: InfoWindow(
+                      title: project.projectName, snippet: project.location),
+                );
+                _markers.add(marker1);
+                mapController.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(addressLat!, addressLong!),
+                      zoom: 11.0,
+                    ),
+                  ),
+                );
+              },
+              mapToolbarEnabled: false,
+              markers: _markers,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(addressLat!, addressLong!),
+                zoom: 11.0,
+              ),
             ),
-          },
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          myLocationEnabled: true,
-          scrollGesturesEnabled: true,
-          zoomGesturesEnabled: true,
-          tiltGesturesEnabled: true,
-          onMapCreated: (GoogleMapController controller) async {
-            mapController = controller;
-            final int markerIdVal1 = generateIds();
-            final MarkerId markerId = MarkerId(markerIdVal1.toString());
-            final Marker marker1 = Marker(
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueGreen),
-              markerId: markerId,
-              onTap: () {},
-              position: LatLng(addressLat!, addressLong!),
-              infoWindow: InfoWindow(
-                  title: project.projectName, snippet: project.location),
-            );
-            _markers.add(marker1);
-            mapController.moveCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: LatLng(addressLat!, addressLong!),
-                  zoom: 8.0,
+          ),
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Container(
+              decoration: BoxDecoration(
+                color: WHITE,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: IconButton(
+                onPressed: () async => await _commonUrlLauncher.openSystemMap(
+                    addressLat!, addressLong!),
+                icon: Icon(
+                  Icons.directions,
+                  color: GREEN,
                 ),
               ),
-            );
-          },
-          mapToolbarEnabled: false,
-          markers: _markers,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(addressLat!, addressLong!),
-            zoom: 10.0,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
