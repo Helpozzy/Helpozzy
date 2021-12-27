@@ -19,7 +19,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   void initState() {
-    _projectTaskBloc.getProjectTasks('9pAPDbwbmKhrORI1RXWb');
+    _projectTaskBloc.getProjectAllTasks('9pAPDbwbmKhrORI1RXWb');
     super.initState();
   }
 
@@ -53,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Widget taskList() {
     return StreamBuilder<Tasks>(
-      stream: _projectTaskBloc.getProjectTasksStream,
+      stream: _projectTaskBloc.getProjectAllTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -97,7 +97,7 @@ class _TasksScreenState extends State<TasksScreen> {
         ),
       ),
     );
-    await _projectTaskBloc.getProjectTasks('');
+    await _projectTaskBloc.getProjectAllTasks('');
   }
 
   Future onDelete(TaskModel task) async {
@@ -110,6 +110,6 @@ class _TasksScreenState extends State<TasksScreen> {
       CircularLoader().hide(context);
       showSnakeBar(context, msg: 'Something went wrong!');
     }
-    await _projectTaskBloc.getProjectTasks('');
+    await _projectTaskBloc.getProjectAllTasks('');
   }
 }

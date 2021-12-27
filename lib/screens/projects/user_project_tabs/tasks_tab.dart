@@ -21,7 +21,8 @@ class _TaskTabState extends State<TaskTab> {
   late ThemeData _theme;
   late double height;
   late double width;
-  late bool myTaskIsExpanded = false;
+  late bool myTaskExpanded = false;
+  late bool allTasksExpanded = false;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
   @override
@@ -36,24 +37,35 @@ class _TaskTabState extends State<TaskTab> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          tasksCategoriesCard(
-            prefixWidget: CommonUserProfileOrPlaceholder(
-              imgUrl: prefsObject.getString('profileImage')!,
-              size: width / 10,
-            ),
-            label: 'My Tasks',
-            counter: '3',
-            isMyTask: true,
-          ),
-          tasksCategoriesCard(
-            prefixWidget: Icon(
-              CupertinoIcons.square_list,
-              size: width / 12,
-              color: BLUE_GRAY,
-            ),
-            label: 'View all Tasks',
-            counter: '6',
-            isMyTask: false,
+          StreamBuilder<bool>(
+              initialData: myTaskExpanded,
+              stream: _projectTaskBloc.getMyTaskExpandedStream,
+              builder: (context, snapshot) {
+                return tasksCategoriesCard(
+                  prefixWidget: CommonUserProfileOrPlaceholder(
+                    imgUrl: prefsObject.getString('profileImage')!,
+                    size: width / 10,
+                  ),
+                  label: 'My Tasks',
+                  isMyTask: true,
+                  isExpanded: snapshot.data!,
+                );
+              }),
+          StreamBuilder<bool>(
+            initialData: allTasksExpanded,
+            stream: _projectTaskBloc.geAllTaskExpandedStream,
+            builder: (context, snapshot) {
+              return tasksCategoriesCard(
+                prefixWidget: Icon(
+                  CupertinoIcons.square_list,
+                  size: width / 12,
+                  color: BLUE_GRAY,
+                ),
+                label: 'View all Tasks',
+                isMyTask: false,
+                isExpanded: snapshot.data!,
+              );
+            },
           ),
         ],
       ),
@@ -63,88 +75,69 @@ class _TaskTabState extends State<TaskTab> {
   Widget tasksCategoriesCard(
       {required Widget prefixWidget,
       required String label,
-      required String counter,
-      required bool isMyTask}) {
-    return StreamBuilder<bool>(
-      initialData: isMyTask ? myTaskIsExpanded : false,
-      stream: _projectTaskBloc.getMyTaskExpandedStream,
-      builder: (context, myTaskExpandedSnapshot) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
-          child: InkWell(
-            onTap: () {
-              if (isMyTask) {
-                setState(() => myTaskIsExpanded = !myTaskIsExpanded);
-                _projectTaskBloc.isExpanded(myTaskIsExpanded);
-                _projectTaskBloc.getProjectTasks(project.projectId);
-              } else {}
-            },
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              elevation: 3,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 10.0),
-                child: Column(
+      required bool isMyTask,
+      required bool isExpanded}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
+      child: InkWell(
+        onTap: () {
+          if (isMyTask) {
+            setState(() => myTaskExpanded = !myTaskExpanded);
+            _projectTaskBloc.myTaskIsExpanded(myTaskExpanded);
+            _projectTaskBloc.getProjectOwnTasks(project.projectId);
+          } else {
+            setState(() => allTasksExpanded = !allTasksExpanded);
+            _projectTaskBloc.allTaskIsExpanded(allTasksExpanded);
+            _projectTaskBloc.getProjectAllTasks(project.projectId);
+          }
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          elevation: 3,
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            prefixWidget,
-                            SizedBox(width: 8),
-                            Text(
-                              label,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                color: DARK_PINK_COLOR,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              counter,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                color: DARK_PINK_COLOR,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            Icon(
-                              isMyTask
-                                  ? myTaskExpandedSnapshot.data!
-                                      ? Icons.keyboard_arrow_up_rounded
-                                      : Icons.keyboard_arrow_down_rounded
-                                  : Icons.keyboard_arrow_down_rounded,
-                            ),
-                          ],
-                        ),
+                        prefixWidget,
+                        SizedBox(width: 8),
+                        Text(
+                          label,
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            color: DARK_PINK_COLOR,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
                       ],
                     ),
-                    isMyTask
-                        ? myTaskExpandedSnapshot.data!
-                            ? tasksOfProject()
-                            : SizedBox()
-                        : SizedBox(),
+                    Icon(
+                      isExpanded
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded,
+                    ),
                   ],
                 ),
-              ),
+                isExpanded ? tasksOfProject(isMyTask) : SizedBox(),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget tasksOfProject() {
+  Widget tasksOfProject(bool isMyTask) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.01),
       child: StreamBuilder<Tasks>(
-        stream: _projectTaskBloc.getProjectTasksStream,
+        stream: isMyTask
+            ? _projectTaskBloc.getProjectOwnTasksStream
+            : _projectTaskBloc.getProjectAllTasksStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Container(
@@ -171,20 +164,18 @@ class _TaskTabState extends State<TaskTab> {
                           ? LIGHT_GRAY
                           : task.status == TOGGLE_INPROGRESS
                               ? AMBER_COLOR
-                              : GREEN,
+                              : ACCENT_GREEN,
                       borderRadius: BorderRadius.circular(100),
                       border: Border.all(color: PRIMARY_COLOR, width: 1),
                     ),
                   ),
-                  Expanded(
-                    child: TaskCard(
-                      task: task,
-                      optionEnable: false,
-                      onTapItem: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TaskDetails(task: task),
-                        ),
+                  TaskCard(
+                    task: task,
+                    optionEnable: false,
+                    onTapItem: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskDetails(task: task),
                       ),
                     ),
                   ),

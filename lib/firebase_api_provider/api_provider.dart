@@ -359,11 +359,17 @@ class ApiProvider {
     }
   }
 
-  Future<Tasks> getProjectTasksAPIProvider(String projectId) async {
-    final QuerySnapshot querySnapshot = await firestore
-        .collection('tasks')
-        .where('project_id', isEqualTo: projectId)
-        .get();
+  Future<Tasks> getProjectTasksAPIProvider(String projectId, bool isOwn) async {
+    final QuerySnapshot querySnapshot = isOwn
+        ? await firestore
+            .collection('tasks')
+            .where('project_id', isEqualTo: projectId)
+            .where('owner_id', isEqualTo: prefsObject.getString('uID'))
+            .get()
+        : await firestore
+            .collection('tasks')
+            .where('project_id', isEqualTo: projectId)
+            .get();
 
     List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
     List<Map<String, dynamic>> tasks = [];

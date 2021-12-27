@@ -7,19 +7,29 @@ class ProjectTaskBloc {
   final repo = Repository();
 
   final myTaskExpandController = PublishSubject<bool>();
-  final projectTasksController = PublishSubject<Tasks>();
+  final allTaskExpandController = PublishSubject<bool>();
+  final projectOwnTasksController = PublishSubject<Tasks>();
+  final projectAllTasksController = PublishSubject<Tasks>();
   final projectTasksDetailsController = PublishSubject<ProjectTaskHelper>();
   final selectedTasksController = BehaviorSubject<List<TaskModel>>();
 
   Stream<bool> get getMyTaskExpandedStream => myTaskExpandController.stream;
-  Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
+  Stream<bool> get geAllTaskExpandedStream => allTaskExpandController.stream;
+  Stream<Tasks> get getProjectOwnTasksStream =>
+      projectOwnTasksController.stream;
+  Stream<Tasks> get getProjectAllTasksStream =>
+      projectAllTasksController.stream;
   Stream<ProjectTaskHelper> get getProjectTaskDetailsStream =>
       projectTasksDetailsController.stream;
   Stream<List<TaskModel>> get getSelectedTaskStream =>
       selectedTasksController.stream;
 
-  Future isExpanded(bool expand) async {
+  Future myTaskIsExpanded(bool expand) async {
     myTaskExpandController.sink.add(expand);
+  }
+
+  Future allTaskIsExpanded(bool expand) async {
+    allTaskExpandController.sink.add(expand);
   }
 
   Future<bool> postTasks(TaskModel task) async {
@@ -27,13 +37,18 @@ class ProjectTaskBloc {
     return response;
   }
 
-  Future getProjectTasks(String projectId) async {
-    final Tasks response = await repo.getProjectTasksRepo(projectId);
-    projectTasksController.sink.add(response);
+  Future getProjectOwnTasks(String projectId) async {
+    final Tasks response = await repo.getProjectTasksRepo(projectId, true);
+    projectOwnTasksController.sink.add(response);
+  }
+
+  Future getProjectAllTasks(String projectId) async {
+    final Tasks response = await repo.getProjectTasksRepo(projectId, false);
+    projectAllTasksController.sink.add(response);
   }
 
   Future getProjectTaskDetails(String projectId) async {
-    final Tasks response = await repo.getProjectTasksRepo(projectId);
+    final Tasks response = await repo.getProjectTasksRepo(projectId, false);
     final ProjectTaskHelper projectHelper =
         ProjectTaskHelper.fromProject(response.tasks);
     projectTasksDetailsController.sink.add(projectHelper);
@@ -64,8 +79,10 @@ class ProjectTaskBloc {
 
   void dispose() {
     myTaskExpandController.close();
+    allTaskExpandController.close();
     selectedTasksController.close();
-    projectTasksController.close();
+    projectOwnTasksController.close();
+    projectAllTasksController.close();
     projectTasksDetailsController.close();
   }
 }

@@ -147,7 +147,7 @@ class _CreateProjectState extends State<CreateProject> {
                                   builder: (context) =>
                                       CreateEditTask(fromEdit: false)),
                             );
-                            await _projectTaskBloc.getProjectTasks('');
+                            await _projectTaskBloc.getProjectAllTasks('');
                           },
                         ),
                         TextButton(

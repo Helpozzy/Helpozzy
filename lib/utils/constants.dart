@@ -244,6 +244,7 @@ const LOGOUT_BUTTON = 'Logout';
 const DELETE_BUTTON = 'Delete';
 const SENT_OTP_BUTTON = 'Sent OTP';
 const START_BUTTON = 'START';
+const COMPLETED_BUTTON = 'Completed';
 const DECLINE_BUTTON = 'DECLINE';
 const LOG_HOURS_BUTTON = 'Thank you! Click to log your hours';
 
@@ -270,6 +271,7 @@ const ATTACHMENTS_TAB = 'Attachments';
 
 //User project task details
 const TASK_DETAILS = 'Task Details';
+const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
 
 //Tabbar title
 const DETAILS_TAB = 'Details';

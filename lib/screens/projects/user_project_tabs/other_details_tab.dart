@@ -521,7 +521,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
                       target: LatLng(addressLat!, addressLong!),
-                      zoom: 11.0,
+                      zoom: 10.0,
                     ),
                   ),
                 );
@@ -530,18 +530,16 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
               markers: _markers,
               initialCameraPosition: CameraPosition(
                 target: LatLng(addressLat!, addressLong!),
-                zoom: 11.0,
+                zoom: 10.0,
               ),
             ),
           ),
           Positioned(
             bottom: 8,
             right: 8,
-            child: Container(
-              decoration: BoxDecoration(
-                color: WHITE,
-                borderRadius: BorderRadius.circular(12),
-              ),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
               child: IconButton(
                 onPressed: () async => await _commonUrlLauncher.openSystemMap(
                     addressLat!, addressLong!),

@@ -57,61 +57,31 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     _themeData = Theme.of(context);
     width = MediaQuery.of(context).size.width;
-    return Card(
-      elevation: 3,
-      color: !optionEnable
-          ? WHITE
-          : selected
-              ? GRAY
-              : WHITE,
-      margin: EdgeInsets.symmetric(vertical: 5.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          children: [
-            InkWell(
-              onTap: onTapItem,
-              child: Column(
+    return GestureDetector(
+      onTap: onTapItem,
+      child: Card(
+        elevation: 3,
+        color: !optionEnable
+            ? WHITE
+            : selected
+                ? GRAY
+                : WHITE,
+        margin: EdgeInsets.symmetric(vertical: 5.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: width / 1.40,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          timeStampConvertToDate(task.startDate),
-                          style: _themeData.textTheme.bodyText2!.copyWith(
-                              fontSize: 10, color: UNSELECTED_TAB_COLOR),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              ESTIMATED_HRS,
-                              style: _themeData.textTheme.bodyText2!.copyWith(
-                                fontSize: 10,
-                                color: PRIMARY_COLOR,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              task.estimatedHrs.toString(),
-                              style: _themeData.textTheme.bodyText2!.copyWith(
-                                fontSize: 10,
-                                color: UNSELECTED_TAB_COLOR,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  Text(
+                    timeStampConvertToDate(task.startDate),
+                    style: _themeData.textTheme.bodyText2!
+                        .copyWith(fontSize: 10, color: UNSELECTED_TAB_COLOR),
                   ),
-                  CommonDivider(),
                   Text(
                     task.taskName,
                     style: _themeData.textTheme.headline6!.copyWith(
@@ -128,19 +98,28 @@ class _TaskCardState extends State<TaskCard> {
                               ? processButton(true)
                               : singleSubmitHoursButton()
                       : SizedBox(),
+                  SizedBox(height: 8),
+                  Text(
+                    ESTIMATED_HRS + task.estimatedHrs.toString(),
+                    style: _themeData.textTheme.bodyText2!.copyWith(
+                      fontSize: 8,
+                      color: PRIMARY_COLOR,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
-            ),
-            optionEnable
-                ? IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: DARK_GRAY,
-                    ),
-                    onPressed: onTapDelete,
-                  )
-                : SizedBox(),
-          ],
+              optionEnable
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: DARK_GRAY,
+                      ),
+                      onPressed: onTapDelete,
+                    )
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -148,12 +127,12 @@ class _TaskCardState extends State<TaskCard> {
 
   Widget processButton(bool taskIsInProgress) {
     return Container(
-      width: width / 1.35,
+      width: width / 1.37,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Are you running late?',
+            TASK_ARE_YOU_RUNNING_LATE,
             style: _themeData.textTheme.bodyText2!.copyWith(
               fontSize: 8,
               color: BLUE_COLOR,
@@ -163,7 +142,7 @@ class _TaskCardState extends State<TaskCard> {
           taskIsInProgress
               ? SmallCommonButton(
                   fontSize: 12,
-                  text: 'Completed',
+                  text: COMPLETED_BUTTON,
                   buttonColor: DARK_PINK_COLOR,
                   onPressed: () async {
                     final bool response =
