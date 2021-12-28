@@ -58,10 +58,10 @@ class _ChatState extends State<Chat> {
   }
 
   Future getUserData() async {
-    prefsObject.setString('PeerId', peerUser.id);
+    prefsObject.setString(PEER_USRE_ID, peerUser.id);
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(prefsObject.getString('uID'))
+        .doc(prefsObject.getString(CURRENT_USER_ID))
         .get()
         .then((user) async {
       userData = user.data() as Map<String, dynamic>;
@@ -85,16 +85,16 @@ class _ChatState extends State<Chat> {
   Future removeBadge() async {
     await FirebaseFirestore.instance
         .collection('chat_list')
-        .doc(prefsObject.getString('uID'))
-        .collection(prefsObject.getString('uID')!)
+        .doc(prefsObject.getString(CURRENT_USER_ID))
+        .collection(prefsObject.getString(CURRENT_USER_ID)!)
         .doc(peerUser.id)
         .get()
         .then((data) async {
       if (data.data() != null) {
         await FirebaseFirestore.instance
             .collection('chat_list')
-            .doc(prefsObject.getString('uID'))
-            .collection(prefsObject.getString('uID')!)
+            .doc(prefsObject.getString(CURRENT_USER_ID))
+            .collection(prefsObject.getString(CURRENT_USER_ID)!)
             .doc(peerUser.id)
             .update({'badge': '0'});
       }
@@ -109,7 +109,7 @@ class _ChatState extends State<Chat> {
   }
 
   Future<bool> removeActiveUser() async {
-    prefsObject.remove('PeerId');
+    prefsObject.remove(PEER_USRE_ID);
     await FirebaseFirestore.instance
         .collection('user_currently_active')
         .doc(userData['user_id'])
@@ -140,15 +140,16 @@ class _ChatState extends State<Chat> {
   }
 
   void readLocal() {
-    if (prefsObject.getString('uID').hashCode <= peerUser.id.hashCode) {
-      groupChatId = '${prefsObject.getString('uID')}-${peerUser.id}';
+    if (prefsObject.getString(CURRENT_USER_ID).hashCode <=
+        peerUser.id.hashCode) {
+      groupChatId = '${prefsObject.getString(CURRENT_USER_ID)}-${peerUser.id}';
     } else {
-      groupChatId = '${peerUser.id}-${prefsObject.getString('uID')}';
+      groupChatId = '${peerUser.id}-${prefsObject.getString(CURRENT_USER_ID)}';
     }
 
     FirebaseFirestore.instance
         .collection('users')
-        .doc(prefsObject.getString('uID'))
+        .doc(prefsObject.getString(CURRENT_USER_ID))
         .update({'chattingWith': peerUser.id});
 
     setState(() {});
@@ -368,7 +369,7 @@ class _ChatState extends State<Chat> {
     if ((index > 0 &&
             listMessage.isNotEmpty &&
             listMessage[index - 1]['id_from'] ==
-                prefsObject.getString('uID')) ||
+                prefsObject.getString(CURRENT_USER_ID)) ||
         index == 0) {
       return true;
     } else {
@@ -380,7 +381,7 @@ class _ChatState extends State<Chat> {
     if ((index > 0 &&
             listMessage.isNotEmpty &&
             listMessage[index - 1]['id_from'] !=
-                prefsObject.getString('uID')) ||
+                prefsObject.getString(CURRENT_USER_ID)) ||
         index == 0) {
       return true;
     } else {
@@ -412,7 +413,7 @@ class _ChatState extends State<Chat> {
         transaction.set(
           documentReference,
           {
-            'id_from': prefsObject.getString('uID'),
+            'id_from': prefsObject.getString(CURRENT_USER_ID),
             'id_to': peerUser.id,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
@@ -422,8 +423,8 @@ class _ChatState extends State<Chat> {
       }).then((onValue) async {
         await FirebaseFirestore.instance
             .collection('chat_list')
-            .doc(prefsObject.getString('uID'))
-            .collection(prefsObject.getString('uID')!)
+            .doc(prefsObject.getString(CURRENT_USER_ID))
+            .collection(prefsObject.getString(CURRENT_USER_ID)!)
             .doc(peerUser.id)
             .set({
           'user_id': peerUser.id,
@@ -440,7 +441,7 @@ class _ChatState extends State<Chat> {
                 .collection('chat_list')
                 .doc(peerUser.id)
                 .collection(peerUser.id)
-                .doc(prefsObject.getString('uID'))
+                .doc(prefsObject.getString(CURRENT_USER_ID))
                 .get()
                 .then((doc) async {
               final Map<String, dynamic> json =
@@ -452,9 +453,9 @@ class _ChatState extends State<Chat> {
                     .collection('chat_list')
                     .doc(peerUser.id)
                     .collection(peerUser.id)
-                    .doc(prefsObject.getString('uID'))
+                    .doc(prefsObject.getString(CURRENT_USER_ID))
                     .set({
-                  'user_id': prefsObject.getString('uID'),
+                  'user_id': prefsObject.getString(CURRENT_USER_ID),
                   'name': "${userData['name']}",
                   'email': "${userData['emailId']}",
                   'type': type,
@@ -477,9 +478,9 @@ class _ChatState extends State<Chat> {
                 .collection('chat_list')
                 .doc(peerUser.id)
                 .collection(peerUser.id)
-                .doc(prefsObject.getString('uID'))
+                .doc(prefsObject.getString(CURRENT_USER_ID))
                 .set({
-              'user_id': prefsObject.getString('uID'),
+              'user_id': prefsObject.getString(CURRENT_USER_ID),
               'name': "${userData['name']}",
               'email': "${userData['emailId']}",
               'type': type,
@@ -505,7 +506,7 @@ class _ChatState extends State<Chat> {
   }
 
   Widget buildItem(BuildContext context, int index, DocumentSnapshot document) {
-    if (document['id_from'] == prefsObject.getString('uID')) {
+    if (document['id_from'] == prefsObject.getString(CURRENT_USER_ID)) {
       // Sent Message (my message)
       return Column(
         children: <Widget>[
@@ -517,7 +518,7 @@ class _ChatState extends State<Chat> {
                       onLongPress: () {
                         Clipboard.setData(
                             ClipboardData(text: document['content']));
-                        showSnakeBar(context, msg: 'Message copied');
+                        showSnakeBar(context, msg: MESSAGE_COPIED_POPUP_MSG);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width - 100,

@@ -20,7 +20,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
 
   @override
   void initState() {
-    currentUserId = prefsObject.getString('uID')!;
+    currentUserId = prefsObject.getString(CURRENT_USER_ID)!;
     getOpenChatUser();
     super.initState();
   }

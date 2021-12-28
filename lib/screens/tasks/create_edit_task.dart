@@ -666,7 +666,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     CircularLoader().show(context);
     final TaskModel taskDetails = TaskModel(
       projectId: '',
-      ownerId: prefsObject.getString('uID')!,
+      ownerId: prefsObject.getString(CURRENT_USER_ID)!,
       id: fromEdit ? task!.id : '',
       taskName: _taskNameController.text,
       description: _taskDesController.text,
@@ -693,17 +693,21 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     if (isUploaded) {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context,
-          msg: fromEdit
-              ? 'Task updated successfully!'
-              : 'Task created successfully!');
+      showSnakeBar(
+        context,
+        msg: fromEdit
+            ? TASK_UPDATED_SUCCESSFULLY_POPUP_MSG
+            : TASK_CREATED_SUCCESSFULLY_POPUP_MSG,
+      );
     } else {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context,
-          msg: fromEdit
-              ? 'Task not updated due some error, Try again!'
-              : 'Task not created due some error, Try again!');
+      showSnakeBar(
+        context,
+        msg: fromEdit
+            ? TASK_NOT_UPDATED_ERROR_POPUP_MSG
+            : TASK_NOT_CREATED_ERROR_POPUP_MSG,
+      );
     }
   }
 

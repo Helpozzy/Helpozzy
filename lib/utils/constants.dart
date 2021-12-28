@@ -168,6 +168,36 @@ const ENTER_PASSWORD_HINT = 'Enter password';
 const ENTER_CONFIRM_PASSWORD_HINT = 'Enter confirm password';
 const SEARCH_COUNTRY_HINT = 'Search Here';
 
+//Prefs Keys
+const CURRENT_USER_ID = 'uID';
+const PEER_USRE_ID = 'PeerId';
+const CURRENT_USER_PROFILE_URL = 'profileImage';
+const CURRENT_USER_DATA = 'currentUser';
+
+//Snakbar message
+const LOGIN_SUCEED_POPUP_MSG = 'Login Succeed';
+const SIGN_UP_FAILED_POPUP_MSG = 'Sign-Up Failed!';
+const FAILED_POPUP_MSG = 'Failed!';
+const OTP_SENT_TO_POPUP_MSG = 'OTP sent to';
+const ENTER_HRS_POPUP_MSG = 'Enter your hrs in field';
+const PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG = 'Project created successfully!';
+const PROJECT_NOT_CREATED_ERROR_POPUP_MSG =
+    'Project not created due some error, Try again!';
+const TASK_COMPLETED_POPUP_MSG = 'Task completed';
+const TASK_STARTED_POPUP_MSG = 'Task started';
+const TASK_NOT_UPDATED_POPUP_MSG = 'Technical issue! Task not updated';
+const TASK_DELETED_POPUP_MSG = 'Task deleted!';
+const SOMETHING_WENT_WRONG_POPUP_MSG = 'Something went wrong!';
+const MESSAGE_COPIED_POPUP_MSG = 'Message copied';
+const PROFILE_UPDATED_POPUP_MSG = 'Profile Updated';
+const PROFILE_NOT_UPDATED_POPUP_MSG = 'Technical issue! Profile not updated';
+const TASK_UPDATED_SUCCESSFULLY_POPUP_MSG = 'Task updated successfully!';
+const TASK_CREATED_SUCCESSFULLY_POPUP_MSG = 'Task created successfully!';
+const TASK_NOT_UPDATED_ERROR_POPUP_MSG =
+    'Task not updated due some error, Try again!';
+const TASK_NOT_CREATED_ERROR_POPUP_MSG =
+    'Task not created due some error, Try again!';
+
 //Reset password
 const RESET_PASSWORD = 'Forgot your password?';
 const RESER_PASS_MSG =
@@ -271,6 +301,8 @@ const ATTACHMENTS_TAB = 'Attachments';
 
 //User project task details
 const TASK_DETAILS = 'Task Details';
+const MY_TASKS_LABEL = 'My Tasks';
+const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
 
 //Tabbar title
@@ -331,6 +363,7 @@ const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';
 const PROJECT_APPBAR = 'Projects';
+const REPORTS_APPBAR = 'Reports';
 const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
 
 //Details Tab
@@ -598,6 +631,24 @@ Map<String, dynamic> rewardsList = {
     ],
   },
 };
+
+List<Map<String, dynamic>> sampleReportList = [
+  {
+    'year': 2021,
+    'users': 122,
+    'hours': 375,
+  },
+  {
+    'year': 2020,
+    'users': 57,
+    'hours': 175,
+  },
+  {
+    'year': 2019,
+    'users': 35,
+    'hours': 105,
+  },
+];
 
 int generateIds() {
   final rng = Random();

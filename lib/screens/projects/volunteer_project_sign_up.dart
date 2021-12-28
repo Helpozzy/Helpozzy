@@ -40,7 +40,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
   final TextEditingController _phnController = TextEditingController();
 
   Future getUserData() async {
-    final String userData = prefsObject.getString('currentUser')!;
+    final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
     final Map<String, dynamic> json =
         jsonDecode(userData) as Map<String, dynamic>;
     final SignUpAndUserModel userModel =
@@ -240,7 +240,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                         if (_formKey.currentState!.validate()) {
                           CircularLoader().show(context);
                           final projectSignUpVal = ProjectSignUpModel(
-                            ownerId: prefsObject.getString('uID'),
+                            ownerId: prefsObject.getString(CURRENT_USER_ID),
                             projectId: project.projectId,
                             name: _nameController.text,
                             email: _emailController.text,

@@ -27,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginResponseModel loginResponse =
           await authRepository.signIn(email, password, type);
       if (loginResponse.user != null) {
-        prefsObject.setString('uID', loginResponse.user!.uid);
+        prefsObject.setString(CURRENT_USER_ID, loginResponse.user!.uid);
         yield LoginSucceed(loginResponse: loginResponse);
       } else {
         yield LoginFailed(loginResponse: loginResponse);

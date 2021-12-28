@@ -38,7 +38,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   @override
   void initState() {
     super.initState();
-    _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _categoryBloc.getCategories();
     _userProjectsBloc.searchProjects('');
     scrollController.addListener(() {

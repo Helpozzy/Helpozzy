@@ -544,7 +544,7 @@ class _CreateProjectState extends State<CreateProject> {
       endDate: DateTime.parse(_projEndDateController.text)
           .millisecondsSinceEpoch
           .toString(),
-      projectOwner: prefsObject.getString('uID')!,
+      projectOwner: prefsObject.getString(CURRENT_USER_ID)!,
       collaboratorsCoadmin: _projCollaboraorController.text,
       status: PROJECT_NOT_STARTED,
     );
@@ -553,12 +553,11 @@ class _CreateProjectState extends State<CreateProject> {
     if (isUploaded) {
       await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: 'Project created successfully!');
+      showSnakeBar(context, msg: PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG);
     } else {
       await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context,
-          msg: 'Project not created due some error, Try again!');
+      showSnakeBar(context, msg: PROJECT_NOT_CREATED_ERROR_POPUP_MSG);
     }
   }
 

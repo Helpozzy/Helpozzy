@@ -39,6 +39,7 @@ dependencies:
   geolocator: ^8.0.1
   geocoding: ^2.0.1
   provider: ^5.0.0
+  fl_chart: ^0.40.6
   email_validator: ^2.0.1
   equatable: ^2.0.3
   shared_preferences: ^2.0.6

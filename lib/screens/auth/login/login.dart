@@ -41,7 +41,7 @@ class LoginPage extends StatelessWidget {
         } else if (state is LoginLoading) {
         } else if (state is LoginSucceed) {
           CircularLoader().hide(context);
-          showSnakeBar(context, msg: 'Login Succeed');
+          showSnakeBar(context, msg: LOGIN_SUCEED_POPUP_MSG);
           if (state.loginResponse.type == LOGIN_ADMIN) {
             Navigator.pushNamedAndRemoveUntil(
                 context, ADMIN_SELECTION, (route) => false);

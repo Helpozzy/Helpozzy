@@ -43,7 +43,7 @@ class _TaskCardState extends State<TaskCard> {
   final GestureTapCallback? onTapItem;
   final GestureTapCallback? onTapDelete;
 
-  late ThemeData _themeData;
+  late ThemeData _theme;
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
@@ -55,7 +55,7 @@ class _TaskCardState extends State<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    _themeData = Theme.of(context);
+    _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: onTapItem,
@@ -79,12 +79,12 @@ class _TaskCardState extends State<TaskCard> {
                 children: [
                   Text(
                     timeStampConvertToDate(task.startDate),
-                    style: _themeData.textTheme.bodyText2!
+                    style: _theme.textTheme.bodyText2!
                         .copyWith(fontSize: 10, color: UNSELECTED_TAB_COLOR),
                   ),
                   Text(
                     task.taskName,
-                    style: _themeData.textTheme.headline6!.copyWith(
+                    style: _theme.textTheme.headline6!.copyWith(
                       fontSize: 14,
                       color: UNSELECTED_TAB_COLOR,
                       fontWeight: FontWeight.w600,
@@ -101,7 +101,7 @@ class _TaskCardState extends State<TaskCard> {
                   SizedBox(height: 8),
                   Text(
                     ESTIMATED_HRS + task.estimatedHrs.toString(),
-                    style: _themeData.textTheme.bodyText2!.copyWith(
+                    style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 8,
                       color: PRIMARY_COLOR,
                       fontWeight: FontWeight.w600,
@@ -133,7 +133,7 @@ class _TaskCardState extends State<TaskCard> {
         children: [
           Text(
             TASK_ARE_YOU_RUNNING_LATE,
-            style: _themeData.textTheme.bodyText2!.copyWith(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 8,
               color: BLUE_COLOR,
               fontWeight: FontWeight.bold,
@@ -151,10 +151,9 @@ class _TaskCardState extends State<TaskCard> {
                             key: 'status',
                             val: TOGGLE_COMPLETE);
                     if (response)
-                      showSnakeBar(context, msg: 'Task completed');
+                      showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
                     else
-                      showSnakeBar(context,
-                          msg: 'Technical issue! Task not updated');
+                      showSnakeBar(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
                   },
                 )
               : Row(
@@ -171,10 +170,12 @@ class _TaskCardState extends State<TaskCard> {
                                 key: 'status',
                                 val: TOGGLE_INPROGRESS);
                         if (response)
-                          showSnakeBar(context, msg: 'Task started');
+                          showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
                         else
-                          showSnakeBar(context,
-                              msg: 'Technical issue! Task not updated');
+                          showSnakeBar(
+                            context,
+                            msg: TASK_NOT_UPDATED_POPUP_MSG,
+                          );
                       },
                     ),
                     SizedBox(width: 7),

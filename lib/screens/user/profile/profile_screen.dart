@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _categoryBloc.getCategories();
     _userProjectsBloc.getOwnCompletedProjects();
     super.initState();

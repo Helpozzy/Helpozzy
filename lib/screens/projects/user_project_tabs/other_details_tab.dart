@@ -37,7 +37,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
 
   @override
   void initState() {
-    _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     getLatLong();
     super.initState();
   }
@@ -502,6 +502,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
               scrollGesturesEnabled: true,
               zoomGesturesEnabled: true,
               tiltGesturesEnabled: true,
+              mapType: MapType.normal,
               indoorViewEnabled: true,
               onMapCreated: (GoogleMapController controller) async {
                 mapController = controller;
@@ -521,7 +522,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
                       target: LatLng(addressLat!, addressLong!),
-                      zoom: 10.0,
+                      zoom: 11,
                     ),
                   ),
                 );
@@ -530,7 +531,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
               markers: _markers,
               initialCameraPosition: CameraPosition(
                 target: LatLng(addressLat!, addressLong!),
-                zoom: 10.0,
+                zoom: 11.0,
               ),
             ),
           ),

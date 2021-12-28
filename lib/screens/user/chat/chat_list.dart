@@ -21,7 +21,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   void initState() {
-    currentUserId = prefsObject.getString('uID')!;
+    currentUserId = prefsObject.getString(CURRENT_USER_ID)!;
     getOpenChatUser();
     super.initState();
   }

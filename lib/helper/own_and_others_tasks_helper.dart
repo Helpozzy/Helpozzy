@@ -4,7 +4,7 @@ import 'package:helpozzy/utils/constants.dart';
 class ProjectOwnTaskAndOthersHelper {
   ProjectOwnTaskAndOthersHelper.fromProject(List<TaskModel> tasks) {
     tasks.forEach((task) {
-      if (task.ownerId == prefsObject.getString('uID')) {
+      if (task.ownerId == prefsObject.getString(CURRENT_USER_ID)) {
         ownTasks.add(task);
       } else {
         othersTasks.add(task);

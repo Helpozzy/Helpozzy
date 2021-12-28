@@ -103,7 +103,7 @@ class SetPasswordScreen extends StatelessWidget {
                                 builder: (context) => HomeScreen()),
                             (route) => false);
                       else
-                        showSnakeBar(context, msg: 'Sign-Up Failed!');
+                        showSnakeBar(context, msg: SIGN_UP_FAILED_POPUP_MSG);
                     });
                   }
                 },

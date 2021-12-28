@@ -192,10 +192,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 final bool response =
                     await _signUpBloc.sentOtp(_emailController.text);
                 if (response) {
-                  showSnakeBar(context,
-                      msg: 'OTP sent to ${_emailController.text}!');
+                  showSnakeBar(
+                    context,
+                    msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
+                  );
                 } else {
-                  showSnakeBar(context, msg: 'Failed!');
+                  showSnakeBar(context, msg: FAILED_POPUP_MSG);
                 }
               } else {
                 showAlertDialog(context,

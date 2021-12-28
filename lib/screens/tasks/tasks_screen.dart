@@ -105,10 +105,10 @@ class _TasksScreenState extends State<TasksScreen> {
     final bool deleted = await _projectTaskBloc.deleteTask(task.id);
     if (deleted) {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: 'Task deleted!');
+      showSnakeBar(context, msg: TASK_DELETED_POPUP_MSG);
     } else {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: 'Something went wrong!');
+      showSnakeBar(context, msg: SOMETHING_WENT_WRONG_POPUP_MSG);
     }
     await _projectTaskBloc.getProjectAllTasks('');
   }

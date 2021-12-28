@@ -73,7 +73,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future listenUser() async {
-    userModel = await _userInfoBloc.getUser(prefsObject.getString('uID')!);
+    userModel =
+        await _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _firstNameController.text = userModel!.name!.split(' ')[0];
     _lastNameController.text = userModel!.name!.split(' ')[1];
     _aboutController.text = userModel!.about!;
@@ -140,11 +141,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await _editProfileBloc.editProfile(signUpAndUserModel);
     if (response) {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: 'Profile Updated');
+      showSnakeBar(context, msg: PROFILE_UPDATED_POPUP_MSG);
       Navigator.of(context).pop();
     } else {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: 'Technical issue! Profile not updated');
+      showSnakeBar(context, msg: PROFILE_NOT_UPDATED_POPUP_MSG);
     }
   }
 

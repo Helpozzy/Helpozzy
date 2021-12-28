@@ -43,10 +43,10 @@ class _TaskTabState extends State<TaskTab> {
               builder: (context, snapshot) {
                 return tasksCategoriesCard(
                   prefixWidget: CommonUserProfileOrPlaceholder(
-                    imgUrl: prefsObject.getString('profileImage')!,
+                    imgUrl: prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
                     size: width / 10,
                   ),
-                  label: 'My Tasks',
+                  label: MY_TASKS_LABEL,
                   isMyTask: true,
                   isExpanded: snapshot.data!,
                 );
@@ -61,7 +61,7 @@ class _TaskTabState extends State<TaskTab> {
                   size: width / 12,
                   color: BLUE_GRAY,
                 ),
-                label: 'View all Tasks',
+                label: VIEW_ALL_TASKS_LABEL,
                 isMyTask: false,
                 isExpanded: snapshot.data!,
               );
