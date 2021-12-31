@@ -31,7 +31,7 @@ class _TasksScreenState extends State<TasksScreen> {
       appBar: CommonAppBar(context).show(
         elevation: 0,
         title: TASKS_APPBAR,
-        onBackPressed: () {
+        onBack: () {
           Navigator.pop(context);
         },
         actions: [

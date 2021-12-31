@@ -28,7 +28,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   late double width;
   late bool isExpanded = false;
 
-  ProjectsBloc _projectsBloc = ProjectsBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {

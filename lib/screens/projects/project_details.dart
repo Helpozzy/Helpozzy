@@ -48,8 +48,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
             SliverPersistentHeader(
               pinned: false,
               delegate: SliverAppBarDelegate(
-                minHeight: height / 8.5,
-                maxHeight: height / 8.5,
+                minHeight: height / 8.6,
+                maxHeight: height / 8.6,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,25 +106,31 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
             ),
             Positioned(
               left: 16,
-              bottom: 45,
+              bottom: 42,
               child: Container(
                 width: width - 30,
                 child: Text(
                   project.projectName,
                   maxLines: 2,
-                  style: _theme.textTheme.headline6!
-                      .copyWith(color: WHITE, fontSize: 28),
+                  style: _theme.textTheme.headline6!.copyWith(
+                    color: WHITE,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                  ),
                 ),
               ),
             ),
             Positioned(
               left: 16,
-              bottom: 25,
+              bottom: 28,
               child: Text(
                 project.organization,
                 maxLines: 2,
                 style: _theme.textTheme.headline5!.copyWith(
-                    color: WHITE, fontWeight: FontWeight.bold, fontSize: 14),
+                  color: GRAY,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
               ),
             ),
             Positioned(
@@ -142,20 +148,18 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,
-                    unratedColor: WHITE,
+                    unratedColor: GRAY,
                     itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                     itemBuilder: (context, _) => Icon(
                       Icons.star,
                       color: AMBER_COLOR,
                     ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
+                    onRatingUpdate: (rating) => print(rating),
                   ),
                   Text(
                     ' (${project.reviewCount} Reviews)',
                     style: _theme.textTheme.bodyText2!.copyWith(
-                      color: WHITE,
+                      color: GRAY,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -168,9 +172,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               bottom: 11,
               child: InkWell(
                 onTap: () {
-                  setState(() {
-                    project.isLiked = !project.isLiked;
-                  });
+                  setState(() => project.isLiked = !project.isLiked);
                 },
                 child: Icon(
                   project.isLiked
@@ -193,46 +195,68 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            DateFormat('EEEE, MMMM dd, yyyy').format(
-              DateTime.fromMillisecondsSinceEpoch(
-                int.parse(project.startDate),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              dateWithLabel(
+                label: START_DATE_LABEL,
+                date: project.startDate,
               ),
-            ),
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              color: BLUE_COLOR,
-              fontWeight: FontWeight.w600,
+              SizedBox(height: 2),
+              dateWithLabel(
+                label: END_DATE_LABEL,
+                date: project.endDate,
+              ),
+            ],
+          ),
+          SmallCommonButton(
+            fontSize: 10,
+            text: SIGN_UP,
+            onPressed: () => Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ProjectVolunteerSignUp(project: project),
+              ),
             ),
           ),
-          Container(
-            height: 33,
-            child: CommonButton(
-              fontSize: 10,
-              text: SIGN_UP,
-              onPressed: () => Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) =>
-                      ProjectVolunteerSignUp(project: project),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
   }
 
+  Widget dateWithLabel({String? label, String? date}) {
+    return Row(
+      children: [
+        Text(
+          label!,
+          style: _theme.textTheme.bodyText2!.copyWith(
+            fontSize: 11,
+            color: PRIMARY_COLOR,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Text(
+          DateFormat('EEEE, MMMM dd, yyyy').format(
+            DateTime.fromMillisecondsSinceEpoch(
+              int.parse(date!),
+            ),
+          ),
+          style: _theme.textTheme.bodyText2!
+              .copyWith(fontSize: 11, color: BLUE_COLOR),
+        ),
+      ],
+    );
+  }
+
   Widget contactPersontile() {
     return ListDividerLabel(
-      label: 'Project Lead : ' + project.contactName,
+      label: PROJECT_LEAD_LABEL + project.contactName,
       hasIcon: true,
       suffixIcon: InkWell(
         onTap: () => CommonUrlLauncher().launchCall(project.contactNumber),
         child: Icon(
           CupertinoIcons.phone,
-          size: 20,
+          size: 18,
         ),
       ),
     );
@@ -244,6 +268,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         indicatorColor: DARK_PINK_COLOR,
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 3.0,
+        enableFeedback: true,
         tabs: [
           _tab(text: DETAILS_TAB),
           _tab(text: TASKS_TAB),
@@ -257,9 +282,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: _theme.textTheme.bodyText2!.copyWith(
             fontSize: 13,
-            fontFamily: QUICKSAND,
             color: DARK_PINK_COLOR,
             fontWeight: FontWeight.bold,
           ),
@@ -273,8 +297,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         ProjectOtherDetailsScreen(project: project),
         TaskTab(project: project),
         ProjectMembersTab(),
-        Text('Coming Soon!'),
-        Text('Coming Soon!'),
+        Text(COMING_SOON_SCREEN_TEXT),
+        Text(COMING_SOON_SCREEN_TEXT),
       ],
     );
   }

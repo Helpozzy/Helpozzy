@@ -26,8 +26,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   late double height;
   late double width;
   late ThemeData _theme;
-  TextEditingController _reviewController = TextEditingController();
-  UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final TextEditingController _reviewController = TextEditingController();
+  final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CommonUrlLauncher _commonUrlLauncher = CommonUrlLauncher();
 
   late GoogleMapController mapController;

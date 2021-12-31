@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
-import 'package:helpozzy/screens/admin/reports/line_chart.dart';
+import 'package:helpozzy/models/admin_model/report_model.dart';
+import 'package:helpozzy/screens/admin/reports/simple_line_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -43,29 +44,28 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
         SizedBox(height: width * 0.02),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: ReportLineChart(),
+          child: SimpleLineChartReport(),
         ),
         SizedBox(height: width * 0.05),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: SmallInfoLabel(label: 'Yearly Report'),
-        ),
+        ListDividerLabel(label: YEARLY_REPORTS_LABEL),
         reportList(),
       ],
     );
   }
 
   Widget reportList() {
+    Reports reports = Reports.fromJson(list: sampleReportList);
     return ListView.separated(
       shrinkWrap: true,
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.02),
       separatorBuilder: (context, index) => Divider(),
       physics: ScrollPhysics(),
-      itemCount: sampleReportList.length,
+      itemCount: reports.yearlyReports.length,
       itemBuilder: (context, index) {
+        ReportModel report = reports.yearlyReports[index];
         return ListTile(
           title: Text(
-            sampleReportList[index]['year'].toString(),
+            report.year.toString(),
             style: _theme.textTheme.headline6!
                 .copyWith(fontWeight: FontWeight.w600),
           ),
@@ -73,12 +73,12 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               tile(
-                key: 'Users : ',
-                value: sampleReportList[index]['users'].toString(),
+                key: USERS_LABEL,
+                value: report.users.toString(),
               ),
               tile(
-                key: 'Total Hours : ',
-                value: sampleReportList[index]['hours'].toString(),
+                key: TOTAL_HRS_LABEL,
+                value: report.totalHrs.toString(),
               ),
             ],
           ),
@@ -95,14 +95,14 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           style: _theme.textTheme.bodyText2!.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: DARK_GRAY_FONT_COLOR,
+            color: DARK_GRAY,
           ),
         ),
         Text(
           value!,
           style: _theme.textTheme.bodyText2!.copyWith(
             fontSize: 12,
-            color: DARK_GRAY_FONT_COLOR,
+            color: DARK_GRAY,
           ),
         ),
       ],

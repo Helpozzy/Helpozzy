@@ -36,7 +36,7 @@ class _MembersScreenState extends State<MembersScreen> {
       appBar: CommonAppBar(context).show(
         elevation: 0,
         title: MEMBERS_APPBAR,
-        onBackPressed: () {
+        onBack: () {
           Navigator.of(context).pop();
         },
       ),

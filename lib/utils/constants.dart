@@ -107,6 +107,8 @@ const EXPLORE_SCREEN = 'explore_screen';
 const PROJECT_DETAILS_SCREEN = 'project_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
 
+const COMING_SOON_SCREEN_TEXT = 'Coming Soon!';
+
 //Bottom Tabbar
 const EXPLORE_TAB = 'Explore';
 const REWARD_TAB = 'Rewards';
@@ -292,6 +294,7 @@ const ESTIMATED_HRS = 'Estimated Hrs : ';
 const MEMBERS_SIGNED_UP = ' Members signed up';
 const PROJECT_CREATED_ON = 'Project created on : ';
 const ESTIMATED_END_DATE = 'Estimated end date : ';
+const PROJECT_LEAD_LABEL = 'Project Lead : ';
 
 //User project tabbar title
 const TASKS_TAB = 'Tasks';
@@ -359,6 +362,11 @@ const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
 const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
+
+//Admin reports
+const YEARLY_REPORTS_LABEL = 'Yearly Reports';
+const USERS_LABEL = 'Users : ';
+const TOTAL_HRS_LABEL = 'Total Hours : ';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';
@@ -467,14 +475,13 @@ const TASK_MEMBERS_REQUIREMENT_LABEL = 'Members Requirements';
 const TASK_MEMBERS_LABEL = '# of Members';
 const TASK_MINIMUM_AGE_LABEL = 'Minimum Age';
 const TASK_QUALIFICATION_LABEL = 'Any Qualification';
-const TASK_START_DATE_LABEL = 'Start Date';
-const TASK_END_LABEL = 'End Date';
+const START_DATE_LABEL = 'Start Date : ';
+const END_DATE_LABEL = 'End Date : ';
 const TASK_NAME_HINT = 'Enter Task Name';
 const TASK_DESCRIPTION_HINT = 'Enter Task Description';
 const TASK_MEMBERS_REQUIREMENT_HINT = 'Enter no of Members';
 const TASK_MINIMUM_AGE_HINT = 'Enter Minimum Age';
 const TASK_QUALIFICATION_HINT = 'Enter Qualification';
-const TASK_START_DATE_HINT = 'Start Date';
 const TASK_END_HINT = 'End Date';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 const SELECTED_HOURS_LABEL = 'Selected Hours';
@@ -636,17 +643,17 @@ List<Map<String, dynamic>> sampleReportList = [
   {
     'year': 2021,
     'users': 122,
-    'hours': 375,
+    'total_hrs': 375,
   },
   {
     'year': 2020,
     'users': 57,
-    'hours': 175,
+    'total_hrs': 175,
   },
   {
     'year': 2019,
     'users': 35,
-    'hours': 105,
+    'total_hrs': 105,
   },
 ];
 

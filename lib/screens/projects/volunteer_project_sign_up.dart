@@ -45,7 +45,6 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
         jsonDecode(userData) as Map<String, dynamic>;
     final SignUpAndUserModel userModel =
         SignUpAndUserModel.fromJson(json: json);
-    print(userModel);
     _nameController.text = userModel.name!;
     _emailController.text = userModel.email!;
     _addressController.text = userModel.address!;

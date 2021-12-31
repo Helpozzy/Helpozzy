@@ -35,9 +35,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         backButton: fromAdmin ? true : false,
         title: PROJECTS_APPBAR,
         bottom: fromAdmin ? _tabBar() : topSearchWithTab(),
-        onBackPressed: () {
-          if (fromAdmin) Navigator.of(context).pop();
-        },
+        onBack: () => fromAdmin ? Navigator.of(context).pop() : null,
       ),
       body: body(),
     );

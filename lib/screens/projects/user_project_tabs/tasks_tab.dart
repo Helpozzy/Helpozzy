@@ -38,19 +38,20 @@ class _TaskTabState extends State<TaskTab> {
       child: Column(
         children: [
           StreamBuilder<bool>(
-              initialData: myTaskExpanded,
-              stream: _projectTaskBloc.getMyTaskExpandedStream,
-              builder: (context, snapshot) {
-                return tasksCategoriesCard(
-                  prefixWidget: CommonUserProfileOrPlaceholder(
-                    imgUrl: prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
-                    size: width / 10,
-                  ),
-                  label: MY_TASKS_LABEL,
-                  isMyTask: true,
-                  isExpanded: snapshot.data!,
-                );
-              }),
+            initialData: myTaskExpanded,
+            stream: _projectTaskBloc.getMyTaskExpandedStream,
+            builder: (context, snapshot) {
+              return tasksCategoriesCard(
+                prefixWidget: CommonUserProfileOrPlaceholder(
+                  imgUrl: prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
+                  size: width / 10,
+                ),
+                label: MY_TASKS_LABEL,
+                isMyTask: true,
+                isExpanded: snapshot.data!,
+              );
+            },
+          ),
           StreamBuilder<bool>(
             initialData: allTasksExpanded,
             stream: _projectTaskBloc.geAllTaskExpandedStream,

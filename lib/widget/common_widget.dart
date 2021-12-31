@@ -730,7 +730,7 @@ class SmallCommonButton extends StatelessWidget {
           color: buttonColor,
           borderRadius: BorderRadius.circular(100),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
         child: Text(
           text,
           style: TextStyle(
@@ -851,7 +851,7 @@ class CommonAppBar {
 
   AppBar show({
     required String title,
-    Function()? onBackPressed,
+    Function()? onBack,
     List<Widget>? actions,
     required double elevation,
     PreferredSizeWidget? bottom,
@@ -871,7 +871,7 @@ class CommonAppBar {
       ),
       leading: backButton
           ? IconButton(
-              onPressed: onBackPressed ??
+              onPressed: onBack ??
                   () {
                     Navigator.of(context).pop();
                   },
