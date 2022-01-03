@@ -6,6 +6,7 @@ import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -91,4 +92,10 @@ class Repository {
 
   Future<bool> deleteTaskRepo(String taskId) =>
       apiProvider.deleteTaskAPIProvider(taskId);
+
+  Future<bool> postReviewRepo(ReviewModel review) =>
+      apiProvider.postReviewAPIProvider(review);
+
+  Future<Reviews> getProjectReviewsRepo(String projectId) =>
+      apiProvider.getProjectReviewsAPIProvider(projectId);
 }

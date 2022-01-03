@@ -199,6 +199,8 @@ const TASK_NOT_UPDATED_ERROR_POPUP_MSG =
     'Task not updated due some error, Try again!';
 const TASK_NOT_CREATED_ERROR_POPUP_MSG =
     'Task not created due some error, Try again!';
+const REVIEW_POSTED_POPUP_MSG = 'Review posted';
+const REVIEW_NOT_POSTED_ERROR_POPUP_MSG = 'Try again! Review not posted';
 
 //Reset password
 const RESET_PASSWORD = 'Forgot your password?';
@@ -279,6 +281,7 @@ const START_BUTTON = 'START';
 const COMPLETED_BUTTON = 'Completed';
 const DECLINE_BUTTON = 'DECLINE';
 const LOG_HOURS_BUTTON = 'Thank you! Click to log your hours';
+const SUBMIT_BUTTON = 'SUBMIT';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -515,25 +518,6 @@ List<String> gradeLevels = [
   '11th',
   '12th',
   'College',
-];
-
-List<Map<String, dynamic>> reviewData = [
-  {
-    'image_url': 'assets/images/event1.jpg',
-    'name': 'Roy Merlin',
-    'address': 'Dublin, CA 94568',
-    'rating': 4.5,
-    'date_time': '2 Days ago',
-    'review_text': 'They are so good! I wish to visit this place again.',
-  },
-  {
-    'image_url': 'assets/images/event1.jpg',
-    'name': 'Kay Codetta',
-    'address': 'Sacrdmento, CA 94203',
-    'rating': 4,
-    'date_time': '12 Days ago',
-    'review_text': '',
-  },
 ];
 
 Map<String, dynamic> rewardsList = {

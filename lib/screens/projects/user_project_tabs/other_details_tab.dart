@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
@@ -28,17 +29,20 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   late ThemeData _theme;
   final TextEditingController _reviewController = TextEditingController();
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final ProjectReviewsBloc _projectReviewsBloc = ProjectReviewsBloc();
   final CommonUrlLauncher _commonUrlLauncher = CommonUrlLauncher();
 
   late GoogleMapController mapController;
   late double? addressLat = 0.0;
   late double? addressLong = 0.0;
+  late double selectedRating = 0.0;
   final Set<Marker> _markers = {};
 
   @override
   void initState() {
-    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     getLatLong();
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
+    _projectReviewsBloc.getProjectReviews(project.projectId);
     super.initState();
   }
 
@@ -55,20 +59,23 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            aboutOraganizer(),
-            overviewDetails(),
-            projectDetails(),
-            scheduleTimeAndLocation(),
-            locationMap(),
-            infoSection(),
-            reviewSection(),
-            reviewCard(),
-            reviewList(),
-          ],
+      body: GestureDetector(
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              aboutOraganizer(),
+              overviewDetails(),
+              projectDetails(),
+              scheduleTimeAndLocation(),
+              locationMap(),
+              infoSection(),
+              reviewSection(),
+              reviewCard(),
+              reviewList(),
+            ],
+          ),
         ),
       ),
     );
@@ -303,6 +310,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   }
 
   Widget reviewCard() {
+    final ReviewModel reviewModel = ReviewModel();
     return StreamBuilder<SignUpAndUserModel>(
       stream: _userInfoBloc.userStream,
       builder: (context, snapshot) {
@@ -317,63 +325,102 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            padding: EdgeInsets.only(
+                top: 10.0, left: width * 0.04, right: width * 0.04),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    CommonUserProfileOrPlaceholder(size: 30),
-                    SizedBox(width: 5),
+                    CommonUserProfileOrPlaceholder(
+                      size: width / 10,
+                      imgUrl: snapshot.data!.profileUrl,
+                    ),
+                    SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           snapshot.data!.name!,
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           snapshot.data!.address!,
                           style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: 12,
+                            fontSize: 10,
                             color: DARK_GRAY,
                             fontWeight: FontWeight.w600,
                           ),
+                        ),
+                        SizedBox(height: 5),
+                        RatingBar.builder(
+                          initialRating: 0,
+                          minRating: 1,
+                          itemSize: 15,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          unratedColor: LIGHT_GRAY,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                          itemBuilder: (context, _) =>
+                              Icon(Icons.star, color: AMBER_COLOR),
+                          onRatingUpdate: (rating) =>
+                              setState(() => selectedRating = rating),
                         ),
                       ],
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: RatingBar.builder(
-                    initialRating: 0,
-                    minRating: 1,
-                    itemSize: 18,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    unratedColor: LIGHT_GRAY,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    itemBuilder: (context, _) =>
-                        Icon(Icons.star, color: AMBER_COLOR),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                  ),
-                ),
-                Container(
-                  height: 35,
-                  width: width / 2,
-                  child: TextField(
-                    style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
-                    controller: _reviewController,
-                    decoration: reviewFieldDecoration(),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style:
+                            _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
+                        controller: _reviewController,
+                        decoration: reviewFieldDecoration(),
+                        onChanged: (val) => setState(() =>
+                            _reviewController.selection =
+                                TextSelection.fromPosition(
+                                    TextPosition(offset: val.length))),
+                      ),
+                    ),
+                    _reviewController.text.isNotEmpty
+                        ? SizedBox(width: 10)
+                        : SizedBox(),
+                    _reviewController.text.isNotEmpty
+                        ? SmallCommonButton(
+                            text: SUBMIT_BUTTON,
+                            fontSize: 12,
+                            onPressed: () async {
+                              reviewModel.projectId = project.projectId;
+                              reviewModel.reviewerId =
+                                  prefsObject.getString(CURRENT_USER_ID);
+                              reviewModel.address = snapshot.data!.address;
+                              reviewModel.imageUrl = snapshot.data!.profileUrl;
+                              reviewModel.name = snapshot.data!.name;
+                              reviewModel.rating = selectedRating;
+                              reviewModel.timeStamp = DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString();
+                              reviewModel.reviewText = _reviewController.text;
+                              final bool response = await _projectReviewsBloc
+                                  .postReview(reviewModel);
+
+                              if (response) {
+                                showSnakeBar(context,
+                                    msg: REVIEW_POSTED_POPUP_MSG);
+                                _projectReviewsBloc
+                                    .getProjectReviews(project.projectId);
+                              } else {
+                                showSnakeBar(context,
+                                    msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
+                              }
+                            },
+                          )
+                        : SizedBox(),
+                  ],
                 ),
               ],
             ),
@@ -386,98 +433,97 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   InputDecoration reviewFieldDecoration() {
     return InputDecoration(
       hintText: REVIEW_HINT,
-      contentPadding: EdgeInsets.only(bottom: 10.0),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide.none,
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide.none,
-      ),
+      focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
+      enabledBorder: UnderlineInputBorder(borderSide: BorderSide.none),
+      disabledBorder: UnderlineInputBorder(borderSide: BorderSide.none),
       hintStyle:
           _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY, fontSize: 12),
     );
   }
 
   Widget reviewList() {
-    final snapShot = Reviews(list: reviewData);
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 12.0),
-      itemCount: snapShot.reviews.length,
-      itemBuilder: (context, index) {
-        final ReviewModel review = snapShot.reviews[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+    return StreamBuilder<Reviews>(
+      stream: _projectReviewsBloc.getProjectReviewsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: LinearLoader(minheight: 12),
+          );
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: snapshot.data!.reviews.length,
+          itemBuilder: (context, index) {
+            final ReviewModel review = snapshot.data!.reviews[index];
+            return Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: 10, horizontal: width * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CommonUserProfileOrPlaceholder(size: 30),
-                  SizedBox(width: 5),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        review.name,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      CommonUserProfileOrPlaceholder(
+                        size: width / 10,
+                        imgUrl: review.imageUrl,
                       ),
-                      Text(
-                        review.address,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 12,
-                          color: DARK_GRAY,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            review.name!,
+                            style: _theme.textTheme.bodyText2!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            review.address!,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: DARK_GRAY,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          RatingBar.builder(
+                            initialRating: 0,
+                            minRating: 1,
+                            itemSize: 15,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            unratedColor: LIGHT_GRAY,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                            itemBuilder: (context, _) =>
+                                Icon(Icons.star, color: AMBER_COLOR),
+                            onRatingUpdate: (rating) => print(rating),
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                  review.reviewText!.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 5.0),
+                          child: Text(
+                            review.reviewText!,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 12,
+                              color: DARK_GRAY_FONT_COLOR,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  CommonDivider(),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                child: RatingBar.builder(
-                  initialRating: review.rating,
-                  ignoreGestures: true,
-                  minRating: 1,
-                  itemSize: 18,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  unratedColor: LIGHT_GRAY,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: AMBER_COLOR,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
-                ),
-              ),
-              review.reviewText != ''
-                  ? Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        review.reviewText,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 12,
-                          color: DARK_GRAY_FONT_COLOR,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              CommonDivider(),
-            ],
-          ),
+            );
+          },
         );
       },
     );

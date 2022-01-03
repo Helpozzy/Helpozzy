@@ -44,7 +44,7 @@ class SimpleLineChartReportState extends State<SimpleLineChartReport> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Yearly Sales',
+              'Yearly Hours',
               style: _theme.textTheme.headline6!.copyWith(
                 color: DARK_PINK_COLOR,
                 fontWeight: FontWeight.w600,

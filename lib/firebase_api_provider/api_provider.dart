@@ -7,6 +7,7 @@ import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
@@ -405,5 +406,31 @@ class ApiProvider {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<bool> postReviewAPIProvider(ReviewModel reviewModel) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('reviews').doc();
+      await documentReference.set(reviewModel.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Reviews> getProjectReviewsAPIProvider(String projectId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('reviews')
+        .where('project_id', isEqualTo: projectId)
+        .get();
+
+    List<QueryDocumentSnapshot<Object?>> reviewsList = querySnapshot.docs;
+    List<Map<String, dynamic>> reviews = [];
+    reviewsList.forEach((json) {
+      final review = json.data() as Map<String, dynamic>;
+      reviews.add(review);
+    });
+    return Reviews.fromSnapshot(list: reviews);
   }
 }
