@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/report_model.dart';
-import 'package:helpozzy/screens/admin/reports/simple_line_chart.dart';
+import 'package:helpozzy/screens/admin/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -15,12 +16,14 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   late double height;
   late double width;
 
-  ProjectsBloc _projectsBloc = ProjectsBloc();
+  late bool test = false;
+  late bool test1 = false;
+
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
-    _projectsBloc.getOnGoingProjects(
-        projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB);
+    _projectsBloc.getProjects();
     super.initState();
   }
 
@@ -39,31 +42,62 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   }
 
   Widget body() {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: width * 0.02),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+            child: ReportLineChart(),
+          ),
+          SizedBox(height: width * 0.05),
+          // choiceSelection(),
+          ListDividerLabel(label: MONTHLY_REPORTS_LABEL),
+          yearlyReportList(),
+          ListDividerLabel(label: PROJECT_HOURS_LABEL),
+          projectHrsList(),
+        ],
+      ),
+    );
+  }
+
+  Widget choiceSelection() {
+    return Row(
       children: [
-        SizedBox(height: width * 0.02),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: SimpleLineChartReport(),
+        ChoiceChip(
+          label: Text('Test'),
+          selected: test,
+          onSelected: (val) {
+            setState(() {
+              test = val;
+            });
+          },
         ),
-        SizedBox(height: width * 0.05),
-        ListDividerLabel(label: YEARLY_REPORTS_LABEL),
-        reportList(),
+        ChoiceChip(
+          label: Text('Test1'),
+          selected: test1,
+          onSelected: (val) {
+            setState(() {
+              test1 = val;
+            });
+          },
+        ),
       ],
     );
   }
 
-  Widget reportList() {
+  Widget yearlyReportList() {
     Reports reports = Reports.fromJson(list: sampleReportList);
     return ListView.separated(
       shrinkWrap: true,
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.02),
-      separatorBuilder: (context, index) => Divider(),
+      separatorBuilder: (context, index) => Divider(height: 0.5),
       physics: ScrollPhysics(),
       itemCount: reports.yearlyReports.length,
       itemBuilder: (context, index) {
         ReportModel report = reports.yearlyReports[index];
         return ListTile(
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
           title: Text(
             report.year.toString(),
             style: _theme.textTheme.headline6!
@@ -72,11 +106,11 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              tile(
+              keyValueTile(
                 key: USERS_LABEL,
                 value: report.users.toString(),
               ),
-              tile(
+              keyValueTile(
                 key: TOTAL_HRS_LABEL,
                 value: report.totalHrs.toString(),
               ),
@@ -87,7 +121,53 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     );
   }
 
-  Widget tile({String? key, String? value}) {
+  Widget projectHrsList() {
+    return StreamBuilder<Projects>(
+      stream: _projectsBloc.getProjectsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: LinearLoader(minheight: 12),
+          );
+        }
+        return ListView.separated(
+          shrinkWrap: true,
+          separatorBuilder: (context, index) => Divider(height: 0.5),
+          physics: ScrollPhysics(),
+          itemCount: snapshot.data!.projectList.length,
+          itemBuilder: (context, index) {
+            ProjectModel project = snapshot.data!.projectList[index];
+            return ListTile(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+              title: Text(
+                project.projectName,
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    project.organization,
+                    style: _theme.textTheme.bodyText2!,
+                  ),
+                  keyValueTile(
+                    key: TOTAL_HRS_LABEL,
+                    value: '55',
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget keyValueTile({String? key, String? value}) {
     return Row(
       children: [
         Text(

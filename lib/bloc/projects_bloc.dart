@@ -34,7 +34,7 @@ class ProjectsBloc {
     return response;
   }
 
-  Future getProjects({required ProjectTabType projectTabType}) async {
+  Future getProjects({ProjectTabType? projectTabType}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
     projectsController.sink.add(response);

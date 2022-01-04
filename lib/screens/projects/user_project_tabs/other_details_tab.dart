@@ -333,7 +333,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                 Row(
                   children: [
                     CommonUserProfileOrPlaceholder(
-                      size: width / 10,
+                      size: width * 0.11,
                       imgUrl: snapshot.data!.profileUrl,
                     ),
                     SizedBox(width: 10),
@@ -467,7 +467,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   Row(
                     children: [
                       CommonUserProfileOrPlaceholder(
-                        size: width / 10,
+                        size: width * 0.11,
                         imgUrl: review.imageUrl,
                       ),
                       SizedBox(width: 10),

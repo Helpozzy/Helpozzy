@@ -222,7 +222,7 @@ class _MembersScreenState extends State<MembersScreen> {
             vertical: width * 0.035, horizontal: width * 0.04),
         child: Row(
           children: [
-            CommonUserProfileOrPlaceholder(size: width * 0.14),
+            CommonUserProfileOrPlaceholder(size: width * 0.11),
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -230,16 +230,14 @@ class _MembersScreenState extends State<MembersScreen> {
                 children: [
                   Text(
                     volunteer.name!,
-                    style: _theme.textTheme.bodyText2!.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: _theme.textTheme.bodyText2!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
                     volunteer.address!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: _theme.textTheme.bodyText2!,
+                    style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
                   ),
                   Row(
                     children: [

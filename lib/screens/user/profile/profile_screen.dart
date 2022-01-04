@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/admin/reports/reports.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
@@ -15,7 +17,6 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -114,11 +115,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ),
                                 Text(
-                                  DateFormat('MMM yyyy').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(user.joiningDate!),
-                                    ),
-                                  ),
+                                  DateFormatFromTimeStamp()
+                                      .dateFormatToEEEDDMMMYYYY(
+                                          timeStamp: user.joiningDate!),
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -183,6 +182,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             projectPref(),
                           ],
+                        ),
+                      ),
+                      ListDividerLabel(label: VOLUNTEER_REPORT_TEXT),
+                      ListTile(
+                        onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => AdminReportsScreen(),
+                          ),
+                        ),
+                        title: Text(MONTHLY_REPORTS_LABEL),
+                        trailing: Icon(
+                          CupertinoIcons.chart_bar_alt_fill,
+                          color: DARK_PINK_COLOR,
                         ),
                       ),
                       ownProjectsList(),
@@ -387,31 +400,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final List<ProjectModel> projects = snapshot.data!.projectList;
         return Column(
           children: [
-            Container(
-              width: double.infinity,
-              color: GRAY,
-              padding:
-                  EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.05),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    COMPLETED_PROJECT_TEXT,
-                    style: _theme.textTheme.bodyText2!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    projects.length.toString(),
-                    style: _theme.textTheme.bodyText2!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ],
+            ListDividerLabel(
+              label: COMPLETED_PROJECT_TEXT,
+              hasIcon: true,
+              suffixIcon: Text(
+                projects.length.toString(),
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.all(0),
               itemCount: projects.length,
               itemBuilder: (context, index) {
                 final ProjectModel project = projects[index];
@@ -446,16 +446,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Text(
                                   project.organization,
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    color: DARK_GRAY,
-                                  ),
+                                  style: _theme.textTheme.bodyText2!
+                                      .copyWith(color: DARK_GRAY),
                                 ),
                                 Text(
-                                  DateFormat('EEE, dd MMM - yyyy').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(project.startDate),
-                                    ),
-                                  ),
+                                  DateFormatFromTimeStamp()
+                                      .dateFormatToEEEDDMMMYYYY(
+                                          timeStamp: project.startDate),
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     color: DARK_BLUE,
                                     fontWeight: FontWeight.bold,

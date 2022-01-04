@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
@@ -12,7 +13,6 @@ import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class ProjectVolunteerSignUp extends StatefulWidget {
   ProjectVolunteerSignUp({required this.project});
@@ -435,11 +435,8 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
               ),
               SizedBox(height: 3),
               Text(
-                DateFormat('EE - MMM dd, yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(project.startDate),
-                  ),
-                ),
+                DateFormatFromTimeStamp()
+                    .dateFormatToEEEDDMMMYYYY(timeStamp: project.startDate),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,
@@ -461,11 +458,8 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
               ),
               SizedBox(height: 3),
               Text(
-                DateFormat('EE - MMM dd, yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(project.endDate),
-                  ),
-                ),
+                DateFormatFromTimeStamp()
+                    .dateFormatToEEEDDMMMYYYY(timeStamp: project.endDate),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,

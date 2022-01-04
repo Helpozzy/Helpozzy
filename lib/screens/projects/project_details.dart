@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/screens/projects/volunteer_project_sign_up.dart';
 import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
@@ -10,7 +11,6 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class ProjectDetailsInfo extends StatefulWidget {
   ProjectDetailsInfo({required this.project});
@@ -236,11 +236,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           ),
         ),
         Text(
-          DateFormat('EEEE, MMMM dd, yyyy').format(
-            DateTime.fromMillisecondsSinceEpoch(
-              int.parse(date!),
-            ),
-          ),
+          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(timeStamp: date!),
           style: _theme.textTheme.bodyText2!
               .copyWith(fontSize: 11, color: BLUE_COLOR),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
@@ -13,7 +14,6 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class CreateProject extends StatefulWidget {
   @override
@@ -475,7 +475,8 @@ class _CreateProjectState extends State<CreateProject> {
                     _selectedStartDate = pickedDate;
                   });
                 _projStartDateController.value = TextEditingValue(
-                    text: '${DateFormat.yMd().format(_selectedStartDate)}');
+                    text: DateFormatFromTimeStamp()
+                        .dateFormatToYMD(dateTime: _selectedStartDate));
               });
             },
           ),
@@ -510,7 +511,8 @@ class _CreateProjectState extends State<CreateProject> {
                     _selectedEndDate = pickedDate;
                   });
                 _projEndDateController.value = TextEditingValue(
-                    text: '${DateFormat.yMd().format(_selectedEndDate)}');
+                    text: DateFormatFromTimeStamp()
+                        .dateFormatToYMD(dateTime: _selectedEndDate));
               });
             },
           ),

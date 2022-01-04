@@ -2,12 +2,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({required this.signupAndUserModel});
@@ -265,7 +265,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 _selectedBirthDate = pickedDate;
               });
             _dateController.value = TextEditingValue(
-                text: '${DateFormat.yMd().format(_selectedBirthDate)}');
+                text: DateFormatFromTimeStamp()
+                    .dateFormatToYMD(dateTime: _selectedBirthDate));
           });
         },
         validator: (state) {

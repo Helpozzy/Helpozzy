@@ -1,13 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/utils/constants.dart';
 
-class SimpleLineChartReport extends StatefulWidget {
+class ReportLineChart extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => SimpleLineChartReportState();
+  State<StatefulWidget> createState() => ReportLineChartState();
 }
 
-class SimpleLineChartReportState extends State<SimpleLineChartReport> {
+class ReportLineChartState extends State<ReportLineChart> {
   late bool isShowingMainData;
 
   late double height;
@@ -37,14 +38,17 @@ class SimpleLineChartReportState extends State<SimpleLineChartReport> {
           children: <Widget>[
             const SizedBox(height: 20),
             Text(
-              'Unfold Report ' + DateTime.now().year.toString(),
+              UNFOLD_REPORT + DateTime.now().year.toString(),
               style: _theme.textTheme.bodyText2!.copyWith(
-                  color: Color(0xff827daa), letterSpacing: 1, fontSize: 12),
+                color: Color(0xff827daa),
+                letterSpacing: 1,
+                fontSize: 12,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
-              'Yearly Hours',
+              MONTHY_HOURS,
               style: _theme.textTheme.headline6!.copyWith(
                 color: DARK_PINK_COLOR,
                 fontWeight: FontWeight.w600,
@@ -144,13 +148,14 @@ class _LineChart extends StatelessWidget {
           fontSize: 16,
         ),
         getTitles: (value) {
+          final int lastMonth = DateFormatFromTimeStamp().getLastMonth();
           switch (value.toInt()) {
             case 2:
-              return '2019';
+              return (lastMonth - 2).toString();
             case 7:
-              return '2020';
+              return (lastMonth - 1).toString();
             case 12:
-              return '2021';
+              return lastMonth.toString();
           }
           return '';
         },
@@ -161,7 +166,7 @@ class _LineChart extends StatelessWidget {
   FlBorderData get borderData => FlBorderData(
         show: true,
         border: const Border(
-          bottom: BorderSide(color: SILVER_GRAY, width: 1),
+          bottom: BorderSide(color: SILVER_GRAY, width: 0.5),
           left: BorderSide(color: Colors.transparent),
           right: BorderSide(color: Colors.transparent),
           top: BorderSide(color: Colors.transparent),

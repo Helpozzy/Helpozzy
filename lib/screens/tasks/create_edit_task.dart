@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/screens/admin/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class CreateEditTask extends StatefulWidget {
   CreateEditTask({required this.fromEdit, this.task});
@@ -471,7 +471,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     _selectedStartDate = pickedDate;
                   });
                 _taskStartDateController.value = TextEditingValue(
-                    text: '${DateFormat.yMd().format(_selectedStartDate)}');
+                    text: DateFormatFromTimeStamp()
+                        .dateFormatToYMD(dateTime: _selectedStartDate));
               });
             },
           ),
@@ -506,7 +507,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     _selectedEndDate = pickedDate;
                   });
                 _taskEndDateController.value = TextEditingValue(
-                    text: '${DateFormat.yMd().format(_selectedEndDate)}');
+                    text: DateFormatFromTimeStamp()
+                        .dateFormatToYMD(dateTime: _selectedEndDate));
               });
             },
           ),

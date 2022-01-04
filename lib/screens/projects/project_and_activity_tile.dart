@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/task_Helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class ProjectTile extends StatefulWidget {
   ProjectTile({
@@ -110,11 +110,8 @@ class _ProjectTileState extends State<ProjectTile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('EEEE, MMMM dd, yyyy').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(project.startDate),
-                            ),
-                          ),
+                          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                              timeStamp: project.startDate),
                           style: _theme.textTheme.bodyText2!.copyWith(
                             fontSize: 12,
                             color: BLUE_COLOR,

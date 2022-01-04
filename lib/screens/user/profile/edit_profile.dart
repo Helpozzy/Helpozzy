@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -16,7 +17,6 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({required this.user});
@@ -80,8 +80,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _aboutController.text = userModel!.about!;
     _addressController.text = userModel!.address!;
     _emailController.text = userModel!.email!;
-    _dateOfBirthController.text = DateFormat.yMd().format(
-        DateTime.fromMillisecondsSinceEpoch(
+    _dateOfBirthController.text = DateFormatFromTimeStamp().dateFormatToYMD(
+        dateTime: DateTime.fromMillisecondsSinceEpoch(
             int.parse(userModel!.dateOfBirth!)));
     _genderController.text = userModel!.gender!;
     _stateController.text = userModel!.state!;

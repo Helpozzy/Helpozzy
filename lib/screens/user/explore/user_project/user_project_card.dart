@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class UserProjectCard extends StatefulWidget {
   const UserProjectCard({
@@ -68,11 +68,8 @@ class _UserProjectCardState extends State<UserProjectCard> {
                     Row(
                       children: [
                         Text(
-                          DateFormat('EEE, dd MMM - yyyy').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(project.startDate),
-                            ),
-                          ),
+                          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                              timeStamp: project.startDate),
                           style: _theme.textTheme.bodyText2!.copyWith(
                             fontSize: 16,
                             color: PRIMARY_COLOR,

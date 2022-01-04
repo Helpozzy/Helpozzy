@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -328,6 +327,7 @@ const CONTACT_TEXT = 'Contact';
 const ABOUT_TEXT = 'About';
 const PROJECT_PREFRENCES_TEXT = 'Project Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
+const VOLUNTEER_REPORT_TEXT = 'Reports';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';
@@ -367,7 +367,10 @@ const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
 //Admin reports
-const YEARLY_REPORTS_LABEL = 'Yearly Reports';
+const MONTHLY_REPORTS_LABEL = 'Monthly Reports';
+const UNFOLD_REPORT = 'Unfold Report ';
+const MONTHY_HOURS = 'Monthly Hours';
+const PROJECT_HOURS_LABEL = 'Project Hours';
 const USERS_LABEL = 'Users : ';
 const TOTAL_HRS_LABEL = 'Total Hours : ';
 

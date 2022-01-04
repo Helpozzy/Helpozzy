@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class TaskDetails extends StatefulWidget {
   TaskDetails({required this.task});
@@ -19,12 +19,6 @@ class _TaskDetailsState extends State<TaskDetails> {
   late double width;
 
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-
-  String timeStampConvertToDate(String date) {
-    return DateFormat('EEE, dd MMM yyyy').format(
-      DateTime.fromMillisecondsSinceEpoch(int.parse(date)),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +112,8 @@ class _TaskDetailsState extends State<TaskDetails> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              timeStampConvertToDate(task.startDate),
+              DateFormatFromTimeStamp()
+                  .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
               style: _theme.textTheme.bodyText2!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
             ),
