@@ -339,18 +339,6 @@ class ApiProvider {
     }
   }
 
-  Future<bool> updateTaskKeyValue(String taskId, String key, String val) async {
-    try {
-      DocumentSnapshot documentSnapshot =
-          await firestore.collection('tasks').doc(taskId).get();
-
-      documentSnapshot.reference.update(<String, dynamic>{key: val});
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<bool> updateTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =

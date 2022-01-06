@@ -156,11 +156,24 @@ class _TaskDetailsState extends State<TaskDetails> {
                   borderColor: DARK_PINK_COLOR,
                   color: DARK_PINK_COLOR,
                   onPressed: () async {
+                    final TaskModel taskModel = TaskModel(
+                      projectId: task.projectId,
+                      ownerId: task.ownerId,
+                      id: task.id,
+                      taskName: task.taskName,
+                      description: task.description,
+                      memberRequirement: task.memberRequirement,
+                      ageRestriction: task.ageRestriction,
+                      qualification: task.qualification,
+                      startDate: task.startDate,
+                      endDate: task.endDate,
+                      estimatedHrs: task.estimatedHrs,
+                      totalVolunteerHrs: task.totalVolunteerHrs,
+                      members: task.members,
+                      status: TOGGLE_COMPLETE,
+                    );
                     final bool response =
-                        await _projectTaskBloc.updateTaskKeyValue(
-                            taskId: task.id,
-                            key: 'status',
-                            val: TOGGLE_COMPLETE);
+                        await _projectTaskBloc.updateTasks(taskModel);
                     if (response)
                       showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
                     else
@@ -175,12 +188,24 @@ class _TaskDetailsState extends State<TaskDetails> {
                       borderColor: GRAY,
                       color: GRAY,
                       onPressed: () async {
-                        final bool response =
-                            await _projectTaskBloc.updateTaskKeyValue(
-                          taskId: task.id,
-                          key: 'status',
-                          val: TOGGLE_INPROGRESS,
+                        final TaskModel taskModel = TaskModel(
+                          projectId: task.projectId,
+                          ownerId: task.ownerId,
+                          id: task.id,
+                          taskName: task.taskName,
+                          description: task.description,
+                          memberRequirement: task.memberRequirement,
+                          ageRestriction: task.ageRestriction,
+                          qualification: task.qualification,
+                          startDate: task.startDate,
+                          endDate: task.endDate,
+                          estimatedHrs: task.estimatedHrs,
+                          totalVolunteerHrs: task.totalVolunteerHrs,
+                          members: task.members,
+                          status: TOGGLE_INPROGRESS,
                         );
+                        final bool response =
+                            await _projectTaskBloc.updateTasks(taskModel);
                         if (response)
                           showSnakeBar(context, msg: TASK_STARTED_POPUP_MSG);
                         else

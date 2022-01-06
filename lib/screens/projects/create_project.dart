@@ -239,7 +239,7 @@ class _CreateProjectState extends State<CreateProject> {
             if (!snapshot.hasData) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Center(child: LinearLoader(minheight: 12)),
+                child: Center(child: LinearLoader()),
               );
             }
             return DropdownButtonFormField<CategoryModel>(
@@ -363,7 +363,7 @@ class _CreateProjectState extends State<CreateProject> {
           return Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(8.0),
-            child: LinearLoader(minheight: 13),
+            child: LinearLoader(),
           );
         }
         final List<dynamic> users = snapshot.data;

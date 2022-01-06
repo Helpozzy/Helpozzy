@@ -34,6 +34,7 @@ dependencies:
   firebase_core: ^1.6.0
   firebase_auth: ^3.0.1
   firebase_storage: ^10.0.6
+  custom_timer: ^0.1.1
   email_auth: ^1.0.0
   google_maps_flutter: ^2.1.1
   geolocator: ^8.0.1

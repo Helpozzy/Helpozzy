@@ -1,3 +1,4 @@
+import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
@@ -45,6 +46,7 @@ class _TaskCardState extends State<TaskCard> {
 
   late ThemeData _theme;
   late double width;
+  final CustomTimerController _timerController = CustomTimerController();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
   @override
@@ -71,11 +73,36 @@ class _TaskCardState extends State<TaskCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    DateFormatFromTimeStamp()
-                        .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
-                    style: _theme.textTheme.bodyText2!
-                        .copyWith(fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                  SizedBox(
+                    width: width / 1.37,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                              timeStamp: task.startDate),
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                        ),
+                        !optionEnable && task.status == TOGGLE_INPROGRESS
+                            ? CustomTimer(
+                                controller: _timerController,
+                                begin: Duration(days: 1),
+                                end: Duration(hours: task.estimatedHrs),
+                                builder: (time) {
+                                  return Text(
+                                    "${time.hours} : ${time.minutes} : ${time.seconds}",
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      color: PRIMARY_COLOR,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                },
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
                   ),
                   Text(
                     task.taskName,
@@ -85,7 +112,7 @@ class _TaskCardState extends State<TaskCard> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   !optionEnable
                       ? task.status == TOGGLE_NOT_STARTED
                           ? processButton(false)
@@ -140,15 +167,30 @@ class _TaskCardState extends State<TaskCard> {
                   text: COMPLETED_BUTTON,
                   buttonColor: DARK_PINK_COLOR,
                   onPressed: () async {
+                    final TaskModel taskModel = TaskModel(
+                      projectId: task.projectId,
+                      ownerId: task.ownerId,
+                      id: task.id,
+                      taskName: task.taskName,
+                      description: task.description,
+                      memberRequirement: task.memberRequirement,
+                      ageRestriction: task.ageRestriction,
+                      qualification: task.qualification,
+                      startDate: task.startDate,
+                      endDate: task.endDate,
+                      estimatedHrs: task.estimatedHrs,
+                      totalVolunteerHrs: task.totalVolunteerHrs,
+                      members: task.members,
+                      status: TOGGLE_COMPLETE,
+                    );
                     final bool response =
-                        await _projectTaskBloc.updateTaskKeyValue(
-                            taskId: task.id,
-                            key: 'status',
-                            val: TOGGLE_COMPLETE);
-                    if (response)
+                        await _projectTaskBloc.updateTasks(taskModel);
+                    if (response) {
+                      _timerController.finish();
                       showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
-                    else
+                    } else {
                       showSnakeBar(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+                    }
                   },
                 )
               : Row(
@@ -159,18 +201,33 @@ class _TaskCardState extends State<TaskCard> {
                       text: START_BUTTON,
                       buttonColor: GRAY,
                       onPressed: () async {
+                        final TaskModel taskModel = TaskModel(
+                          projectId: task.projectId,
+                          ownerId: task.ownerId,
+                          id: task.id,
+                          taskName: task.taskName,
+                          description: task.description,
+                          memberRequirement: task.memberRequirement,
+                          ageRestriction: task.ageRestriction,
+                          qualification: task.qualification,
+                          startDate: task.startDate,
+                          endDate: task.endDate,
+                          estimatedHrs: task.estimatedHrs,
+                          totalVolunteerHrs: task.totalVolunteerHrs,
+                          members: task.members,
+                          status: TOGGLE_INPROGRESS,
+                        );
                         final bool response =
-                            await _projectTaskBloc.updateTaskKeyValue(
-                                taskId: task.id,
-                                key: 'status',
-                                val: TOGGLE_INPROGRESS);
-                        if (response)
+                            await _projectTaskBloc.updateTasks(taskModel);
+                        if (response) {
+                          _timerController.start();
                           showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
-                        else
+                        } else {
                           showSnakeBar(
                             context,
                             msg: TASK_NOT_UPDATED_POPUP_MSG,
                           );
+                        }
                       },
                     ),
                     SizedBox(width: 7),

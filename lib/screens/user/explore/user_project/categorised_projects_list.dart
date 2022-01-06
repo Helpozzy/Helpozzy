@@ -48,7 +48,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
           return Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: LinearLoader(minheight: 12),
+              child: LinearLoader(),
             ),
           );
         }

@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: LinearLoader(minheight: 15),
+              child: LinearLoader(),
             );
           }
           final SignUpAndUserModel? user = snapshot.data;
@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (!projectSnapshot.hasData) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(child: LinearLoader(minheight: 12)),
+                  child: Center(child: LinearLoader()),
                 );
               }
               return Container(
@@ -316,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _categoryBloc.getCategories();
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Center(child: LinearLoader(minheight: 12)),
+                        child: Center(child: LinearLoader()),
                       );
                     }
                     late List<CategoryModel> availCategory = [];
@@ -349,7 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 CachedNetworkImage(
                                   placeholder: (context, url) => Center(
-                                    child: LinearLoader(minheight: 10),
+                                    child: LinearLoader(),
                                   ),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error_outline_rounded),
@@ -394,7 +394,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _userProjectsBloc.getOwnCompletedProjects();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Center(child: LinearLoader(minheight: 12)),
+            child: Center(child: LinearLoader()),
           );
         }
         final List<ProjectModel> projects = snapshot.data!.projectList;

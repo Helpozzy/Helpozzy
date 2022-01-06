@@ -391,7 +391,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           return Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(8.0),
-            child: LinearLoader(minheight: 13),
+            child: LinearLoader(),
           );
         }
         final List<dynamic> users = snapshot.data;
@@ -682,6 +682,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           .millisecondsSinceEpoch
           .toString(),
       estimatedHrs: hrsTrackerVal.round(),
+      totalVolunteerHrs: 0,
       members: _taskMembersController.text,
       status: _selectedIndexValue == 0
           ? TOGGLE_NOT_STARTED

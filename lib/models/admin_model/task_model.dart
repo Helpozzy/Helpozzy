@@ -21,6 +21,7 @@ class TaskModel {
     required this.startDate,
     required this.endDate,
     required this.estimatedHrs,
+    required this.totalVolunteerHrs,
     required this.members,
     required this.status,
     this.isSelected,
@@ -38,6 +39,7 @@ class TaskModel {
     startDate = json['start_date'];
     endDate = json['end_date'];
     estimatedHrs = json['estimated_hrs'];
+    totalVolunteerHrs = json['total_volunteer_hours'];
     members = json['members'];
     status = json['status'];
   }
@@ -55,6 +57,7 @@ class TaskModel {
       'start_date': startDate,
       'end_date': endDate,
       'estimated_hrs': estimatedHrs,
+      'total_volunteer_hours': totalVolunteerHrs,
       'members': members,
       'status': status,
     };
@@ -71,6 +74,7 @@ class TaskModel {
   late String startDate;
   late String endDate;
   late int estimatedHrs;
+  late int totalVolunteerHrs;
   late String members;
   late String status;
   late bool? isSelected = false;

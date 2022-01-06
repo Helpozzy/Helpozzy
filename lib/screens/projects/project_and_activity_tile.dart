@@ -302,7 +302,7 @@ class _ProjectTileState extends State<ProjectTile> {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: LinearLoader(minheight: 12),
+              child: LinearLoader(),
             ),
           );
         }

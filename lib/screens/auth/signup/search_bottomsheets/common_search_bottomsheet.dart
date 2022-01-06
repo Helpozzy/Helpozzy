@@ -183,7 +183,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               : _schoolsInfoBloc.searchedSchoolsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         return snapshot.data.isNotEmpty
             ? ListView.builder(

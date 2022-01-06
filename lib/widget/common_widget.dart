@@ -737,6 +737,7 @@ class SmallCommonButton extends StatelessWidget {
             fontSize: fontSize,
             fontFamily: QUICKSAND,
             fontWeight: FontWeight.w600,
+            letterSpacing: 0.7,
             color: fontColor,
           ),
         ),
@@ -954,8 +955,6 @@ class CircularLoader {
 }
 
 class LinearLoader extends StatelessWidget {
-  LinearLoader({this.minheight});
-  final double? minheight;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -963,7 +962,7 @@ class LinearLoader extends StatelessWidget {
       width: width / 2.5,
       child: LinearProgressIndicator(
         color: LIGHT_ACCENT_GRAY,
-        minHeight: minheight,
+        minHeight: 12,
       ),
     );
   }

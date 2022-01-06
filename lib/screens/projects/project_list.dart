@@ -111,7 +111,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         final List<ProjectModel> projects = snapshot.data!.projectList;
         return projects.isNotEmpty
@@ -159,7 +159,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       stream: _projectsBloc.getMonthlyProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         final List<ProjectActivityModel> monthlyList =
             snapshot.data!.monthlyList;

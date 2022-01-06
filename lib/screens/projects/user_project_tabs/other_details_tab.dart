@@ -33,10 +33,12 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   final CommonUrlLauncher _commonUrlLauncher = CommonUrlLauncher();
 
   late GoogleMapController mapController;
+
   late double? addressLat = 0.0;
   late double? addressLong = 0.0;
   late double selectedRating = 0.0;
   final Set<Marker> _markers = {};
+  Future _mapFuture = Future.delayed(Duration(seconds: 2), () => true);
 
   @override
   void initState() {
@@ -316,7 +318,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
-            child: LinearLoader(minheight: 12),
+            child: LinearLoader(),
           );
         }
         return Card(
@@ -333,7 +335,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                 Row(
                   children: [
                     CommonUserProfileOrPlaceholder(
-                      size: width * 0.11,
+                      size: width * 0.10,
                       imgUrl: snapshot.data!.profileUrl,
                     ),
                     SizedBox(width: 10),
@@ -449,7 +451,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           return Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: LinearLoader(minheight: 12),
+            child: LinearLoader(),
           );
         }
         return ListView.builder(
@@ -467,7 +469,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   Row(
                     children: [
                       CommonUserProfileOrPlaceholder(
-                        size: width * 0.11,
+                        size: width * 0.10,
                         imgUrl: review.imageUrl,
                       ),
                       SizedBox(width: 10),
@@ -530,75 +532,86 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   }
 
   Widget locationMap() {
-    return Container(
-      height: height / 3.5,
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: GoogleMap(
-              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                Factory<OneSequenceGestureRecognizer>(
-                    () => EagerGestureRecognizer()),
-              },
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: false,
-              myLocationEnabled: true,
-              scrollGesturesEnabled: true,
-              zoomGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              mapType: MapType.normal,
-              indoorViewEnabled: true,
-              onMapCreated: (GoogleMapController controller) async {
-                mapController = controller;
-                final int markerIdVal1 = generateIds();
-                final MarkerId markerId = MarkerId(markerIdVal1.toString());
-                final Marker marker1 = Marker(
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueGreen),
-                  markerId: markerId,
-                  onTap: () {},
-                  position: LatLng(addressLat!, addressLong!),
-                  infoWindow: InfoWindow(
-                      title: project.projectName, snippet: project.location),
-                );
-                _markers.add(marker1);
-                mapController.moveCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                      target: LatLng(addressLat!, addressLong!),
-                      zoom: 11,
-                    ),
+    return FutureBuilder(
+      future: _mapFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: LinearLoader(),
+          );
+        }
+        return Container(
+          height: height / 3.5,
+          margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: GoogleMap(
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(
+                        () => EagerGestureRecognizer()),
+                  },
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: false,
+                  myLocationEnabled: true,
+                  scrollGesturesEnabled: true,
+                  zoomGesturesEnabled: true,
+                  tiltGesturesEnabled: true,
+                  mapType: MapType.normal,
+                  indoorViewEnabled: true,
+                  onMapCreated: (GoogleMapController controller) async {
+                    mapController = controller;
+                    final int markerIdVal1 = generateIds();
+                    final MarkerId markerId = MarkerId(markerIdVal1.toString());
+                    final Marker marker1 = Marker(
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueGreen),
+                      markerId: markerId,
+                      position: LatLng(addressLat!, addressLong!),
+                      infoWindow: InfoWindow(
+                          title: project.projectName,
+                          snippet: project.location),
+                    );
+                    _markers.add(marker1);
+                    mapController.moveCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: LatLng(addressLat!, addressLong!),
+                          zoom: 11,
+                        ),
+                      ),
+                    );
+                    setState(() {});
+                  },
+                  mapToolbarEnabled: false,
+                  markers: _markers,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(addressLat!, addressLong!),
+                    zoom: 11.0,
                   ),
-                );
-              },
-              mapToolbarEnabled: false,
-              markers: _markers,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(addressLat!, addressLong!),
-                zoom: 11.0,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                onPressed: () async => await _commonUrlLauncher.openSystemMap(
-                    addressLat!, addressLong!),
-                icon: Icon(
-                  Icons.directions,
-                  color: GREEN,
                 ),
               ),
-            ),
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: IconButton(
+                    onPressed: () async => await _commonUrlLauncher
+                        .openSystemMap(addressLat!, addressLong!),
+                    icon: Icon(
+                      Icons.directions,
+                      color: GREEN,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

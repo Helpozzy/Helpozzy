@@ -34,7 +34,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
       stream: _membersBloc.getuserRewardDetailsStream,
       builder: (context, rewardDetailsSnapshot) {
         if (!rewardDetailsSnapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         return SingleChildScrollView(
           child: Column(
@@ -104,7 +104,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           _membersBloc.getMembers();
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         final peoples = snapshot.data!.peoples;
         return ListView.builder(

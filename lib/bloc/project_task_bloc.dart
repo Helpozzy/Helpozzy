@@ -63,15 +63,6 @@ class ProjectTaskBloc {
     return response;
   }
 
-  Future<bool> updateTaskKeyValue({
-    required String taskId,
-    required String key,
-    required String val,
-  }) async {
-    final bool response = await repo.updateTaskKeyValueRepo(taskId, key, val);
-    return response;
-  }
-
   Future<bool> deleteTask(String taskId) async {
     final bool response = await repo.deleteTaskRepo(taskId);
     return response;

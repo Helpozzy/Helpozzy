@@ -402,7 +402,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             _categoryBloc.getCategories();
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Center(child: LinearLoader(minheight: 12)),
+              child: Center(child: LinearLoader()),
             );
           }
           return Column(
@@ -427,7 +427,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       children: [
                         CachedNetworkImage(
                           placeholder: (context, url) => Center(
-                            child: LinearLoader(minheight: 10),
+                            child: LinearLoader(),
                           ),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outline_rounded),
@@ -467,7 +467,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         if (!snapshot.hasData) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Center(child: LinearLoader(minheight: 12)),
+            child: Center(child: LinearLoader()),
           );
         }
         return snapshot.data.isNotEmpty

@@ -74,7 +74,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
       stream: _membersBloc.getSearchedMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         return ListView.separated(
           separatorBuilder: (context, index) => CommonDivider(),

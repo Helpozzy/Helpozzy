@@ -191,7 +191,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
               children: [
                 CachedNetworkImage(
                   placeholder: (context, url) => Center(
-                    child: LinearLoader(minheight: 10),
+                    child: LinearLoader(),
                   ),
                   errorWidget: (context, url, error) =>
                       Icon(Icons.error_outline_rounded),

@@ -55,7 +55,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return Center(
-                              child: LinearLoader(minheight: 12),
+                              child: LinearLoader(),
                             );
                           }
                           return Text(
@@ -134,7 +134,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           height: width / 5,
                           width: width / 5,
                           placeholder: (context, url) => Center(
-                            child: LinearLoader(minheight: 10),
+                            child: LinearLoader(),
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error_outline_rounded,

@@ -144,7 +144,7 @@ class _TaskTabState extends State<TaskTab> {
             return Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: width * 0.04),
-              child: LinearLoader(minheight: 12),
+              child: LinearLoader(),
             );
           }
           return ListView.builder(

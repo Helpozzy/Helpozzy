@@ -48,8 +48,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
             SliverPersistentHeader(
               pinned: false,
               delegate: SliverAppBarDelegate(
-                minHeight: height / 8.6,
-                maxHeight: height / 8.6,
+                minHeight: height / 8,
+                maxHeight: height / 8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -57,7 +57,7 @@ class _TasksScreenState extends State<TasksScreen> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
-            child: LinearLoader(minheight: 13),
+            child: LinearLoader(),
           );
         }
         return ListView.builder(

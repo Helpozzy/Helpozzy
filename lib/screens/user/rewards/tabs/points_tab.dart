@@ -59,7 +59,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
       stream: _membersBloc.getuserRewardDetailsStream,
       builder: (context, rewardDetailsSnapshot) {
         if (!rewardDetailsSnapshot.hasData) {
-          return Center(child: LinearLoader(minheight: 12));
+          return Center(child: LinearLoader());
         }
         return SingleChildScrollView(
           child: Column(

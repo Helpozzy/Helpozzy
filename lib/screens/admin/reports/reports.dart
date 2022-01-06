@@ -129,7 +129,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           return Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: LinearLoader(minheight: 12),
+            child: LinearLoader(),
           );
         }
         return ListView.separated(
