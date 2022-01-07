@@ -50,6 +50,8 @@ const DARK_BLUE_COLOR = Color(0xFF4C63C6);
 const MATE_WHITE = Color(0xFFFDEFFF);
 
 const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
+const APP_ICON_URL =
+    'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/helpozzy_icon%2Fhelpozzy_icon.png?alt=media&token=4e4a5fa0-ea75-4fbe-8f36-7db01347da3f';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 

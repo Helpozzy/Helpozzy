@@ -819,29 +819,23 @@ class CommonUserProfileOrPlaceholder extends StatelessWidget {
           color: PRIMARY_COLOR,
         ),
       ),
-      child: imgUrl != null
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: CachedNetworkImage(
-                placeholder: (context, url) => Center(
-                  child: CircularProgressIndicator(
-                    color: PRIMARY_COLOR,
-                    strokeWidth: 0.7,
-                  ),
-                ),
-                errorWidget: (context, url, error) =>
-                    Icon(Icons.error_outline_rounded),
-                imageUrl: imgUrl!,
-                fit: BoxFit.cover,
-                height: size,
-                width: size,
-              ),
-            )
-          : Image.asset(
-              'assets/images/user_placeholder.png',
-              height: size,
-              width: size,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: CachedNetworkImage(
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(
+              color: PRIMARY_COLOR,
+              strokeWidth: 0.7,
             ),
+          ),
+          errorWidget: (context, url, error) =>
+              Icon(Icons.error_outline_rounded),
+          imageUrl: imgUrl != null ? imgUrl! : APP_ICON_URL,
+          fit: BoxFit.cover,
+          height: size,
+          width: size,
+        ),
+      ),
     );
   }
 }

@@ -157,7 +157,10 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
           child: Row(
             children: [
-              CommonUserProfileOrPlaceholder(size: 30),
+              CommonUserProfileOrPlaceholder(
+                size: 30,
+                imgUrl: people.profileUrl,
+              ),
               SizedBox(width: 14.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -87,7 +87,7 @@ class _LineChart extends StatelessWidget {
         borderData: borderData,
         lineBarsData: lineBarsData,
         minX: 0,
-        maxX: 14,
+        maxX: 6,
         maxY: 6,
         minY: 0,
       );
@@ -148,15 +148,21 @@ class _LineChart extends StatelessWidget {
           fontSize: 16,
         ),
         getTitles: (value) {
-          final int lastMonth = DateFormatFromTimeStamp().getLastMonth();
+          final List<String> lastFiveMonth =
+              DateFormatFromTimeStamp().getLastFiveMonth();
           switch (value.toInt()) {
+            case 1:
+              return lastFiveMonth[4];
             case 2:
-              return (lastMonth - 2).toString();
-            case 7:
-              return (lastMonth - 1).toString();
-            case 12:
-              return lastMonth.toString();
+              return lastFiveMonth[3];
+            case 3:
+              return lastFiveMonth[2];
+            case 4:
+              return lastFiveMonth[1];
+            case 5:
+              return lastFiveMonth[0];
           }
+
           return '';
         },
       );
@@ -186,10 +192,10 @@ class _LineChart extends StatelessWidget {
         ),
         spots: const [
           FlSpot(1, 3.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 5),
-          FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
+          FlSpot(2, 1.9),
+          FlSpot(3, 5),
+          FlSpot(4, 2.8),
+          FlSpot(5, 3.9),
         ],
       );
 }

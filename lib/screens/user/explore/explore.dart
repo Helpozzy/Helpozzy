@@ -7,8 +7,8 @@ import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -69,7 +69,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         child: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
-            topImageView(),
+            topContainerWithProgress(),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -98,11 +98,11 @@ class _ExploreScreenState extends State<ExploreScreen>
     );
   }
 
-  Widget topImageView() {
+  Widget topContainerWithProgress() {
     return SliverPersistentHeader(
       delegate: SliverAppBarDelegate(
         minHeight: height / 6,
-        maxHeight: height / 3.5,
+        maxHeight: height / 4,
         child: StreamBuilder<SignUpAndUserModel>(
           stream: _userInfoBloc.userStream,
           builder: (context, snapshot) {
@@ -146,7 +146,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       )
                     : SizedBox(),
                 Positioned(
-                  bottom: width * 0.17,
+                  bottom: width * 0.16,
                   left: 0,
                   child: targetGoalSection(user),
                 ),
@@ -174,23 +174,21 @@ class _ExploreScreenState extends State<ExploreScreen>
               Text(
                 YOUR_HOURS_1,
                 style: _themeData.textTheme.bodyText2!.copyWith(
-                    fontSize: 16,
-                    color: MATE_WHITE,
-                    fontWeight: FontWeight.bold),
+                  color: MATE_WHITE,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Text(
                 '50',
                 style: _themeData.textTheme.bodyText2!.copyWith(
-                    fontSize: width * 0.1,
+                    fontSize: width * 0.08,
                     color: AMBER_COLOR,
                     fontWeight: FontWeight.bold),
               ),
               Text(
                 YOUR_HOURS_2,
-                style: _themeData.textTheme.bodyText2!.copyWith(
-                    fontSize: 16,
-                    color: MATE_WHITE,
-                    fontWeight: FontWeight.bold),
+                style: _themeData.textTheme.bodyText2!
+                    .copyWith(color: MATE_WHITE, fontWeight: FontWeight.bold),
               ),
               Text(
                 '${DateTime.now().year}',
@@ -484,7 +482,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectOtherDetailsScreen(project: project),
+                            ProjectDetailsInfo(project: project),
                       ),
                     ),
                     onPressedSignUpButton: () => Navigator.push(

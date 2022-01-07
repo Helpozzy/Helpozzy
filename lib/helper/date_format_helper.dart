@@ -14,8 +14,16 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 
-  int getLastMonth() {
-    return int.parse(
-        DateFormat('MM').format(DateTime.now().subtract(Duration(days: 30))));
+  List<String> getLastFiveMonth() {
+    final List<String> lastFiveMonth = [];
+    final DateFormat formatter = DateFormat('MMM');
+    final DateTime date = DateTime.now();
+
+    for (int i = 1; i < 6; i++) {
+      DateTime month = DateTime(date.year, date.month - i);
+      String monthName = formatter.format(month);
+      lastFiveMonth.add(monthName);
+    }
+    return lastFiveMonth;
   }
 }

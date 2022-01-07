@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
+import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class SearchProject {
@@ -187,7 +187,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectOtherDetailsScreen(project: project),
+                            ProjectDetailsInfo(project: project),
                       ),
                     ),
                     child: Column(

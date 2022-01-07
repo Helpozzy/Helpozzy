@@ -10,8 +10,8 @@ import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/admin/reports/reports.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
+import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
 import 'package:helpozzy/screens/user/profile/edit_profile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -421,7 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectOtherDetailsScreen(project: project),
+                            ProjectDetailsInfo(project: project),
                       ),
                     );
                   },
