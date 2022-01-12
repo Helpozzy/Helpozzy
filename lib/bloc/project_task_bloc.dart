@@ -11,7 +11,7 @@ class ProjectTaskBloc {
   final projectOwnTasksController = PublishSubject<Tasks>();
   final projectAllTasksController = PublishSubject<Tasks>();
   final projectTasksDetailsController = PublishSubject<ProjectTaskHelper>();
-  final selectedTasksController = BehaviorSubject<List<TaskModel>>();
+  final selectedTasksController = PublishSubject<List<TaskModel>>();
 
   Stream<bool> get getMyTaskExpandedStream => myTaskExpandController.stream;
   Stream<bool> get geAllTaskExpandedStream => allTaskExpandController.stream;

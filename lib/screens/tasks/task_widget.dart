@@ -1,10 +1,10 @@
-import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/custom_timer.dart';
 
 class TaskCard extends StatefulWidget {
   TaskCard({
@@ -46,7 +46,6 @@ class _TaskCardState extends State<TaskCard> {
 
   late ThemeData _theme;
   late double width;
-  final CustomTimerController _timerController = CustomTimerController();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
   @override
@@ -85,21 +84,7 @@ class _TaskCardState extends State<TaskCard> {
                               fontSize: 10, color: UNSELECTED_TAB_COLOR),
                         ),
                         !optionEnable && task.status == TOGGLE_INPROGRESS
-                            ? CustomTimer(
-                                controller: _timerController,
-                                begin: Duration(days: 1),
-                                end: Duration(hours: task.estimatedHrs),
-                                builder: (time) {
-                                  return Text(
-                                    "${time.hours} : ${time.minutes} : ${time.seconds}",
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      color: PRIMARY_COLOR,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              )
+                            ? CustomCoutDownTimer(hrs: task.estimatedHrs)
                             : SizedBox(),
                       ],
                     ),
@@ -186,7 +171,6 @@ class _TaskCardState extends State<TaskCard> {
                     final bool response =
                         await _projectTaskBloc.updateTasks(taskModel);
                     if (response) {
-                      _timerController.finish();
                       showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
                     } else {
                       showSnakeBar(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
@@ -220,8 +204,7 @@ class _TaskCardState extends State<TaskCard> {
                         final bool response =
                             await _projectTaskBloc.updateTasks(taskModel);
                         if (response) {
-                          _timerController.start();
-                          showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
+                          showSnakeBar(context, msg: TASK_STARTED_POPUP_MSG);
                         } else {
                           showSnakeBar(
                             context,

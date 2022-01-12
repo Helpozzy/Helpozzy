@@ -44,7 +44,7 @@ class _TaskTabState extends State<TaskTab> {
               return tasksCategoriesCard(
                 prefixWidget: CommonUserProfileOrPlaceholder(
                   imgUrl: prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
-                  size: width / 10,
+                  size: width / 12,
                 ),
                 label: MY_TASKS_LABEL,
                 isMyTask: true,
@@ -73,11 +73,12 @@ class _TaskTabState extends State<TaskTab> {
     );
   }
 
-  Widget tasksCategoriesCard(
-      {required Widget prefixWidget,
-      required String label,
-      required bool isMyTask,
-      required bool isExpanded}) {
+  Widget tasksCategoriesCard({
+    required Widget prefixWidget,
+    required String label,
+    required bool isMyTask,
+    required bool isExpanded,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
       child: InkWell(
@@ -147,43 +148,45 @@ class _TaskTabState extends State<TaskTab> {
               child: LinearLoader(),
             );
           }
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(vertical: 5),
-            itemCount: snapshot.data!.tasks.length,
-            itemBuilder: (context, index) {
-              final TaskModel task = snapshot.data!.tasks[index];
-              return Row(
-                children: [
-                  Container(
-                    height: 15,
-                    width: 15,
-                    margin: EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      color: task.status == TOGGLE_NOT_STARTED
-                          ? LIGHT_GRAY
-                          : task.status == TOGGLE_INPROGRESS
-                              ? AMBER_COLOR
-                              : ACCENT_GREEN,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: PRIMARY_COLOR, width: 1),
-                    ),
-                  ),
-                  TaskCard(
-                    task: task,
-                    optionEnable: false,
-                    onTapItem: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TaskDetails(task: task),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+          return snapshot.data!.tasks.isNotEmpty
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  itemCount: snapshot.data!.tasks.length,
+                  itemBuilder: (context, index) {
+                    final TaskModel task = snapshot.data!.tasks[index];
+                    return Row(
+                      children: [
+                        Container(
+                          height: 15,
+                          width: 15,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: task.status == TOGGLE_NOT_STARTED
+                                ? LIGHT_GRAY
+                                : task.status == TOGGLE_INPROGRESS
+                                    ? AMBER_COLOR
+                                    : ACCENT_GREEN,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: PRIMARY_COLOR, width: 1),
+                          ),
+                        ),
+                        TaskCard(
+                          task: task,
+                          optionEnable: false,
+                          onTapItem: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskDetails(task: task),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              : SizedBox();
         },
       ),
     );

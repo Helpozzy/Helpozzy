@@ -162,7 +162,6 @@ class _LineChart extends StatelessWidget {
             case 5:
               return lastFiveMonth[0];
           }
-
           return '';
         },
       );
