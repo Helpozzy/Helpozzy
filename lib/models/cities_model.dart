@@ -3,27 +3,27 @@ class Cities {
     items.forEach((element) {
       cities.add(CityModel.fromJson(json: element));
     });
-    cities
-        .sort((a, b) => a.city!.toLowerCase().compareTo(b.city!.toLowerCase()));
+    cities.sort((a, b) =>
+        a.cityName!.toLowerCase().compareTo(b.cityName!.toLowerCase()));
   }
   late List<CityModel> cities = [];
 }
 
 class CityModel {
-  String? city;
+  String? cityName;
   String? stateId;
   String? stateName;
   String? countyName;
 
   CityModel({
-    this.city,
+    this.cityName,
     this.stateId,
     this.stateName,
     this.countyName,
   });
 
   CityModel.fromJson({required Map<String, dynamic> json}) {
-    city = json["city"];
+    cityName = json["city"];
     stateId = json["state_id"];
     stateName = json["state_name"];
     countyName = json["county_name"];
@@ -31,7 +31,7 @@ class CityModel {
 
   Map<String, dynamic> toJson() {
     return {
-      "city": city,
+      "city": cityName,
       "state_id": stateId,
       "state_name": stateName,
       "county_name": countyName,

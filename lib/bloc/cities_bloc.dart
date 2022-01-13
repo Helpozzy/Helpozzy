@@ -24,6 +24,23 @@ class CityInfoBloc {
     return citiesList;
   }
 
+  List<CityModel> searchedCityList = [];
+
+  Future searchItem(
+      {required List<CityModel> cities, required String searchText}) async {
+    searchedCityList = [];
+    if (searchText.isEmpty) {
+      _searchCitiesController.sink.add(cities);
+    } else {
+      cities.forEach((city) {
+        if (city.cityName!.toLowerCase().contains(searchText.toLowerCase())) {
+          searchedCityList.add(city);
+        }
+      });
+      _searchCitiesController.sink.add(searchedCityList);
+    }
+  }
+
   void dispose() {
     _searchCitiesController.close();
   }

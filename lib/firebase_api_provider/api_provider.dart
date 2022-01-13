@@ -70,6 +70,7 @@ class ApiProvider {
             ? await firestore
                 .collection('schools_info')
                 .where('state', isEqualTo: state)
+                .where('city', isEqualTo: city)
                 .get()
             : (state != null && state.isNotEmpty)
                 ? await firestore

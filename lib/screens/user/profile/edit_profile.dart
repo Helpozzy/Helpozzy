@@ -736,7 +736,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   isExpanded: true,
                   onChanged: (CityModel? newValue) {
                     setState(() {
-                      _cityController.text = newValue!.city!;
+                      _cityController.text = newValue!.cityName!;
                     });
                   },
                   validator: (val) {
@@ -751,7 +751,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return DropdownMenuItem<CityModel>(
                       value: value,
                       child: Text(
-                        value!.city!,
+                        value!.cityName!,
                         textAlign: TextAlign.center,
                         style: _theme.textTheme.bodyText2,
                       ),

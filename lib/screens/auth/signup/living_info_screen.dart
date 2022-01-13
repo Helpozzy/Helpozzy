@@ -97,7 +97,9 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                     ),
                     TopInfoLabel(label: WHICH_STATE),
                     selectStateDropDown(states!),
-                    cities!.isNotEmpty ? SizedBox(height: 10) : SizedBox(),
+                    cities!.isNotEmpty
+                        ? TopInfoLabel(label: WHICH_CITY)
+                        : SizedBox(),
                     selectCitiesDropDown(cities!),
                     TextFieldWithLabel(
                       controller: _zipCodeController,
@@ -188,27 +190,13 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   }
 
   Widget selectCitiesDropDown(List<CityModel> cities) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-      child: cities.isNotEmpty
-          ? DropdownButtonFormField<CityModel>(
-              hint: Text(_stateController.text.isEmpty
-                  ? SELECT_CITY_HINT
-                  : cities.isEmpty
-                      ? 'Loading..'
-                      : SELECT_CITY_HINT),
-              icon: Icon(Icons.expand_more_outlined),
-              decoration: inputRoundedDecoration(
-                getHint: SELECT_CITY_HINT,
-                isDropDown: true,
-              ),
-              isExpanded: true,
-              onTap: () => FocusScope.of(context).unfocus(),
-              onChanged: (CityModel? newValue) {
-                setState(() {
-                  _cityController.text = newValue!.city!;
-                });
-              },
+    return cities.isNotEmpty
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+            child: CommonRoundedTextfield(
+              controller: _cityController,
+              hintText: SELECT_CITY_HINT,
+              onTap: () {},
               validator: (val) {
                 if (_cityController.text.isNotEmpty &&
                     _cityController.text == SELECT_CITY_HINT) {
@@ -216,18 +204,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 }
                 return null;
               },
-              items:
-                  cities.map<DropdownMenuItem<CityModel>>((CityModel? value) {
-                return DropdownMenuItem<CityModel>(
-                  value: value,
-                  child: Text(
-                    value!.city!,
-                    textAlign: TextAlign.center,
-                    style: _theme.textTheme.bodyText2,
-                  ),
-                );
-              }).toList())
-          : SizedBox(),
-    );
+            ),
+          )
+        : SizedBox();
   }
 }
