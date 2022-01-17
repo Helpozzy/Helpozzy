@@ -36,7 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late double width;
   XFile? _imageFile;
   final CommonPicker _commonPicker = CommonPicker();
-  final CityInfoBloc _cityInfoBloc = CityInfoBloc();
+  final CityBloc _cityBloc = CityBloc();
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final EditProfileBloc _editProfileBloc = EditProfileBloc();
   final TextEditingController _firstNameController = TextEditingController();
@@ -67,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     countryCode = _personalPhoneController.text.isNotEmpty
         ? CountryCode(code: countryCode!.dialCode!)
         : CountryCode(code: '+1', name: 'US');
-    _cityInfoBloc.getStates();
+    _cityBloc.getStates();
     listenState();
     super.initState();
   }
@@ -96,12 +96,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future listenState() async {
-    final States statesList = await _cityInfoBloc.getStates();
+    final States statesList = await _cityBloc.getStates();
     setState(() => states = statesList.states);
   }
 
   Future listenCities(String stateName) async {
-    final Cities citiesList = await _cityInfoBloc.getCities(stateName);
+    final Cities citiesList = await _cityBloc.getCities(stateName);
     setState(() => cities = citiesList.cities);
   }
 

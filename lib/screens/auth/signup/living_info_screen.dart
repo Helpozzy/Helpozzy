@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/search_bottomsheets/city_search_bottomsheet.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'contact_info.dart';
@@ -19,7 +20,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   _LivingInfoScreenState({required this.signupAndUserModel});
   final SignUpAndUserModel signupAndUserModel;
   final _formKey = GlobalKey<FormState>();
-  final CityInfoBloc _cityInfoBloc = CityInfoBloc();
+  final CityBloc _cityInfoBloc = CityBloc();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
@@ -194,15 +195,21 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
         ? Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.1),
             child: CommonRoundedTextfield(
+              textAlignCenter: false,
               controller: _cityController,
+              readOnly: true,
+              suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
               hintText: SELECT_CITY_HINT,
-              onTap: () {},
               validator: (val) {
-                if (_cityController.text.isNotEmpty &&
-                    _cityController.text == SELECT_CITY_HINT) {
+                if (val!.isEmpty) {
                   return 'Please select city';
                 }
                 return null;
+              },
+              onTap: () async {
+                final String city = await SearchCityBottomSheet()
+                    .showBottomSheet(context, cities: cities);
+                setState(() => _cityController.text = city);
               },
             ),
           )

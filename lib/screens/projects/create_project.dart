@@ -1,5 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
@@ -45,12 +50,63 @@ class _CreateProjectState extends State<CreateProject> {
   late double height;
   late int selectedCategoryId;
 
+  late GoogleMapController mapController;
+
+  late double? currentLat = 0.0;
+  late double? currentLong = 0.0;
+  late double selectedRating = 0.0;
+  late String currentAddress;
+  final Set<Marker> _markers = {};
+
   @override
   void initState() {
+    _determinePosition();
     _categoryBloc.getCategories();
     _projectsBloc.getOtherUsersInfo();
     _projectsBloc.searchUsers('');
     super.initState();
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future _mapFuture = Future.delayed(Duration(seconds: 2), () => true);
+
+  Future setCurrentLatLong() async {
+    final Position position = await Geolocator.getCurrentPosition();
+    currentLat = position.latitude;
+    currentLong = position.longitude;
+
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(currentLat!, currentLong!);
+
+    currentAddress = placemarks[0].street.toString() +
+        ', ' +
+        placemarks[0].country.toString() +
+        ', ' +
+        placemarks[0].postalCode.toString();
+    setState(() {});
   }
 
   @override
@@ -111,19 +167,11 @@ class _CreateProjectState extends State<CreateProject> {
                   ),
                   Divider(),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SimpleFieldWithLabel(
-                      label: PROJECT_LOCATION_LABEL,
-                      controller: _projLocationController,
-                      hintText: PROJECT_LOCATION_HINT,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Enter project location';
-                        }
-                        return null;
-                      },
-                    ),
+                    padding: EdgeInsets.symmetric(
+                        vertical: width * 0.03, horizontal: width * 0.05),
+                    child: SmallInfoLabel(label: PROJECT_LOCATION_LABEL),
                   ),
+                  locationMap(),
                   Divider(),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -271,6 +319,71 @@ class _CreateProjectState extends State<CreateProject> {
           },
         ),
       ],
+    );
+  }
+
+  Widget locationMap() {
+    return FutureBuilder(
+      future: _mapFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: LinearLoader(),
+          );
+        }
+        return Container(
+          height: height / 3.5,
+          margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: GoogleMap(
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer()),
+              },
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: false,
+              myLocationEnabled: false,
+              scrollGesturesEnabled: true,
+              zoomGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              mapType: MapType.normal,
+              indoorViewEnabled: true,
+              onMapCreated: (GoogleMapController controller) async {
+                setCurrentLatLong();
+                mapController = controller;
+                final int markerIdVal = generateIds();
+                final MarkerId markerId = MarkerId(markerIdVal.toString());
+
+                final Marker marker = Marker(
+                  draggable: true,
+                  markerId: markerId,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueGreen),
+                  infoWindow: InfoWindow(title: currentAddress),
+                  position: LatLng(currentLat!, currentLong!),
+                );
+                _markers.add(marker);
+                mapController.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(currentLat!, currentLong!),
+                      zoom: 11,
+                    ),
+                  ),
+                );
+                setState(() {});
+              },
+              mapToolbarEnabled: false,
+              markers: _markers,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(currentLat!, currentLong!),
+                zoom: 11.0,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -2,9 +2,9 @@ import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CityInfoBloc {
+class CityBloc {
   final repo = Repository();
-  final _searchCitiesController = PublishSubject<List<CityModel>>();
+  final _searchCitiesController = BehaviorSubject<List<CityModel>>();
 
   Stream<List<CityModel>> get searchedCitiesStream =>
       _searchCitiesController.stream;
@@ -24,15 +24,21 @@ class CityInfoBloc {
     return citiesList;
   }
 
+  List<CityModel> cityList = [];
+
+  Future citiesListFromList({required List<CityModel> cities}) async {
+    cityList = cities;
+    _searchCitiesController.sink.add(cityList);
+  }
+
   List<CityModel> searchedCityList = [];
 
-  Future searchItem(
-      {required List<CityModel> cities, required String searchText}) async {
+  Future searchItem({required String searchText}) async {
     searchedCityList = [];
     if (searchText.isEmpty) {
-      _searchCitiesController.sink.add(cities);
+      _searchCitiesController.sink.add(cityList);
     } else {
-      cities.forEach((city) {
+      cityList.forEach((city) {
         if (city.cityName!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedCityList.add(city);
         }

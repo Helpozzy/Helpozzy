@@ -117,58 +117,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: width * 0.15,
-                  right: width * 0.15,
-                  bottom: height * 0.03),
-              width: double.infinity,
-              child: StreamBuilder<bool>(
-                initialData: false,
-                stream: _signUpBloc.parentEmailVerifiedStream,
-                builder: (context, snapshot) {
-                  return CommonButton(
-                    text: CONTINUE_BUTTON,
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      signupAndUserModel.countryCode = countryCode!.code!;
-                      signupAndUserModel.personalPhnNo =
-                          _personalPhoneController.text;
-
-                      signupAndUserModel.parentEmail =
-                          showParentFields ? _parentEmailController.text : '';
-                      signupAndUserModel.relationshipWithParent =
-                          showParentFields ? _relationController.text : '';
-
-                      if (_formKey.currentState!.validate()) {
-                        if (snapshot.data!) {
-                          if (signupAndUserModel.volunteerType == 1) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SchoolAndGradeScreen(
-                                      signupAndUserModel: signupAndUserModel)),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TargetAndAreaOfInterest(
-                                      signupAndUserModel: signupAndUserModel)),
-                            );
-                          }
-                        } else {
-                          showAlertDialog(context,
-                              title: ALERT,
-                              content:
-                                  'Parent/Guardian email is not verified, Please verify your email.');
-                        }
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
+            continueButton(),
           ],
         ),
       ),
@@ -309,6 +258,92 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget continueButton() {
+    return Container(
+      margin: EdgeInsets.only(
+          left: width * 0.15, right: width * 0.15, bottom: height * 0.03),
+      width: double.infinity,
+      child: showParentFields
+          ? StreamBuilder<bool>(
+              initialData: false,
+              stream: _signUpBloc.parentEmailVerifiedStream,
+              builder: (context, snapshot) {
+                return CommonButton(
+                  text: CONTINUE_BUTTON,
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    signupAndUserModel.countryCode = countryCode!.code!;
+                    signupAndUserModel.personalPhnNo =
+                        _personalPhoneController.text;
+
+                    signupAndUserModel.parentEmail =
+                        showParentFields ? _parentEmailController.text : '';
+                    signupAndUserModel.relationshipWithParent =
+                        showParentFields ? _relationController.text : '';
+
+                    if (_formKey.currentState!.validate()) {
+                      if (snapshot.data!) {
+                        if (signupAndUserModel.volunteerType == 1) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SchoolAndGradeScreen(
+                                    signupAndUserModel: signupAndUserModel)),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TargetAndAreaOfInterest(
+                                    signupAndUserModel: signupAndUserModel)),
+                          );
+                        }
+                      } else {
+                        showAlertDialog(context,
+                            title: ALERT,
+                            content:
+                                'Parent/Guardian email is not verified, Please verify your email.');
+                      }
+                    }
+                  },
+                );
+              },
+            )
+          : CommonButton(
+              text: CONTINUE_BUTTON,
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                signupAndUserModel.countryCode = countryCode!.code!;
+                signupAndUserModel.personalPhnNo =
+                    _personalPhoneController.text;
+
+                signupAndUserModel.parentEmail =
+                    showParentFields ? _parentEmailController.text : '';
+                signupAndUserModel.relationshipWithParent =
+                    showParentFields ? _relationController.text : '';
+
+                if (_formKey.currentState!.validate()) {
+                  if (signupAndUserModel.volunteerType == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SchoolAndGradeScreen(
+                              signupAndUserModel: signupAndUserModel)),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TargetAndAreaOfInterest(
+                              signupAndUserModel: signupAndUserModel)),
+                    );
+                  }
+                }
+              },
+            ),
     );
   }
 }
