@@ -42,13 +42,8 @@ class LoginPage extends StatelessWidget {
         } else if (state is LoginSucceed) {
           CircularLoader().hide(context);
           showSnakeBar(context, msg: LOGIN_SUCEED_POPUP_MSG);
-          if (state.loginResponse.type == LOGIN_ADMIN) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, ADMIN_SELECTION, (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, HOME_SCREEN, (route) => false);
-          }
+          Navigator.pushNamedAndRemoveUntil(
+              context, HOME_SCREEN, (route) => false);
         } else if (state is LoginFailed) {
           CircularLoader().hide(context);
           showSnakeBar(context, msg: state.loginResponse.error!.split('] ')[1]);
@@ -83,7 +78,6 @@ class _LoginInputState extends State<LoginInput> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  final TextEditingController _modeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -134,13 +128,16 @@ class _LoginInputState extends State<LoginInput> {
                         }
                       },
                     ),
-                    SizedBox(height: 15),
-                    selectloginTypeDropdown(),
                   ],
                 ),
               ),
               Container(
-                margin: buildEdgeInsetsCustom(width, 0.20, 20.0, 0.20, 15.0),
+                margin: buildEdgeInsetsCustom(
+                    width: width,
+                    left: 0.25,
+                    top: 20.0,
+                    right: 0.25,
+                    bottom: 15.0),
                 width: double.infinity,
                 child: CommonButton(
                   text: MSG_LOGIN.toUpperCase(),
@@ -153,9 +150,7 @@ class _LoginInputState extends State<LoginInput> {
                       context
                           .read<LoginBloc>()
                           .add(LoginPasswordChanged(_passController.text));
-                      context
-                          .read<LoginBloc>()
-                          .add(LoginTypeChanged(_modeController.text));
+
                       context.read<LoginBloc>().add(const LoginSubmitted());
                     }
                   },
@@ -207,35 +202,5 @@ class _LoginInputState extends State<LoginInput> {
         );
       },
     );
-  }
-
-  Widget selectloginTypeDropdown() {
-    return DropdownButtonFormField<String>(
-        decoration:
-            inputRoundedDecoration(getHint: SELECT_TYPE_HINT, isDropDown: true),
-        icon: Icon(Icons.expand_more_outlined),
-        isExpanded: true,
-        validator: (val) {
-          if (_modeController.text.isEmpty) {
-            return 'Choose user wnat to login';
-          }
-          return null;
-        },
-        onChanged: (String? newValue) {
-          setState(() {
-            _modeController.text = newValue!;
-          });
-        },
-        items: loginModes.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Center(
-              child: Text(
-                value,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }).toList());
   }
 }

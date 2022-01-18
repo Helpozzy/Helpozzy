@@ -55,12 +55,12 @@ class _CreateProjectState extends State<CreateProject> {
   late double? currentLat = 0.0;
   late double? currentLong = 0.0;
   late double selectedRating = 0.0;
-  late String currentAddress;
+  late String currentAddress = '';
   final Set<Marker> _markers = {};
 
   @override
   void initState() {
-    _determinePosition();
+    _determinePosition().then((value) => setCurrentLatLong());
     _categoryBloc.getCategories();
     _projectsBloc.getOtherUsersInfo();
     _projectsBloc.searchUsers('');

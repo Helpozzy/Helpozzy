@@ -107,7 +107,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => type.id == 0
-                        ? ProjectsScreen(fromAdmin: true)
+                        ? ProjectsScreen()
                         : type.id == 1
                             ? MembersScreen()
                             : type.id == 4

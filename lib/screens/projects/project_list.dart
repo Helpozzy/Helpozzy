@@ -3,25 +3,21 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:helpozzy/screens/projects/create_project.dart';
 import 'package:helpozzy/screens/projects/project_and_activity_tile.dart';
 import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectListScreen extends StatefulWidget {
-  ProjectListScreen({required this.fromAdmin, required this.projectTabType});
-  final bool fromAdmin;
+  ProjectListScreen({required this.projectTabType});
   final ProjectTabType projectTabType;
   @override
-  _ProjectListScreenState createState() => _ProjectListScreenState(
-      fromAdmin: fromAdmin, projectTabType: projectTabType);
+  _ProjectListScreenState createState() =>
+      _ProjectListScreenState(projectTabType: projectTabType);
 }
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
-  _ProjectListScreenState(
-      {required this.fromAdmin, required this.projectTabType});
-  final bool fromAdmin;
+  _ProjectListScreenState({required this.projectTabType});
   final ProjectTabType projectTabType;
   late ThemeData _themeData;
   late double height;
@@ -33,15 +29,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   @override
   void initState() {
     _projectsBloc.getProjects(projectTabType: projectTabType);
-    if (!fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
+    if (projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
       _projectsBloc.getOnGoingProjects(
           projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB);
     }
-    if (!fromAdmin && projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
+    if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
       _projectsBloc.getProjectsActivityStatus();
     }
-    if (!fromAdmin &&
-        projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
+    if (projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
       _projectsBloc.getProjectsActivityStatus();
     }
     super.initState();
@@ -54,54 +49,32 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? ListDividerLabel(label: NEW_PROJECT_LABEL)
-            : !fromAdmin &&
-                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                 ? ListDividerLabel(label: RECENTLY_COMPLETED_LABEL)
-                : !fromAdmin &&
-                        projectTabType ==
-                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                : projectTabType ==
+                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                     ? ListDividerLabel(label: LATEST_CONTRIBUTION_HOURS_LABEL)
                     : SizedBox(),
         Expanded(child: projectList(_projectsBloc.getProjectsStream)),
-        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? ListDividerLabel(label: ONGOING_PROJECT_LABEL)
-            : !fromAdmin &&
-                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                 ? ListDividerLabel(label: DateTime.now().year.toString())
-                : !fromAdmin &&
-                        projectTabType ==
-                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                : projectTabType ==
+                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                     ? ListDividerLabel(label: DateTime.now().year.toString())
                     : SizedBox(),
-        !fromAdmin && projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? Expanded(
                 child: projectList(_projectsBloc.getOnGoingProjectsStream))
-            : !fromAdmin &&
-                    projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                 ? Expanded(child: monthlyProjectsStatus())
-                : !fromAdmin &&
-                        projectTabType ==
-                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                : projectTabType ==
+                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                     ? Expanded(child: monthlyProjectsStatus())
                     : SizedBox(),
-        fromAdmin
-            ? Container(
-                padding: EdgeInsets.symmetric(vertical: width * 0.02),
-                child: CommonButton(
-                  text: ADD_NEW_PROJECT_BUTTON.toUpperCase(),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateProject(),
-                      ),
-                    );
-                  },
-                ),
-              )
-            : SizedBox(),
       ],
     );
   }
@@ -133,7 +106,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                     ProjectDetailsInfo(project: project))),
                         child: ProjectTile(
                           projectTabType: projectTabType,
-                          fromAdmin: fromAdmin,
                           project: project,
                           isExpanded: snapshot.data!,
                           adminProjectsBloc: _projectsBloc,

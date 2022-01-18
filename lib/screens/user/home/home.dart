@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     ExploreScreen(),
     // RewardsScreen(initialIndex: 1, fromBottomBar: true),
-    ProjectsScreen(fromAdmin: false),
+    ProjectsScreen(),
     // CommonSampleScreen('Inbox'),
     // ChatListScreen(),
     ProfileScreen(),

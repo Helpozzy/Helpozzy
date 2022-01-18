@@ -20,8 +20,7 @@ class AuthRepository {
   }
 
   // Sign In with email and password
-  Future<LoginResponseModel> signIn(
-      String email, String password, String type) async {
+  Future<LoginResponseModel> signIn(String email, String password) async {
     UserCredential auth;
     try {
       auth = await firebaseAuth.signInWithEmailAndPassword(
@@ -34,15 +33,7 @@ class AuthRepository {
             await collectionReference.doc(auth.user!.uid).get();
 
         if (documentSnapshot.exists) {
-          final Map<String, dynamic> userData =
-              documentSnapshot.data() as Map<String, dynamic>;
-          if (userData['login_type'] == type) {
-            return LoginResponseModel(
-                user: auth.user, success: true, type: userData['login_type']);
-          } else {
-            return LoginResponseModel(
-                success: false, error: "You can't access $type account.");
-          }
+          return LoginResponseModel(user: auth.user, success: true);
         } else {
           return LoginResponseModel(
               success: false, error: "User not exist. Please retry.");
@@ -87,12 +78,10 @@ class AuthRepository {
           await collectionReference.doc(firebaseAuth.currentUser!.uid).get();
 
       if (documentSnapshot.exists) {
-        final Map<String, dynamic> userData =
-            documentSnapshot.data() as Map<String, dynamic>;
         return LoginResponseModel(
-            user: firebaseAuth.currentUser,
-            success: true,
-            type: userData['login_type']);
+          user: firebaseAuth.currentUser,
+          success: true,
+        );
       } else {
         return LoginResponseModel(
             success: false, error: "User not exist. Please retry.");

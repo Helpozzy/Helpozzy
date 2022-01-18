@@ -17,15 +17,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield _mapEmailChangedToState(event, state);
     } else if (event is LoginPasswordChanged) {
       yield _mapPasswordChangedToState(event, state);
-    } else if (event is LoginTypeChanged) {
-      yield _mapTypeChangedToState(event, state);
     } else if (event is LoginSubmitted) {
       final email = state.email;
       final password = state.password;
-      final type = state.type;
       yield state.copyWith(state, isLoading: true);
       LoginResponseModel loginResponse =
-          await authRepository.signIn(email, password, type);
+          await authRepository.signIn(email, password);
       if (loginResponse.user != null) {
         prefsObject.setString(CURRENT_USER_ID, loginResponse.user!.uid);
         yield LoginSucceed(loginResponse: loginResponse);
@@ -45,9 +42,5 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginState _mapPasswordChangedToState(
       LoginPasswordChanged event, LoginState state) {
     return state.copyWith(state, password: event.password);
-  }
-
-  LoginState _mapTypeChangedToState(LoginTypeChanged event, LoginState state) {
-    return state.copyWith(state, type: event.type);
   }
 }

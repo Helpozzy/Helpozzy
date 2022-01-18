@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,16 +29,25 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _personalPhoneController =
+      TextEditingController();
   final SignUpBloc _signUpBloc = SignUpBloc();
   late DateTime _selectedBirthDate = DateTime.now();
 
   late double width;
-  late ThemeData _theme;
+  late double height;
+  CountryCode? countryCode;
+
+  @override
+  void initState() {
+    countryCode = CountryCode(code: '+1', name: 'US');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
-    _theme = Theme.of(context);
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
@@ -125,6 +135,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         signupAndUserModel.dateOfBirth = _selectedBirthDate
                             .millisecondsSinceEpoch
                             .toString();
+                        signupAndUserModel.countryCode = countryCode!.code!;
+                        signupAndUserModel.personalPhnNo =
+                            _personalPhoneController.text;
                         signupAndUserModel.gender = _genderController.text;
                         if (_formKey.currentState!.validate()) {
                           if (snapshot.data!) {
@@ -185,35 +198,48 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   },
                 );
               }),
-          InkWell(
-            onTap: () async {
-              FocusScope.of(context).unfocus();
-              if (_emailController.text.trim().isNotEmpty) {
-                final bool response =
-                    await _signUpBloc.sentOtp(_emailController.text);
-                if (response) {
-                  showSnakeBar(
-                    context,
-                    msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
-                  );
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(top: 8.0),
+            child: SmallCommonButton(
+              fontSize: 10,
+              text: SENT_VERIFICATION_CODE_BUTTON,
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                if (_emailController.text.trim().isNotEmpty) {
+                  final bool response =
+                      await _signUpBloc.sentOtp(_emailController.text);
+                  if (response) {
+                    showSnakeBar(
+                      context,
+                      msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
+                    );
+                  } else {
+                    showSnakeBar(context, msg: FAILED_POPUP_MSG);
+                  }
                 } else {
-                  showSnakeBar(context, msg: FAILED_POPUP_MSG);
+                  showAlertDialog(context,
+                      title: 'Alert', content: 'Email is empty');
                 }
+              },
+            ),
+          ),
+          TopInfoLabel(label: ENTER_YOUR_PHONE_NUMBER),
+          CommonRoundedTextfield(
+            controller: _personalPhoneController,
+            prefixIcon: countryCodePicker(),
+            hintText: ENTER_PHONE_NUMBER_HINT,
+            maxLength: 10,
+            keyboardType: TextInputType.number,
+            validator: (phone) {
+              if (phone!.isEmpty) {
+                return 'Please enter phone number';
+              } else if (phone.isNotEmpty && phone.length != 10) {
+                return 'Please enter 10 digit number';
               } else {
-                showAlertDialog(context,
-                    title: 'Alert', content: 'Email is empty');
+                return null;
               }
             },
-            child: Container(
-              alignment: Alignment.centerRight,
-              padding:
-                  EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
-              child: Text(
-                SENT_OTP_BUTTON,
-                style:
-                    _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
-              ),
-            ),
           ),
           StreamBuilder<bool>(
             initialData: false,
@@ -244,6 +270,28 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget countryCodePicker() {
+    return CountryCodePicker(
+      onChanged: (CountryCode code) => countryCode = code,
+      boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      initialSelection: 'US',
+      backgroundColor: WHITE,
+      padding: EdgeInsets.only(left: width * 0.03),
+      showCountryOnly: false,
+      dialogSize: Size(width, height - 30),
+      showFlagMain: true,
+      dialogTextStyle: Theme.of(context).textTheme.bodyText2,
+      flagWidth: 25.0,
+      showOnlyCountryWhenClosed: false,
+      showFlag: false,
+      showFlagDialog: true,
+      favorite: ['+1', 'US'],
+      textStyle: Theme.of(context).textTheme.bodyText2,
+      closeIcon: Icon(Icons.close_rounded),
+      searchDecoration: inputRoundedDecoration(getHint: SEARCH_COUNTRY_HINT),
     );
   }
 

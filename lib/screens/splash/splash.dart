@@ -25,13 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (ctx, state) {
         if (state is AuthenticateState) {
-          if (state.authResponse.type == LOGIN_ADMIN) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, ADMIN_SELECTION, (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, HOME_SCREEN, (route) => false);
-          }
+          Navigator.pushNamedAndRemoveUntil(
+              context, HOME_SCREEN, (route) => false);
         } else {
           Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
         }

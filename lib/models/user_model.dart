@@ -29,7 +29,6 @@ class SignUpAndUserModel {
     this.zipCode,
     this.schoolName,
     this.gradeLevel,
-    this.userType,
     this.areaOfInterests,
     this.currentYearTargetHours,
     this.favorite,
@@ -57,7 +56,6 @@ class SignUpAndUserModel {
     zipCode = json['zip_code'];
     schoolName = json['school_name'];
     gradeLevel = json['grade_level'];
-    userType = json['user_type'];
     if (json['area_of_interests'] != null &&
         json['area_of_interests'].isNotEmpty) {
       List<int> areaOfInterestids = [];
@@ -94,7 +92,6 @@ class SignUpAndUserModel {
       'zip_code': zipCode,
       'school_name': schoolName,
       'grade_level': gradeLevel,
-      'user_type': userType,
       'area_of_interests': areaOfInterests,
       'current_year_target_hours': currentYearTargetHours,
       'date_of_joining': joiningDate,
@@ -121,7 +118,6 @@ class SignUpAndUserModel {
   late String? zipCode;
   late String? schoolName;
   late String? gradeLevel;
-  late String? userType;
   late List<int>? areaOfInterests = [];
   late int? currentYearTargetHours;
   late bool? favorite = false;

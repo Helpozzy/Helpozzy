@@ -7,16 +7,11 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({required this.signupAndUserModel});
-  final SignUpAndUserModel signupAndUserModel;
   @override
-  _SignUpScreenState createState() =>
-      _SignUpScreenState(signupAndUserModel: signupAndUserModel);
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  _SignUpScreenState({required this.signupAndUserModel});
-  final SignUpAndUserModel signupAndUserModel;
   late double width;
   late double height;
   late ThemeData _theme;
@@ -38,17 +33,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: SCREEN_BACKGROUND,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: topIconSection(context, SELECT_CATEGORY),
-          ),
+          topIconSection(SELECT_CATEGORY),
           volunteerList(),
         ],
       ),
     );
   }
 
-  Widget topIconSection(context, title) {
+  Widget topIconSection(title) {
     return Column(
       children: [
         CommonWidget(context).showBackButton(),
@@ -88,7 +80,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: LIGHT_BLACK,
                   text: _item.type,
                   onPressed: () {
-                    signupAndUserModel.volunteerType = index;
+                    SignUpAndUserModel signupAndUserModel =
+                        SignUpAndUserModel(volunteerType: index);
                     Navigator.push(
                       context,
                       MaterialPageRoute(

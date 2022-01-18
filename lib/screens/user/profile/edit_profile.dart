@@ -134,7 +134,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       profileUrl: profileUrl.isEmpty ? userModel!.profileUrl : profileUrl,
       rating: userModel!.rating,
       reviewsByPersons: userModel!.reviewsByPersons,
-      userType: userModel!.userType,
       volunteerType: userModel!.volunteerType,
     );
     final bool response =
@@ -471,7 +470,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             padding:
                 EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
             child: Text(
-              SENT_OTP_BUTTON,
+              SENT_VERIFICATION_CODE_BUTTON,
               style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
             ),
           ),

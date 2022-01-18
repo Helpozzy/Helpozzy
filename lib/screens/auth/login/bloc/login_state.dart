@@ -5,20 +5,17 @@ class LoginState extends Equatable {
   final String email;
   final String password;
   final bool isLoading;
-  final String type;
 
   LoginState({
     this.email = '',
     this.password = '',
     this.isLoading = false,
-    this.type = '',
   });
 
   @override
   List<Object> get props => [
         email,
         password,
-        type,
         isLoading,
       ];
 
@@ -32,7 +29,6 @@ class LoginState extends Equatable {
     return LoginState(
       email: email ?? oldState.email,
       password: password ?? oldState.password,
-      type: type ?? oldState.type,
       isLoading: isLoading ?? oldState.isLoading,
     );
   }
@@ -41,7 +37,6 @@ class LoginState extends Equatable {
     return LoginState(
       email: '',
       password: '',
-      type: '',
     );
   }
 }

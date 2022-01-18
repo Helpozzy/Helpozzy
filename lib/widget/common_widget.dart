@@ -443,7 +443,8 @@ EdgeInsets buildEdgeInsets(double width) {
   return EdgeInsets.only(top: 80, left: width * 0.15, right: width * 0.15);
 }
 
-EdgeInsets buildEdgeInsetsCustom(double width, left, top, right, bottom) {
+EdgeInsets buildEdgeInsetsCustom(
+    {required double width, left, top, right, bottom}) {
   return EdgeInsets.only(
       left: width * left, top: top, right: width * right, bottom: bottom);
 }

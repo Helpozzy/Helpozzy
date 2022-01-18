@@ -214,7 +214,7 @@ class _ExploreScreenState extends State<ExploreScreen>
 
     return Container(
       height: height / 9,
-      width: width,
+      width: width - 15,
       alignment: Alignment.topCenter,
       child: Timeline.tileBuilder(
         padding: EdgeInsets.symmetric(vertical: 2.0),

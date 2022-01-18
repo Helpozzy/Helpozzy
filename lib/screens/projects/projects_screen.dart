@@ -1,23 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/screens/projects/create_project.dart';
 import 'package:helpozzy/screens/projects/project_list.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectsScreen extends StatefulWidget {
-  ProjectsScreen({required this.fromAdmin});
-  final bool fromAdmin;
   @override
-  _ProjectsScreenState createState() =>
-      _ProjectsScreenState(fromAdmin: fromAdmin);
+  _ProjectsScreenState createState() => _ProjectsScreenState();
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen>
     with TickerProviderStateMixin {
-  _ProjectsScreenState({required this.fromAdmin});
-  final bool fromAdmin;
   late TabController _tabController;
   late double width;
+  late ThemeData _theme;
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -28,14 +25,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CommonAppBar(context).show(
         elevation: 1,
-        backButton: fromAdmin ? true : false,
+        backButton: false,
         title: PROJECTS_APPBAR,
-        bottom: fromAdmin ? _tabBar() : topSearchWithTab(),
-        onBack: () => fromAdmin ? Navigator.of(context).pop() : null,
+        bottom: topSearchWithTab(),
       ),
       body: body(),
     );
@@ -45,19 +42,50 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         preferredSize: Size(width, width / 4.5),
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: CommonRoundedTextfield(
-                textAlignCenter: true,
-                prefixIcon: Icon(
-                  CupertinoIcons.search,
-                  color: DARK_GRAY,
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 41,
+                    padding: EdgeInsets.only(left: width * 0.05),
+                    child: CommonRoundedTextfield(
+                      textAlignCenter: true,
+                      prefixIcon: Icon(
+                        CupertinoIcons.search,
+                        color: DARK_GRAY,
+                      ),
+                      fillColor: GRAY,
+                      controller: _searchController,
+                      hintText: SEARCH_PROJECT_HINT,
+                      validator: (val) {},
+                    ),
+                  ),
                 ),
-                fillColor: GRAY,
-                controller: _searchController,
-                hintText: SEARCH_PROJECT_HINT,
-                validator: (val) {},
-              ),
+                Transform.scale(
+                  scale: 0.8,
+                  child: FloatingActionButton.extended(
+                    elevation: 4,
+                    label: Text(
+                      ADD_NEW_PROJECT_BUTTON.toUpperCase(),
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        color: WHITE,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateProject(),
+                      ),
+                    ),
+                    backgroundColor: PRIMARY_COLOR,
+                    icon: Icon(
+                      CupertinoIcons.add_circled,
+                      color: WHITE,
+                    ),
+                  ),
+                ),
+              ],
             ),
             _tabBar(),
           ],
@@ -69,16 +97,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         indicatorColor: DARK_PINK_COLOR,
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 3.0,
-        isScrollable: fromAdmin ? false : true,
+        isScrollable: true,
         tabs: [
           _tab(text: PROJECT_UPCOMING_TAB),
           _tab(
-            text: fromAdmin ? PROJECT_INPROGRESS_TAB : PROJECT_COMPLETED_TAB,
+            text: PROJECT_INPROGRESS_TAB,
           ),
           _tab(
-            text: fromAdmin
-                ? PROJECT_COMPLETED_TAB
-                : PROJECT_CONTRIBUTION_TRACKER_TAB,
+            text: PROJECT_CONTRIBUTION_TRACKER_TAB,
           ),
         ],
       );
@@ -104,28 +130,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         controller: _tabController,
         children: [
           ProjectListScreen(
-            fromAdmin: fromAdmin,
             projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
           ),
-          fromAdmin
-              ? ProjectListScreen(
-                  fromAdmin: fromAdmin,
-                  projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB,
-                )
-              : ProjectListScreen(
-                  fromAdmin: fromAdmin,
-                  projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
-                ),
-          fromAdmin
-              ? ProjectListScreen(
-                  fromAdmin: fromAdmin,
-                  projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
-                )
-              : ProjectListScreen(
-                  fromAdmin: fromAdmin,
-                  projectTabType:
-                      ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
-                ),
+          ProjectListScreen(
+            projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB,
+          ),
+          ProjectListScreen(
+            projectTabType: ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
+          ),
         ],
       ),
     );

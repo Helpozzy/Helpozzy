@@ -72,7 +72,12 @@ class _ResetPasswordState extends State<ResetPassword> {
           Align(
             alignment: FractionalOffset.bottomCenter,
             child: Container(
-              margin: buildEdgeInsetsCustom(width, 0.15, 20.0, 0.15, 20.0),
+              margin: buildEdgeInsetsCustom(
+                  width: width,
+                  left: 0.15,
+                  top: 20.0,
+                  right: 0.15,
+                  bottom: 20.0),
               width: double.infinity,
               child: CommonButton(
                 text: SEND_MAIL_BUTTON,

@@ -164,8 +164,7 @@ class IntroWidget extends StatelessWidget {
   }
 
   Widget _pageBuilder(BuildContext context, PageItem page) {
-    return Container(
-        child: Stack(
+    return Stack(
       fit: StackFit.expand,
       children: [
         Image.asset(
@@ -176,7 +175,7 @@ class IntroWidget extends StatelessWidget {
           color: Colors.black38,
         )
       ],
-    ));
+    );
   }
 }
 

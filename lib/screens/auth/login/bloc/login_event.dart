@@ -23,14 +23,6 @@ class LoginPasswordChanged extends LoginEvent {
   List<Object> get props => [password];
 }
 
-class LoginTypeChanged extends LoginEvent {
-  const LoginTypeChanged(this.type);
-
-  final String type;
-
-  List<Object> get props => [type];
-}
-
 class LoginSubmitted extends LoginEvent {
   const LoginSubmitted();
 }

@@ -15,20 +15,17 @@ class ProjectTile extends StatefulWidget {
     required this.project,
     required this.projectTabType,
     required this.isExpanded,
-    required this.fromAdmin,
     required this.adminProjectsBloc,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
-  final bool fromAdmin;
   final ProjectsBloc adminProjectsBloc;
   @override
   _ProjectTileState createState() => _ProjectTileState(
       project: project,
       projectTabType: projectTabType,
       isExpanded: isExpanded,
-      fromAdmin: fromAdmin,
       adminProjectsBloc: adminProjectsBloc);
 }
 
@@ -37,13 +34,11 @@ class _ProjectTileState extends State<ProjectTile> {
     required this.project,
     required this.projectTabType,
     required this.isExpanded,
-    required this.fromAdmin,
     required this.adminProjectsBloc,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
-  final bool fromAdmin;
   final ProjectsBloc adminProjectsBloc;
   late ThemeData _theme;
   late double width;
@@ -53,7 +48,8 @@ class _ProjectTileState extends State<ProjectTile> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
-    return fromAdmin ? simpleTile() : slidableListItem();
+    return simpleTile();
+    // : slidableListItem();
   }
 
   Widget slidableListItem() {
@@ -118,42 +114,40 @@ class _ProjectTileState extends State<ProjectTile> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        fromAdmin
-                            ? SmallCommonButtonWithIcon(
-                                height: 20,
-                                width: 135,
-                                onPressed: () {
-                                  project.isProjectDetailsExpanded =
-                                      !project.isProjectDetailsExpanded;
-                                  adminProjectsBloc.isExpanded(isExpanded);
-                                  if (project.isProjectDetailsExpanded &&
-                                      project.isTaskDetailsExpanded) {
-                                    _projectTaskBloc.getProjectTaskDetails(
-                                        project.projectId);
-                                  }
-                                },
-                                icon: project.isProjectDetailsExpanded
-                                    ? Icons.keyboard_arrow_up_rounded
-                                    : Icons.keyboard_arrow_down_rounded,
-                                borderColor: project.isProjectDetailsExpanded
-                                    ? WHITE
-                                    : PRIMARY_COLOR,
-                                fontSize: 10,
-                                iconSize: 15,
-                                text: project.isProjectDetailsExpanded
-                                    ? HIDE_DETAILS_BUTTON
-                                    : SHOW_DETAILS_BUTTON,
-                                buttonColor: project.isProjectDetailsExpanded
-                                    ? PRIMARY_COLOR
-                                    : GRAY,
-                                iconColor: project.isProjectDetailsExpanded
-                                    ? WHITE
-                                    : PRIMARY_COLOR,
-                                fontColor: project.isProjectDetailsExpanded
-                                    ? WHITE
-                                    : PRIMARY_COLOR,
-                              )
-                            : SizedBox(),
+                        SmallCommonButtonWithIcon(
+                          height: 20,
+                          width: 135,
+                          onPressed: () {
+                            project.isProjectDetailsExpanded =
+                                !project.isProjectDetailsExpanded;
+                            adminProjectsBloc.isExpanded(isExpanded);
+                            if (project.isProjectDetailsExpanded &&
+                                project.isTaskDetailsExpanded) {
+                              _projectTaskBloc
+                                  .getProjectTaskDetails(project.projectId);
+                            }
+                          },
+                          icon: project.isProjectDetailsExpanded
+                              ? Icons.keyboard_arrow_up_rounded
+                              : Icons.keyboard_arrow_down_rounded,
+                          borderColor: project.isProjectDetailsExpanded
+                              ? WHITE
+                              : PRIMARY_COLOR,
+                          fontSize: 10,
+                          iconSize: 15,
+                          text: project.isProjectDetailsExpanded
+                              ? HIDE_DETAILS_BUTTON
+                              : SHOW_DETAILS_BUTTON,
+                          buttonColor: project.isProjectDetailsExpanded
+                              ? PRIMARY_COLOR
+                              : GRAY,
+                          iconColor: project.isProjectDetailsExpanded
+                              ? WHITE
+                              : PRIMARY_COLOR,
+                          fontColor: project.isProjectDetailsExpanded
+                              ? WHITE
+                              : PRIMARY_COLOR,
+                        ),
                       ],
                     ),
                     project.isProjectDetailsExpanded
@@ -180,16 +174,14 @@ class _ProjectTileState extends State<ProjectTile> {
                   ],
                 ),
               ),
-              fromAdmin
-                  ? SizedBox()
-                  : project.status == PROJECT_COMPLTED &&
-                          projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                      ? Text(
-                          PROJECT_COMPLTED,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(color: ACCENT_GREEN),
-                        )
-                      : Icon(Icons.arrow_forward_ios_rounded, size: 14)
+              // project.status == PROJECT_COMPLTED &&
+              //         projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+              //     ? Text(
+              //         PROJECT_COMPLTED,
+              //         style: _theme.textTheme.bodyText2!
+              //             .copyWith(color: ACCENT_GREEN),
+              //       )
+              //     : Icon(Icons.arrow_forward_ios_rounded, size: 14)
             ],
           ),
         ),
