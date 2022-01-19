@@ -1,30 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/models/admin_model/report_model.dart';
+import 'package:helpozzy/models/report_model.dart';
 import 'package:helpozzy/screens/admin/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class AdminReportsScreen extends StatefulWidget {
+class ReportsDetails extends StatefulWidget {
   @override
-  _AdminReportsScreenState createState() => _AdminReportsScreenState();
+  _ReportsDetailsState createState() => _ReportsDetailsState();
 }
 
-class _AdminReportsScreenState extends State<AdminReportsScreen> {
+class _ReportsDetailsState extends State<ReportsDetails> {
   late ThemeData _theme;
   late double height;
   late double width;
-
-  late bool test = false;
-  late bool test1 = false;
+  late List<BarChartModel> data = [];
 
   final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
     _projectsBloc.getProjects();
+    setListData();
     super.initState();
+  }
+
+  Future setListData() async {
+    final List<String> previousSixMonth =
+        DateFormatFromTimeStamp().getPreviousSixMonths();
+    data = [
+      BarChartModel(users: 12, hours: 16, month: previousSixMonth[5]),
+      BarChartModel(users: 8, hours: 22, month: previousSixMonth[4]),
+      BarChartModel(users: 5, hours: 55, month: previousSixMonth[3]),
+      BarChartModel(users: 10, hours: 38, month: previousSixMonth[2]),
+      BarChartModel(users: 13, hours: 16, month: previousSixMonth[1]),
+      BarChartModel(users: 18, hours: 20, month: previousSixMonth[0]),
+    ];
+    setState(() {});
   }
 
   @override
@@ -32,26 +46,15 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: CommonAppBar(context).show(
-        title: REPORTS_APPBAR,
-        elevation: 0,
-      ),
-      body: body(),
-    );
-  }
-
-  Widget body() {
     return SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(height: width * 0.02),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: ReportLineChart(),
+            child: BarChartGraph(data: data),
           ),
           SizedBox(height: width * 0.05),
-          // choiceSelection(),
           ListDividerLabel(label: MONTHLY_REPORTS_LABEL),
           yearlyReportList(),
           ListDividerLabel(label: PROJECT_HOURS_LABEL),
@@ -61,45 +64,20 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     );
   }
 
-  Widget choiceSelection() {
-    return Row(
-      children: [
-        ChoiceChip(
-          label: Text('Test'),
-          selected: test,
-          onSelected: (val) {
-            setState(() {
-              test = val;
-            });
-          },
-        ),
-        ChoiceChip(
-          label: Text('Test1'),
-          selected: test1,
-          onSelected: (val) {
-            setState(() {
-              test1 = val;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
   Widget yearlyReportList() {
-    Reports reports = Reports.fromJson(list: sampleReportList);
+    Reports reports = Reports.fromJson(list: data);
     return ListView.separated(
       shrinkWrap: true,
       separatorBuilder: (context, index) => Divider(height: 0.5),
       physics: ScrollPhysics(),
-      itemCount: reports.yearlyReports.length,
+      itemCount: reports.monthlyReports.length,
       itemBuilder: (context, index) {
-        ReportModel report = reports.yearlyReports[index];
+        BarChartModel report = reports.monthlyReports[index];
         return ListTile(
           contentPadding:
               EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
           title: Text(
-            report.year.toString(),
+            report.month.toString(),
             style: _theme.textTheme.headline6!
                 .copyWith(fontWeight: FontWeight.w600),
           ),
@@ -112,7 +90,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
               ),
               keyValueTile(
                 key: TOTAL_HRS_LABEL,
-                value: report.totalHrs.toString(),
+                value: report.hours.toString(),
               ),
             ],
           ),

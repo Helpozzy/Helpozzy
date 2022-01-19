@@ -8,7 +8,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/admin/reports/reports.dart';
+import 'package:helpozzy/screens/admin/reports/report_screen.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
@@ -189,12 +189,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () => Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => AdminReportsScreen(),
+                            builder: (context) => ReportsScreen(),
                           ),
                         ),
                         title: Text(MONTHLY_REPORTS_LABEL),
                         trailing: Icon(
-                          CupertinoIcons.chart_bar_alt_fill,
+                          Icons.stacked_bar_chart_sharp,
                           color: DARK_PINK_COLOR,
                         ),
                       ),

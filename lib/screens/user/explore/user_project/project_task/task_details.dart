@@ -153,7 +153,6 @@ class _TaskDetailsState extends State<TaskDetails> {
               ? CommonButton(
                   fontSize: 12,
                   text: COMPLETED_BUTTON,
-                  borderColor: DARK_PINK_COLOR,
                   color: DARK_PINK_COLOR,
                   onPressed: () async {
                     final TaskModel taskModel = TaskModel(
@@ -185,7 +184,6 @@ class _TaskDetailsState extends State<TaskDetails> {
                     CommonButton(
                       fontSize: 12,
                       text: START_BUTTON,
-                      borderColor: GRAY,
                       color: GRAY,
                       onPressed: () async {
                         final TaskModel taskModel = TaskModel(
@@ -219,7 +217,6 @@ class _TaskDetailsState extends State<TaskDetails> {
                     CommonButton(
                       fontSize: 12,
                       fontColor: BLACK,
-                      borderColor: SILVER_GRAY,
                       color: SILVER_GRAY,
                       text: DECLINE_BUTTON,
                       onPressed: () {},

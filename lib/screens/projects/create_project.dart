@@ -171,6 +171,7 @@ class _CreateProjectState extends State<CreateProject> {
                         vertical: width * 0.03, horizontal: width * 0.05),
                     child: SmallInfoLabel(label: PROJECT_LOCATION_LABEL),
                   ),
+                  // locationCard(),
                   locationMap(),
                   Divider(),
                   Padding(
@@ -384,6 +385,17 @@ class _CreateProjectState extends State<CreateProject> {
           ),
         );
       },
+    );
+  }
+
+  Widget locationCard() {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
+      child: ListTile(
+        onTap: () async {},
+        title: Text('Select location'),
+        trailing: Icon(Icons.pin_drop_rounded),
+      ),
     );
   }
 

@@ -51,115 +51,118 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommonWidget(context).showBackButton(),
-                    TopInfoLabel(label: ENTER_YOUR_NAME),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.16, vertical: 4.0),
-                      child: TextfieldLabelSmall(label: FIRST_NAME),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _firstNameController,
-                        hintText: ENTER_FIRST_NAME_HINT,
-                        validator: (fname) {
-                          if (fname!.isEmpty) {
-                            return 'Please enter first name';
-                          } else if (fname.isNotEmpty && fname.length <= 3) {
-                            return 'Please enter more than 3 charcters';
-                          } else {
-                            return null;
-                          }
-                        },
+      body: GestureDetector(
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CommonWidget(context).showBackButton(),
+                      TopInfoLabel(label: ENTER_YOUR_NAME),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.16, vertical: 4.0),
+                        child: TextfieldLabelSmall(label: FIRST_NAME),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.16, vertical: 4.0),
-                      child: TextfieldLabelSmall(label: LAST_NAME),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _lastNameController,
-                        hintText: ENTER_LAST_NAME_HINT,
-                        validator: (lname) {
-                          if (lname!.isEmpty) {
-                            return 'Please enter last name';
-                          } else if (lname.isNotEmpty && lname.length <= 3) {
-                            return 'Please enter more than 3 charcters';
-                          } else {
-                            return null;
-                          }
-                        },
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                        child: CommonRoundedTextfield(
+                          controller: _firstNameController,
+                          hintText: ENTER_FIRST_NAME_HINT,
+                          validator: (fname) {
+                            if (fname!.isEmpty) {
+                              return 'Please enter first name';
+                            } else if (fname.isNotEmpty && fname.length <= 3) {
+                              return 'Please enter more than 3 charcters';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                    TopInfoLabel(label: ENTER_YOUR_EMAIL),
-                    emailSection(),
-                    TopInfoLabel(label: SELECT_BIRTH_DATE),
-                    dateOfBirthField(),
-                    TopInfoLabel(label: SELECT_GENDER),
-                    genderDropDown(),
-                  ],
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.16, vertical: 4.0),
+                        child: TextfieldLabelSmall(label: LAST_NAME),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                        child: CommonRoundedTextfield(
+                          controller: _lastNameController,
+                          hintText: ENTER_LAST_NAME_HINT,
+                          validator: (lname) {
+                            if (lname!.isEmpty) {
+                              return 'Please enter last name';
+                            } else if (lname.isNotEmpty && lname.length <= 3) {
+                              return 'Please enter more than 3 charcters';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                      TopInfoLabel(label: ENTER_YOUR_EMAIL),
+                      emailSection(),
+                      TopInfoLabel(label: SELECT_BIRTH_DATE),
+                      dateOfBirthField(),
+                      TopInfoLabel(label: SELECT_GENDER),
+                      genderDropDown(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                vertical: 20.0,
-                horizontal: width * 0.15,
-              ),
-              width: double.infinity,
-              child: StreamBuilder<bool>(
-                  initialData: false,
-                  stream: _signUpBloc.emailVerifiedStream,
-                  builder: (context, snapshot) {
-                    return CommonButton(
-                      text: CONTINUE_BUTTON,
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        signupAndUserModel.name = _firstNameController.text +
-                            ' ' +
-                            _lastNameController.text;
-                        signupAndUserModel.email = _emailController.text;
-                        signupAndUserModel.dateOfBirth = _selectedBirthDate
-                            .millisecondsSinceEpoch
-                            .toString();
-                        signupAndUserModel.countryCode = countryCode!.code!;
-                        signupAndUserModel.personalPhnNo =
-                            _personalPhoneController.text;
-                        signupAndUserModel.gender = _genderController.text;
-                        if (_formKey.currentState!.validate()) {
-                          if (snapshot.data!) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LivingInfoScreen(
-                                    signupAndUserModel: signupAndUserModel),
-                              ),
-                            );
-                          } else {
-                            showAlertDialog(context,
-                                title: ALERT,
-                                content:
-                                    'Email is not verified, Please verify your email.');
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: width * 0.15,
+                ),
+                width: double.infinity,
+                child: StreamBuilder<bool>(
+                    initialData: false,
+                    stream: _signUpBloc.emailVerifiedStream,
+                    builder: (context, snapshot) {
+                      return CommonButton(
+                        text: CONTINUE_BUTTON,
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          signupAndUserModel.name = _firstNameController.text +
+                              ' ' +
+                              _lastNameController.text;
+                          signupAndUserModel.email = _emailController.text;
+                          signupAndUserModel.dateOfBirth = _selectedBirthDate
+                              .millisecondsSinceEpoch
+                              .toString();
+                          signupAndUserModel.countryCode = countryCode!.code!;
+                          signupAndUserModel.personalPhnNo =
+                              _personalPhoneController.text;
+                          signupAndUserModel.gender = _genderController.text;
+                          if (_formKey.currentState!.validate()) {
+                            if (snapshot.data!) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LivingInfoScreen(
+                                      signupAndUserModel: signupAndUserModel),
+                                ),
+                              );
+                            } else {
+                              showAlertDialog(context,
+                                  title: ALERT,
+                                  content:
+                                      'Email is not verified, Please verify your email.');
+                            }
                           }
-                        }
-                      },
-                    );
-                  }),
-            ),
-          ],
+                        },
+                      );
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );

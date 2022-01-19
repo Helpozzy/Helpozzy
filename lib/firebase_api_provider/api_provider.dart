@@ -301,7 +301,7 @@ class ApiProvider {
                 : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                     ? await firestore
                         .collection('projects')
-                        .where('status', isEqualTo: PROJECT_COMPLTED)
+                        .where('status', isEqualTo: PROJECT_COMPLETED)
                         .get()
                     : projectTabType ==
                             ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB

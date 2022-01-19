@@ -158,20 +158,14 @@ class _TaskTabState extends State<TaskTab> {
                     final TaskModel task = snapshot.data!.tasks[index];
                     return Row(
                       children: [
-                        Container(
-                          height: 15,
-                          width: 15,
-                          margin: EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
+                        CommonBadge(
                             color: task.status == TOGGLE_NOT_STARTED
                                 ? LIGHT_GRAY
                                 : task.status == TOGGLE_INPROGRESS
                                     ? AMBER_COLOR
                                     : ACCENT_GREEN,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: PRIMARY_COLOR, width: 1),
-                          ),
-                        ),
+                            size: 15,
+                            border: true),
                         TaskCard(
                           task: task,
                           optionEnable: false,

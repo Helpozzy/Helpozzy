@@ -81,7 +81,6 @@ class IntroWidget extends StatelessWidget {
               margin: EdgeInsets.only(left: width * 0.10, right: width * 0.10),
               width: double.infinity,
               child: CommonButton(
-                  borderColor: WHITE,
                   text: MSG_SIGN_UP.toUpperCase(),
                   onPressed: () {
                     signupScreenCallback(context);

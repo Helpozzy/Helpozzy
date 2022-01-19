@@ -5,7 +5,7 @@ import 'package:helpozzy/bloc/admin/admin_types_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/admin/reports/reports.dart';
+import 'package:helpozzy/screens/admin/reports/reports_tab/reports.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/projects/projects_screen.dart';
 import 'package:helpozzy/screens/user/common_screen.dart';
@@ -111,7 +111,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         : type.id == 1
                             ? MembersScreen()
                             : type.id == 4
-                                ? AdminReportsScreen()
+                                ? ReportsDetails()
                                 : CommonSampleScreen(
                                     '${type.label}\nCurrently Not Available'),
                   ),

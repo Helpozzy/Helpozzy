@@ -359,6 +359,11 @@ const SELECT_GAURDIAN = 'Guardian';
 const SELECT_MALE = 'Male';
 const SELECT_FEMALE = 'Female';
 const SELECT_OTHER = 'Other';
+const SLECT_DECLINE_TO_ANSWER = 'Decline to answer';
+
+//Report screen
+const REPORT_MONTHLY_TAB = 'Monthly';
+const REPORT_YEARLY_TAB = 'Yearly';
 
 //Admin Module
 
@@ -473,7 +478,7 @@ const TO = 'to';
 const COPY_LINK = 'Copy Link';
 const PROJECT_NOT_STARTED = 'Not Started';
 const PROJECT_IN_PROGRESS = 'In Progress';
-const PROJECT_COMPLTED = 'Completed';
+const PROJECT_COMPLETED = 'Completed';
 
 //Admin create task
 const TASK_NAME_LABEL = 'Task Name';
@@ -510,7 +515,13 @@ const SAMPLE_LONG_TEXT =
 
 //Dropdowns
 List<String> loginModes = [SELECT_VOLUNTEER, SELECT_ADMIN];
-List<String> gendersItems = [SELECT_MALE, SELECT_FEMALE, SELECT_OTHER];
+
+List<String> gendersItems = [
+  SELECT_MALE,
+  SELECT_FEMALE,
+  SELECT_OTHER,
+  SLECT_DECLINE_TO_ANSWER
+];
 
 List<String> relationShips = [SELECT_PARENT, SELECT_GAURDIAN];
 
@@ -627,24 +638,6 @@ Map<String, dynamic> rewardsList = {
     ],
   },
 };
-
-List<Map<String, dynamic>> sampleReportList = [
-  {
-    'year': 2021,
-    'users': 122,
-    'total_hrs': 375,
-  },
-  {
-    'year': 2020,
-    'users': 57,
-    'total_hrs': 175,
-  },
-  {
-    'year': 2019,
-    'users': 35,
-    'total_hrs': 105,
-  },
-];
 
 int generateIds() {
   final rng = Random();

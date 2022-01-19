@@ -332,6 +332,31 @@ Widget topBarBackArrowWithTitleWidget(context, title) {
   );
 }
 
+//Badge
+class CommonBadge extends StatelessWidget {
+  const CommonBadge({
+    this.border = false,
+    required this.color,
+    required this.size,
+  });
+  final Color color;
+  final double size;
+  final bool border;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: size,
+      width: size,
+      margin: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(100),
+        border: border ? Border.all(color: PRIMARY_COLOR, width: 1) : null,
+      ),
+    );
+  }
+}
+
 Widget labelText(context, title) {
   final _theme = Theme.of(context);
   return Align(
@@ -547,7 +572,6 @@ class CommonButton extends StatelessWidget {
     this.color = PRIMARY_COLOR,
     this.fontSize = 18,
     required this.onPressed,
-    this.borderColor = BLACK,
     this.fontColor = WHITE,
     this.elevation = 3,
   });
@@ -556,7 +580,6 @@ class CommonButton extends StatelessWidget {
   final Color fontColor;
   final double fontSize;
   final void Function() onPressed;
-  final Color borderColor;
   final double? elevation;
 
   @override
@@ -566,7 +589,6 @@ class CommonButton extends StatelessWidget {
         primary: color,
         elevation: elevation,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: borderColor, width: 0.3),
           borderRadius: BorderRadius.circular(25),
         ),
       ),

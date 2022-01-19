@@ -69,12 +69,11 @@ class _TaskCardState extends State<TaskCard> {
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: width / 1.37,
-                    child: Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -88,33 +87,33 @@ class _TaskCardState extends State<TaskCard> {
                             : SizedBox(),
                       ],
                     ),
-                  ),
-                  Text(
-                    task.taskName,
-                    style: _theme.textTheme.headline6!.copyWith(
-                      fontSize: 14,
-                      color: UNSELECTED_TAB_COLOR,
-                      fontWeight: FontWeight.w600,
+                    Text(
+                      task.taskName,
+                      style: _theme.textTheme.headline6!.copyWith(
+                        fontSize: 14,
+                        color: UNSELECTED_TAB_COLOR,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  !optionEnable
-                      ? task.status == TOGGLE_NOT_STARTED
-                          ? processButton(false)
-                          : task.status == TOGGLE_INPROGRESS
-                              ? processButton(true)
-                              : singleSubmitHoursButton()
-                      : SizedBox(),
-                  SizedBox(height: 8),
-                  Text(
-                    ESTIMATED_HRS + task.estimatedHrs.toString(),
-                    style: _theme.textTheme.bodyText2!.copyWith(
-                      fontSize: 8,
-                      color: PRIMARY_COLOR,
-                      fontWeight: FontWeight.w600,
+                    SizedBox(height: 5),
+                    !optionEnable
+                        ? task.status == TOGGLE_NOT_STARTED
+                            ? processButton(false)
+                            : task.status == TOGGLE_INPROGRESS
+                                ? processButton(true)
+                                : singleSubmitHoursButton()
+                        : SizedBox(),
+                    SizedBox(height: 8),
+                    Text(
+                      ESTIMATED_HRS + task.estimatedHrs.toString(),
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 8,
+                        color: PRIMARY_COLOR,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               optionEnable
                   ? IconButton(

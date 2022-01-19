@@ -51,30 +51,26 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       children: [
         projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? ListDividerLabel(label: NEW_PROJECT_LABEL)
-            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                ? ListDividerLabel(label: RECENTLY_COMPLETED_LABEL)
-                : projectTabType ==
-                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                    ? ListDividerLabel(label: LATEST_CONTRIBUTION_HOURS_LABEL)
-                    : SizedBox(),
+            : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+                ? ListDividerLabel(label: ONGOING_PROJECT_LABEL)
+                : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                    ? ListDividerLabel(label: RECENTLY_COMPLETED_LABEL)
+                    : projectTabType ==
+                            ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+                        ? ListDividerLabel(
+                            label: LATEST_CONTRIBUTION_HOURS_LABEL)
+                        : SizedBox(),
         Expanded(child: projectList(_projectsBloc.getProjectsStream)),
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-            ? ListDividerLabel(label: ONGOING_PROJECT_LABEL)
-            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+        projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            ? ListDividerLabel(label: DateTime.now().year.toString())
+            : projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                 ? ListDividerLabel(label: DateTime.now().year.toString())
-                : projectTabType ==
-                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                    ? ListDividerLabel(label: DateTime.now().year.toString())
-                    : SizedBox(),
-        projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-            ? Expanded(
-                child: projectList(_projectsBloc.getOnGoingProjectsStream))
-            : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                : SizedBox(),
+        projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+            ? Expanded(child: monthlyProjectsStatus())
+            : projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                 ? Expanded(child: monthlyProjectsStatus())
-                : projectTabType ==
-                        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                    ? Expanded(child: monthlyProjectsStatus())
-                    : SizedBox(),
+                : SizedBox(),
       ],
     );
   }
