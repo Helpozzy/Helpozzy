@@ -214,17 +214,26 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   ),
                 ),
                 Spacer(),
-                Icon(
-                  Icons.call_outlined,
-                  size: 15,
-                  color: DARK_GRAY,
-                ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Icon(
-                    Icons.messenger_outline_rounded,
-                    size: 15,
-                    color: DARK_GRAY,
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Icon(
+                      Icons.call_outlined,
+                      size: 18,
+                      color: DARK_GRAY,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Icon(
+                      Icons.messenger_outline_rounded,
+                      size: 18,
+                      color: DARK_GRAY,
+                    ),
                   ),
                 ),
               ],
@@ -552,7 +561,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                     Factory<OneSequenceGestureRecognizer>(
                         () => EagerGestureRecognizer()),
                   },
-                  myLocationButtonEnabled: true,
+                  myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   myLocationEnabled: true,
                   scrollGesturesEnabled: true,

@@ -52,6 +52,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         prefixIcon: Icon(
                           CupertinoIcons.search,
                           color: DARK_GRAY,
+                          size: 20,
                         ),
                         fillColor: GRAY,
                         controller: _searchController,
@@ -61,7 +62,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     ),
                   ),
                   Transform.scale(
-                    scale: 0.7,
+                    scale: 0.67,
                     child: FloatingActionButton(
                       elevation: 0,
                       onPressed: () => Navigator.push(
@@ -72,7 +73,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       ),
                       backgroundColor: GRAY,
                       child: Icon(
-                        Icons.add,
+                        CupertinoIcons.add,
                         color: PRIMARY_COLOR,
                       ),
                     ),

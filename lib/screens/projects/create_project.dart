@@ -567,6 +567,9 @@ class _CreateProjectState extends State<CreateProject> {
                   final TaskModel task = snapshot.data![index];
                   return TaskCard(
                     task: task,
+                    onTapItem: () =>
+                        setState(() => task.isSelected = !task.isSelected!),
+                    selected: task.isSelected!,
                     optionEnable: false,
                   );
                 },

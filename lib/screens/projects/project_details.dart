@@ -29,9 +29,15 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   late ThemeData _theme;
   late TabController _tabController;
 
+  final ScrollController scrollController = ScrollController();
+  late double currentPosition = 0.0;
+
   @override
   void initState() {
     _tabController = TabController(length: 5, initialIndex: 0, vsync: this);
+    scrollController.addListener(() {
+      setState(() => currentPosition = scrollController.offset);
+    });
     super.initState();
   }
 
@@ -43,22 +49,18 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
+          controller: scrollController,
           slivers: <Widget>[
             projectOrganizer(),
-            SliverPersistentHeader(
-              pinned: false,
-              delegate: SliverAppBarDelegate(
-                minHeight: height / 8,
-                maxHeight: height / 8,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            if (project.projectOwner == prefsObject.getString(CURRENT_USER_ID))
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
                     scheduleTiming(),
                     contactPersontile(),
                   ],
                 ),
               ),
-            ),
             SliverFillRemaining(
               child: Scaffold(
                 appBar: _tabBar(),
@@ -79,7 +81,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         maxHeight: height / 4,
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               height: height / 4,
               width: double.infinity,
               child: Image.asset(
@@ -104,85 +106,93 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                 ),
               ),
             ),
-            Positioned(
-              left: 16,
-              bottom: 42,
-              child: Container(
-                width: width - 30,
-                child: Text(
-                  project.projectName,
-                  maxLines: 2,
-                  style: _theme.textTheme.headline6!.copyWith(
-                    color: WHITE,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 16,
-              bottom: 28,
-              child: Text(
-                project.organization,
-                maxLines: 2,
-                style: _theme.textTheme.headline5!.copyWith(
-                  color: GRAY,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 10,
-              left: 18,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RatingBar.builder(
-                    initialRating: project.rating,
-                    ignoreGestures: true,
-                    minRating: 1,
-                    itemSize: 14,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    unratedColor: GRAY,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: AMBER_COLOR,
+            currentPosition < height / 10
+                ? Positioned(
+                    left: 16,
+                    bottom: 42,
+                    child: Container(
+                      width: width - 30,
+                      child: Text(
+                        project.projectName,
+                        maxLines: 2,
+                        style: _theme.textTheme.headline6!.copyWith(
+                          color: WHITE,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 26,
+                        ),
+                      ),
                     ),
-                    onRatingUpdate: (rating) => print(rating),
-                  ),
-                  Text(
-                    ' (${project.reviewCount} Reviews)',
-                    style: _theme.textTheme.bodyText2!.copyWith(
-                      color: GRAY,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                  )
+                : SizedBox(),
+            currentPosition < height / 10
+                ? Positioned(
+                    left: 16,
+                    bottom: 28,
+                    child: Text(
+                      project.organization,
+                      maxLines: 2,
+                      style: _theme.textTheme.headline5!.copyWith(
+                        color: GRAY,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 17,
-              bottom: 11,
-              child: InkWell(
-                onTap: () {
-                  setState(() => project.isLiked = !project.isLiked);
-                },
-                child: Icon(
-                  project.isLiked
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_rounded,
-                  color: project.isLiked ? Colors.red : WHITE,
-                  size: 19,
-                ),
-              ),
-            )
+                  )
+                : SizedBox(),
+            currentPosition < height / 10
+                ? Positioned(
+                    bottom: 10,
+                    left: 18,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RatingBar.builder(
+                          initialRating: project.rating,
+                          ignoreGestures: true,
+                          minRating: 1,
+                          itemSize: 14,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          unratedColor: GRAY,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: AMBER_COLOR,
+                          ),
+                          onRatingUpdate: (rating) => print(rating),
+                        ),
+                        Text(
+                          ' (${project.reviewCount} Reviews)',
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            color: GRAY,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+            currentPosition < height / 10
+                ? Positioned(
+                    right: 17,
+                    bottom: 11,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() => project.isLiked = !project.isLiked);
+                      },
+                      child: Icon(
+                        project.isLiked
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_border_rounded,
+                        color: project.isLiked ? Colors.red : WHITE,
+                        size: 19,
+                      ),
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -209,16 +219,19 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               ),
             ],
           ),
-          SmallCommonButton(
-            fontSize: 10,
-            text: SIGN_UP,
-            onPressed: () => Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => ProjectVolunteerSignUp(project: project),
-              ),
-            ),
-          ),
+          project.status != PROJECT_COMPLETED
+              ? SmallCommonButton(
+                  fontSize: 10,
+                  text: SIGN_UP,
+                  onPressed: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) =>
+                          ProjectVolunteerSignUp(project: project),
+                    ),
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     );

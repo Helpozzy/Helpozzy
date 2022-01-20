@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:share/share.dart';
@@ -16,35 +15,31 @@ class CommonUrlLauncher {
   }
 
   Future launchMap(String address) async {
-    String url = 'https://www.google.com/maps/search/?api=1&query=$address';
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri =
+        Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': '$address'});
+    if (await canLaunch(uri.toString())) {
+      await launch(uri.toString());
     } else {
-      throw 'Could not launch Map $url';
+      throw 'Could not launch Map ${uri.toString()}';
     }
   }
 
   Future openSystemMap(double lat, double lng) async {
-    String url = '';
-    String urlAppleMaps = '';
+    final uri =
+        Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': '$lat,$lng'});
     if (Platform.isAndroid) {
-      url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
-    } else {
-      urlAppleMaps = 'https://maps.apple.com/?q=$lat,$lng';
-      url = 'comgooglemaps://?saddr=&daddr=$lat,$lng&directionsmode=driving';
-      if (await canLaunch(url)) {
-        await launch(url);
+      if (await canLaunch(uri.toString())) {
+        await launch(uri.toString());
       } else {
-        throw 'Could not launch $url';
+        throw 'Could not launch Map ${uri.toString()}';
       }
-    }
-
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else if (await canLaunch(urlAppleMaps)) {
-      await launch(urlAppleMaps);
     } else {
-      throw 'Could not launch $url';
+      final String urlAppleMaps = 'https://maps.apple.com/?q=$lat,$lng';
+      if (await canLaunch(urlAppleMaps)) {
+        await launch(urlAppleMaps);
+      } else {
+        throw 'Could not launch $urlAppleMaps';
+      }
     }
   }
 

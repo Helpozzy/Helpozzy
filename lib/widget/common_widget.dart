@@ -12,7 +12,7 @@ class CommonWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
-        margin: EdgeInsets.only(top: height * 0.05, left: width * 0.05),
+        margin: EdgeInsets.only(top: height * 0.05, left: width * 0.03),
         child: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -700,30 +700,27 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: buttonColor,
-          border: Border.all(width: 0.6, color: fontColor),
           borderRadius: BorderRadius.circular(100),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: iconColor,
-                size: iconSize,
+        padding: EdgeInsets.only(top: 3.0, bottom: 3.0, right: 10.0, left: 6.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: iconColor,
+              size: iconSize,
+            ),
+            SizedBox(width: 3),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontFamily: QUICKSAND,
+                color: fontColor,
               ),
-              SizedBox(width: 6),
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontFamily: QUICKSAND,
-                  color: fontColor,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       onTap: onPressed,
@@ -1000,16 +997,17 @@ class ListDividerLabel extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
-      color: LABEL_TILE_COLOR,
+      color: GRAY,
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText2!
-                  .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: DARK_GRAY_FONT_COLOR,
+                  ),
             ),
           ),
           hasIcon ? suffixIcon! : SizedBox(),

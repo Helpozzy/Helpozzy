@@ -191,8 +191,7 @@ class _LoginInputState extends State<LoginInput> {
                           color: PRIMARY_COLOR,
                           fontWeight: FontWeight.w700),
                       recognizer: TapGestureRecognizer()
-                        ..onTap =
-                            () => Navigator.pushNamed(context, USER_SLECTION),
+                        ..onTap = () => Navigator.pushNamed(context, SIGNUP),
                     ),
                   ],
                 ),

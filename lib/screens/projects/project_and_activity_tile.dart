@@ -93,10 +93,10 @@ class _ProjectTileState extends State<ProjectTile> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 5),
+                      SizedBox(width: 3),
                       project.projectOwner ==
                               prefsObject.getString(CURRENT_USER_ID)
-                          ? CommonBadge(color: PINK_COLOR, size: 10)
+                          ? CommonBadge(color: PINK_COLOR, size: 8)
                           : SizedBox(),
                     ],
                   ),

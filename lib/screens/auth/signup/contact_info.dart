@@ -73,7 +73,9 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                     showParentFields
                         ? Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: width * 0.16, vertical: 4.0),
+                              horizontal: width * 0.16,
+                              vertical: 4.0,
+                            ),
                             child:
                                 TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
                           )
@@ -131,10 +133,10 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               }),
           Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.only(top: 8.0, right: 8.0),
             child: SmallCommonButton(
               fontSize: 10,
-              text: SENT_VERIFICATION_CODE_BUTTON,
+              text: SEND_VERIFICATION_CODE_BUTTON,
               onPressed: () async {
                 FocusScope.of(context).unfocus();
                 if (_parentEmailController.text.trim().isNotEmpty)

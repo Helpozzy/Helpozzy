@@ -112,14 +112,15 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       dateOfBirthField(),
                       TopInfoLabel(label: SELECT_GENDER),
                       genderDropDown(),
+                      SizedBox(height: 10),
                     ],
                   ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(
-                  vertical: 20.0,
-                  horizontal: width * 0.15,
+                  vertical: 5.0,
+                  horizontal: width * 0.2,
                 ),
                 width: double.infinity,
                 child: StreamBuilder<bool>(
@@ -203,10 +204,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               }),
           Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.only(top: 8.0, right: 8.0),
             child: SmallCommonButton(
               fontSize: 10,
-              text: SENT_VERIFICATION_CODE_BUTTON,
+              text: SEND_VERIFICATION_CODE_BUTTON,
               onPressed: () async {
                 FocusScope.of(context).unfocus();
                 if (_emailController.text.trim().isNotEmpty) {
