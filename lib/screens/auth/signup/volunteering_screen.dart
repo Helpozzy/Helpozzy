@@ -15,11 +15,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late double width;
   late double height;
   late ThemeData _theme;
-  final AirportDetailBloc _airportDetailBloc = AirportDetailBloc();
+  final VolunteerBloc _volunteerBloc = VolunteerBloc();
 
   @override
   void initState() {
-    _airportDetailBloc.getVolunteerList();
+    _volunteerBloc.getVolunteerList();
     super.initState();
   }
 
@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget volunteerList() {
     return StreamBuilder<VolunteerTypes>(
-      stream: _airportDetailBloc.volunteersListStream,
+      stream: _volunteerBloc.volunteersListStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator(color: PRIMARY_COLOR);

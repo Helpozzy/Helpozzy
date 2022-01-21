@@ -91,6 +91,8 @@ class SetPasswordScreen extends StatelessWidget {
                   FocusScope.of(context).unfocus();
                   if (_formKey.currentState!.validate()) {
                     CircularLoader().show(context);
+                    signupAndUserModel.joiningDate =
+                        DateTime.now().millisecondsSinceEpoch.toString();
                     _signUpBloc
                         .registerUser(
                             signupAndUserModel, _confirmPassController.text)
@@ -103,7 +105,8 @@ class SetPasswordScreen extends StatelessWidget {
                                 builder: (context) => HomeScreen()),
                             (route) => false);
                       else
-                        showSnakeBar(context, msg: SIGN_UP_FAILED_POPUP_MSG);
+                        ScaffoldSnakBar()
+                            .show(context, msg: SIGN_UP_FAILED_POPUP_MSG);
                     });
                   }
                 },

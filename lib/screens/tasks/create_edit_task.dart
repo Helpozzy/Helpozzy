@@ -696,7 +696,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     if (isUploaded) {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(
+      ScaffoldSnakBar().show(
         context,
         msg: fromEdit
             ? TASK_UPDATED_SUCCESSFULLY_POPUP_MSG
@@ -705,7 +705,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     } else {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(
+      ScaffoldSnakBar().show(
         context,
         msg: fromEdit
             ? TASK_NOT_UPDATED_ERROR_POPUP_MSG

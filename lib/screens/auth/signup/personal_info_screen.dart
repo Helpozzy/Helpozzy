@@ -9,6 +9,7 @@ import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({required this.signupAndUserModel});
@@ -108,6 +109,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       ),
                       TopInfoLabel(label: ENTER_YOUR_EMAIL),
                       emailSection(),
+                      TopInfoLabel(label: ENTER_YOUR_PHONE_NUMBER),
+                      phoneNumberField(),
                       TopInfoLabel(label: SELECT_BIRTH_DATE),
                       dateOfBirthField(),
                       TopInfoLabel(label: SELECT_GENDER),
@@ -152,7 +155,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                 ),
                               );
                             } else {
-                              showAlertDialog(context,
+                              PlatformAlertDialog().show(context,
                                   title: ALERT,
                                   content:
                                       'Email is not verified, Please verify your email.');
@@ -204,7 +207,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               }),
           Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(top: 8.0, right: 8.0),
+            padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
             child: SmallCommonButton(
               fontSize: 10,
               text: SEND_VERIFICATION_CODE_BUTTON,
@@ -214,36 +217,19 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   final bool response =
                       await _signUpBloc.sentOtp(_emailController.text);
                   if (response) {
-                    showSnakeBar(
+                    ScaffoldSnakBar().show(
                       context,
                       msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
                     );
                   } else {
-                    showSnakeBar(context, msg: FAILED_POPUP_MSG);
+                    ScaffoldSnakBar().show(context, msg: FAILED_POPUP_MSG);
                   }
                 } else {
-                  showAlertDialog(context,
-                      title: 'Alert', content: 'Email is empty');
+                  PlatformAlertDialog()
+                      .show(context, title: ALERT, content: 'Email is empty');
                 }
               },
             ),
-          ),
-          TopInfoLabel(label: ENTER_YOUR_PHONE_NUMBER),
-          CommonRoundedTextfield(
-            controller: _personalPhoneController,
-            prefixIcon: countryCodePicker(),
-            hintText: ENTER_PHONE_NUMBER_HINT,
-            maxLength: 10,
-            keyboardType: TextInputType.number,
-            validator: (phone) {
-              if (phone!.isEmpty) {
-                return 'Please enter phone number';
-              } else if (phone.isNotEmpty && phone.length != 10) {
-                return 'Please enter 10 digit number';
-              } else {
-                return null;
-              }
-            },
           ),
           StreamBuilder<bool>(
             initialData: false,
@@ -273,6 +259,28 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget phoneNumberField() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+      child: CommonRoundedTextfield(
+        controller: _personalPhoneController,
+        prefixIcon: countryCodePicker(),
+        hintText: ENTER_PHONE_NUMBER_HINT,
+        maxLength: 10,
+        keyboardType: TextInputType.number,
+        validator: (phone) {
+          if (phone!.isEmpty) {
+            return 'Please enter phone number';
+          } else if (phone.isNotEmpty && phone.length != 10) {
+            return 'Please enter 10 digit number';
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }

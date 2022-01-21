@@ -113,9 +113,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       );
 
   Widget get body => GestureDetector(
-        onPanDown: (_) {
-          FocusScope.of(context).unfocus();
-        },
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
         child: TabBarView(
           controller: _tabController,
           children: [

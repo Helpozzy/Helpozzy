@@ -66,7 +66,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 child: Column(
                   children: [
                     CommonWidget(context).showBackButton(),
-                    TopInfoLabel(label: 'Residential Address'),
+                    TopInfoLabel(label: RESIDENTAL_ADDRESS),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                       child: CommonRoundedTextfield(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/screens/projects/projects_screen.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/profile/profile_screen.dart';
+import 'package:helpozzy/screens/user/sign_out_dialog/sign_out_dialog.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'bloc/home_bloc.dart';
 
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
     // CommonSampleScreen('Inbox'),
     // ChatListScreen(),
     ProfileScreen(),
+    FullScreenSignOutDialog(),
   ];
 
   @override
@@ -71,6 +73,11 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person),
               label: PROFILE_TAB,
+              backgroundColor: Colors.white,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.logout_rounded),
+              label: LOGOUT_TAB,
               backgroundColor: Colors.white,
             ),
           ],

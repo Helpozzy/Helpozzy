@@ -482,12 +482,12 @@ EdgeInsets bottomContinueBtnEdgeInsets(double width, double height) {
       bottom: height * 0.03);
 }
 
-Future showSnakeBar(BuildContext context, {required String msg}) async {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(msg),
-    ),
-  );
+class ScaffoldSnakBar {
+  Future show(BuildContext context, {required String msg}) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
 }
 
 Future<void> showLoadingDialog(
@@ -904,44 +904,6 @@ class CommonAppBar {
 
 double timeConvertToDouble(TimeOfDay myTime) =>
     myTime.hour + myTime.minute / 60.0;
-
-showAlertDialog(BuildContext context,
-    {required String title, required String content}) {
-  Widget okButton = TextButton(
-    child: Text(
-      OK_BUTTON,
-      style:
-          Theme.of(context).textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
-    ),
-    onPressed: () => Navigator.of(context).pop(),
-  );
-
-  AlertDialog alert = AlertDialog(
-    backgroundColor: GRAY,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    title: Text(
-      title,
-      style: Theme.of(context)
-          .textTheme
-          .bodyText2!
-          .copyWith(fontWeight: FontWeight.bold),
-    ),
-    content: Text(
-      content,
-      style: Theme.of(context).textTheme.bodyText2,
-    ),
-    actions: [
-      okButton,
-    ],
-  );
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
 
 class CircularLoader {
   void show(BuildContext context) {

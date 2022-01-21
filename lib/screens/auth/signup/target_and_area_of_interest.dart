@@ -115,7 +115,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                   onChanged: (value) {
                     setState(() => trackerVal = value);
                     if (trackerVal.round() == 225) {
-                      showSnakeBar(context, msg: ENTER_HRS_POPUP_MSG);
+                      ScaffoldSnakBar().show(context, msg: ENTER_HRS_POPUP_MSG);
                     }
                   },
                 ),

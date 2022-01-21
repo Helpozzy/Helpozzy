@@ -72,9 +72,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
 
   Widget signUpForm() {
     return GestureDetector(
-      onPanDown: (_) {
-        FocusScope.of(context).unfocus();
-      },
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Form(
         key: _formKey,
         child: Column(
@@ -256,11 +254,13 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
 
                           if (response.success!) {
                             CircularLoader().hide(context);
-                            await showSnakeBar(context, msg: response.message!);
+                            await ScaffoldSnakBar()
+                                .show(context, msg: response.message!);
                             Navigator.of(context).pop();
                           } else {
                             CircularLoader().hide(context);
-                            await showSnakeBar(context, msg: response.error!);
+                            await ScaffoldSnakBar()
+                                .show(context, msg: response.error!);
                           }
                         }
                       },

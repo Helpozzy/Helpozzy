@@ -683,11 +683,12 @@ class _CreateProjectState extends State<CreateProject> {
     if (isUploaded) {
       await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG);
+      ScaffoldSnakBar()
+          .show(context, msg: PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG);
     } else {
       await clearFields();
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: PROJECT_NOT_CREATED_ERROR_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: PROJECT_NOT_CREATED_ERROR_POPUP_MSG);
     }
   }
 

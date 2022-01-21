@@ -518,7 +518,8 @@ class _ChatState extends State<Chat> {
                       onLongPress: () {
                         Clipboard.setData(
                             ClipboardData(text: document['content']));
-                        showSnakeBar(context, msg: MESSAGE_COPIED_POPUP_MSG);
+                        ScaffoldSnakBar()
+                            .show(context, msg: MESSAGE_COPIED_POPUP_MSG);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width - 100,

@@ -89,7 +89,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         .then((result) async {
                       CircularLoader().hide(context);
                       Navigator.of(context).pop();
-                      await showSnakeBar(
+                      await ScaffoldSnakBar().show(
                         context,
                         msg: result
                             ? 'Mail sent successfully\nPlease check your E-mail!'

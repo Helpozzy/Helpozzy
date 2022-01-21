@@ -2,7 +2,7 @@ import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AirportDetailBloc {
+class VolunteerBloc {
   final repo = Repository();
 
   final volunteersController = PublishSubject<VolunteerTypes>();

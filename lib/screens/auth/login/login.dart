@@ -41,12 +41,13 @@ class LoginPage extends StatelessWidget {
         } else if (state is LoginLoading) {
         } else if (state is LoginSucceed) {
           CircularLoader().hide(context);
-          showSnakeBar(context, msg: LOGIN_SUCEED_POPUP_MSG);
+          ScaffoldSnakBar().show(context, msg: LOGIN_SUCEED_POPUP_MSG);
           Navigator.pushNamedAndRemoveUntil(
               context, HOME_SCREEN, (route) => false);
         } else if (state is LoginFailed) {
           CircularLoader().hide(context);
-          showSnakeBar(context, msg: state.loginResponse.error!.split('] ')[1]);
+          ScaffoldSnakBar()
+              .show(context, msg: state.loginResponse.error!.split('] ')[1]);
         }
       },
       child: GestureDetector(

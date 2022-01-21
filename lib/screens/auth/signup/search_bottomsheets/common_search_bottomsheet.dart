@@ -78,9 +78,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
     width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: GestureDetector(
-        onPanDown: (_) {
-          FocusScope.of(context).unfocus();
-        },
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.965,
           padding: const EdgeInsets.only(

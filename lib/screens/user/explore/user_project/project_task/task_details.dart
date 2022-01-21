@@ -174,9 +174,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                     final bool response =
                         await _projectTaskBloc.updateTasks(taskModel);
                     if (response)
-                      showSnakeBar(context, msg: TASK_COMPLETED_POPUP_MSG);
+                      ScaffoldSnakBar()
+                          .show(context, msg: TASK_COMPLETED_POPUP_MSG);
                     else
-                      showSnakeBar(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+                      ScaffoldSnakBar()
+                          .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
                   },
                 )
               : Row(
@@ -205,9 +207,10 @@ class _TaskDetailsState extends State<TaskDetails> {
                         final bool response =
                             await _projectTaskBloc.updateTasks(taskModel);
                         if (response)
-                          showSnakeBar(context, msg: TASK_STARTED_POPUP_MSG);
+                          ScaffoldSnakBar()
+                              .show(context, msg: TASK_STARTED_POPUP_MSG);
                         else
-                          showSnakeBar(
+                          ScaffoldSnakBar().show(
                             context,
                             msg: TASK_NOT_UPDATED_POPUP_MSG,
                           );

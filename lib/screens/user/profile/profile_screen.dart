@@ -9,7 +9,6 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/admin/reports/report_screen.dart';
-import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
 import 'package:helpozzy/screens/user/profile/edit_profile.dart';
@@ -17,7 +16,6 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -50,176 +48,147 @@ class _ProfileScreenState extends State<ProfileScreen> {
         stream: _userInfoBloc.userStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-              child: LinearLoader(),
-            );
+            return Center(child: LinearLoader());
           }
           final SignUpAndUserModel? user = snapshot.data;
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FullScreenView(
-                                        imgUrl: user!.profileUrl!),
-                                  ),
-                                ),
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.only(bottom: 10, top: 15.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: PRIMARY_COLOR.withOpacity(0.8),
-                                  ),
-                                  child: CommonUserProfileOrPlaceholder(
-                                    size: width / 5,
-                                    imgUrl: user!.profileUrl!,
-                                  ),
-                                ),
-                              ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FullScreenView(imgUrl: user!.profileUrl!),
                             ),
-                            Center(
-                              child: Text(
-                                user.name!,
-                                style: _theme.textTheme.headline6!
-                                    .copyWith(fontWeight: FontWeight.w600),
-                              ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 10, top: 15.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: PRIMARY_COLOR.withOpacity(0.8),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.people_alt_outlined, size: 16),
-                                    SizedBox(width: 2),
-                                    Text(
-                                      '${user.reviewsByPersons} review',
-                                      style:
-                                          _theme.textTheme.bodyText2!.copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: DARK_GRAY_FONT_COLOR,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  DateFormatFromTimeStamp()
-                                      .dateFormatToEEEDDMMMYYYY(
-                                          timeStamp: user.joiningDate!),
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: DARK_GRAY_FONT_COLOR,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '10 Hours',
-                                      style:
-                                          _theme.textTheme.bodyText2!.copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: DARK_GRAY_FONT_COLOR,
-                                      ),
-                                    ),
-                                    SizedBox(width: 2),
-                                    Icon(Icons.arrow_forward_ios_rounded,
-                                        size: 14)
-                                  ],
-                                ),
-                              ],
+                            child: CommonUserProfileOrPlaceholder(
+                              size: width / 5,
+                              imgUrl: user!.profileUrl!,
                             ),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  top: 6.0, bottom: 6.0, right: 3.0),
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditProfileScreen(user: user),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  EDIT_PROFILE_TEXT,
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: BLUE_GRAY,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            CommonDividerWithVal(
-                              height: 1,
-                              color: DARK_GRAY,
-                            ),
-                            address(user),
-                            CommonDividerWithVal(
-                              height: 1,
-                              color: DARK_GRAY,
-                            ),
-                            aboutMe(user),
-                            CommonDividerWithVal(
-                              height: 1,
-                              color: DARK_GRAY,
-                            ),
-                            projectPref(),
-                          ],
-                        ),
-                      ),
-                      ListDividerLabel(label: VOLUNTEER_REPORT_TEXT),
-                      ListTile(
-                        onTap: () => Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => ReportsScreen(),
                           ),
                         ),
-                        title: Text(MONTHLY_REPORTS_LABEL),
-                        trailing: Icon(
-                          Icons.stacked_bar_chart_sharp,
-                          color: DARK_PINK_COLOR,
+                      ),
+                      Center(
+                        child: Text(
+                          user.name!,
+                          style: _theme.textTheme.headline6!
+                              .copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
-                      ownProjectsList(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.people_alt_outlined, size: 16),
+                              SizedBox(width: 2),
+                              Text(
+                                '${user.reviewsByPersons} review',
+                                style: _theme.textTheme.bodyText2!.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: DARK_GRAY_FONT_COLOR,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                                timeStamp: user.joiningDate!),
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: DARK_GRAY_FONT_COLOR,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                '10 Hours',
+                                style: _theme.textTheme.bodyText2!.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: DARK_GRAY_FONT_COLOR,
+                                ),
+                              ),
+                              SizedBox(width: 2),
+                              Icon(Icons.arrow_forward_ios_rounded, size: 14)
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.only(top: 6.0, bottom: 6.0, right: 3.0),
+                        alignment: Alignment.centerRight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditProfileScreen(user: user),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            EDIT_PROFILE_TEXT,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: BLUE_GRAY,
+                            ),
+                          ),
+                        ),
+                      ),
+                      CommonDividerWithVal(
+                        height: 1,
+                        color: DARK_GRAY,
+                      ),
+                      address(user),
+                      CommonDividerWithVal(
+                        height: 1,
+                        color: DARK_GRAY,
+                      ),
+                      aboutMe(user),
+                      CommonDividerWithVal(
+                        height: 1,
+                        color: DARK_GRAY,
+                      ),
+                      projectPref(),
                     ],
                   ),
                 ),
-              ),
-              Container(
-                margin:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: width * 0.1),
-                width: double.infinity,
-                child: CommonButton(
-                  text: LOGOUT_BUTTON,
-                  onPressed: () async {
-                    Provider.of<AuthBloc>(context, listen: false)
-                        .add(AppLogout());
-                    prefsObject.clear();
-                    prefsObject.reload();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, INTRO, (route) => false);
-                  },
+                ListDividerLabel(label: VOLUNTEER_REPORT_TEXT),
+                ListTile(
+                  onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ReportsScreen(),
+                    ),
+                  ),
+                  title: Text(MONTHLY_REPORTS_LABEL),
+                  trailing: Icon(
+                    Icons.stacked_bar_chart_sharp,
+                    color: DARK_PINK_COLOR,
+                  ),
                 ),
-              ),
-            ],
+                ownProjectsList(),
+              ],
+            ),
           );
         },
       ),
@@ -242,9 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(width: 5),
           GestureDetector(
-            onTap: () {
-              CommonUrlLauncher().launchCall(user.personalPhnNo!);
-            },
+            onTap: () => CommonUrlLauncher().launchCall(user.personalPhnNo!),
             child: Row(
               children: [
                 Text(

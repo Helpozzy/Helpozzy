@@ -63,9 +63,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     _themeData = Theme.of(context);
     return SafeArea(
       child: GestureDetector(
-        onPanDown: (_) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
         child: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
@@ -77,16 +75,16 @@ class _ExploreScreenState extends State<ExploreScreen>
                   Divider(),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: width * 0.05,
-                        right: width * 0.05,
-                        bottom: width * 0.02),
+                      left: width * 0.05,
+                      right: width * 0.05,
+                      bottom: width * 0.02,
+                    ),
                     child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
                   ),
                   categoryView(),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SmallInfoLabel(
-                        label: 'Current open projects in your area'),
+                    child: SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
                   ),
                   projectListView(),
                 ],

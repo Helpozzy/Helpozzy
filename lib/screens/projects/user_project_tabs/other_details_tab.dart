@@ -420,12 +420,12 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                                   .postReview(reviewModel);
 
                               if (response) {
-                                showSnakeBar(context,
+                                ScaffoldSnakBar().show(context,
                                     msg: REVIEW_POSTED_POPUP_MSG);
                                 _projectReviewsBloc
                                     .getProjectReviews(project.projectId);
                               } else {
-                                showSnakeBar(context,
+                                ScaffoldSnakBar().show(context,
                                     msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
                               }
                             },

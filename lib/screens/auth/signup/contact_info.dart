@@ -7,6 +7,7 @@ import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class ContactInfoScreen extends StatefulWidget {
   ContactInfoScreen({required this.signupAndUserModel});
@@ -133,7 +134,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               }),
           Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(top: 8.0, right: 8.0),
+            padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
             child: SmallCommonButton(
               fontSize: 10,
               text: SEND_VERIFICATION_CODE_BUTTON,
@@ -142,9 +143,8 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                 if (_parentEmailController.text.trim().isNotEmpty)
                   _signUpBloc.sentOtpOfParentEmail(_parentEmailController.text);
                 else
-                  showAlertDialog(context,
-                      title: 'Alert',
-                      content: 'Parent/Guardian email is empty');
+                  PlatformAlertDialog().show(context,
+                      title: ALERT, content: 'Parent/Guardian email is empty');
               },
             ),
           ),
@@ -249,7 +249,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                           );
                         }
                       } else {
-                        showAlertDialog(context,
+                        PlatformAlertDialog().show(context,
                             title: ALERT,
                             content:
                                 'Parent/Guardian email is not verified, Please verify your email.');

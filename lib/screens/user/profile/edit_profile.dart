@@ -16,6 +16,7 @@ import 'package:helpozzy/screens/auth/signup/search_bottomsheets/common_search_b
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -140,11 +141,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await _editProfileBloc.editProfile(signUpAndUserModel);
     if (response) {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: PROFILE_UPDATED_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: PROFILE_UPDATED_POPUP_MSG);
       Navigator.of(context).pop();
     } else {
       CircularLoader().hide(context);
-      showSnakeBar(context, msg: PROFILE_NOT_UPDATED_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: PROFILE_NOT_UPDATED_POPUP_MSG);
     }
   }
 
@@ -197,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           _parentEmailController.text) {
                         await postModifiedData();
                       } else {
-                        showAlertDialog(context,
+                        PlatformAlertDialog().show(context,
                             title: ALERT,
                             content:
                                 'Parent/Guardian email is not verified, Please verify your email.');
@@ -462,8 +463,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _editProfileBloc
                   .sentOtpOfParentEmail(_parentEmailController.text);
             else
-              showAlertDialog(context,
-                  title: 'Alert', content: 'Parent/Guardian email is empty');
+              PlatformAlertDialog().show(context,
+                  title: ALERT, content: 'Parent/Guardian email is empty');
           },
           child: Container(
             alignment: Alignment.centerRight,
@@ -633,7 +634,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ],
         cancelButton: CupertinoActionSheetAction(
           child: Text(
-            'Cancle',
+            CANCEL_BUTTON,
             style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
           ),
           isDefaultAction: true,
