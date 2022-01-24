@@ -50,6 +50,66 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
     }
   }
 
+  Future streamOncontinue(AsyncSnapshot<bool> snapshot) async {
+    FocusScope.of(context).unfocus();
+
+    signupAndUserModel.parentEmail =
+        showParentFields ? _parentEmailController.text : '';
+    signupAndUserModel.relationshipWithParent =
+        showParentFields ? _relationController.text : '';
+
+    if (_formKey.currentState!.validate()) {
+      if (snapshot.data!) {
+        if (signupAndUserModel.volunteerType == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SchoolAndGradeScreen(
+                    signupAndUserModel: signupAndUserModel)),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TargetAndAreaOfInterest(
+                    signupAndUserModel: signupAndUserModel)),
+          );
+        }
+      } else {
+        PlatformAlertDialog().show(context,
+            title: ALERT,
+            content:
+                'Parent/Guardian email is not verified, Please verify your email.');
+      }
+    }
+  }
+
+  Future onContinue() async {
+    FocusScope.of(context).unfocus();
+    signupAndUserModel.parentEmail =
+        showParentFields ? _parentEmailController.text : '';
+    signupAndUserModel.relationshipWithParent =
+        showParentFields ? _relationController.text : '';
+
+    if (_formKey.currentState!.validate()) {
+      if (signupAndUserModel.volunteerType == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  SchoolAndGradeScreen(signupAndUserModel: signupAndUserModel)),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TargetAndAreaOfInterest(
+                  signupAndUserModel: signupAndUserModel)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -59,42 +119,44 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
       backgroundColor: SCREEN_BACKGROUND,
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommonWidget(context).showBackButton(),
-                    showParentFields
-                        ? TopInfoLabel(label: ENTER_PARENT_EMAIL)
-                        : SizedBox(),
-                    showParentFields ? emailSection() : SizedBox(),
-                    showParentFields ? SizedBox(height: 10) : SizedBox(),
-                    showParentFields
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: width * 0.16,
-                              vertical: 4.0,
-                            ),
-                            child:
-                                TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
-                          )
-                        : SizedBox(),
-                    showParentFields
-                        ? Container(
-                            margin:
-                                EdgeInsets.symmetric(horizontal: width * 0.10),
-                            child: selectRelationshipDropdown(),
-                          )
-                        : SizedBox(),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            continueButton(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              showParentFields
+                  ? StreamBuilder<bool>(
+                      initialData: false,
+                      stream: _signUpBloc.parentEmailVerifiedStream,
+                      builder: (context, snapshot) {
+                        return CommonWidget(context).showBackForwardButton(
+                          onPressedForward: () => streamOncontinue(snapshot),
+                        );
+                      })
+                  : CommonWidget(context).showBackForwardButton(
+                      onPressedForward: () => onContinue(),
+                    ),
+              showParentFields
+                  ? TopInfoLabel(label: ENTER_PARENT_EMAIL)
+                  : SizedBox(),
+              showParentFields ? emailSection() : SizedBox(),
+              showParentFields ? SizedBox(height: 10) : SizedBox(),
+              showParentFields
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.16,
+                        vertical: 4.0,
+                      ),
+                      child: TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+                    )
+                  : SizedBox(),
+              showParentFields
+                  ? Container(
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.10),
+                      child: selectRelationshipDropdown(),
+                    )
+                  : SizedBox(),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
@@ -208,85 +270,6 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
           ),
         );
       }).toList(),
-    );
-  }
-
-  Widget continueButton() {
-    return Container(
-      margin: EdgeInsets.only(
-          left: width * 0.15, right: width * 0.15, bottom: height * 0.03),
-      width: double.infinity,
-      child: showParentFields
-          ? StreamBuilder<bool>(
-              initialData: false,
-              stream: _signUpBloc.parentEmailVerifiedStream,
-              builder: (context, snapshot) {
-                return CommonButton(
-                  text: CONTINUE_BUTTON,
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-
-                    signupAndUserModel.parentEmail =
-                        showParentFields ? _parentEmailController.text : '';
-                    signupAndUserModel.relationshipWithParent =
-                        showParentFields ? _relationController.text : '';
-
-                    if (_formKey.currentState!.validate()) {
-                      if (snapshot.data!) {
-                        if (signupAndUserModel.volunteerType == 1) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SchoolAndGradeScreen(
-                                    signupAndUserModel: signupAndUserModel)),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TargetAndAreaOfInterest(
-                                    signupAndUserModel: signupAndUserModel)),
-                          );
-                        }
-                      } else {
-                        PlatformAlertDialog().show(context,
-                            title: ALERT,
-                            content:
-                                'Parent/Guardian email is not verified, Please verify your email.');
-                      }
-                    }
-                  },
-                );
-              },
-            )
-          : CommonButton(
-              text: CONTINUE_BUTTON,
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                signupAndUserModel.parentEmail =
-                    showParentFields ? _parentEmailController.text : '';
-                signupAndUserModel.relationshipWithParent =
-                    showParentFields ? _relationController.text : '';
-
-                if (_formKey.currentState!.validate()) {
-                  if (signupAndUserModel.volunteerType == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SchoolAndGradeScreen(
-                              signupAndUserModel: signupAndUserModel)),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TargetAndAreaOfInterest(
-                              signupAndUserModel: signupAndUserModel)),
-                    );
-                  }
-                }
-              },
-            ),
     );
   }
 }

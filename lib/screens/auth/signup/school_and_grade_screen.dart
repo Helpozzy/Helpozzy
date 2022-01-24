@@ -29,6 +29,21 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   late double height;
   late double width;
 
+  Future onContinue() async {
+    FocusScope.of(context).unfocus();
+    signupAndUserModel.schoolName = _schoolController.text;
+    signupAndUserModel.gradeLevel = _gradeLevelController.text;
+    if (_formKey.currentState!.validate()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              TargetAndAreaOfInterest(signupAndUserModel: signupAndUserModel),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -41,7 +56,9 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         key: _formKey,
         child: Column(
           children: [
-            CommonWidget(context).showBackButton(),
+            CommonWidget(context).showBackForwardButton(
+              onPressedForward: () => onContinue(),
+            ),
             TopInfoLabel(label: SCHOOL_STATE),
             selectStateDropdown(),
             TopInfoLabel(label: SCHOOL_CITY),
@@ -49,31 +66,9 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
             TopInfoLabel(label: SCHOOL_NAME),
             schoolField(),
             TopInfoLabel(label: GRADE_LEVEL),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: width * 0.10),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.10),
               child: selectGradeDropDown(),
-            ),
-            Spacer(),
-            Container(
-              margin: bottomContinueBtnEdgeInsets(width, height),
-              width: double.infinity,
-              child: CommonButton(
-                text: CONTINUE_BUTTON,
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  signupAndUserModel.schoolName = _schoolController.text;
-                  signupAndUserModel.gradeLevel = _gradeLevelController.text;
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TargetAndAreaOfInterest(
-                            signupAndUserModel: signupAndUserModel),
-                      ),
-                    );
-                  }
-                },
-              ),
             ),
           ],
         ),
@@ -187,8 +182,8 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
           });
         },
         validator: (val) {
-          if (_gradeLevelController.text.isEmpty) {
-            return 'Please select grade level';
+          if (val == null) {
+            return 'Please select grade';
           }
           return null;
         },

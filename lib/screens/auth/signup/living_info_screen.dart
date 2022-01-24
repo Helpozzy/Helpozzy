@@ -49,6 +49,25 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     setState(() => cities = citiesList.cities);
   }
 
+  Future onContinue() async {
+    FocusScope.of(context).unfocus();
+    signupAndUserModel.volunteerType = signupAndUserModel.volunteerType;
+    signupAndUserModel.state = _stateController.text;
+    signupAndUserModel.city = _cityController.text;
+    signupAndUserModel.zipCode = _zipCodeController.text;
+    signupAndUserModel.address =
+        _houseNoController.text + ', ' + _streetController.text;
+    if (_formKey.currentState!.validate()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ContactInfoScreen(signupAndUserModel: signupAndUserModel),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -59,97 +78,65 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
       backgroundColor: SCREEN_BACKGROUND,
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CommonWidget(context).showBackButton(),
-                    TopInfoLabel(label: RESIDENTAL_ADDRESS),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _houseNoController,
-                        hintText: HOUSE_NO_HINT,
-                        validator: (address) {
-                          if (address!.isEmpty) {
-                            return 'Please enter your house/apt number';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 25),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                      child: CommonRoundedTextfield(
-                        controller: _streetController,
-                        hintText: STREET_NAME_HINT,
-                        validator: (address) {
-                          if (address!.isEmpty) {
-                            return 'Please enter your street name';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                    TopInfoLabel(label: WHICH_STATE),
-                    selectStateDropDown(states!),
-                    cities!.isNotEmpty
-                        ? TopInfoLabel(label: WHICH_CITY)
-                        : SizedBox(),
-                    selectCitiesDropDown(cities!),
-                    TextFieldWithLabel(
-                      controller: _zipCodeController,
-                      keyboardType: TextInputType.number,
-                      label: ENTER_ZIP_CODE,
-                      maxLength: 5,
-                      hintText: ENTER_ZIP_CODE_HINT,
-                      validator: (code) {
-                        if (code!.isEmpty) {
-                          return 'Please enter ZIP code';
-                        } else if (code.isNotEmpty && code.length != 5) {
-                          return 'Please enter 5 digit code';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    SizedBox(height: 25),
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CommonWidget(context).showBackForwardButton(
+                onPressedForward: () => onContinue(),
+              ),
+              TopInfoLabel(label: RESIDENTAL_ADDRESS),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                child: CommonRoundedTextfield(
+                  controller: _houseNoController,
+                  hintText: HOUSE_NO_HINT,
+                  validator: (address) {
+                    if (address!.isEmpty) {
+                      return 'Please enter your house/apt number';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
               ),
-            ),
-            Container(
-              margin: bottomContinueBtnEdgeInsets(width, height),
-              width: double.infinity,
-              child: CommonButton(
-                text: CONTINUE_BUTTON,
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-                  signupAndUserModel.volunteerType =
-                      signupAndUserModel.volunteerType;
-                  signupAndUserModel.state = _stateController.text;
-                  signupAndUserModel.city = _cityController.text;
-                  signupAndUserModel.zipCode = _zipCodeController.text;
-                  signupAndUserModel.address =
-                      _houseNoController.text + ', ' + _streetController.text;
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ContactInfoScreen(
-                            signupAndUserModel: signupAndUserModel),
-                      ),
-                    );
+              SizedBox(height: 25),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                child: CommonRoundedTextfield(
+                  controller: _streetController,
+                  hintText: STREET_NAME_HINT,
+                  validator: (address) {
+                    if (address!.isEmpty) {
+                      return 'Please enter your street name';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              TopInfoLabel(label: WHICH_STATE),
+              selectStateDropDown(states!),
+              cities!.isNotEmpty ? TopInfoLabel(label: WHICH_CITY) : SizedBox(),
+              selectCitiesDropDown(cities!),
+              TextFieldWithLabel(
+                controller: _zipCodeController,
+                keyboardType: TextInputType.number,
+                label: ENTER_ZIP_CODE,
+                maxLength: 5,
+                hintText: ENTER_ZIP_CODE_HINT,
+                validator: (code) {
+                  if (code!.isEmpty) {
+                    return 'Please enter ZIP code';
+                  } else if (code.isNotEmpty && code.length != 5) {
+                    return 'Please enter 5 digit code';
+                  } else {
+                    return null;
                   }
                 },
               ),
-            ),
-          ],
+              SizedBox(height: 25),
+            ],
+          ),
         ),
       ),
     );
@@ -171,8 +158,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             listenCities(newValue!.stateName!);
           },
           validator: (val) {
-            if (_stateController.text.isNotEmpty &&
-                _stateController.text == SELECT_STATE_HINT) {
+            if (val == null) {
               return 'Please select state';
             }
             return null;
@@ -201,7 +187,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
               suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
               hintText: SELECT_CITY_HINT,
               validator: (val) {
-                if (val!.isEmpty) {
+                if (val == null) {
                   return 'Please select city';
                 }
                 return null;

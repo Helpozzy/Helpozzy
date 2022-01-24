@@ -52,15 +52,14 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           controller: scrollController,
           slivers: <Widget>[
             projectOrganizer(),
-            if (project.projectOwner == prefsObject.getString(CURRENT_USER_ID))
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    scheduleTiming(),
-                    contactPersontile(),
-                  ],
-                ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  scheduleTiming(),
+                  contactPersontile(),
+                ],
               ),
+            ),
             SliverFillRemaining(
               child: Scaffold(
                 appBar: _tabBar(),
@@ -219,19 +218,21 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               ),
             ],
           ),
-          project.status != PROJECT_COMPLETED
-              ? SmallCommonButton(
-                  fontSize: 10,
-                  text: SIGN_UP,
-                  onPressed: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) =>
-                          ProjectVolunteerSignUp(project: project),
+          project.projectOwner == prefsObject.getString(CURRENT_USER_ID)
+              ? SizedBox()
+              : project.status == PROJECT_COMPLETED
+                  ? SizedBox()
+                  : SmallCommonButton(
+                      fontSize: 10,
+                      text: SIGN_UP,
+                      onPressed: () => Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) =>
+                              ProjectVolunteerSignUp(project: project),
+                        ),
+                      ),
                     ),
-                  ),
-                )
-              : SizedBox(),
         ],
       ),
     );

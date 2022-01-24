@@ -163,11 +163,16 @@ class _UserProjectCardState extends State<UserProjectCard> {
                           ],
                         ),
                         Spacer(),
-                        CommonButton(
-                          fontSize: 11,
-                          text: SIGN_UP,
-                          onPressed: onPressedSignUpButton!,
-                        ),
+                        project.projectOwner ==
+                                prefsObject.getString(CURRENT_USER_ID)
+                            ? SizedBox()
+                            : project.status == PROJECT_COMPLETED
+                                ? SizedBox()
+                                : SmallCommonButton(
+                                    fontSize: 12,
+                                    text: SIGN_UP,
+                                    onPressed: onPressedSignUpButton!,
+                                  ),
                         SizedBox(width: 10),
                       ],
                     ),

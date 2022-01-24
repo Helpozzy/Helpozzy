@@ -35,6 +35,28 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
     super.initState();
   }
 
+  Future onContinue(List<CategoryModel> categories) async {
+    if (_formKey.currentState!.validate()) {
+      selectedAreaOfInterests = [];
+      categories.forEach((category) {
+        if (category.isSelected) {
+          selectedAreaOfInterests.add(category.id);
+        }
+      });
+      signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
+          ? trackerVal.round()
+          : int.parse(_targetHoursController.text);
+      signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              SetPasswordScreen(signupAndUserModel: signupAndUserModel),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -55,37 +77,21 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
             );
           }
           final List<CategoryModel> categories = snapshot.data!.categories;
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        CommonWidget(context).showBackButton(),
-                        TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
-                        targetFields(),
-                        TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
-                        categoryView(categories),
-                      ],
-                    ),
+          return SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  CommonWidget(context).showBackForwardButton(
+                    onPressedForward: () => onContinue(categories),
                   ),
-                ),
+                  TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
+                  targetFields(),
+                  TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
+                  categoryView(categories),
+                ],
               ),
-              Container(
-                margin: bottomContinueBtnEdgeInsets(width, height),
-                width: double.infinity,
-                child: CommonButton(
-                  text: CONTINUE_BUTTON,
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await getSelectedCategories(categories);
-                    }
-                  },
-                ),
-              ),
-            ],
+            ),
           );
         },
       ),
@@ -228,26 +234,6 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
           ),
         );
       },
-    );
-  }
-
-  Future getSelectedCategories(List<CategoryModel> categories) async {
-    selectedAreaOfInterests = [];
-    categories.forEach((category) {
-      if (category.isSelected) {
-        selectedAreaOfInterests.add(category.id);
-      }
-    });
-    signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
-        ? trackerVal.round()
-        : int.parse(_targetHoursController.text);
-    signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            SetPasswordScreen(signupAndUserModel: signupAndUserModel),
-      ),
     );
   }
 }

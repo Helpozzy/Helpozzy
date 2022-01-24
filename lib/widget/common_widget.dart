@@ -45,6 +45,37 @@ class CommonWidget {
       ),
     );
   }
+
+  Widget showBackForwardButton({required VoidCallback? onPressedForward}) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(
+          top: height * 0.05, left: width * 0.03, right: width * 0.03),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: CLOSE_ICON,
+            ),
+          ),
+          IconButton(
+            onPressed: onPressedForward,
+            icon: Icon(
+              Icons.arrow_forward_rounded,
+              color: CLOSE_ICON,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class TopInfoLabel extends StatelessWidget {
