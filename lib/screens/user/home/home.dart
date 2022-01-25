@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/projects/projects_screen.dart';
+import 'package:helpozzy/screens/user/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/user/explore/explore.dart';
 import 'package:helpozzy/screens/user/profile/profile_screen.dart';
 import 'package:helpozzy/screens/user/sign_out_dialog/sign_out_dialog.dart';
@@ -29,10 +29,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final List<Widget> _children = [
+    DashboardScreen(),
     ExploreScreen(),
     // RewardsScreen(initialIndex: 1, fromBottomBar: true),
-    ProjectsScreen(),
-    // CommonSampleScreen('Inbox'),
     // ChatListScreen(),
     ProfileScreen(),
     FullScreenSignOutDialog(),
@@ -44,15 +43,17 @@ class _HomeState extends State<Home> {
       return Scaffold(
         body: Center(child: _children[state.currentIndex]),
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 1,
           selectedLabelStyle:
-              TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: TextStyle(fontSize: 13),
+              TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          unselectedLabelStyle: TextStyle(fontSize: 12),
           unselectedIconTheme: IconThemeData(color: DARK_GRAY),
-          type: BottomNavigationBarType.shifting,
-          items: const <BottomNavigationBarItem>[
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search),
-              label: EXPLORE_TAB,
+              icon: Icon(CupertinoIcons.home, size: 17),
+              activeIcon: Icon(CupertinoIcons.home),
+              label: HOME_TAB,
               backgroundColor: Colors.white,
             ),
             // BottomNavigationBarItem(
@@ -61,8 +62,9 @@ class _HomeState extends State<Home> {
             //   backgroundColor: Colors.white,
             // ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.rectangle_3_offgrid),
-              label: PROJECTs_TAB,
+              icon: Icon(CupertinoIcons.search, size: 17),
+              activeIcon: Icon(CupertinoIcons.search),
+              label: EXPLORE_TAB,
               backgroundColor: Colors.white,
             ),
             // BottomNavigationBarItem(
@@ -71,12 +73,14 @@ class _HomeState extends State<Home> {
             //   backgroundColor: Colors.white,
             // ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person),
+              icon: Icon(CupertinoIcons.person, size: 17),
+              activeIcon: Icon(CupertinoIcons.person),
               label: PROFILE_TAB,
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.logout_rounded),
+              icon: Icon(Icons.logout_rounded, size: 17),
+              activeIcon: Icon(Icons.logout_rounded),
               label: LOGOUT_TAB,
               backgroundColor: Colors.white,
             ),

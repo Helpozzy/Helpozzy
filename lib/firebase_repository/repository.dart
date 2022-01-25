@@ -62,9 +62,8 @@ class Repository {
           ProjectSignUpModel projectSignUpVal) =>
       apiProvider.postProjectSignupProvider(projectSignUpVal);
 
-  //Admin Repo
-  Future<AdminTypes> getAdminCategoriesRepo() =>
-      apiProvider.getAdminCategoriesAPIProvider();
+  Future<DashboardMenus> getDashBoardMenusRepo() =>
+      apiProvider.getDashBoardMenusAPIProvider();
 
   Future<bool> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);

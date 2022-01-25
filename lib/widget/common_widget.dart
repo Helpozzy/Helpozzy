@@ -572,7 +572,7 @@ class TopAppLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(20.0),
       width: MediaQuery.of(context).size.width,
       height: height,
       child: Row(

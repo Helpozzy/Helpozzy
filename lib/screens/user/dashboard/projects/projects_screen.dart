@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/projects/create_project.dart';
-import 'package:helpozzy/screens/projects/project_list.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+
+import 'create_project.dart';
+import 'project_list.dart';
 
 class ProjectsScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     return Scaffold(
       appBar: CommonAppBar(context).show(
         elevation: 1,
-        backButton: false,
+        backButton: true,
         title: PROJECTS_APPBAR,
         bottom: topSearchWithTab(),
       ),
@@ -37,7 +38,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   PreferredSize topSearchWithTab() => PreferredSize(
-        preferredSize: Size(width, width / 4.5),
+        preferredSize: Size(width, width / 4),
         child: Column(
           children: [
             Padding(

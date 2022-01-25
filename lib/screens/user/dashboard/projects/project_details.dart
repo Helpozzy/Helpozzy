@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/screens/projects/volunteer_project_sign_up.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/other_details_tab.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/members_tab.dart';
-import 'package:helpozzy/screens/projects/user_project_tabs/tasks_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
+
+import 'project_tabs/members_tab.dart';
+import 'project_tabs/other_details_tab.dart';
+import 'project_tabs/tasks_tab.dart';
+import 'volunteer_project_sign_up.dart';
 
 class ProjectDetailsInfo extends StatefulWidget {
   ProjectDetailsInfo({required this.project});

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/user/home/home.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -47,10 +46,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
           .then((response) {
         CircularLoader().hide(context);
         if (response)
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-              (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, HOME_SCREEN, (route) => false);
         else
           ScaffoldSnakBar().show(context, msg: SIGN_UP_FAILED_POPUP_MSG);
       });

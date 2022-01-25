@@ -261,16 +261,15 @@ class ApiProvider {
 
   //Admin API Provider
 
-  Future<AdminTypes> getAdminCategoriesAPIProvider() async {
+  Future<DashboardMenus> getDashBoardMenusAPIProvider() async {
     final DocumentReference documentRef =
-        firestore.collection('admin').doc('adminTypes');
+        firestore.collection('dashboard').doc('menus');
 
-    final DocumentSnapshot categoriesDoc = await documentRef.get();
+    final DocumentSnapshot menusDoc = await documentRef.get();
 
-    final Map<String, dynamic> categories =
-        categoriesDoc.data() as Map<String, dynamic>;
+    final Map<String, dynamic> menus = menusDoc.data() as Map<String, dynamic>;
 
-    return AdminTypes.fromJson(items: categories['admin_types']);
+    return DashboardMenus.fromJson(items: menus['menu_items']);
   }
 
   Future<bool> postProjectAPIProvider(ProjectModel project) async {

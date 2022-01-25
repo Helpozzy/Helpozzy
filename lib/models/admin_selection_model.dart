@@ -1,16 +1,14 @@
-class AdminTypes {
-  AdminTypes.fromJson({required List items}) {
+class DashboardMenus {
+  DashboardMenus.fromJson({required List items}) {
     items.forEach((element) {
-      if (element['id'] != 3) {
-        adminTypes.add(AdminTypeModel.fromJson(json: element));
-      }
+      menus.add(MenuModel.fromJson(json: element));
     });
   }
-  late List<AdminTypeModel> adminTypes = [];
+  late List<MenuModel> menus = [];
 }
 
-class AdminTypeModel {
-  AdminTypeModel.fromJson({required Map<String, dynamic> json}) {
+class MenuModel {
+  MenuModel.fromJson({required Map<String, dynamic> json}) {
     id = json['id'];
     imgUrl = json['img_url'];
     label = json['title'];

@@ -90,8 +90,7 @@ const LOGIN_ADMIN = 'Admin';
 
 // Routes
 const INTRO = 'intro';
-const USER_SLECTION = 'user_selection';
-const ADMIN_SELECTION = 'admin_selection';
+const DASHBOARD = 'dashboard';
 const LOGIN = 'login';
 const SIGNUP = 'signup';
 const LIVING_INFO_SCREEN = 'state_select';
@@ -113,7 +112,7 @@ const COMING_SOON_SCREEN_TEXT = 'Coming Soon!';
 //Bottom Tabbar
 const EXPLORE_TAB = 'Explore';
 const REWARD_TAB = 'Rewards';
-const PROJECTs_TAB = 'Projects';
+const HOME_TAB = 'Home';
 const INBOX_TAB = 'Inbox';
 const PROFILE_TAB = 'Profile';
 const LOGOUT_TAB = 'Logout';
@@ -166,6 +165,7 @@ const SELECT_DATE_OF_BIRTH_HINT = 'MM/DD/YYYY';
 const SELCT_GENDER_HINT = 'Select gender';
 const ENTER_PHONE_NUMBER_HINT = 'Enter phone number';
 const SELECT_SCHOOL_HINT = 'Select your school';
+const ENTER_SCHOOL_HINT = 'Enter your school';
 const SELECT_YOUR_GRADE = 'Select your grade';
 const ENTER_TARGET_HOURS_HINT = 'Enter target hours';
 const ENTER_PASSWORD_HINT = 'Enter password';

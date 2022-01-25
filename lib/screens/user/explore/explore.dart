@@ -7,15 +7,15 @@ import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/projects/project_details.dart';
-import 'package:helpozzy/screens/user/explore/user_project/categorised_projects_list.dart';
-import 'package:helpozzy/screens/user/explore/user_project/user_project_card.dart';
+import 'package:helpozzy/screens/user/dashboard/projects/project_details.dart';
+import 'package:helpozzy/screens/user/dashboard/projects/volunteer_project_sign_up.dart';
+import 'package:helpozzy/screens/user/dashboard/projects/categorised_projects_list.dart';
+import 'package:helpozzy/screens/user/dashboard/projects/project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:timelines/timelines.dart';
-import '../../projects/volunteer_project_sign_up.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -472,7 +472,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final ProjectModel project = snapshot.data[index];
-                  return UserProjectCard(
+                  return ProjectCard(
                     project: project,
                     onTapCard: () => Navigator.push(
                       context,

@@ -11,7 +11,7 @@ class PlatformAlertDialog {
       builder: (context) {
         return AlertDialog(
           elevation: 1,
-          backgroundColor: SCREEN_BACKGROUND,
+          backgroundColor: ACCENT_GRAY_COLOR,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -54,7 +54,7 @@ class PlatformAlertDialog {
       builder: (context) {
         return AlertDialog(
           elevation: 1,
-          backgroundColor: SCREEN_BACKGROUND,
+          backgroundColor: ACCENT_GRAY_COLOR,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

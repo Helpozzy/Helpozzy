@@ -3,7 +3,7 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/report_model.dart';
-import 'package:helpozzy/screens/admin/reports/reports_chart.dart';
+import 'package:helpozzy/screens/user/dashboard/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

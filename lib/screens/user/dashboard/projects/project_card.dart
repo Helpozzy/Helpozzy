@@ -5,8 +5,8 @@ import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class UserProjectCard extends StatefulWidget {
-  const UserProjectCard({
+class ProjectCard extends StatefulWidget {
+  const ProjectCard({
     this.onTapCard,
     required this.project,
     required this.onPressedSignUpButton,
@@ -16,14 +16,14 @@ class UserProjectCard extends StatefulWidget {
   final ProjectModel project;
 
   @override
-  _UserProjectCardState createState() => _UserProjectCardState(
+  _ProjectCardState createState() => _ProjectCardState(
       onTapCard: onTapCard,
       onPressedSignUpButton: onPressedSignUpButton,
       project: project);
 }
 
-class _UserProjectCardState extends State<UserProjectCard> {
-  _UserProjectCardState({
+class _ProjectCardState extends State<ProjectCard> {
+  _ProjectCardState({
     this.onTapCard,
     required this.project,
     required this.onPressedSignUpButton,

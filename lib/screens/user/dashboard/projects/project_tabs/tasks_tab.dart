@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
-import 'package:helpozzy/screens/tasks/task_widget.dart';
-import 'package:helpozzy/screens/user/explore/user_project/project_task/task_details.dart';
+import 'package:helpozzy/screens/user/dashboard/tasks/task_details.dart';
+import 'package:helpozzy/screens/user/dashboard/tasks/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

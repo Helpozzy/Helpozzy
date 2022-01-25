@@ -3,10 +3,11 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:helpozzy/screens/projects/project_and_activity_tile.dart';
-import 'package:helpozzy/screens/projects/project_details.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+
+import 'project_and_activity_tile.dart';
+import 'project_details.dart';
 
 class ProjectListScreen extends StatefulWidget {
   ProjectListScreen({required this.projectTabType});

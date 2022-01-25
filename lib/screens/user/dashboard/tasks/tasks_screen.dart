@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
-import 'package:helpozzy/screens/tasks/create_edit_task.dart';
-import 'package:helpozzy/screens/tasks/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+
+import 'create_edit_task.dart';
+import 'task_widget.dart';
 
 class TasksScreen extends StatefulWidget {
   @override

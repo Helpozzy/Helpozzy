@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/admin/reports/reports_tab/reports.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+
+import 'reports_tab/reports.dart';
 
 class ReportsScreen extends StatefulWidget {
   @override

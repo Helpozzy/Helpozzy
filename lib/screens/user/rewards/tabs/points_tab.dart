@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/admin/admin_volunteer_bloc.dart';
+import 'package:helpozzy/bloc/members_bloc.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';

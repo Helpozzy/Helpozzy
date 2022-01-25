@@ -16,6 +16,11 @@ class _CommonSampleScreenState extends State<CommonSampleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CommonAppBar(context).show(
+        title: 'Common Screen',
+        elevation: 0,
+        backButton: true,
+      ),
       body: Column(
         children: [
           SizedBox(height: 100),
