@@ -686,10 +686,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ? _stateController.text
                 : states.isEmpty
                     ? 'Loading..'
-                    : SELECT_STATE_HINT,
+                    : SEARCH_STATE_NAME_HINT,
           ),
           icon: Icon(Icons.expand_more_outlined),
-          decoration: inputSimpleDecoration(getHint: SELECT_STATE_HINT),
+          decoration: inputSimpleDecoration(getHint: SEARCH_STATE_NAME_HINT),
           isExpanded: true,
           onChanged: (StateModel? newValue) async {
             setState(() => _stateController.text = newValue!.stateName!);
@@ -697,9 +697,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             listenCities(newValue!.stateName!);
           },
           validator: (val) {
-            if (_stateController.text.isNotEmpty &&
-                _stateController.text == SELECT_STATE_HINT) {
-              return 'Please select state';
+            if (val == null) {
+              return 'Please search state';
             }
             return null;
           },
@@ -727,12 +726,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   hint: Text(_stateController.text.isEmpty
                       ? _cityController.text.isNotEmpty
                           ? _cityController.text
-                          : SELECT_CITY_HINT
+                          : SEARCH_CITY_NAME_HINT
                       : cities.isEmpty
                           ? 'Loading..'
-                          : SELECT_CITY_HINT),
+                          : SEARCH_CITY_NAME_HINT),
                   icon: Icon(Icons.expand_more_outlined),
-                  decoration: inputSimpleDecoration(getHint: SELECT_CITY_HINT),
+                  decoration:
+                      inputSimpleDecoration(getHint: SEARCH_CITY_NAME_HINT),
                   isExpanded: true,
                   onChanged: (CityModel? newValue) {
                     setState(() {
@@ -740,9 +740,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     });
                   },
                   validator: (val) {
-                    if (_cityController.text.isNotEmpty &&
-                        _cityController.text == SELECT_CITY_HINT) {
-                      return 'Please select city';
+                    if (val == null) {
+                      return 'Please search city';
                     }
                     return null;
                   },
@@ -819,10 +818,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: _schoolController,
           readOnly: true,
           suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-          hintText: SELECT_SCHOOL_HINT,
+          hintText: SEARCH_SCHOOL_HINT,
           validator: (val) {
-            if (val!.isNotEmpty && val == SELECT_SCHOOL_HINT) {
-              return 'Please select school';
+            if (val!.isNotEmpty && val == SEARCH_SCHOOL_HINT) {
+              return 'Please search school';
             }
             return null;
           },

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/school_info_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/search_bottomsheets/common_search_bottomsheet.dart';
 import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -23,11 +23,15 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
-  static final _formKey = GlobalKey<FormState>();
+  final SchoolsInfoBloc _schoolsInfoBloc = SchoolsInfoBloc();
+  final _formKey = GlobalKey<FormState>();
   late ThemeData _theme;
   late String stateId = '';
   late double height;
   late double width;
+  late List<StateModel> statesList = [];
+  late List<String> citiesList = [];
+  late List<SchoolDetailsModel> schoolsList = [];
 
   Future onContinue() async {
     FocusScope.of(context).unfocus();
@@ -50,27 +54,32 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: SCREEN_BACKGROUND,
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            CommonWidget(context).showBackForwardButton(
-              onPressedForward: () => onContinue(),
+      body: GestureDetector(
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                CommonWidget(context).showBackForwardButton(
+                  onPressedForward: () => onContinue(),
+                ),
+                TopInfoLabel(label: SCHOOL_STATE),
+                selectStateDropdown(),
+                TopInfoLabel(label: SCHOOL_CITY),
+                selectCityDropdown(),
+                TopInfoLabel(label: SCHOOL_NAME),
+                schoolField(),
+                TopInfoLabel(label: GRADE_LEVEL),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.10),
+                  child: selectGradeDropDown(),
+                ),
+              ],
             ),
-            TopInfoLabel(label: SCHOOL_STATE),
-            selectStateDropdown(),
-            TopInfoLabel(label: SCHOOL_CITY),
-            selectCityDropdown(),
-            TopInfoLabel(label: SCHOOL_NAME),
-            schoolField(),
-            TopInfoLabel(label: GRADE_LEVEL),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.10),
-              child: selectGradeDropDown(),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -80,30 +89,15 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: CommonRoundedTextfield(
-        textAlignCenter: false,
         controller: _stateController,
-        readOnly: true,
-        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-        hintText: SELECT_STATE_HINT,
+        hintText: SEARCH_STATE_NAME_HINT,
         validator: (val) {
           if (val!.isEmpty) {
-            return 'Please select state';
+            return 'Please enter state';
           }
           return null;
         },
-        onTap: () async {
-          final StateModel model =
-              await SearchBottomSheet().modalBottomSheetMenu(
-            context: context,
-            searchBottomSheetType: SearchBottomSheetType.STATE_BOTTOMSHEET,
-            state: '',
-            city: '',
-          );
-          setState(() {
-            _stateController.text = model.stateName!;
-            stateId = model.stateId!;
-          });
-        },
+        onChanged: (value) {},
       ),
     );
   }
@@ -112,28 +106,15 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: CommonRoundedTextfield(
-        textAlignCenter: false,
         controller: _cityController,
-        readOnly: true,
-        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-        hintText: SELECT_CITY_HINT,
+        hintText: SEARCH_CITY_NAME_HINT,
         validator: (val) {
           if (val!.isEmpty) {
-            return 'Please select city';
+            return 'Please enter city';
           }
           return null;
         },
-        onTap: () async {
-          final String city = await SearchBottomSheet().modalBottomSheetMenu(
-            context: context,
-            searchBottomSheetType: SearchBottomSheetType.CITY_BOTTOMSHEET,
-            state: stateId,
-            city: '',
-          );
-          setState(() {
-            _cityController.text = city;
-          });
-        },
+        onChanged: (value) {},
       ),
     );
   }
@@ -142,28 +123,14 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: CommonRoundedTextfield(
-        textAlignCenter: false,
         controller: _schoolController,
-        readOnly: true,
-        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-        hintText: SELECT_SCHOOL_HINT,
+        hintText: SEARCH_SCHOOL_HINT,
+        onChanged: (value) {},
         validator: (val) {
           if (val!.isEmpty) {
             return 'Please select school';
           }
           return null;
-        },
-        onTap: () async {
-          final SchoolDetailsModel school = await SearchBottomSheet()
-              .modalBottomSheetMenu(
-                  context: context,
-                  searchBottomSheetType:
-                      SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
-                  state: stateId,
-                  city: _cityController.text);
-          setState(() {
-            _schoolController.text = school.schoolName;
-          });
         },
       ),
     );
@@ -171,31 +138,31 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
 
   Widget selectGradeDropDown() {
     return DropdownButtonFormField<String>(
-        hint: Text(SELECT_GRADE_HINT),
-        icon: Icon(Icons.expand_more_outlined),
-        decoration: inputRoundedDecoration(
-            getHint: SELECT_GRADE_HINT, isDropDown: true),
-        isExpanded: true,
-        onChanged: (String? newValue) {
-          setState(() {
-            _gradeLevelController.text = newValue!;
-          });
-        },
-        validator: (val) {
-          if (val == null) {
-            return 'Please select grade';
-          }
-          return null;
-        },
-        items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              textAlign: TextAlign.center,
-              style: _theme.textTheme.bodyText2,
-            ),
-          );
-        }).toList());
+      icon: Icon(Icons.expand_more_outlined),
+      decoration: inputRoundedDecoration(
+        getHint: SELECT_GRADE_HINT,
+        isDropDown: true,
+      ),
+      isExpanded: true,
+      onChanged: (String? newValue) {
+        setState(() => _gradeLevelController.text = newValue!);
+      },
+      validator: (val) {
+        if (val == null) {
+          return 'Please select grade';
+        }
+        return null;
+      },
+      items: gradeLevels.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            textAlign: TextAlign.center,
+            style: _theme.textTheme.bodyText2,
+          ),
+        );
+      }).toList(),
+    );
   }
 }

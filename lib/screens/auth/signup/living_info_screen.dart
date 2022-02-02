@@ -3,6 +3,7 @@ import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/search_bottomsheets/city_search_bottomsheet.dart';
+import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'contact_info.dart';
@@ -61,8 +62,9 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ContactInfoScreen(signupAndUserModel: signupAndUserModel),
+          builder: (context) => signupAndUserModel.volunteerType == 0
+              ? TargetAndAreaOfInterest(signupAndUserModel: signupAndUserModel)
+              : ContactInfoScreen(signupAndUserModel: signupAndUserModel),
         ),
       );
     }
@@ -185,7 +187,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
               controller: _cityController,
               readOnly: true,
               suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-              hintText: SELECT_CITY_HINT,
+              hintText: SELECT_STATE_HINT,
               validator: (val) {
                 if (val == null) {
                   return 'Please select city';

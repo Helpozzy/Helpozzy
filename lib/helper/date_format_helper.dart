@@ -10,7 +10,7 @@ class DateFormatFromTimeStamp {
       DateFormat.yMd().format(dateTime);
 
   String dateFormatToMMMYYYY({required String timeStamp}) =>
-      DateFormat('MMM yyyy').format(
+      DateFormat('MMM, yyyy').format(
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 

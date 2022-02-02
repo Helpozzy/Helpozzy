@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          TopAppLogo(height: height / 5),
+          TopAppLogo(size: height / 5),
           Positioned(
             top: height / 1.7,
             child: Container(

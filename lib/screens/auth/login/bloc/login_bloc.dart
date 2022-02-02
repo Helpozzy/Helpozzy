@@ -33,9 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   LoginState _mapEmailChangedToState(
-    LoginEmailChanged event,
-    LoginState state,
-  ) {
+      LoginEmailChanged event, LoginState state) {
     return state.copyWith(state, email: event.email);
   }
 

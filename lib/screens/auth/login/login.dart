@@ -60,7 +60,7 @@ class LoginPage extends StatelessWidget {
             Padding(
               padding:
                   EdgeInsets.only(top: height * 0.15, bottom: height * 0.10),
-              child: TopAppLogo(height: height / 6),
+              child: TopAppLogo(size: height / 6),
             ),
             LoginInput(),
           ],

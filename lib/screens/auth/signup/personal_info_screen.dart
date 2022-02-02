@@ -147,7 +147,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 dateOfBirthField(),
                 TopInfoLabel(label: SELECT_GENDER),
                 genderDropDown(),
-                SizedBox(height: 10),
+                SizedBox(height: 25),
               ],
             ),
           ),

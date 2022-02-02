@@ -34,7 +34,7 @@ class IntroWidget extends StatelessWidget {
           _createPageBuilder(context),
           Padding(
             padding: EdgeInsets.only(top: height * 0.05),
-            child: TopAppLogo(height: height / 6),
+            child: TopAppLogo(size: height / 6),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,

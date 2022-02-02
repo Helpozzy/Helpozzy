@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-import 'reports_tab/reports.dart';
+import 'reports_tab/by_month.dart';
 
 class ReportsScreen extends StatefulWidget {
   @override
@@ -43,8 +43,8 @@ class _ReportsScreenState extends State<ReportsScreen>
         indicatorWeight: 3.0,
         isScrollable: true,
         tabs: [
-          _tab(REPORT_MONTHLY_TAB),
-          _tab(REPORT_YEARLY_TAB),
+          _tab(REPORT_BY_MONTH_TAB),
+          _tab(REPORT_BY_PROJECT_TAB),
         ],
       );
 
@@ -67,8 +67,8 @@ class _ReportsScreenState extends State<ReportsScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            ReportsDetails(),
-            ReportsDetails(),
+            ReportsByMonthDetails(),
+            ReportsByMonthDetails(),
           ],
         ),
       );

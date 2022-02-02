@@ -52,7 +52,6 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
   Future streamOncontinue(AsyncSnapshot<bool> snapshot) async {
     FocusScope.of(context).unfocus();
-
     signupAndUserModel.parentEmail =
         showParentFields ? _parentEmailController.text : '';
     signupAndUserModel.relationshipWithParent =
@@ -60,26 +59,20 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
     if (_formKey.currentState!.validate()) {
       if (snapshot.data!) {
-        if (signupAndUserModel.volunteerType == 1) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SchoolAndGradeScreen(
-                    signupAndUserModel: signupAndUserModel)),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TargetAndAreaOfInterest(
-                    signupAndUserModel: signupAndUserModel)),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => signupAndUserModel.volunteerType == 1
+                ? SchoolAndGradeScreen(signupAndUserModel: signupAndUserModel)
+                : TargetAndAreaOfInterest(
+                    signupAndUserModel: signupAndUserModel),
+          ),
+        );
       } else {
         PlatformAlertDialog().show(context,
             title: ALERT,
-            content:
-                'Parent/Guardian email is not verified, Please verify your email.');
+            content: 'Parent/Guardian email is not verified, '
+                'Please verify your email.');
       }
     }
   }
@@ -154,7 +147,6 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                       child: selectRelationshipDropdown(),
                     )
                   : SizedBox(),
-              SizedBox(height: 10),
             ],
           ),
         ),

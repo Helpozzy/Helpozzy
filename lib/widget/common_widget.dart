@@ -567,28 +567,25 @@ Future<void> showLoadingDialog(
 
 //Top Icon on Intro
 class TopAppLogo extends StatelessWidget {
-  TopAppLogo({required this.height});
-  final double height;
+  TopAppLogo({required this.size});
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       width: MediaQuery.of(context).size.width,
-      height: height,
+      height: size,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/helpozzy_logo.png',
-            height: height / 1,
-          ),
+          Image.asset('assets/images/helpozzy_logo.png'),
           SizedBox(width: 5),
           Text(
             HELPOZZY_REMAINING_TEXT,
             style: Theme.of(context).textTheme.headline5!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: DARK_BLACK,
-                  fontSize: height / 3,
+                  fontSize: size / 3,
                 ),
           )
         ],

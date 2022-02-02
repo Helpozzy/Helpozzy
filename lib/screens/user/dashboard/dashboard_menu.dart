@@ -10,6 +10,7 @@ import 'package:helpozzy/screens/user/dashboard/members/members.dart';
 import 'package:helpozzy/screens/user/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:timelines/timelines.dart';
 import 'projects/projects_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late double width;
   late ThemeData _theme;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  late int _processIndex = 2;
+  late double currentPosition = 0.0;
 
   @override
   void initState() {
@@ -31,23 +34,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
+  Color getColor(int index) {
+    if (index == _processIndex) {
+      return AMBER_COLOR;
+    } else if (index < _processIndex) {
+      return AMBER_COLOR;
+    } else {
+      return LIGHT_GRAY;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     _theme = Theme.of(context);
-    return Scaffold(
-      body: SafeArea(
+    return SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: TopAppLogo(height: height / 6.5),
-            ),
+            topContainerWithProgress(),
+            CommonDivider(),
             Padding(
               padding:
-                  EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 6.0),
+                  EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 8.0),
               child: StreamBuilder<SignUpAndUserModel>(
                 stream: _userInfoBloc.userStream,
                 builder: (context, snapshot) {
@@ -65,10 +76,172 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
               ),
             ),
-            Expanded(child: typeSelectionGrid()),
+            typeSelectionGrid(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget topContainerWithProgress() {
+    return StreamBuilder<SignUpAndUserModel>(
+      stream: _userInfoBloc.userStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox();
+        }
+        final SignUpAndUserModel user = snapshot.data!;
+        return Container(
+          color: ACCENT_GRAY_COLOR,
+          child: Column(
+            children: [
+              TopAppLogo(size: width * 0.23),
+              Text(
+                MSG_DASHBOARD,
+                textAlign: TextAlign.center,
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  color: DARK_PINK_COLOR,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 7),
+              timelineProgress(user),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget achievedScoreDetails(SignUpAndUserModel user) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+      child: Row(
+        children: [
+          Text(
+            YOUR_HOURS_1,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              color: BLUE_GRAY,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '50',
+            style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: width * 0.08,
+                color: AMBER_COLOR,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            YOUR_HOURS_2,
+            style: _theme.textTheme.bodyText2!
+                .copyWith(color: BLUE_GRAY, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            '${DateTime.now().year}',
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontSize: 20,
+              color: BLUE_GRAY,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget timelineProgress(SignUpAndUserModel user) {
+    _processIndex = 50;
+    List<int> items =
+        List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
+            .take((user.currentYearTargetHours! / 23).round())
+            .toList();
+
+    return Stack(
+      children: [
+        Container(
+          height: height / 7.5,
+          width: width - 15,
+          child: Timeline.tileBuilder(
+            padding: EdgeInsets.symmetric(vertical: 2.0),
+            shrinkWrap: true,
+            theme: TimelineThemeData(
+              direction: Axis.horizontal,
+              connectorTheme: ConnectorThemeData(thickness: 3.0),
+            ),
+            builder: TimelineTileBuilder.connected(
+              connectionDirection: ConnectionDirection.before,
+              itemExtentBuilder: (ctx, index) => width / 9.5,
+              contentsBuilder: (ctx, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    index == items.length - 1
+                        ? '${items[index]}\nTarget'
+                        : '${items[index]}',
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontWeight: index == items.length - 1
+                          ? FontWeight.bold
+                          : FontWeight.w600,
+                      fontSize: 12,
+                      color: DARK_GRAY,
+                    ),
+                  ),
+                );
+              },
+              indicatorBuilder: (ctx, index) {
+                Color color;
+                if (items[index] == _processIndex) {
+                  color = AMBER_COLOR;
+                } else if (items[index] < _processIndex) {
+                  color = AMBER_COLOR;
+                } else {
+                  color = LIGHT_GRAY;
+                }
+
+                if (items[index] <= _processIndex) {
+                  return Container(
+                    height: width * 0.025,
+                    width: width * 0.025,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: color,
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: width * 0.025,
+                    width: width * 0.025,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: color,
+                    ),
+                  );
+                }
+              },
+              connectorBuilder: (ctx, index, type) {
+                if (items[index] > 0) {
+                  if (items[index] == _processIndex) {
+                    final color = getColor(items[index]);
+                    return DecoratedLineConnector(
+                      decoration: BoxDecoration(color: color),
+                    );
+                  } else {
+                    return SolidLineConnector(color: getColor(items[index]));
+                  }
+                } else {
+                  return null;
+                }
+              },
+              itemCount: items.length,
+            ),
+          ),
+        ),
+        achievedScoreDetails(user),
+      ],
     );
   }
 
@@ -77,7 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       stream: _dashboardBloc.getDashBoardMenusStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator(color: PRIMARY_COLOR));
+          return Center(child: LinearLoader());
         }
         return GridView.count(
           physics: ScrollPhysics(),
@@ -105,7 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Card(
                 margin: EdgeInsets.all(8.0),
                 elevation: 0,
-                color: ACCENT_GRAY_COLOR,
+                color: GRAY,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 child: Column(

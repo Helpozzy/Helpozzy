@@ -141,10 +141,10 @@ const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
 //Hint Msg
-const SEARCH_PROJECT_HINT = 'Search for projects..';
-const SEARCH_SCHOOL_HINT = 'Search for school..';
-const SEARCH_STATE_NAME_HINT = 'Search for state..';
-const SEARCH_CITY_NAME_HINT = 'Search for city..';
+const SEARCH_PROJECT_HINT = 'Search for projects';
+const SEARCH_SCHOOL_HINT = 'Search for school';
+const SEARCH_STATE_NAME_HINT = 'Search for state';
+const SEARCH_CITY_NAME_HINT = 'Search for city';
 const REVIEW_HINT = 'Tap to review..';
 const SELECT_STATE_HINT = 'Select State';
 const SELECT_CITY_HINT = 'Select City';
@@ -164,7 +164,6 @@ const ENTER_PARENTS_EMAIL_HINT = 'Enter parents email';
 const SELECT_DATE_OF_BIRTH_HINT = 'MM/DD/YYYY';
 const SELCT_GENDER_HINT = 'Select gender';
 const ENTER_PHONE_NUMBER_HINT = 'Enter phone number';
-const SELECT_SCHOOL_HINT = 'Select your school';
 const ENTER_SCHOOL_HINT = 'Enter your school';
 const SELECT_YOUR_GRADE = 'Select your grade';
 const ENTER_TARGET_HOURS_HINT = 'Enter target hours';
@@ -214,7 +213,8 @@ const MSG_DASHBOARD = 'Changing the World,\nOne Project At a Time';
 const SEARCH_PROJECT_LABEL = 'Find volunteering opportunities';
 const TYPE_KEYWORD_HINT = 'Look-up active projects';
 const SEARCH_BY_CATEGORY = 'Search by category';
-const CURRENT_OPEN_PROJECT_LABEL = 'Current open projects in your area';
+const CURRENT_OPEN_PROJECT_LABEL =
+    'Current available volunteering opportunities';
 const YOUR_HOURS_1 = 'You have ';
 const YOUR_HOURS_2 = ' hours for - ';
 const DETAILS = 'Details';
@@ -332,9 +332,10 @@ const ENTER_MESSAGE_HINT = 'Enter Message';
 //Profile
 const CONTACT_TEXT = 'Contact';
 const ABOUT_TEXT = 'About';
-const PROJECT_PREFRENCES_TEXT = 'Project Prefrences';
+const PROJECT_PREFRENCES_TEXT = 'My Volunteering Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
+const MEMBER_SYNC_LABEL = 'Member Sync : ';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';
@@ -367,8 +368,8 @@ const SELECT_OTHER = 'Other';
 const SLECT_DECLINE_TO_ANSWER = 'Decline to answer';
 
 //Report screen
-const REPORT_MONTHLY_TAB = 'Monthly';
-const REPORT_YEARLY_TAB = 'Yearly';
+const REPORT_BY_MONTH_TAB = 'By Month';
+const REPORT_BY_PROJECT_TAB = 'By Project';
 
 //Admin Module
 
@@ -379,12 +380,12 @@ const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
 //Admin reports
-const MONTHLY_REPORTS_LABEL = 'Monthly Reports';
+const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
 const UNFOLD_REPORT = 'Unfold Report ';
 const MONTHY_HOURS = 'Monthly Hours';
 const PROJECT_HOURS_LABEL = 'Project Hours';
 const USERS_LABEL = 'Users : ';
-const TOTAL_HRS_LABEL = 'Total Hours : ';
+const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';

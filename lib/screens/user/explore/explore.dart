@@ -6,7 +6,6 @@ import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/user/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/user/dashboard/projects/volunteer_project_sign_up.dart';
 import 'package:helpozzy/screens/user/dashboard/projects/categorised_projects_list.dart';
@@ -14,8 +13,6 @@ import 'package:helpozzy/screens/user/dashboard/projects/project_card.dart';
 import 'package:helpozzy/screens/user/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/sliver_class.dart';
-import 'package:timelines/timelines.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -27,7 +24,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   late double height;
   late double width;
   late ThemeData _themeData;
-  late int _processIndex = 2;
+
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
   final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
@@ -46,16 +43,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     });
   }
 
-  Color getColor(int index) {
-    if (index == _processIndex) {
-      return AMBER_COLOR;
-    } else if (index < _processIndex) {
-      return AMBER_COLOR;
-    } else {
-      return MATE_WHITE;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -64,230 +51,34 @@ class _ExploreScreenState extends State<ExploreScreen>
     return SafeArea(
       child: GestureDetector(
         onPanDown: (_) => FocusScope.of(context).unfocus(),
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            topContainerWithProgress(),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  searchField(),
-                  Divider(),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: width * 0.05,
-                      right: width * 0.05,
-                      bottom: width * 0.02,
+        child: Column(
+          children: [
+            searchField(),
+            CommonDivider(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.02,
+                        top: 5,
+                      ),
+                      child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
                     ),
-                    child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
-                  ),
-                  categoryView(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
-                  ),
-                  projectListView(),
-                ],
+                    categoryView(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
+                    ),
+                    projectListView(),
+                  ],
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget topContainerWithProgress() {
-    return SliverPersistentHeader(
-      delegate: SliverAppBarDelegate(
-        minHeight: height / 6,
-        maxHeight: height / 4,
-        child: StreamBuilder<SignUpAndUserModel>(
-          stream: _userInfoBloc.userStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return SizedBox();
-            }
-            final SignUpAndUserModel user = snapshot.data!;
-            return Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: GRAY)),
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        MATE_WHITE,
-                        BLUE_GRAY,
-                        PRIMARY_COLOR,
-                      ],
-                    ),
-                  ),
-                ),
-                currentPosition < height / 30
-                    ? Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(
-                            MSG_DASHBOARD,
-                            textAlign: TextAlign.center,
-                            style: _themeData.textTheme.bodyText2!.copyWith(
-                              fontSize: width / 16,
-                              color: WHITE,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-                currentPosition < height / 8
-                    ? Positioned(
-                        bottom: width * 0.16,
-                        child: targetGoalSection(user),
-                      )
-                    : SizedBox(),
-                currentPosition < height / 8
-                    ? Positioned(
-                        bottom: width * 0.02,
-                        child: timelineProgress(user),
-                      )
-                    : SizedBox(),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget targetGoalSection(SignUpAndUserModel user) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: Row(
-            children: [
-              Text(
-                YOUR_HOURS_1,
-                style: _themeData.textTheme.bodyText2!.copyWith(
-                  color: MATE_WHITE,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '50',
-                style: _themeData.textTheme.bodyText2!.copyWith(
-                    fontSize: width * 0.08,
-                    color: AMBER_COLOR,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                YOUR_HOURS_2,
-                style: _themeData.textTheme.bodyText2!
-                    .copyWith(color: MATE_WHITE, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '${DateTime.now().year}',
-                style: _themeData.textTheme.bodyText2!.copyWith(
-                  fontSize: 20,
-                  color: MATE_WHITE,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget timelineProgress(SignUpAndUserModel user) {
-    _processIndex = 50;
-    List<int> items =
-        List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
-            .take((user.currentYearTargetHours! / 23).round())
-            .toList();
-
-    return Container(
-      height: height / 9,
-      width: width - 15,
-      alignment: Alignment.topCenter,
-      child: Timeline.tileBuilder(
-        padding: EdgeInsets.symmetric(vertical: 2.0),
-        shrinkWrap: true,
-        theme: TimelineThemeData(
-          direction: Axis.horizontal,
-          connectorTheme: ConnectorThemeData(thickness: 3.0),
-        ),
-        builder: TimelineTileBuilder.connected(
-          connectionDirection: ConnectionDirection.before,
-          itemExtentBuilder: (ctx, index) => width / 9.5,
-          contentsBuilder: (ctx, index) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Text(
-                index == items.length - 1
-                    ? '${items[index]}\nTarget'
-                    : '${items[index]}',
-                textAlign: TextAlign.center,
-                style: _themeData.textTheme.bodyText2!.copyWith(
-                  fontWeight: index == items.length - 1
-                      ? FontWeight.bold
-                      : FontWeight.w600,
-                  fontSize: 12,
-                  color: getColor(items[index]),
-                ),
-              ),
-            );
-          },
-          indicatorBuilder: (ctx, index) {
-            Color color;
-            if (items[index] == _processIndex) {
-              color = AMBER_COLOR;
-            } else if (items[index] < _processIndex) {
-              color = AMBER_COLOR;
-            } else {
-              color = MATE_WHITE;
-            }
-
-            if (items[index] <= _processIndex) {
-              return Container(
-                height: width * 0.025,
-                width: width * 0.025,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: color,
-                ),
-              );
-            } else {
-              return Container(
-                height: width * 0.025,
-                width: width * 0.025,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: color,
-                ),
-              );
-            }
-          },
-          connectorBuilder: (ctx, index, type) {
-            if (items[index] > 0) {
-              if (items[index] == _processIndex) {
-                final color = getColor(items[index]);
-                return DecoratedLineConnector(
-                  decoration: BoxDecoration(color: color),
-                );
-              } else {
-                return SolidLineConnector(color: getColor(items[index]));
-              }
-            } else {
-              return null;
-            }
-          },
-          itemCount: items.length,
         ),
       ),
     );

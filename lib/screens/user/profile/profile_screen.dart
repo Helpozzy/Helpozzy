@@ -59,101 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  FullScreenView(imgUrl: user!.profileUrl!),
-                            ),
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 10, top: 15.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: PRIMARY_COLOR.withOpacity(0.8),
-                            ),
-                            child: CommonUserProfileOrPlaceholder(
-                              size: width / 5,
-                              imgUrl: user!.profileUrl!,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          user.name!,
-                          style: _theme.textTheme.headline6!
-                              .copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.people_alt_outlined, size: 16),
-                              SizedBox(width: 2),
-                              Text(
-                                '${user.reviewsByPersons} review',
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: DARK_GRAY_FONT_COLOR,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                                timeStamp: user.joiningDate!),
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: DARK_GRAY_FONT_COLOR,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '10 Hours',
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: DARK_GRAY_FONT_COLOR,
-                                ),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(Icons.arrow_forward_ios_rounded, size: 14)
-                            ],
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.only(top: 6.0, bottom: 6.0, right: 3.0),
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditProfileScreen(user: user),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            EDIT_PROFILE_TEXT,
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: BLUE_GRAY,
-                            ),
-                          ),
-                        ),
-                      ),
+                      profileSection(user!),
                       CommonDividerWithVal(
                         height: 1,
                         color: DARK_GRAY,
@@ -191,6 +97,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget profileSection(SignUpAndUserModel user) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      margin: const EdgeInsets.only(top: 15.0, bottom: 10.0),
+      decoration: BoxDecoration(
+          border: Border.all(width: 0.7, color: GRAY),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: width * 0.04),
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FullScreenView(imgUrl: user.profileUrl!),
+              ),
+            ),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 10, top: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: PRIMARY_COLOR.withOpacity(0.8),
+              ),
+              child: CommonUserProfileOrPlaceholder(
+                size: width / 5,
+                imgUrl: user.profileUrl!,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      user.name!,
+                      style: _theme.textTheme.headline6!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 5),
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(user: user),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.edit,
+                        color: DARK_GRAY,
+                        size: 16,
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  MEMBER_SYNC_LABEL +
+                      DateFormatFromTimeStamp()
+                          .dateFormatToMMMYYYY(timeStamp: user.joiningDate!),
+                  style: _theme.textTheme.bodyText2!.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: DARK_GRAY_FONT_COLOR,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.people_alt_outlined, size: 16),
+                    SizedBox(width: 2),
+                    Text(
+                      '${user.reviewsByPersons} review',
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: DARK_GRAY_FONT_COLOR,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'Total volunteering hrs : 10 Hours',
+                  style: _theme.textTheme.bodyText2!.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: DARK_GRAY_FONT_COLOR,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -309,8 +315,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: Container(
                             width: width / 5.7,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 10.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -330,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   category.label,
                                   textAlign: TextAlign.center,
-                                  maxLines: 2,
+                                  maxLines: 3,
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     fontSize: 10,
                                     color: PRIMARY_COLOR,

@@ -89,6 +89,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                   targetFields(),
                   TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
                   categoryView(categories),
+                  SizedBox(height: 25),
                 ],
               ),
             ),
