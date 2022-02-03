@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
-import 'package:helpozzy/screens/user/rewards/tabs/my_rewards_tab.dart';
+import 'package:helpozzy/screens/common_screen.dart';
+import 'package:helpozzy/screens/rewards/tabs/my_rewards_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

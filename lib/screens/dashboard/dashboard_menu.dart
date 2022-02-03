@@ -5,9 +5,9 @@ import 'package:helpozzy/bloc/categories_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/user/common_screen.dart';
-import 'package:helpozzy/screens/user/dashboard/members/members.dart';
-import 'package:helpozzy/screens/user/dashboard/reports/report_screen.dart';
+import 'package:helpozzy/screens/common_screen.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_tabs/tasks_tab.dart';
+import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:timelines/timelines.dart';
@@ -267,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context) => menu.id == 0
                         ? ProjectsScreen()
                         : menu.id == 1
-                            ? MembersScreen()
+                            ? TaskTab(getMyAll: true)
                             : menu.id == 2
                                 ? ReportsScreen()
                                 : CommonSampleScreen(

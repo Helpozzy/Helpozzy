@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
-import 'package:helpozzy/screens/user/chat/chat_screen.dart';
+import 'package:helpozzy/screens/chat/chat_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

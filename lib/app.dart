@@ -2,13 +2,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/screens/auth/login/login.dart';
 import 'package:helpozzy/screens/auth/signup/volunteering_screen.dart';
-import 'package:helpozzy/screens/user/dashboard/dashboard_menu.dart';
-import 'package:helpozzy/screens/user/explore/explore.dart';
-import 'package:helpozzy/screens/user/home/home.dart';
+import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
+import 'package:helpozzy/screens/explore/explore.dart';
+import 'package:helpozzy/screens/home/home.dart';
 import 'package:helpozzy/screens/intro/intro.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'screens/splash.dart';
-import 'screens/user/rewards/rewards.dart';
+import 'screens/rewards/rewards.dart';
 
 class HelpozzyApp extends MaterialApp {
   @override

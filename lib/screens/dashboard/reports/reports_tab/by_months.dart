@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/report_model.dart';
-import 'package:helpozzy/screens/user/dashboard/reports/reports_chart.dart';
+import 'package:helpozzy/screens/dashboard/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class ReportsDetails extends StatefulWidget {
+class ReportsByMonths extends StatefulWidget {
   @override
-  _ReportsDetailsState createState() => _ReportsDetailsState();
+  _ReportsByMonthsState createState() => _ReportsByMonthsState();
 }
 
-class _ReportsDetailsState extends State<ReportsDetails> {
+class _ReportsByMonthsState extends State<ReportsByMonths> {
   late ThemeData _theme;
   late double height;
   late double width;
   late List<BarChartModel> data = [];
 
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
-
   @override
   void initState() {
-    _projectsBloc.getProjects();
     setListData();
     super.initState();
   }
@@ -56,15 +51,13 @@ class _ReportsDetailsState extends State<ReportsDetails> {
           ),
           SizedBox(height: width * 0.05),
           ListDividerLabel(label: MONTHLY_REPORTS_LABEL),
-          yearlyReportList(),
-          ListDividerLabel(label: PROJECT_HOURS_LABEL),
-          projectHrsList(),
+          monthlyReportList(),
         ],
       ),
     );
   }
 
-  Widget yearlyReportList() {
+  Widget monthlyReportList() {
     Reports reports = Reports.fromJson(list: data);
     return ListView.separated(
       shrinkWrap: true,
@@ -94,52 +87,6 @@ class _ReportsDetailsState extends State<ReportsDetails> {
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget projectHrsList() {
-    return StreamBuilder<Projects>(
-      stream: _projectsBloc.getProjectsStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: LinearLoader(),
-          );
-        }
-        return ListView.separated(
-          shrinkWrap: true,
-          separatorBuilder: (context, index) => Divider(height: 0.5),
-          physics: ScrollPhysics(),
-          itemCount: snapshot.data!.projectList.length,
-          itemBuilder: (context, index) {
-            ProjectModel project = snapshot.data!.projectList[index];
-            return ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
-              title: Text(
-                project.projectName,
-                style: _theme.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    project.organization,
-                    style: _theme.textTheme.bodyText2!,
-                  ),
-                  keyValueTile(
-                    key: TOTAL_HRS_LABEL,
-                    value: '55',
-                  ),
-                ],
-              ),
-            );
-          },
         );
       },
     );

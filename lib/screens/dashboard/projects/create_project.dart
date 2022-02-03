@@ -12,13 +12,14 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/screens/user/dashboard/tasks/create_edit_task.dart';
-import 'package:helpozzy/screens/user/dashboard/tasks/task_widget.dart';
-import 'package:helpozzy/screens/user/dashboard/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
+
+import 'project_task/create_edit_task.dart';
+import 'project_task/task_widget.dart';
+import 'project_task/tasks_screen.dart';
 
 class CreateProject extends StatefulWidget {
   @override

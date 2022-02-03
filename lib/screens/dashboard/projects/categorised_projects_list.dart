@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/project_details.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/volunteer_project_sign_up.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/project_card.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
+import 'package:helpozzy/screens/dashboard/projects/volunteer_project_sign_up.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

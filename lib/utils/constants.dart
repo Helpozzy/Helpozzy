@@ -391,6 +391,7 @@ const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
 const REWARDS_APPBAR = 'Rewards';
 const PROJECT_APPBAR = 'Projects';
 const REPORTS_APPBAR = 'Reports';
+const MY_TAKS_APPBAR = 'My Tasks';
 const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
 
 //Details Tab

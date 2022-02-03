@@ -6,11 +6,11 @@ import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/project_details.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/volunteer_project_sign_up.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/categorised_projects_list.dart';
-import 'package:helpozzy/screens/user/dashboard/projects/project_card.dart';
-import 'package:helpozzy/screens/user/rewards/rewards.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
+import 'package:helpozzy/screens/dashboard/projects/volunteer_project_sign_up.dart';
+import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_card.dart';
+import 'package:helpozzy/screens/rewards/rewards.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -124,7 +124,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                   icon: Icon(
                     Icons.close_rounded,
                     color: DARK_GRAY,
-                    size: 22,
+                    size: 20,
                   ),
                 ),
                 enabledBorder: searchBarDecoration(),

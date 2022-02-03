@@ -7,7 +7,7 @@ import 'package:helpozzy/screens/auth/login/bloc/login_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/user/home/bloc/home_bloc.dart';
+import 'screens/home/bloc/home_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

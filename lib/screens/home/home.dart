@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/screens/user/dashboard/dashboard_menu.dart';
-import 'package:helpozzy/screens/user/explore/explore.dart';
-import 'package:helpozzy/screens/user/profile/profile_screen.dart';
-import 'package:helpozzy/screens/user/sign_out_dialog/sign_out_dialog.dart';
+import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
+import 'package:helpozzy/screens/explore/explore.dart';
+import 'package:helpozzy/screens/profile/profile_screen.dart';
+import 'package:helpozzy/screens/sign_out_dialog/sign_out_dialog.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'bloc/home_bloc.dart';
 

@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/models/admin_model/project_model.dart';
 import 'package:helpozzy/models/admin_model/task_model.dart';
-import 'package:helpozzy/screens/user/dashboard/tasks/task_details.dart';
-import 'package:helpozzy/screens/user/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class TaskTab extends StatefulWidget {
-  TaskTab({required this.project});
-  final ProjectModel project;
+  TaskTab({this.project, this.getMyAll = false});
+  final ProjectModel? project;
+  final bool getMyAll;
   @override
-  _TaskTabState createState() => _TaskTabState(project: project);
+  _TaskTabState createState() =>
+      _TaskTabState(project: project, getMyAll: getMyAll);
 }
 
 class _TaskTabState extends State<TaskTab> {
-  _TaskTabState({required this.project});
-  final ProjectModel project;
+  _TaskTabState({this.project, this.getMyAll = false});
+  final ProjectModel? project;
+  final bool getMyAll;
   late ThemeData _theme;
   late double height;
   late double width;
@@ -30,7 +33,15 @@ class _TaskTabState extends State<TaskTab> {
     _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Scaffold(body: taskDivisions());
+    return Scaffold(
+      appBar: getMyAll
+          ? CommonAppBar(context).show(
+              title: MY_TAKS_APPBAR,
+              elevation: 0,
+            )
+          : null,
+      body: taskDivisions(),
+    );
   }
 
   Widget taskDivisions() {
@@ -86,11 +97,17 @@ class _TaskTabState extends State<TaskTab> {
           if (isMyTask) {
             setState(() => myTaskExpanded = !myTaskExpanded);
             _projectTaskBloc.myTaskIsExpanded(myTaskExpanded);
-            _projectTaskBloc.getProjectOwnTasks(project.projectId);
+            if (getMyAll) {
+            } else {
+              _projectTaskBloc.getProjectOwnTasks(project!.projectId);
+            }
           } else {
             setState(() => allTasksExpanded = !allTasksExpanded);
             _projectTaskBloc.allTaskIsExpanded(allTasksExpanded);
-            _projectTaskBloc.getProjectAllTasks(project.projectId);
+            if (getMyAll) {
+            } else {
+              _projectTaskBloc.getProjectAllTasks(project!.projectId);
+            }
           }
         },
         child: Card(
