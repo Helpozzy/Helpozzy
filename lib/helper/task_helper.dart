@@ -1,4 +1,4 @@
-import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class ProjectTaskHelper {

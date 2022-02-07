@@ -316,6 +316,7 @@ const TASK_DETAILS = 'Task Details';
 const MY_TASKS_LABEL = 'My Tasks';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
+const TASK_NOT_AVAILABLE = 'Task not available';
 
 //Tabbar title
 const DETAILS_TAB = 'Details';

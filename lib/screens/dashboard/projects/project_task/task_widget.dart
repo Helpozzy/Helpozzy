@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/custom_timer.dart';
@@ -55,7 +55,7 @@ class _TaskCardState extends State<TaskCard> {
     return GestureDetector(
       onTap: onTapItem,
       child: Card(
-        elevation: 3,
+        elevation: 2,
         color: !optionEnable
             ? WHITE
             : selected
@@ -63,7 +63,7 @@ class _TaskCardState extends State<TaskCard> {
                 : WHITE,
         margin: EdgeInsets.symmetric(vertical: 5.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Container(
           padding: const EdgeInsets.all(10.0),
@@ -132,101 +132,100 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   Widget processButton(bool taskIsInProgress) {
-    return Container(
-      width: width / 1.37,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            TASK_ARE_YOU_RUNNING_LATE,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 8,
-              color: BLUE_COLOR,
-              fontWeight: FontWeight.bold,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          TASK_ARE_YOU_RUNNING_LATE,
+          style: _theme.textTheme.bodyText2!.copyWith(
+            fontSize: 8,
+            color: BLUE_COLOR,
+            fontWeight: FontWeight.bold,
           ),
-          taskIsInProgress
-              ? SmallCommonButton(
-                  fontSize: 12,
-                  text: COMPLETED_BUTTON,
-                  buttonColor: DARK_PINK_COLOR,
-                  onPressed: () async {
-                    final TaskModel taskModel = TaskModel(
-                      projectId: task.projectId,
-                      ownerId: task.ownerId,
-                      id: task.id,
-                      taskName: task.taskName,
-                      description: task.description,
-                      memberRequirement: task.memberRequirement,
-                      ageRestriction: task.ageRestriction,
-                      qualification: task.qualification,
-                      startDate: task.startDate,
-                      endDate: task.endDate,
-                      estimatedHrs: task.estimatedHrs,
-                      totalVolunteerHrs: task.totalVolunteerHrs,
-                      members: task.members,
-                      status: TOGGLE_COMPLETE,
-                    );
-                    final bool response =
-                        await _projectTaskBloc.updateTasks(taskModel);
-                    if (response) {
-                      ScaffoldSnakBar()
-                          .show(context, msg: TASK_COMPLETED_POPUP_MSG);
-                    } else {
-                      ScaffoldSnakBar()
-                          .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-                    }
-                  },
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SmallCommonButton(
-                      fontSize: 12,
-                      text: START_BUTTON,
-                      buttonColor: GRAY,
-                      onPressed: () async {
-                        final TaskModel taskModel = TaskModel(
-                          projectId: task.projectId,
-                          ownerId: task.ownerId,
-                          id: task.id,
-                          taskName: task.taskName,
-                          description: task.description,
-                          memberRequirement: task.memberRequirement,
-                          ageRestriction: task.ageRestriction,
-                          qualification: task.qualification,
-                          startDate: task.startDate,
-                          endDate: task.endDate,
-                          estimatedHrs: task.estimatedHrs,
-                          totalVolunteerHrs: task.totalVolunteerHrs,
-                          members: task.members,
-                          status: TOGGLE_INPROGRESS,
+        ),
+        taskIsInProgress
+            ? SmallCommonButton(
+                fontSize: 12,
+                text: COMPLETED_BUTTON,
+                buttonColor: DARK_PINK_COLOR,
+                onPressed: () async {
+                  final TaskModel taskModel = TaskModel(
+                    projectId: task.projectId,
+                    ownerId: task.ownerId,
+                    id: task.id,
+                    taskName: task.taskName,
+                    description: task.description,
+                    memberRequirement: task.memberRequirement,
+                    ageRestriction: task.ageRestriction,
+                    qualification: task.qualification,
+                    startDate: task.startDate,
+                    endDate: task.endDate,
+                    estimatedHrs: task.estimatedHrs,
+                    totalVolunteerHrs: task.totalVolunteerHrs,
+                    members: task.members,
+                    status: TOGGLE_COMPLETE,
+                  );
+                  final bool response =
+                      await _projectTaskBloc.updateTasks(taskModel);
+                  if (response) {
+                    ScaffoldSnakBar()
+                        .show(context, msg: TASK_COMPLETED_POPUP_MSG);
+                  } else {
+                    ScaffoldSnakBar()
+                        .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+                  }
+                },
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SmallCommonButton(
+                    fontSize: 12,
+                    text: START_BUTTON,
+                    buttonColor: GRAY,
+                    onPressed: () async {
+                      final TaskModel taskModel = TaskModel(
+                        projectId: task.projectId,
+                        ownerId: task.ownerId,
+                        id: task.id,
+                        taskName: task.taskName,
+                        description: task.description,
+                        memberRequirement: task.memberRequirement,
+                        ageRestriction: task.ageRestriction,
+                        qualification: task.qualification,
+                        startDate: task.startDate,
+                        endDate: task.endDate,
+                        estimatedHrs: task.estimatedHrs,
+                        totalVolunteerHrs: task.totalVolunteerHrs,
+                        members: task.members,
+                        status: TOGGLE_INPROGRESS,
+                      );
+                      final bool response =
+                          await _projectTaskBloc.updateTasks(taskModel);
+                      if (response) {
+                        ScaffoldSnakBar().show(
+                          context,
+                          msg: TASK_STARTED_POPUP_MSG,
                         );
-                        final bool response =
-                            await _projectTaskBloc.updateTasks(taskModel);
-                        if (response) {
-                          ScaffoldSnakBar()
-                              .show(context, msg: TASK_STARTED_POPUP_MSG);
-                        } else {
-                          ScaffoldSnakBar().show(
-                            context,
-                            msg: TASK_NOT_UPDATED_POPUP_MSG,
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(width: 7),
-                    SmallCommonButton(
-                      fontSize: 12,
-                      fontColor: BLACK,
-                      buttonColor: SILVER_GRAY,
-                      text: DECLINE_BUTTON,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-        ],
-      ),
+                      } else {
+                        ScaffoldSnakBar().show(
+                          context,
+                          msg: TASK_NOT_UPDATED_POPUP_MSG,
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(width: 7),
+                  SmallCommonButton(
+                    fontSize: 12,
+                    fontColor: BLACK,
+                    buttonColor: SILVER_GRAY,
+                    text: DECLINE_BUTTON,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+      ],
     );
   }
 

@@ -6,7 +6,7 @@ import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/common_screen.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_tabs/tasks_tab.dart';
+import 'package:helpozzy/screens/dashboard/my_task/my_enrolled_tasks.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -88,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       stream: _userInfoBloc.userStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return SizedBox();
+          return Center(child: LinearLoader());
         }
         final SignUpAndUserModel user = snapshot.data!;
         return Container(
@@ -267,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context) => menu.id == 0
                         ? ProjectsScreen()
                         : menu.id == 1
-                            ? TaskTab(getMyAll: true)
+                            ? MyEnrolledTask()
                             : menu.id == 2
                                 ? ReportsScreen()
                                 : CommonSampleScreen(

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
@@ -362,6 +362,21 @@ class ApiProvider {
             .collection('tasks')
             .where('project_id', isEqualTo: projectId)
             .get();
+
+    List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
+    List<Map<String, dynamic>> tasks = [];
+    tasksList.forEach((json) {
+      final task = json.data() as Map<String, dynamic>;
+      tasks.add(task);
+    });
+    return Tasks.fromJson(list: tasks);
+  }
+
+  Future<Tasks> getEnrolledTasksAPIProvider() async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('tasks')
+        .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .get();
 
     List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
     List<Map<String, dynamic>> tasks = [];

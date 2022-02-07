@@ -1,6 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
-import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
@@ -82,6 +82,9 @@ class Repository {
 
   Future<Tasks> getProjectTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectTasksAPIProvider(projectId, isOwn);
+
+  Future<Tasks> getEnrolledTasksRepo() =>
+      apiProvider.getEnrolledTasksAPIProvider();
 
   Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
       apiProvider.getSelectedTasksAPIProvider(taskIds);

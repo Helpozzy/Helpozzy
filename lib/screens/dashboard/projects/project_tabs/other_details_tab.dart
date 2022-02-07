@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/report_model.dart';
 import 'package:helpozzy/screens/dashboard/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -17,26 +16,6 @@ class _ReportsByMonthsState extends State<ReportsByMonths> {
   late List<BarChartModel> data = [];
 
   @override
-  void initState() {
-    setListData();
-    super.initState();
-  }
-
-  Future setListData() async {
-    final List<String> previousSixMonth =
-        DateFormatFromTimeStamp().getPreviousSixMonths();
-    data = [
-      BarChartModel(users: 12, hours: 16, month: previousSixMonth[5]),
-      BarChartModel(users: 8, hours: 22, month: previousSixMonth[4]),
-      BarChartModel(users: 5, hours: 55, month: previousSixMonth[3]),
-      BarChartModel(users: 10, hours: 38, month: previousSixMonth[2]),
-      BarChartModel(users: 13, hours: 16, month: previousSixMonth[1]),
-      BarChartModel(users: 18, hours: 20, month: previousSixMonth[0]),
-    ];
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
@@ -45,9 +24,10 @@ class _ReportsByMonthsState extends State<ReportsByMonths> {
       child: Column(
         children: [
           SizedBox(height: width * 0.02),
-          Padding(
+          Container(
+            height: height / 2,
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: BarChartGraph(data: data),
+            child: ReportGraph(),
           ),
           SizedBox(height: width * 0.05),
           ListDividerLabel(label: MONTHLY_REPORTS_LABEL),

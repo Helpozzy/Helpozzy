@@ -68,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
         return Expanded(
           child: ListView.builder(
+            shrinkWrap: true,
             itemCount: snapshot.data!.volunteers.length,
             itemBuilder: (context, index) {
               final VolunteerModel _item = snapshot.data!.volunteers[index];

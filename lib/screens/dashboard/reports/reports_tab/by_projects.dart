@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
-import 'package:helpozzy/models/admin_model/project_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/report_model.dart';
 import 'package:helpozzy/screens/dashboard/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -36,7 +36,7 @@ class _ReportsByProjectsState extends State<ReportsByProjects> {
           SizedBox(height: width * 0.02),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: BarChartGraph(data: data),
+            child: ReportGraph(),
           ),
           SizedBox(height: width * 0.05),
           ListDividerLabel(label: PROJECT_HOURS_LABEL),

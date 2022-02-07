@@ -1,6 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/task_Helper.dart';
-import 'package:helpozzy/models/admin_model/task_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectTaskBloc {
