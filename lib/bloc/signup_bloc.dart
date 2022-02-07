@@ -33,11 +33,13 @@ class SignUpBloc {
   Future<bool> registerUser(
       SignUpAndUserModel signupAndUserModel, String password) async {
     final User? result = await auth.signUp(signupAndUserModel.email!, password);
-
-    final bool response = await repo.postSignUpDetailsRepo(
-        result!.uid, signupAndUserModel.toJson());
-
-    return response;
+    try {
+      final bool response = await repo.postSignUpDetailsRepo(
+          result!.uid, signupAndUserModel.toJson());
+      return response;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<bool> sentOtp(String email) async {

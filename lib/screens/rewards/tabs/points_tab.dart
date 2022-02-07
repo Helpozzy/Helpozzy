@@ -179,7 +179,6 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                         double.parse(userRewardsDetails.totalPoint.toString()) /
                             100,
                     animateFromLastPercent: true,
-                    linearStrokeCap: LinearStrokeCap.butt,
                     progressColor: BLACK,
                     backgroundColor: DARK_ACCENT_GRAY,
                   ),

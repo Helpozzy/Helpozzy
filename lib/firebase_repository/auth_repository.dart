@@ -17,6 +17,7 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       print('Auth ${e.toString()}');
     }
+    return null;
   }
 
   // Sign In with email and password

@@ -11,7 +11,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({this.loginBloc, required this.authRepository})
       : super(LoginState());
 
-  @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginEmailChanged) {
       yield _mapEmailChangedToState(event, state);

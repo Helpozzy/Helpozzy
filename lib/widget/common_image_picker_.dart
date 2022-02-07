@@ -15,6 +15,7 @@ class CommonPicker {
       );
     } catch (e) {
       print(e);
+      return null;
     }
   }
 

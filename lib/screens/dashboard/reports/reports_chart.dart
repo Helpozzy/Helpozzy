@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/models/report_chart_val_model.dart';
+import 'package:helpozzy/models/report_chart_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportGraph extends StatefulWidget {
-  const ReportGraph({Key? key}) : super(key: key);
-
+  const ReportGraph({Key? key, required this.chartData}) : super(key: key);
+  final List<ChartDataModel>? chartData;
   @override
-  _ReportGraphState createState() => _ReportGraphState();
+  _ReportGraphState createState() => _ReportGraphState(chartData: chartData);
 }
 
 class _ReportGraphState extends State<ReportGraph> {
-  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
-      DateFormatFromTimeStamp();
+  _ReportGraphState({required this.chartData});
+  final List<ChartDataModel>? chartData;
   late double _columnWidth;
   late double _columnSpacing;
-  List<ChartDataModel>? chartData;
+
   TooltipBehavior? _tooltipBehavior;
 
   @override
@@ -42,46 +41,6 @@ class _ReportGraphState extends State<ReportGraph> {
       canShowMarker: true,
       color: DARK_PINK_COLOR,
     );
-
-    final List<String> months = _dateFormatFromTimeStamp.getPreviousSixMonths();
-    chartData = <ChartDataModel>[
-      ChartDataModel(
-        x: months[5],
-        yHrsValue: 25,
-        yUsersValue: 30,
-        yProjectsValue: 22,
-      ),
-      ChartDataModel(
-        x: months[4],
-        yHrsValue: 45,
-        yUsersValue: 42,
-        yProjectsValue: 55,
-      ),
-      ChartDataModel(
-        x: months[3],
-        yHrsValue: 25,
-        yUsersValue: 24,
-        yProjectsValue: 36,
-      ),
-      ChartDataModel(
-        x: months[2],
-        yHrsValue: 35,
-        yUsersValue: 45,
-        yProjectsValue: 55,
-      ),
-      ChartDataModel(
-        x: months[1],
-        yHrsValue: 30,
-        yUsersValue: 35,
-        yProjectsValue: 50,
-      ),
-      ChartDataModel(
-        x: months[0],
-        yHrsValue: 25,
-        yUsersValue: 10,
-        yProjectsValue: 15,
-      ),
-    ];
   }
 
   @override
@@ -110,29 +69,23 @@ class _ReportGraphState extends State<ReportGraph> {
   List<ColumnSeries<ChartDataModel, String>> _getDefaultColumn() {
     return <ColumnSeries<ChartDataModel, String>>[
       ColumnSeries<ChartDataModel, String>(
-          width: _columnWidth,
-          spacing: _columnSpacing,
-          dataSource: chartData!,
-          color: const Color.fromRGBO(252, 216, 20, 1),
-          xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-          yValueMapper: (ChartDataModel sales, _) => sales.yHrsValue,
-          name: 'Users'),
+        dataSource: chartData!,
+        width: _columnWidth,
+        spacing: _columnSpacing,
+        color: const Color.fromRGBO(169, 169, 169, 1),
+        xValueMapper: (ChartDataModel sales, _) => sales.x as String,
+        yValueMapper: (ChartDataModel sales, _) => sales.yHrsValue,
+        name: 'Hours',
+      ),
       ColumnSeries<ChartDataModel, String>(
-          dataSource: chartData!,
-          width: _columnWidth,
-          spacing: _columnSpacing,
-          color: const Color.fromRGBO(169, 169, 169, 1),
-          xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-          yValueMapper: (ChartDataModel sales, _) => sales.yUsersValue,
-          name: 'Hours'),
-      ColumnSeries<ChartDataModel, String>(
-          dataSource: chartData!,
-          width: _columnWidth,
-          spacing: _columnSpacing,
-          color: const Color.fromRGBO(205, 127, 50, 1),
-          xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-          yValueMapper: (ChartDataModel sales, _) => sales.yProjectsValue,
-          name: 'Projects')
+        dataSource: chartData!,
+        width: _columnWidth,
+        spacing: _columnSpacing,
+        color: const Color.fromRGBO(252, 216, 20, 1),
+        xValueMapper: (ChartDataModel sales, _) => sales.x as String,
+        yValueMapper: (ChartDataModel sales, _) => sales.yProjectsValue,
+        name: 'Projects',
+      )
     ];
   }
 }

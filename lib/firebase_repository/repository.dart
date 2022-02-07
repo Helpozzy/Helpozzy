@@ -1,7 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
-import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -61,9 +60,6 @@ class Repository {
   Future<ResponseModel> postProjectSignupRepo(
           ProjectSignUpModel projectSignUpVal) =>
       apiProvider.postProjectSignupProvider(projectSignUpVal);
-
-  Future<DashboardMenus> getDashBoardMenusRepo() =>
-      apiProvider.getDashBoardMenusAPIProvider();
 
   Future<bool> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);

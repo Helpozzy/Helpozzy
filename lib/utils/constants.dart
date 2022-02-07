@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const PRIMARY_COLOR = Color(0xFF0F464C);
@@ -208,6 +209,12 @@ const RESET_PASSWORD = 'Forgot your password?';
 const RESER_PASS_MSG =
     "That's okay, it happens!\nEnter your email and Click on button below to reset your password.";
 
+//Dashboard scrreen
+const PROJECTS_TILE = 'Projects';
+const MY_TASKS_TILE = 'My Tasks';
+const REPORTS_TILE = 'Report';
+const TIME_TRACKER_TILE = 'Time Tracker';
+
 // Explore Screen
 const MSG_DASHBOARD = 'Changing the World,\nOne Project At a Time';
 const SEARCH_PROJECT_LABEL = 'Find volunteering opportunities';
@@ -385,7 +392,7 @@ const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
 const UNFOLD_REPORT = 'Unfold Report ';
 const MONTHY_HOURS = 'Monthly Hours';
 const PROJECT_HOURS_LABEL = 'Project Hours';
-const USERS_LABEL = 'Users : ';
+const PROJECTS_LABEL = 'Projects : ';
 const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
 
 //Appbar Title
@@ -542,6 +549,29 @@ List<String> gradeLevels = [
   '11th',
   '12th',
   'College',
+];
+
+List<MenuModel> dashBoardMenuList = [
+  MenuModel(
+    id: 0,
+    asset: 'assets/images/projects.png',
+    label: PROJECTS_TILE,
+  ),
+  MenuModel(
+    id: 1,
+    asset: 'assets/images/tasks.png',
+    label: MY_TASKS_TILE,
+  ),
+  MenuModel(
+    id: 2,
+    asset: 'assets/images/reports.png',
+    label: REPORTS_TILE,
+  ),
+  MenuModel(
+    id: 3,
+    asset: 'assets/images/tracker.png',
+    label: TIME_TRACKER_TILE,
+  ),
 ];
 
 Map<String, dynamic> rewardsList = {

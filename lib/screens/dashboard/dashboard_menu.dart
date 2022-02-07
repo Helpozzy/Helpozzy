@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/categories_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
-import 'package:helpozzy/models/admin_selection_model.dart';
+import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/common_screen.dart';
 import 'package:helpozzy/screens/dashboard/my_task/my_enrolled_tasks.dart';
@@ -19,7 +17,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final DashboardBloc _dashboardBloc = DashboardBloc();
   late double height;
   late double width;
   late ThemeData _theme;
@@ -30,7 +27,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _dashboardBloc.getCategories();
     super.initState();
   }
 
@@ -42,6 +38,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else {
       return LIGHT_GRAY;
     }
+  }
+
+  Future<DashboardMenus> getMenuList() async {
+    return DashboardMenus.fromList(items: dashBoardMenuList);
   }
 
   @override
@@ -88,7 +88,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       stream: _userInfoBloc.userStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: LinearLoader());
+          return Center(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: LinearLoader(),
+          ));
         }
         final SignUpAndUserModel user = snapshot.data!;
         return Container(
@@ -246,8 +250,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget typeSelectionGrid() {
-    return StreamBuilder<DashboardMenus>(
-      stream: _dashboardBloc.getDashBoardMenusStream,
+    return FutureBuilder<DashboardMenus>(
+      future: getMenuList(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
@@ -286,18 +290,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0),
-                      child: CachedNetworkImage(
-                        imageUrl: menu.imgUrl,
+                      child: Image.asset(
+                        menu.asset,
                         height: width / 5.5,
                         width: width / 5.5,
                         color: PRIMARY_COLOR,
-                        placeholder: (context, url) =>
-                            Center(child: LinearLoader()),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.error_outline_rounded,
-                          color: GRAY,
-                          size: width / 7,
-                        ),
                       ),
                     ),
                     CommonDivider(),

@@ -58,7 +58,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         fillColor: GRAY,
                         controller: _searchController,
                         hintText: SEARCH_PROJECT_HINT,
-                        validator: (val) {},
+                        validator: (val) {
+                          return null;
+                        },
                       ),
                     ),
                   ),

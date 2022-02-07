@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/school_info_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -23,7 +22,6 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
-  final SchoolsInfoBloc _schoolsInfoBloc = SchoolsInfoBloc();
   final _formKey = GlobalKey<FormState>();
   late ThemeData _theme;
   late String stateId = '';

@@ -3,7 +3,6 @@ import 'package:helpozzy/bloc/volunteer_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/screens/auth/signup/personal_info_screen.dart';
-import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -87,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SchoolAndGradeScreen(
+                        builder: (context) => PersonalInfoScreen(
                             signupAndUserModel: signupAndUserModel),
                       ),
                     );

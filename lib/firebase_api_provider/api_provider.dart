@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
-import 'package:helpozzy/models/admin_selection_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -257,19 +256,6 @@ class ApiProvider {
           ResponseModel(error: 'Project enrollment failed', success: false);
     }
     return responseModel;
-  }
-
-  //Admin API Provider
-
-  Future<DashboardMenus> getDashBoardMenusAPIProvider() async {
-    final DocumentReference documentRef =
-        firestore.collection('dashboard').doc('menus');
-
-    final DocumentSnapshot menusDoc = await documentRef.get();
-
-    final Map<String, dynamic> menus = menusDoc.data() as Map<String, dynamic>;
-
-    return DashboardMenus.fromJson(items: menus['menu_items']);
   }
 
   Future<bool> postProjectAPIProvider(ProjectModel project) async {

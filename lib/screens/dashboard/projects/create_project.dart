@@ -468,7 +468,9 @@ class _CreateProjectState extends State<CreateProject> {
               child: CommonSimpleTextfield(
                 controller: _searchEmailController,
                 hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
-                validator: (val) {},
+                validator: (val) {
+                  return null;
+                },
                 onChanged: (val) {
                   _projectsBloc.searchUsers(val);
                 },
