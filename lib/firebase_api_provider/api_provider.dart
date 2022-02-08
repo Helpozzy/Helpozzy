@@ -373,6 +373,14 @@ class ApiProvider {
     return Tasks.fromJson(list: tasks);
   }
 
+  Future<TaskModel> getTaskInfoAPIProvider(String taskId) async {
+    final DocumentSnapshot documentSnapshot =
+        await firestore.collection('tasks').doc(taskId).get();
+
+    return TaskModel.fromjson(
+        json: documentSnapshot.data() as Map<String, dynamic>);
+  }
+
   Future<Tasks> getSelectedTasksAPIProvider(List<String> taskIds) async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('tasks').get();

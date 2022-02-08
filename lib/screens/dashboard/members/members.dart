@@ -34,7 +34,6 @@ class _MembersScreenState extends State<MembersScreen> {
       backgroundColor: WHITE,
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(context).show(
-        elevation: 0,
         title: MEMBERS_APPBAR,
         onBack: () {
           Navigator.of(context).pop();

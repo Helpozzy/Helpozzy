@@ -82,6 +82,9 @@ class Repository {
   Future<Tasks> getEnrolledTasksRepo() =>
       apiProvider.getEnrolledTasksAPIProvider();
 
+  Future<TaskModel> getTaskInfoRepo(String taskId) =>
+      apiProvider.getTaskInfoAPIProvider(taskId);
+
   Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
       apiProvider.getSelectedTasksAPIProvider(taskIds);
 

@@ -401,6 +401,8 @@ const PROJECT_APPBAR = 'Projects';
 const REPORTS_APPBAR = 'Reports';
 const MY_TAKS_APPBAR = 'My Tasks';
 const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
+const EDIT_PROFILE_APPBAR = 'Edit Profile';
+const TASK_DETAILS_APPBAR = 'Task Detail';
 
 //Details Tab
 const COLUMN_ONE = 'Age\nGroup\n(Yrs old)';

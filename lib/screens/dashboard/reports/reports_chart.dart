@@ -20,7 +20,7 @@ class _ReportGraphState extends State<ReportGraph> {
 
   @override
   void initState() {
-    loadData();
+    initialize();
     super.initState();
   }
 
@@ -30,7 +30,7 @@ class _ReportGraphState extends State<ReportGraph> {
     super.dispose();
   }
 
-  Future loadData() async {
+  Future initialize() async {
     _columnWidth = 0.75;
     _columnSpacing = 0.4;
     _tooltipBehavior = TooltipBehavior(
@@ -39,7 +39,7 @@ class _ReportGraphState extends State<ReportGraph> {
       opacity: 0.7,
       activationMode: ActivationMode.singleTap,
       canShowMarker: true,
-      color: DARK_PINK_COLOR,
+      color: BLACK,
     );
   }
 
@@ -50,9 +50,8 @@ class _ReportGraphState extends State<ReportGraph> {
     return SfCartesianChart(
       backgroundColor: WHITE,
       title: ChartTitle(text: 'Volunteering Summary'),
-      primaryXAxis: CategoryAxis(
-        majorGridLines: const MajorGridLines(width: 0),
-      ),
+      primaryXAxis:
+          CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
       primaryYAxis: NumericAxis(
           maximum: 60,
           minimum: 0,

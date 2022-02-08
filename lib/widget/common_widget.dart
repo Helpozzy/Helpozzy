@@ -366,13 +366,11 @@ Widget topBarBackArrowWithTitleWidget(context, title) {
 //Badge
 class CommonBadge extends StatelessWidget {
   const CommonBadge({
-    this.border = false,
     required this.color,
     required this.size,
   });
   final Color color;
   final double size;
-  final bool border;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -382,7 +380,6 @@ class CommonBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(100),
-        border: border ? Border.all(color: PRIMARY_COLOR, width: 1) : null,
       ),
     );
   }
@@ -896,7 +893,7 @@ class CommonAppBar {
     required String title,
     Function()? onBack,
     List<Widget>? actions,
-    required double elevation,
+    double elevation = 0.0,
     PreferredSizeWidget? bottom,
     bool backButton = true,
   }) {

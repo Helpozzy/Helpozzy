@@ -30,7 +30,6 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
-        elevation: 0,
         title: TASKS_APPBAR,
         onBack: () {
           Navigator.pop(context);

@@ -67,7 +67,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: REPORTS_APPBAR, elevation: 0),
+      appBar: CommonAppBar(context).show(title: REPORTS_APPBAR),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -90,7 +90,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     return Scaffold(
       backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
-        elevation: 0,
         title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
       ),
       body: body(),

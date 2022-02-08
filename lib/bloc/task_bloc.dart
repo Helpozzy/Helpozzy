@@ -8,11 +8,12 @@ class TaskBloc {
 
   final enrolledTasksController = PublishSubject<Tasks>();
   final tasksDetailsController = PublishSubject<ProjectTaskHelper>();
+  final taskInfoController = PublishSubject<TaskModel>();
 
   Stream<Tasks> get getEnrolledTasksStream => enrolledTasksController.stream;
-
   Stream<ProjectTaskHelper> get getTaskDetailsStream =>
       tasksDetailsController.stream;
+  Stream<TaskModel> get getTaskInfoStream => taskInfoController.stream;
 
   Future getEnrolledTasks() async {
     final Tasks response = await repo.getEnrolledTasksRepo();
@@ -26,6 +27,11 @@ class TaskBloc {
     tasksDetailsController.sink.add(projectHelper);
   }
 
+  Future getTask(String taskId) async {
+    final TaskModel response = await repo.getTaskInfoRepo(taskId);
+    taskInfoController.sink.add(response);
+  }
+
   Future<bool> updateTasks(TaskModel task) async {
     final bool response = await repo.updateTaskRepo(task);
     return response;
@@ -34,5 +40,6 @@ class TaskBloc {
   void dispose() {
     enrolledTasksController.close();
     tasksDetailsController.close();
+    taskInfoController.close();
   }
 }

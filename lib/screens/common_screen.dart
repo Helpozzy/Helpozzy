@@ -18,7 +18,6 @@ class _CommonSampleScreenState extends State<CommonSampleScreen> {
     return Scaffold(
       appBar: CommonAppBar(context).show(
         title: 'Common Screen',
-        elevation: 0,
         backButton: true,
       ),
       body: Column(

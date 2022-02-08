@@ -1,72 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
+import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class TaskDetails extends StatefulWidget {
-  TaskDetails({required this.task});
-  final TaskModel task;
+  TaskDetails({required this.taskId});
+  final String taskId;
   @override
-  _TaskDetailsState createState() => _TaskDetailsState(task: task);
+  _TaskDetailsState createState() => _TaskDetailsState(taskId: taskId);
 }
 
 class _TaskDetailsState extends State<TaskDetails> {
-  _TaskDetailsState({required this.task});
-  final TaskModel task;
+  _TaskDetailsState({required this.taskId});
+  final String taskId;
   late ThemeData _theme;
   late double width;
 
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final TaskBloc _taskBloc = TaskBloc();
+
+  @override
+  void initState() {
+    _taskBloc.getTask(taskId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CommonAppBar(context).show(title: 'Task Detail', elevation: 1),
-      body: body(),
+      appBar: CommonAppBar(context).show(title: TASK_DETAILS_APPBAR),
+      body: SafeArea(
+        child: StreamBuilder<TaskModel>(
+          stream: _taskBloc.getTaskInfoStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: LinearLoader());
+            }
+            final TaskModel task = snapshot.data!;
+            return body(task);
+          },
+        ),
+      ),
     );
   }
 
-  Widget body() {
+  Widget body(TaskModel task) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.04),
       child: Column(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    task.taskName,
-                    style: _theme.textTheme.headline6!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: PRIMARY_COLOR,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      task.taskName,
+                      style: _theme.textTheme.headline6!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: PRIMARY_COLOR,
+                      ),
                     ),
                   ),
-                ),
-                taskSchedule(),
-                SizedBox(height: 10),
-                taskDiscription(),
-              ],
+                  taskSchedule(task),
+                  SizedBox(height: 10),
+                  taskDiscription(task),
+                ],
+              ),
             ),
           ),
-          Spacer(),
           task.status == TOGGLE_NOT_STARTED
-              ? processButton(false)
+              ? startDeclineButton(task)
               : task.status == TOGGLE_INPROGRESS
-                  ? processButton(true)
-                  : singleSubmitHoursButton()
+                  ? completedButton(task)
+                  : Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      child: CommonButton(
+                        text: LOG_HOURS_BUTTON,
+                        color: BUTTON_GRAY_COLOR,
+                        onPressed: () {},
+                      ),
+                    )
         ],
       ),
     );
   }
 
-  Widget taskDiscription() {
+  Widget taskDiscription(TaskModel task) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -93,7 +121,7 @@ class _TaskDetailsState extends State<TaskDetails> {
     );
   }
 
-  Widget taskSchedule() {
+  Widget taskSchedule(TaskModel task) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -143,103 +171,90 @@ class _TaskDetailsState extends State<TaskDetails> {
     );
   }
 
-  Widget processButton(bool taskIsInProgress) {
+  Widget startDeclineButton(TaskModel task) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: width * 0.04),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          taskIsInProgress
-              ? CommonButton(
-                  fontSize: 12,
-                  text: COMPLETED_BUTTON,
-                  color: DARK_PINK_COLOR,
-                  onPressed: () async {
-                    final TaskModel taskModel = TaskModel(
-                      projectId: task.projectId,
-                      ownerId: task.ownerId,
-                      id: task.id,
-                      taskName: task.taskName,
-                      description: task.description,
-                      memberRequirement: task.memberRequirement,
-                      ageRestriction: task.ageRestriction,
-                      qualification: task.qualification,
-                      startDate: task.startDate,
-                      endDate: task.endDate,
-                      estimatedHrs: task.estimatedHrs,
-                      totalVolunteerHrs: task.totalVolunteerHrs,
-                      members: task.members,
-                      status: TOGGLE_COMPLETE,
-                    );
-                    final bool response =
-                        await _projectTaskBloc.updateTasks(taskModel);
-                    if (response)
-                      ScaffoldSnakBar()
-                          .show(context, msg: TASK_COMPLETED_POPUP_MSG);
-                    else
-                      ScaffoldSnakBar()
-                          .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-                  },
-                )
-              : Row(
-                  children: [
-                    CommonButton(
-                      fontSize: 12,
-                      text: START_BUTTON,
-                      color: GRAY,
-                      onPressed: () async {
-                        final TaskModel taskModel = TaskModel(
-                          projectId: task.projectId,
-                          ownerId: task.ownerId,
-                          id: task.id,
-                          taskName: task.taskName,
-                          description: task.description,
-                          memberRequirement: task.memberRequirement,
-                          ageRestriction: task.ageRestriction,
-                          qualification: task.qualification,
-                          startDate: task.startDate,
-                          endDate: task.endDate,
-                          estimatedHrs: task.estimatedHrs,
-                          totalVolunteerHrs: task.totalVolunteerHrs,
-                          members: task.members,
-                          status: TOGGLE_INPROGRESS,
-                        );
-                        final bool response =
-                            await _projectTaskBloc.updateTasks(taskModel);
-                        if (response)
-                          ScaffoldSnakBar()
-                              .show(context, msg: TASK_STARTED_POPUP_MSG);
-                        else
-                          ScaffoldSnakBar().show(
-                            context,
-                            msg: TASK_NOT_UPDATED_POPUP_MSG,
-                          );
-                      },
-                    ),
-                    SizedBox(width: 7),
-                    CommonButton(
-                      fontSize: 12,
-                      fontColor: BLACK,
-                      color: SILVER_GRAY,
-                      text: DECLINE_BUTTON,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
+          Expanded(
+            child: CommonButton(
+              text: START_BUTTON,
+              color: GRAY,
+              fontColor: DARK_GRAY,
+              onPressed: () async {
+                final TaskModel taskModel = TaskModel(
+                  projectId: task.projectId,
+                  ownerId: task.ownerId,
+                  id: task.id,
+                  taskName: task.taskName,
+                  description: task.description,
+                  memberRequirement: task.memberRequirement,
+                  ageRestriction: task.ageRestriction,
+                  qualification: task.qualification,
+                  startDate: task.startDate,
+                  endDate: task.endDate,
+                  estimatedHrs: task.estimatedHrs,
+                  totalVolunteerHrs: task.totalVolunteerHrs,
+                  members: task.members,
+                  status: TOGGLE_INPROGRESS,
+                );
+                final bool response =
+                    await _projectTaskBloc.updateTasks(taskModel);
+                if (response) {
+                  _taskBloc.getTask(task.id);
+                  ScaffoldSnakBar().show(context, msg: TASK_STARTED_POPUP_MSG);
+                } else {
+                  ScaffoldSnakBar()
+                      .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+                }
+              },
+            ),
+          ),
+          SizedBox(width: 15),
+          Expanded(
+            child: CommonButton(
+              fontColor: BLACK,
+              color: SILVER_GRAY,
+              text: DECLINE_BUTTON,
+              onPressed: () {},
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget singleSubmitHoursButton() {
-    return Container(
-      width: width / 1.35,
-      alignment: Alignment.center,
-      child: SmallCommonButton(
-        text: LOG_HOURS_BUTTON,
-        buttonColor: BUTTON_GRAY_COLOR,
-        fontSize: 12,
-        onPressed: () {},
+  Widget completedButton(TaskModel task) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: width * 0.04),
+      child: CommonButton(
+        text: COMPLETED_BUTTON,
+        color: DARK_PINK_COLOR,
+        onPressed: () async {
+          final TaskModel taskModel = TaskModel(
+            projectId: task.projectId,
+            ownerId: task.ownerId,
+            id: task.id,
+            taskName: task.taskName,
+            description: task.description,
+            memberRequirement: task.memberRequirement,
+            ageRestriction: task.ageRestriction,
+            qualification: task.qualification,
+            startDate: task.startDate,
+            endDate: task.endDate,
+            estimatedHrs: task.estimatedHrs,
+            totalVolunteerHrs: task.totalVolunteerHrs,
+            members: task.members,
+            status: TOGGLE_COMPLETE,
+          );
+          final bool response = await _projectTaskBloc.updateTasks(taskModel);
+          if (response) {
+            _taskBloc.getTask(task.id);
+            ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
+          } else {
+            ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+          }
+        },
       ),
     );
   }

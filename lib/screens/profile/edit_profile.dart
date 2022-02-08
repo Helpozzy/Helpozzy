@@ -181,8 +181,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _theme = Theme.of(context);
     return Scaffold(
       appBar: CommonAppBar(context).show(
-        title: 'Edit Profile',
-        elevation: 0,
+        title: EDIT_PROFILE_APPBAR,
         actions: [
           StreamBuilder<bool>(
             initialData: false,

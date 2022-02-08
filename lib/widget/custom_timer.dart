@@ -16,7 +16,7 @@ class _CustomCoutDownTimerState extends State<CustomCoutDownTimer> {
 
   DateTime eventDate = DateTime(2022, 01, 14, 12, 00);
 
-  late Duration duration = Duration();
+  late Duration duration = Duration(hours: hrs);
 
   /// Get the remaining hours always with two digits.
   String get hours => fill(duration.inHours.remainder(24));
