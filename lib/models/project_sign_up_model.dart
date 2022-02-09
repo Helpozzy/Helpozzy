@@ -12,7 +12,7 @@ class ProjectSignedUpUsers {
 
 class ProjectSignUpModel {
   ProjectSignUpModel({
-    this.ownerId,
+    this.signUpUserId,
     this.projectId,
     this.name,
     this.email,
@@ -24,7 +24,7 @@ class ProjectSignUpModel {
   });
 
   ProjectSignUpModel.fromJson({required Map<String, dynamic> json}) {
-    ownerId = json['owner_id'];
+    signUpUserId = json['signup_uid'];
     projectId = json['project_id'];
     name = json['name'];
     email = json['email'];
@@ -37,7 +37,7 @@ class ProjectSignUpModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'owner_id': ownerId,
+      'signup_uid': signUpUserId,
       'project_id': projectId,
       'name': name,
       'email': email,
@@ -49,7 +49,7 @@ class ProjectSignUpModel {
     };
   }
 
-  late String? ownerId;
+  late String? signUpUserId;
   late String? projectId;
   late String? name;
   late String? email;

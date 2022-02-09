@@ -210,7 +210,13 @@ class _TaskTabState extends State<TaskTab> {
                   );
                 },
               )
-            : SizedBox();
+            : Container(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  NO_RECORD_FOUND,
+                  style: _theme.textTheme.bodyText2!.copyWith(color: GRAY),
+                ),
+              );
       },
     );
   }

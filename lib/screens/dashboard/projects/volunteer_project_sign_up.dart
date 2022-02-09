@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -37,6 +38,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _phnController = TextEditingController();
+  final TaskBloc _taskBloc = TaskBloc();
 
   Future getUserData() async {
     final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
@@ -112,7 +114,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      labelWithTopPadding('Volunteer Name'),
+                      labelWithTopPadding(VOLUNTEER_NAME_LABEL),
                       CommonSimpleTextfield(
                         controller: _nameController,
                         hintText: ENTER_NAME_HINT,
@@ -125,7 +127,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           return null;
                         },
                       ),
-                      labelWithTopPadding('Volunteer Email'),
+                      labelWithTopPadding(VOLUNTEER_EMAIL_LABEL),
                       CommonSimpleTextfield(
                         controller: _emailController,
                         hintText: ENTER_EMAIL_HINT,
@@ -139,7 +141,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           return null;
                         },
                       ),
-                      labelWithTopPadding('Volunteer Phone'),
+                      labelWithTopPadding(VOLUNTEER_PHONE_LABEL),
                       CommonSimpleTextfield(
                         controller: _phnController,
                         maxLength: 10,
@@ -153,7 +155,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           return null;
                         },
                       ),
-                      labelWithTopPadding('Address'),
+                      labelWithTopPadding(ADDRESS_LABEL),
                       CommonSimpleTextfield(
                         controller: _addressController,
                         hintText: ADDRESS_HINT,
@@ -169,7 +171,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           Expanded(
                             child: Column(
                               children: [
-                                labelWithTopPadding('City'),
+                                labelWithTopPadding(CITY_LABEL),
                                 CommonSimpleTextfield(
                                   controller: _cityController,
                                   hintText: ENTER_CITY_HINT,
@@ -187,7 +189,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           Expanded(
                             child: Column(
                               children: [
-                                labelWithTopPadding('State'),
+                                labelWithTopPadding(STATE_LABEL),
                                 CommonSimpleTextfield(
                                   controller: _stateController,
                                   hintText: ENTER_STATE_HINT,
@@ -203,7 +205,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                           ),
                         ],
                       ),
-                      labelWithTopPadding('Zip Code'),
+                      labelWithTopPadding(ZIPCODE_LABEL),
                       CommonSimpleTextfield(
                         controller: _zipCodeController,
                         maxLength: 5,
@@ -236,7 +238,8 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                         if (_formKey.currentState!.validate()) {
                           CircularLoader().show(context);
                           final projectSignUpVal = ProjectSignUpModel(
-                            ownerId: prefsObject.getString(CURRENT_USER_ID),
+                            signUpUserId:
+                                prefsObject.getString(CURRENT_USER_ID),
                             projectId: project.projectId,
                             name: _nameController.text,
                             email: _emailController.text,
@@ -246,7 +249,6 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                             personalPhnNo: _phnController.text,
                             zipCode: _zipCodeController.text,
                           );
-
                           final ResponseModel response =
                               await _projectSignUpBloc
                                   .postVolunteerProjectSignUp(projectSignUpVal);
@@ -268,7 +270,7 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
                   SizedBox(width: 15),
                   Expanded(
                     child: CommonButton(
-                      text: 'Cancel',
+                      text: CANCEL_BUTTON,
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {

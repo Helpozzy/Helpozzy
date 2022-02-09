@@ -323,7 +323,7 @@ const TASK_DETAILS = 'Task Details';
 const MY_TASKS_LABEL = 'My Tasks';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
-const TASK_NOT_AVAILABLE = 'Task not available';
+const NO_RECORD_FOUND = 'No record found';
 
 //Tabbar title
 const DETAILS_TAB = 'Details';
@@ -379,21 +379,24 @@ const SLECT_DECLINE_TO_ANSWER = 'Decline to answer';
 const REPORT_BY_MONTH_TAB = 'By Month';
 const REPORT_BY_PROJECT_TAB = 'By Project';
 
-//Admin Module
-
-//Admin Project Tab
+// Project Tab
 const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
 const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
-//Admin reports
+//Reorts
 const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
 const UNFOLD_REPORT = 'Unfold Report ';
 const MONTHY_HOURS = 'Monthly Hours';
 const PROJECT_HOURS_LABEL = 'Project Hours';
 const PROJECTS_LABEL = 'Projects : ';
 const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
+
+//Project sign up
+const VOLUNTEER_EMAIL_LABEL = 'Volunteer Email';
+const VOLUNTEER_NAME_LABEL = 'Volunteer Name';
+const VOLUNTEER_PHONE_LABEL = 'Volunteer Phone';
 
 //Appbar Title
 const REWARDS_APPBAR = 'Rewards';

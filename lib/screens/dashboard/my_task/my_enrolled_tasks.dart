@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
-import 'package:helpozzy/models/task_model.dart';
+import 'package:helpozzy/models/enrolled_task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -15,8 +15,6 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   late ThemeData _theme;
   late double height;
   late double width;
-  late bool myTaskExpanded = false;
-  late bool allTasksExpanded = false;
   final TaskBloc _taskBloc = TaskBloc();
 
   @override
@@ -39,19 +37,20 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   Widget tasks() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-      child: StreamBuilder<Tasks>(
+      child: StreamBuilder<EnrolledTasks>(
         stream: _taskBloc.getEnrolledTasksStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: LinearLoader());
           }
-          return snapshot.data!.tasks.isNotEmpty
+          return snapshot.data!.enrolledTasks.isNotEmpty
               ? ListView.builder(
                   shrinkWrap: true,
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
-                  itemCount: snapshot.data!.tasks.length,
+                  itemCount: snapshot.data!.enrolledTasks.length,
                   itemBuilder: (context, index) {
-                    final TaskModel task = snapshot.data!.tasks[index];
+                    final EnrolledTaskModel task =
+                        snapshot.data!.enrolledTasks[index];
                     return Row(
                       children: [
                         CommonBadge(
@@ -63,7 +62,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                           size: 15,
                         ),
                         Expanded(
-                          child: TaskCard(
+                          child: EnrolledTaskCard(
                             task: task,
                             optionEnable: false,
                             eventButton: task.status == TOGGLE_NOT_STARTED
@@ -96,7 +95,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 )
               : Center(
                   child: Text(
-                    TASK_NOT_AVAILABLE,
+                    NO_RECORD_FOUND,
                     style: _theme.textTheme.headline6!.copyWith(color: GRAY),
                   ),
                 );
@@ -105,7 +104,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
     );
   }
 
-  Widget processButton(bool taskIsInProgress, TaskModel task) {
+  Widget processButton(bool taskIsInProgress, EnrolledTaskModel task) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,9 +123,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 text: COMPLETED_BUTTON,
                 buttonColor: DARK_PINK_COLOR,
                 onPressed: () async {
-                  final TaskModel taskModel = TaskModel(
-                    projectId: task.projectId,
-                    ownerId: task.ownerId,
+                  EnrolledTaskModel enrolledTaskModel = EnrolledTaskModel(
                     id: task.id,
                     taskName: task.taskName,
                     description: task.description,
@@ -136,11 +133,14 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     startDate: task.startDate,
                     endDate: task.endDate,
                     estimatedHrs: task.estimatedHrs,
+                    ownerId: task.ownerId,
+                    projectId: task.projectId,
+                    status: task.status,
+                    taskId: task.id,
                     totalVolunteerHrs: task.totalVolunteerHrs,
-                    members: task.members,
-                    status: TOGGLE_COMPLETE,
                   );
-                  final bool response = await _taskBloc.updateTasks(taskModel);
+                  final bool response =
+                      await _taskBloc.updateEnrollTasks(enrolledTaskModel);
                   if (response) {
                     _taskBloc.getEnrolledTasks();
                     ScaffoldSnakBar()
@@ -160,9 +160,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     buttonColor: GRAY,
                     fontColor: DARK_GRAY,
                     onPressed: () async {
-                      final TaskModel taskModel = TaskModel(
-                        projectId: task.projectId,
-                        ownerId: task.ownerId,
+                      EnrolledTaskModel enrolledTaskModel = EnrolledTaskModel(
                         id: task.id,
                         taskName: task.taskName,
                         description: task.description,
@@ -172,12 +170,14 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                         startDate: task.startDate,
                         endDate: task.endDate,
                         estimatedHrs: task.estimatedHrs,
+                        ownerId: task.ownerId,
+                        projectId: task.projectId,
+                        status: task.status,
+                        taskId: task.id,
                         totalVolunteerHrs: task.totalVolunteerHrs,
-                        members: task.members,
-                        status: TOGGLE_INPROGRESS,
                       );
                       final bool response =
-                          await _taskBloc.updateTasks(taskModel);
+                          await _taskBloc.updateEnrollTasks(enrolledTaskModel);
                       if (response) {
                         _taskBloc.getEnrolledTasks();
                         ScaffoldSnakBar().show(
