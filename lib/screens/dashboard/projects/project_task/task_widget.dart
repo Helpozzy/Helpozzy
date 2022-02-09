@@ -58,20 +58,50 @@ class TaskCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 5),
-                    !optionEnable
-                        ? eventButton != null
-                            ? eventButton!
-                            : SizedBox()
+                    task.status == TOGGLE_COMPLETE
+                        ? SizedBox(height: 5)
                         : SizedBox(),
-                    SizedBox(height: 8),
-                    Text(
-                      ESTIMATED_HRS + task.estimatedHrs.toString(),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 8,
-                        color: PRIMARY_COLOR,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        task.status == TOGGLE_COMPLETE
+                            ? SizedBox()
+                            : Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    !optionEnable
+                                        ? Text(
+                                            TASK_ARE_YOU_RUNNING_LATE,
+                                            style: _theme.textTheme.bodyText2!
+                                                .copyWith(
+                                              fontSize: 10,
+                                              color: BLUE_COLOR,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                    SizedBox(height: 2),
+                                    Text(
+                                      ESTIMATED_HRS +
+                                          task.estimatedHrs.toString(),
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 8,
+                                        color: PRIMARY_COLOR,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        !optionEnable
+                            ? eventButton != null
+                                ? eventButton!
+                                : SizedBox()
+                            : SizedBox(),
+                        SizedBox(height: 8),
+                      ],
                     ),
                   ],
                 ),
@@ -147,20 +177,50 @@ class EnrolledTaskCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 5),
-                    !optionEnable
-                        ? eventButton != null
-                            ? eventButton!
-                            : SizedBox()
+                    task.status == TOGGLE_COMPLETE
+                        ? SizedBox(height: 5)
                         : SizedBox(),
-                    SizedBox(height: 8),
-                    Text(
-                      ESTIMATED_HRS + task.estimatedHrs.toString(),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 8,
-                        color: PRIMARY_COLOR,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        task.status == TOGGLE_COMPLETE
+                            ? SizedBox()
+                            : Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    !optionEnable
+                                        ? Text(
+                                            TASK_ARE_YOU_RUNNING_LATE,
+                                            style: _theme.textTheme.bodyText2!
+                                                .copyWith(
+                                              fontSize: 10,
+                                              color: BLUE_COLOR,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                    SizedBox(height: 2),
+                                    Text(
+                                      ESTIMATED_HRS +
+                                          task.estimatedHrs.toString(),
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 8,
+                                        color: PRIMARY_COLOR,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        !optionEnable
+                            ? eventButton != null
+                                ? eventButton!
+                                : SizedBox()
+                            : SizedBox(),
+                        SizedBox(height: 8),
+                      ],
                     ),
                   ],
                 ),

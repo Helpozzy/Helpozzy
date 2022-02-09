@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
-import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -38,7 +37,6 @@ class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _phnController = TextEditingController();
-  final TaskBloc _taskBloc = TaskBloc();
 
   Future getUserData() async {
     final String userData = prefsObject.getString(CURRENT_USER_DATA)!;

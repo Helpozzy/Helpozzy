@@ -183,9 +183,9 @@ class _TaskDetailsState extends State<TaskDetails> {
               fontColor: DARK_GRAY,
               onPressed: () async {
                 final TaskModel taskModel = TaskModel(
+                  id: task.id,
                   projectId: task.projectId,
                   ownerId: task.ownerId,
-                  id: task.id,
                   taskName: task.taskName,
                   description: task.description,
                   memberRequirement: task.memberRequirement,
@@ -232,9 +232,9 @@ class _TaskDetailsState extends State<TaskDetails> {
         color: DARK_PINK_COLOR,
         onPressed: () async {
           final TaskModel taskModel = TaskModel(
+            id: task.id,
             projectId: task.projectId,
             ownerId: task.ownerId,
-            id: task.id,
             taskName: task.taskName,
             description: task.description,
             memberRequirement: task.memberRequirement,

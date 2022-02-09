@@ -180,14 +180,14 @@ class _TaskTabState extends State<TaskTab> {
                                       taskIsInProgress: true,
                                       isMyTask: isMyTask,
                                       task: task)
-                                  : Center(
-                                      child: SmallCommonButton(
-                                        text: LOG_HOURS_BUTTON,
-                                        buttonColor: BUTTON_GRAY_COLOR,
-                                        fontSize: 12,
-                                        onPressed: () {},
-                                      ),
-                                    ),
+                                  : task.status == TOGGLE_COMPLETE
+                                      ? SmallCommonButton(
+                                          text: LOG_HOURS_BUTTON,
+                                          buttonColor: BUTTON_GRAY_COLOR,
+                                          fontSize: 12,
+                                          onPressed: () {},
+                                        )
+                                      : SizedBox(),
                           onTapItem: () async {
                             await Navigator.push(
                               context,
@@ -226,23 +226,51 @@ class _TaskTabState extends State<TaskTab> {
     required bool isMyTask,
     required TaskModel task,
   }) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          TASK_ARE_YOU_RUNNING_LATE,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 8,
-            color: BLUE_COLOR,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        taskIsInProgress
-            ? SmallCommonButton(
+    return taskIsInProgress
+        ? SmallCommonButton(
+            fontSize: 12,
+            text: COMPLETED_BUTTON,
+            buttonColor: DARK_PINK_COLOR,
+            onPressed: () async {
+              final TaskModel taskModel = TaskModel(
+                id: task.id,
+                projectId: task.projectId,
+                ownerId: task.ownerId,
+                taskName: task.taskName,
+                description: task.description,
+                memberRequirement: task.memberRequirement,
+                ageRestriction: task.ageRestriction,
+                qualification: task.qualification,
+                startDate: task.startDate,
+                endDate: task.endDate,
+                estimatedHrs: task.estimatedHrs,
+                totalVolunteerHrs: task.totalVolunteerHrs,
+                members: task.members,
+                status: TOGGLE_COMPLETE,
+              );
+              final bool response =
+                  await _projectTaskBloc.updateTasks(taskModel);
+              if (response) {
+                if (isMyTask) {
+                  _projectTaskBloc.getProjectOwnTasks(project.projectId);
+                } else {
+                  _projectTaskBloc.getProjectAllTasks(project.projectId);
+                }
+                ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
+              } else {
+                ScaffoldSnakBar()
+                    .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+              }
+            },
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SmallCommonButton(
                 fontSize: 12,
-                text: COMPLETED_BUTTON,
-                buttonColor: DARK_PINK_COLOR,
+                text: START_BUTTON,
+                buttonColor: GRAY,
+                fontColor: DARK_GRAY,
                 onPressed: () async {
                   final TaskModel taskModel = TaskModel(
                     projectId: task.projectId,
@@ -258,7 +286,7 @@ class _TaskTabState extends State<TaskTab> {
                     estimatedHrs: task.estimatedHrs,
                     totalVolunteerHrs: task.totalVolunteerHrs,
                     members: task.members,
-                    status: TOGGLE_COMPLETE,
+                    status: TOGGLE_INPROGRESS,
                   );
                   final bool response =
                       await _projectTaskBloc.updateTasks(taskModel);
@@ -268,72 +296,27 @@ class _TaskTabState extends State<TaskTab> {
                     } else {
                       _projectTaskBloc.getProjectAllTasks(project.projectId);
                     }
-                    ScaffoldSnakBar()
-                        .show(context, msg: TASK_COMPLETED_POPUP_MSG);
+                    ScaffoldSnakBar().show(
+                      context,
+                      msg: TASK_STARTED_POPUP_MSG,
+                    );
                   } else {
-                    ScaffoldSnakBar()
-                        .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+                    ScaffoldSnakBar().show(
+                      context,
+                      msg: TASK_NOT_UPDATED_POPUP_MSG,
+                    );
                   }
                 },
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SmallCommonButton(
-                    fontSize: 12,
-                    text: START_BUTTON,
-                    buttonColor: GRAY,
-                    fontColor: DARK_GRAY,
-                    onPressed: () async {
-                      final TaskModel taskModel = TaskModel(
-                        projectId: task.projectId,
-                        ownerId: task.ownerId,
-                        id: task.id,
-                        taskName: task.taskName,
-                        description: task.description,
-                        memberRequirement: task.memberRequirement,
-                        ageRestriction: task.ageRestriction,
-                        qualification: task.qualification,
-                        startDate: task.startDate,
-                        endDate: task.endDate,
-                        estimatedHrs: task.estimatedHrs,
-                        totalVolunteerHrs: task.totalVolunteerHrs,
-                        members: task.members,
-                        status: TOGGLE_INPROGRESS,
-                      );
-                      final bool response =
-                          await _projectTaskBloc.updateTasks(taskModel);
-                      if (response) {
-                        if (isMyTask) {
-                          _projectTaskBloc
-                              .getProjectOwnTasks(project.projectId);
-                        } else {
-                          _projectTaskBloc
-                              .getProjectAllTasks(project.projectId);
-                        }
-                        ScaffoldSnakBar().show(
-                          context,
-                          msg: TASK_STARTED_POPUP_MSG,
-                        );
-                      } else {
-                        ScaffoldSnakBar().show(
-                          context,
-                          msg: TASK_NOT_UPDATED_POPUP_MSG,
-                        );
-                      }
-                    },
-                  ),
-                  SizedBox(width: 7),
-                  SmallCommonButton(
-                    fontSize: 12,
-                    fontColor: BLACK,
-                    buttonColor: SILVER_GRAY,
-                    text: DECLINE_BUTTON,
-                    onPressed: () {},
-                  ),
-                ],
               ),
-      ],
-    );
+              SizedBox(width: 7),
+              SmallCommonButton(
+                fontSize: 12,
+                fontColor: BLACK,
+                buttonColor: SILVER_GRAY,
+                text: DECLINE_BUTTON,
+                onPressed: () {},
+              ),
+            ],
+          );
   }
 }

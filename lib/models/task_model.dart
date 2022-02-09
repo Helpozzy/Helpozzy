@@ -10,9 +10,9 @@ class Tasks {
 
 class TaskModel {
   TaskModel({
+    required this.id,
     required this.projectId,
     required this.ownerId,
-    required this.id,
     required this.taskName,
     required this.description,
     required this.memberRequirement,
@@ -28,9 +28,9 @@ class TaskModel {
   });
 
   TaskModel.fromjson({required Map<String, dynamic> json}) {
+    id = json['task_id'];
     projectId = json['project_id'];
     ownerId = json['owner_id'];
-    id = json['task_id'];
     taskName = json['task_name'];
     description = json['description'];
     memberRequirement = json['member_requirement'];
@@ -46,9 +46,9 @@ class TaskModel {
 
   Map<String, Object?> toJson() {
     return {
+      'task_id': id,
       'project_id': projectId,
       'owner_id': ownerId,
-      'task_id': id,
       'task_name': taskName,
       'description': description,
       'member_requirement': memberRequirement,
@@ -63,9 +63,9 @@ class TaskModel {
     };
   }
 
+  late String id;
   late String projectId;
   late String ownerId;
-  late String id;
   late String taskName;
   late String description;
   late int memberRequirement;

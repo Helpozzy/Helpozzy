@@ -668,8 +668,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   Future addOrUpdateData() async {
     CircularLoader().show(context);
     final TaskModel taskDetails = TaskModel(
-      projectId: '',
       ownerId: prefsObject.getString(CURRENT_USER_ID)!,
+      projectId: '',
       id: fromEdit ? task!.id : '',
       taskName: _taskNameController.text,
       description: _taskDesController.text,
