@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -198,9 +199,9 @@ class _TaskDetailsState extends State<TaskDetails> {
                   members: task.members,
                   status: TOGGLE_INPROGRESS,
                 );
-                final bool response =
+                final ResponseModel response =
                     await _projectTaskBloc.updateTask(taskModel);
-                if (response) {
+                if (response.success!) {
                   _taskBloc.getTask(task.taskId!);
                   ScaffoldSnakBar().show(context, msg: TASK_STARTED_POPUP_MSG);
                 } else {
@@ -247,8 +248,9 @@ class _TaskDetailsState extends State<TaskDetails> {
             members: task.members,
             status: TOGGLE_COMPLETE,
           );
-          final bool response = await _projectTaskBloc.updateTask(taskModel);
-          if (response) {
+          final ResponseModel response =
+              await _projectTaskBloc.updateTask(taskModel);
+          if (response.success!) {
             _taskBloc.getTask(task.taskId!);
             ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
           } else {

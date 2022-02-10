@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/task_helper.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,8 +32,13 @@ class ProjectTaskBloc {
     allTaskExpandController.sink.add(expand);
   }
 
-  Future<bool> postTasks(TaskModel task) async {
-    final bool response = await repo.postTaskRepo(task);
+  Future<ResponseModel> postTask(TaskModel task) async {
+    final ResponseModel response = await repo.postTaskRepo(task);
+    return response;
+  }
+
+  Future<ResponseModel> enrollTask(TaskModel task) async {
+    final ResponseModel response = await repo.enrollTaskRepo(task);
     return response;
   }
 
@@ -57,13 +63,13 @@ class ProjectTaskBloc {
     selectedTasksController.sink.add(tasks);
   }
 
-  Future<bool> updateTask(TaskModel task) async {
-    final bool response = await repo.updateTaskRepo(task);
+  Future<ResponseModel> updateTask(TaskModel task) async {
+    final ResponseModel response = await repo.updateTaskRepo(task);
     return response;
   }
 
-  Future<bool> deleteTask(String taskId) async {
-    final bool response = await repo.deleteTaskRepo(taskId);
+  Future<ResponseModel> deleteTask(String taskId) async {
+    final ResponseModel response = await repo.deleteTaskRepo(taskId);
     return response;
   }
 

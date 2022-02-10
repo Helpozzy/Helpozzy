@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -691,10 +692,10 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               ? TOGGLE_INPROGRESS
               : TOGGLE_COMPLETE,
     );
-    final bool isUploaded = fromEdit
+    final ResponseModel response = fromEdit
         ? await _projectTaskBloc.updateTask(taskDetails)
-        : await _projectTaskBloc.postTasks(taskDetails);
-    if (isUploaded) {
+        : await _projectTaskBloc.postTask(taskDetails);
+    if (response.success!) {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(

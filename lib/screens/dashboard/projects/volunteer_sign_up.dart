@@ -4,33 +4,46 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class VolunteerProjectTaskSignUp extends StatefulWidget {
-  VolunteerProjectTaskSignUp({required this.project});
-  final ProjectModel project;
+  VolunteerProjectTaskSignUp({this.project, this.task, this.fromTask = false});
+  final ProjectModel? project;
+  final TaskModel? task;
+  final bool fromTask;
+
   @override
   _VolunteerProjectTaskSignUpState createState() =>
-      _VolunteerProjectTaskSignUpState(project: project);
+      _VolunteerProjectTaskSignUpState(
+        project: project,
+        task: task,
+        fromTask: fromTask,
+      );
 }
 
 class _VolunteerProjectTaskSignUpState
     extends State<VolunteerProjectTaskSignUp> {
-  _VolunteerProjectTaskSignUpState({required this.project});
-  final ProjectModel project;
+  _VolunteerProjectTaskSignUpState(
+      {this.project, this.task, this.fromTask = false});
+  final ProjectModel? project;
+  final TaskModel? task;
+  final bool fromTask;
 
   late ThemeData _theme;
   late double height;
   late double width;
   final _formKey = GlobalKey<FormState>();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -52,6 +65,71 @@ class _VolunteerProjectTaskSignUpState
     _stateController.text = userModel.state!;
     _zipCodeController.text = userModel.zipCode!;
     _phnController.text = userModel.personalPhnNo!;
+  }
+
+  Future projectSignUp() async {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.validate()) {
+      CircularLoader().show(context);
+      final ProjectSignUpModel projectSignUpVal = ProjectSignUpModel(
+        signUpUserId: prefsObject.getString(CURRENT_USER_ID),
+        projectId: project!.projectId,
+        name: _nameController.text,
+        email: _emailController.text,
+        address: _addressController.text,
+        city: _cityController.text,
+        state: _stateController.text,
+        personalPhnNo: _phnController.text,
+        zipCode: _zipCodeController.text,
+      );
+      final ResponseModel response =
+          await _projectSignUpBloc.postVolunteerProjectSignUp(projectSignUpVal);
+
+      if (response.success!) {
+        CircularLoader().hide(context);
+        await ScaffoldSnakBar().show(context, msg: response.message!);
+        Navigator.of(context).pop();
+      } else {
+        CircularLoader().hide(context);
+        await ScaffoldSnakBar().show(context, msg: response.error!);
+      }
+    }
+  }
+
+  Future taskSignUp() async {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.validate()) {
+      CircularLoader().show(context);
+      final TaskModel taskSignUpVal = TaskModel(
+        taskId: task!.taskId,
+        signUpUserId: prefsObject.getString(CURRENT_USER_ID),
+        projectId: project!.projectId,
+        enrollTaskId: task!.enrollTaskId,
+        taskOwnerId: task!.taskOwnerId,
+        taskName: task!.taskName,
+        description: task!.description,
+        memberRequirement: task!.memberRequirement,
+        ageRestriction: task!.ageRestriction,
+        qualification: task!.qualification,
+        startDate: task!.startDate,
+        endDate: task!.endDate,
+        estimatedHrs: task!.estimatedHrs,
+        totalVolunteerHrs: task!.totalVolunteerHrs,
+        members: task!.members,
+        status: TOGGLE_NOT_STARTED,
+      );
+      final ResponseModel response =
+          await _projectTaskBloc.enrollTask(taskSignUpVal);
+
+      if (response.success!) {
+        CircularLoader().hide(context);
+        await ScaffoldSnakBar().show(context, msg: response.message!);
+        Navigator.of(context).pop();
+      } else {
+        CircularLoader().hide(context);
+        await ScaffoldSnakBar().show(context, msg: response.error!);
+      }
+    }
   }
 
   @override
@@ -86,7 +164,7 @@ class _VolunteerProjectTaskSignUpState
                 children: [
                   InkWell(
                     onTap: () async => await CommonUrlLauncher()
-                        .launchCall(project.contactNumber),
+                        .launchCall(project!.contactNumber),
                     child: Icon(
                       CupertinoIcons.phone,
                       color: PRIMARY_COLOR,
@@ -106,7 +184,8 @@ class _VolunteerProjectTaskSignUpState
               ),
             ),
             scheduleTiming(),
-            titleWithIcon(title: PROJECT_SIGNUP_APPBAR),
+            titleWithIcon(
+                title: fromTask ? TASK_SIGNUP_APPBAR : PROJECT_SIGNUP_APPBAR),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.04),
@@ -232,37 +311,10 @@ class _VolunteerProjectTaskSignUpState
                     child: CommonButton(
                       text: ENROLL_BUTTON,
                       onPressed: () async {
-                        FocusScope.of(context).unfocus();
-
-                        if (_formKey.currentState!.validate()) {
-                          CircularLoader().show(context);
-                          final projectSignUpVal = ProjectSignUpModel(
-                            signUpUserId:
-                                prefsObject.getString(CURRENT_USER_ID),
-                            projectId: project.projectId,
-                            name: _nameController.text,
-                            email: _emailController.text,
-                            address: _addressController.text,
-                            city: _cityController.text,
-                            state: _stateController.text,
-                            personalPhnNo: _phnController.text,
-                            zipCode: _zipCodeController.text,
-                          );
-                          final ResponseModel response =
-                              await _projectSignUpBloc
-                                  .postVolunteerProjectSignUp(projectSignUpVal);
-
-                          if (response.success!) {
-                            CircularLoader().hide(context);
-                            await ScaffoldSnakBar()
-                                .show(context, msg: response.message!);
-                            Navigator.of(context).pop();
-                          } else {
-                            CircularLoader().hide(context);
-                            await ScaffoldSnakBar()
-                                .show(context, msg: response.error!);
-                          }
-                        }
+                        if (fromTask)
+                          await taskSignUp();
+                        else
+                          await projectSignUp();
                       },
                     ),
                   ),
@@ -315,7 +367,7 @@ class _VolunteerProjectTaskSignUpState
           height: height / 4,
           width: double.infinity,
           child: Image.asset(
-            project.imageUrl,
+            project!.imageUrl,
             fit: BoxFit.cover,
           ),
         ),
@@ -338,81 +390,89 @@ class _VolunteerProjectTaskSignUpState
         ),
         Positioned(
           left: 16,
-          bottom: 45,
+          bottom: fromTask ? 30 : 45,
           child: Container(
             width: width - 30,
             child: Text(
-              project.projectName,
+              fromTask ? task!.taskName! : project!.projectName,
               maxLines: 2,
-              style: _theme.textTheme.headline6!
-                  .copyWith(color: WHITE, fontSize: 28),
+              style: _theme.textTheme.headline6!.copyWith(
+                color: WHITE,
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+              ),
             ),
           ),
         ),
         Positioned(
           left: 16,
-          bottom: 25,
+          bottom: fromTask ? 15 : 28,
           child: Text(
-            project.organization,
+            fromTask ? project!.projectName : project!.organization,
             maxLines: 2,
             style: _theme.textTheme.headline5!.copyWith(
-                color: WHITE, fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-        ),
-        Positioned(
-          bottom: 10,
-          left: 18,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RatingBar.builder(
-                initialRating: project.rating,
-                ignoreGestures: true,
-                minRating: 1,
-                itemSize: 14,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                unratedColor: WHITE,
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: AMBER_COLOR,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              ),
-              Text(
-                ' (${project.reviewCount} Reviews)',
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  color: WHITE,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          right: 17,
-          bottom: 11,
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                project.isLiked = !project.isLiked;
-              });
-            },
-            child: Icon(
-              project.isLiked
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border_rounded,
-              color: project.isLiked ? Colors.red : WHITE,
-              size: 19,
+              color: GRAY,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
           ),
-        )
+        ),
+        !fromTask
+            ? Positioned(
+                bottom: 10,
+                left: 18,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RatingBar.builder(
+                      initialRating: project!.rating,
+                      ignoreGestures: true,
+                      minRating: 1,
+                      itemSize: 14,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      unratedColor: WHITE,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: AMBER_COLOR,
+                      ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    ),
+                    Text(
+                      ' (${project!.reviewCount} Reviews)',
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        color: WHITE,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox(),
+        !fromTask
+            ? Positioned(
+                right: 17,
+                bottom: 11,
+                child: InkWell(
+                  onTap: () {
+                    setState(() => project!.isLiked = !project!.isLiked);
+                  },
+                  child: Icon(
+                    project!.isLiked
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: project!.isLiked ? Colors.red : WHITE,
+                    size: 19,
+                  ),
+                ),
+              )
+            : SizedBox(),
       ],
     );
   }
@@ -426,7 +486,7 @@ class _VolunteerProjectTaskSignUpState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                PROJECT_CREATED_ON,
+                fromTask ? TASK_CREATED_ON : PROJECT_CREATED_ON,
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: PRIMARY_COLOR,
@@ -435,8 +495,9 @@ class _VolunteerProjectTaskSignUpState
               ),
               SizedBox(height: 3),
               Text(
-                DateFormatFromTimeStamp()
-                    .dateFormatToEEEDDMMMYYYY(timeStamp: project.startDate),
+                DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                    timeStamp:
+                        fromTask ? task!.startDate! : project!.startDate),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,
@@ -458,8 +519,8 @@ class _VolunteerProjectTaskSignUpState
               ),
               SizedBox(height: 3),
               Text(
-                DateFormatFromTimeStamp()
-                    .dateFormatToEEEDDMMMYYYY(timeStamp: project.endDate),
+                DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                    timeStamp: fromTask ? task!.endDate! : project!.endDate),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,

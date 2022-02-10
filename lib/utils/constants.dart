@@ -321,6 +321,7 @@ const ATTACHMENTS_TAB = 'Attachments';
 //User project task details
 const TASK_DETAILS = 'Task Details';
 const MY_TASKS_LABEL = 'My Tasks';
+const TASK_CREATED_ON = 'Task created on : ';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
 const NO_RECORD_FOUND = 'No record found';
@@ -404,6 +405,7 @@ const PROJECT_APPBAR = 'Projects';
 const REPORTS_APPBAR = 'Reports';
 const MY_TAKS_APPBAR = 'My Tasks';
 const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
+const TASK_SIGNUP_APPBAR = 'Task Sign-up';
 const EDIT_PROFILE_APPBAR = 'Edit Profile';
 const TASK_DETAILS_APPBAR = 'Task Detail';
 

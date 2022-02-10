@@ -70,11 +70,17 @@ class Repository {
   Future<Users> getOtherUserInfoRepo() =>
       apiProvider.otherUserInfoAPIProvider();
 
-  Future<bool> postTaskRepo(TaskModel task) =>
+  Future<ResponseModel> postTaskRepo(TaskModel task) =>
       apiProvider.postTaskAPIProvider(task);
 
-  Future<bool> updateTaskRepo(TaskModel task) =>
+  Future<ResponseModel> enrollTaskRepo(TaskModel task) =>
+      apiProvider.enrollTaskAPIProvider(task);
+
+  Future<ResponseModel> updateTaskRepo(TaskModel task) =>
       apiProvider.updateTaskAPIProvider(task);
+
+  Future<ResponseModel> deleteTaskRepo(String taskId) =>
+      apiProvider.deleteTaskAPIProvider(taskId);
 
   Future<Tasks> getProjectTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectTasksAPIProvider(projectId, isOwn);
@@ -96,9 +102,6 @@ class Repository {
 
   Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
       apiProvider.getSelectedTasksAPIProvider(taskIds);
-
-  Future<bool> deleteTaskRepo(String taskId) =>
-      apiProvider.deleteTaskAPIProvider(taskId);
 
   Future<bool> postReviewRepo(ReviewModel review) =>
       apiProvider.postReviewAPIProvider(review);

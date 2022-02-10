@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -103,8 +104,9 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Future onDelete(TaskModel task) async {
     CircularLoader().show(context);
-    final bool deleted = await _projectTaskBloc.deleteTask(task.taskId!);
-    if (deleted) {
+    final ResponseModel response =
+        await _projectTaskBloc.deleteTask(task.taskId!);
+    if (response.success!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: TASK_DELETED_POPUP_MSG);
     } else {

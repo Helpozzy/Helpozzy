@@ -203,7 +203,10 @@ class _TaskTabState extends State<TaskTab> {
                                       CupertinoPageRoute(
                                         builder: (context) =>
                                             VolunteerProjectTaskSignUp(
-                                                project: project),
+                                          fromTask: true,
+                                          project: project,
+                                          task: task,
+                                        ),
                                       ),
                                     );
                                   },

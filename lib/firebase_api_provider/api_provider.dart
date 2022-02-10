@@ -227,7 +227,6 @@ class ApiProvider {
 
   Future<ResponseModel> projectSignUpAPIProvider(
       ProjectSignUpModel projectSignUpVal) async {
-    late ResponseModel responseModel;
     try {
       await firestore
           .collection('project_signed_up')
@@ -249,13 +248,10 @@ class ApiProvider {
           'enrollment_count': projectModel.enrollmentCount + 1
         });
       });
-      responseModel =
-          ResponseModel(message: 'Enrolled successfully', success: true);
+      return ResponseModel(message: 'Enrolled successfully', success: true);
     } catch (e) {
-      responseModel =
-          ResponseModel(error: 'Project enrollment failed', success: false);
+      return ResponseModel(error: 'Project enrollment failed', success: false);
     }
-    return responseModel;
   }
 
   Future<bool> postProjectAPIProvider(ProjectModel project) async {
@@ -313,33 +309,56 @@ class ApiProvider {
     return Users.fromJson(list: querySnapshot.docs);
   }
 
-  Future<bool> postTaskAPIProvider(TaskModel task) async {
+  Future<ResponseModel> enrollTaskAPIProvider(TaskModel task) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('signed_up_tasks').doc();
+      task.enrollTaskId = documentReference.id;
+      await documentReference.set(task.toJson());
+      return ResponseModel(success: true, message: 'Enrolled successfully');
+    } catch (e) {
+      return ResponseModel(error: 'Task enrollment failed', success: false);
+    }
+  }
+
+  Future<ResponseModel> postTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc();
       task.enrollTaskId = documentReference.id;
       await documentReference.set(task.toJson());
-      return true;
+      return ResponseModel(success: true, message: 'Enrolled successfully');
     } catch (e) {
-      return false;
+      return ResponseModel(error: 'Task enrollment failed', success: false);
     }
   }
 
-  Future<bool> updateTaskAPIProvider(TaskModel task) async {
+  Future<ResponseModel> updateTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
-      return true;
+      return ResponseModel(success: true, message: 'Task is updated');
     } catch (e) {
-      return false;
+      return ResponseModel(
+          success: false, message: 'Fail! Task is not updated');
+    }
+  }
+
+  Future<ResponseModel> deleteTaskAPIProvider(String taskId) async {
+    try {
+      await firestore.collection('tasks').doc(taskId).delete();
+      return ResponseModel(success: true, message: 'Task is deleted');
+    } catch (e) {
+      return ResponseModel(
+          success: false, message: 'Fail, Task is not deleted');
     }
   }
 
   Future<bool> updateEnrollTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('enrolled_tasks').doc(task.enrollTaskId);
+          firestore.collection('signed_up_tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
       return true;
     } catch (e) {
@@ -373,13 +392,13 @@ class ApiProvider {
       String projectId, bool isOwn) async {
     final QuerySnapshot querySnapshot = isOwn
         ? await firestore
-            .collection('enrolled_tasks')
+            .collection('signed_up_tasks')
             .where('project_id', isEqualTo: projectId)
             .where('owner_id',
                 isEqualTo: prefsObject.getString(CURRENT_USER_ID))
             .get()
         : await firestore
-            .collection('enrolled_tasks')
+            .collection('signed_up_tasks')
             .where('project_id', isEqualTo: projectId)
             .get();
 
@@ -395,7 +414,7 @@ class ApiProvider {
   Future<bool> postEnrolledTasksAPIProvider(TaskModel enrolledTaskModel) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('enrolled_tasks').doc();
+          firestore.collection('signed_up_tasks').doc();
       enrolledTaskModel.enrollTaskId = documentReference.id;
       await documentReference.set(enrolledTaskModel.toJson());
       return true;
@@ -406,7 +425,7 @@ class ApiProvider {
 
   Future<Tasks> getEnrolledTasksAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
-        .collection('enrolled_tasks')
+        .collection('signed_up_tasks')
         .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
@@ -441,15 +460,6 @@ class ApiProvider {
       }
     });
     return Tasks.fromJson(list: tasks);
-  }
-
-  Future<bool> deleteTaskAPIProvider(String taskId) async {
-    try {
-      await firestore.collection('tasks').doc(taskId).delete();
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   Future<bool> postReviewAPIProvider(ReviewModel reviewModel) async {
