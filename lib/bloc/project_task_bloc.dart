@@ -1,5 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
-import 'package:helpozzy/helper/task_Helper.dart';
+import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -8,18 +8,17 @@ class ProjectTaskBloc {
 
   final myTaskExpandController = PublishSubject<bool>();
   final allTaskExpandController = PublishSubject<bool>();
-  final projectOwnTasksController = PublishSubject<Tasks>();
-  final projectAllTasksController = PublishSubject<Tasks>();
-  final projectTasksDetailsController = PublishSubject<ProjectTaskHelper>();
+  final projectEnrolledTasksController = PublishSubject<Tasks>();
+  final projectTasksController = PublishSubject<Tasks>();
+  final projectTasksDetailsController = PublishSubject<TaskHelper>();
   final selectedTasksController = PublishSubject<List<TaskModel>>();
 
   Stream<bool> get getMyTaskExpandedStream => myTaskExpandController.stream;
   Stream<bool> get geAllTaskExpandedStream => allTaskExpandController.stream;
-  Stream<Tasks> get getProjectOwnTasksStream =>
-      projectOwnTasksController.stream;
-  Stream<Tasks> get getProjectAllTasksStream =>
-      projectAllTasksController.stream;
-  Stream<ProjectTaskHelper> get getProjectTaskDetailsStream =>
+  Stream<Tasks> get getProjectEnrolledTasksStream =>
+      projectEnrolledTasksController.stream;
+  Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
+  Stream<TaskHelper> get getProjectTaskDetailsStream =>
       projectTasksDetailsController.stream;
   Stream<List<TaskModel>> get getSelectedTaskStream =>
       selectedTasksController.stream;
@@ -37,20 +36,20 @@ class ProjectTaskBloc {
     return response;
   }
 
-  Future getProjectOwnTasks(String projectId) async {
-    final Tasks response = await repo.getProjectTasksRepo(projectId, true);
-    projectOwnTasksController.sink.add(response);
+  Future getProjectEnrolledTasks(String projectId) async {
+    final Tasks response =
+        await repo.getProjectEnrolledTasksRepo(projectId, false);
+    projectEnrolledTasksController.sink.add(response);
   }
 
   Future getProjectAllTasks(String projectId) async {
     final Tasks response = await repo.getProjectTasksRepo(projectId, false);
-    projectAllTasksController.sink.add(response);
+    projectTasksController.sink.add(response);
   }
 
   Future getProjectTaskDetails(String projectId) async {
     final Tasks response = await repo.getProjectTasksRepo(projectId, false);
-    final ProjectTaskHelper projectHelper =
-        ProjectTaskHelper.fromProject(response.tasks);
+    final TaskHelper projectHelper = TaskHelper(tasks: response.tasks);
     projectTasksDetailsController.sink.add(projectHelper);
   }
 
@@ -58,7 +57,7 @@ class ProjectTaskBloc {
     selectedTasksController.sink.add(tasks);
   }
 
-  Future<bool> updateTasks(TaskModel task) async {
+  Future<bool> updateTask(TaskModel task) async {
     final bool response = await repo.updateTaskRepo(task);
     return response;
   }
@@ -72,8 +71,8 @@ class ProjectTaskBloc {
     myTaskExpandController.close();
     allTaskExpandController.close();
     selectedTasksController.close();
-    projectOwnTasksController.close();
-    projectAllTasksController.close();
+    projectEnrolledTasksController.close();
+    projectTasksController.close();
     projectTasksDetailsController.close();
   }
 }

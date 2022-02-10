@@ -13,16 +13,17 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
-class ProjectVolunteerSignUp extends StatefulWidget {
-  ProjectVolunteerSignUp({required this.project});
+class VolunteerProjectTaskSignUp extends StatefulWidget {
+  VolunteerProjectTaskSignUp({required this.project});
   final ProjectModel project;
   @override
-  _ProjectVolunteerSignUpState createState() =>
-      _ProjectVolunteerSignUpState(project: project);
+  _VolunteerProjectTaskSignUpState createState() =>
+      _VolunteerProjectTaskSignUpState(project: project);
 }
 
-class _ProjectVolunteerSignUpState extends State<ProjectVolunteerSignUp> {
-  _ProjectVolunteerSignUpState({required this.project});
+class _VolunteerProjectTaskSignUpState
+    extends State<VolunteerProjectTaskSignUp> {
+  _VolunteerProjectTaskSignUpState({required this.project});
   final ProjectModel project;
 
   late ThemeData _theme;

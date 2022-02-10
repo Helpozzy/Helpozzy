@@ -573,6 +573,7 @@ class _CreateProjectState extends State<CreateProject> {
                         setState(() => task.isSelected = !task.isSelected!),
                     selected: task.isSelected!,
                     optionEnable: false,
+                    eventButton: SizedBox(),
                   );
                 },
               )

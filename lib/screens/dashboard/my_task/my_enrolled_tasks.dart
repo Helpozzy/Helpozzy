@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
-import 'package:helpozzy/models/enrolled_task_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -37,20 +37,19 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   Widget tasks() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-      child: StreamBuilder<EnrolledTasks>(
+      child: StreamBuilder<Tasks>(
         stream: _taskBloc.getEnrolledTasksStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: LinearLoader());
           }
-          return snapshot.data!.enrolledTasks.isNotEmpty
+          return snapshot.data!.tasks.isNotEmpty
               ? ListView.builder(
                   shrinkWrap: true,
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
-                  itemCount: snapshot.data!.enrolledTasks.length,
+                  itemCount: snapshot.data!.tasks.length,
                   itemBuilder: (context, index) {
-                    final EnrolledTaskModel task =
-                        snapshot.data!.enrolledTasks[index];
+                    final TaskModel task = snapshot.data!.tasks[index];
                     return Row(
                       children: [
                         CommonBadge(
@@ -62,9 +61,8 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                           size: 15,
                         ),
                         Expanded(
-                          child: EnrolledTaskCard(
+                          child: TaskCard(
                             task: task,
-                            optionEnable: false,
                             eventButton: task.status == TOGGLE_NOT_STARTED
                                 ? processButton(false, task)
                                 : task.status == TOGGLE_INPROGRESS
@@ -73,14 +71,19 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                         text: LOG_HOURS_BUTTON,
                                         buttonColor: BUTTON_GRAY_COLOR,
                                         fontSize: 12,
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          final TaskModel taskmodel =
+                                              TaskModel();
+                                          await _taskBloc
+                                              .postEnrolledTask(taskmodel);
+                                        },
                                       ),
                             onTapItem: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      TaskDetails(taskId: task.id),
+                                      TaskDetails(taskId: task.taskId!),
                                 ),
                               );
                               await _taskBloc.getEnrolledTasks();
@@ -102,15 +105,19 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
     );
   }
 
-  Widget processButton(bool taskIsInProgress, EnrolledTaskModel task) {
+  Widget processButton(bool taskIsInProgress, TaskModel task) {
     return taskIsInProgress
         ? SmallCommonButton(
             fontSize: 12,
             text: COMPLETED_BUTTON,
             buttonColor: DARK_PINK_COLOR,
             onPressed: () async {
-              EnrolledTaskModel enrolledTaskModel = EnrolledTaskModel(
-                id: task.id,
+              TaskModel enrolledTaskModel = TaskModel(
+                enrollTaskId: task.enrollTaskId,
+                taskOwnerId: task.taskOwnerId,
+                taskId: task.taskId,
+                signUpUserId: task.signUpUserId,
+                projectId: task.projectId,
                 taskName: task.taskName,
                 description: task.description,
                 memberRequirement: task.memberRequirement,
@@ -119,10 +126,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 startDate: task.startDate,
                 endDate: task.endDate,
                 estimatedHrs: task.estimatedHrs,
-                ownerId: task.ownerId,
-                projectId: task.projectId,
                 status: task.status,
-                taskId: task.id,
                 totalVolunteerHrs: task.totalVolunteerHrs,
               );
               final bool response =
@@ -145,8 +149,12 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 buttonColor: GRAY,
                 fontColor: DARK_GRAY,
                 onPressed: () async {
-                  EnrolledTaskModel enrolledTaskModel = EnrolledTaskModel(
-                    id: task.id,
+                  TaskModel enrolledTaskModel = TaskModel(
+                    enrollTaskId: task.enrollTaskId,
+                    taskId: task.taskId,
+                    taskOwnerId: task.taskOwnerId,
+                    signUpUserId: task.signUpUserId,
+                    projectId: task.projectId,
                     taskName: task.taskName,
                     description: task.description,
                     memberRequirement: task.memberRequirement,
@@ -155,10 +163,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     startDate: task.startDate,
                     endDate: task.endDate,
                     estimatedHrs: task.estimatedHrs,
-                    ownerId: task.ownerId,
-                    projectId: task.projectId,
                     status: task.status,
-                    taskId: task.id,
                     totalVolunteerHrs: task.totalVolunteerHrs,
                   );
                   final bool response =

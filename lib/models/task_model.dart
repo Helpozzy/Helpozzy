@@ -10,27 +10,31 @@ class Tasks {
 
 class TaskModel {
   TaskModel({
-    required this.id,
-    required this.projectId,
-    required this.ownerId,
-    required this.taskName,
-    required this.description,
-    required this.memberRequirement,
-    required this.ageRestriction,
-    required this.qualification,
-    required this.startDate,
-    required this.endDate,
-    required this.estimatedHrs,
-    required this.totalVolunteerHrs,
-    required this.members,
-    required this.status,
+    this.enrollTaskId,
+    this.projectId,
+    this.taskOwnerId,
+    this.signUpUserId,
+    this.taskId,
+    this.taskName,
+    this.description,
+    this.memberRequirement,
+    this.ageRestriction,
+    this.qualification,
+    this.startDate,
+    this.endDate,
+    this.estimatedHrs,
+    this.totalVolunteerHrs,
+    this.members,
+    this.status,
     this.isSelected,
   });
 
   TaskModel.fromjson({required Map<String, dynamic> json}) {
-    id = json['task_id'];
+    enrollTaskId = json['enroll_task_id'];
     projectId = json['project_id'];
-    ownerId = json['owner_id'];
+    taskOwnerId = json['owner_id'];
+    taskId = json['task_id'];
+    signUpUserId = json['sign_up_uid'];
     taskName = json['task_name'];
     description = json['description'];
     memberRequirement = json['member_requirement'];
@@ -46,9 +50,11 @@ class TaskModel {
 
   Map<String, Object?> toJson() {
     return {
-      'task_id': id,
+      'enroll_task_id': enrollTaskId,
       'project_id': projectId,
-      'owner_id': ownerId,
+      'owner_id': taskOwnerId,
+      'sign_up_uid': signUpUserId,
+      'task_id': taskId,
       'task_name': taskName,
       'description': description,
       'member_requirement': memberRequirement,
@@ -63,19 +69,21 @@ class TaskModel {
     };
   }
 
-  late String id;
-  late String projectId;
-  late String ownerId;
-  late String taskName;
-  late String description;
-  late int memberRequirement;
-  late int ageRestriction;
-  late String qualification;
-  late String startDate;
-  late String endDate;
-  late int estimatedHrs;
-  late int totalVolunteerHrs;
-  late String members;
-  late String status;
+  late String? enrollTaskId;
+  late String? projectId;
+  late String? taskOwnerId;
+  late String? signUpUserId;
+  late String? taskId;
+  late String? taskName;
+  late String? description;
+  late int? memberRequirement;
+  late int? ageRestriction;
+  late String? qualification;
+  late String? startDate;
+  late String? endDate;
+  late int? estimatedHrs;
+  late int? totalVolunteerHrs;
+  late String? members;
+  late String? status;
   late bool? isSelected = false;
 }

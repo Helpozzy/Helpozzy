@@ -62,7 +62,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      task.taskName,
+                      task.taskName!,
                       style: _theme.textTheme.headline6!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: PRIMARY_COLOR,
@@ -110,7 +110,7 @@ class _TaskDetailsState extends State<TaskDetails> {
           child: CommonDivider(),
         ),
         Text(
-          task.description,
+          task.description!,
           style: _theme.textTheme.bodyText2!.copyWith(
             fontSize: 12,
             color: DARK_GRAY,
@@ -141,7 +141,7 @@ class _TaskDetailsState extends State<TaskDetails> {
           children: [
             Text(
               DateFormatFromTimeStamp()
-                  .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
+                  .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate!),
               style: _theme.textTheme.bodyText2!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
             ),
@@ -183,9 +183,9 @@ class _TaskDetailsState extends State<TaskDetails> {
               fontColor: DARK_GRAY,
               onPressed: () async {
                 final TaskModel taskModel = TaskModel(
-                  id: task.id,
+                  enrollTaskId: task.enrollTaskId,
                   projectId: task.projectId,
-                  ownerId: task.ownerId,
+                  taskOwnerId: task.taskOwnerId,
                   taskName: task.taskName,
                   description: task.description,
                   memberRequirement: task.memberRequirement,
@@ -199,9 +199,9 @@ class _TaskDetailsState extends State<TaskDetails> {
                   status: TOGGLE_INPROGRESS,
                 );
                 final bool response =
-                    await _projectTaskBloc.updateTasks(taskModel);
+                    await _projectTaskBloc.updateTask(taskModel);
                 if (response) {
-                  _taskBloc.getTask(task.id);
+                  _taskBloc.getTask(task.taskId!);
                   ScaffoldSnakBar().show(context, msg: TASK_STARTED_POPUP_MSG);
                 } else {
                   ScaffoldSnakBar()
@@ -232,9 +232,9 @@ class _TaskDetailsState extends State<TaskDetails> {
         color: DARK_PINK_COLOR,
         onPressed: () async {
           final TaskModel taskModel = TaskModel(
-            id: task.id,
+            enrollTaskId: task.enrollTaskId,
             projectId: task.projectId,
-            ownerId: task.ownerId,
+            taskOwnerId: task.taskOwnerId,
             taskName: task.taskName,
             description: task.description,
             memberRequirement: task.memberRequirement,
@@ -247,9 +247,9 @@ class _TaskDetailsState extends State<TaskDetails> {
             members: task.members,
             status: TOGGLE_COMPLETE,
           );
-          final bool response = await _projectTaskBloc.updateTasks(taskModel);
+          final bool response = await _projectTaskBloc.updateTask(taskModel);
           if (response) {
-            _taskBloc.getTask(task.id);
+            _taskBloc.getTask(task.taskId!);
             ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
           } else {
             ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);

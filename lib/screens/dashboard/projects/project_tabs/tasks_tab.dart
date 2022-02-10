@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
-import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/task_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -24,6 +26,7 @@ class _TaskTabState extends State<TaskTab> {
   late bool myTaskExpanded = false;
   late bool allTasksExpanded = false;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final TaskBloc _taskBloc = TaskBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +89,7 @@ class _TaskTabState extends State<TaskTab> {
           if (isMyTask) {
             setState(() => myTaskExpanded = !myTaskExpanded);
             _projectTaskBloc.myTaskIsExpanded(myTaskExpanded);
-            _projectTaskBloc.getProjectOwnTasks(project.projectId);
+            _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
           } else {
             setState(() => allTasksExpanded = !allTasksExpanded);
             _projectTaskBloc.allTaskIsExpanded(allTasksExpanded);
@@ -138,8 +141,8 @@ class _TaskTabState extends State<TaskTab> {
   Widget tasksOfProject(bool isMyTask) {
     return StreamBuilder<Tasks>(
       stream: isMyTask
-          ? _projectTaskBloc.getProjectOwnTasksStream
-          : _projectTaskBloc.getProjectAllTasksStream,
+          ? _projectTaskBloc.getProjectEnrolledTasksStream
+          : _projectTaskBloc.getProjectTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -155,50 +158,67 @@ class _TaskTabState extends State<TaskTab> {
                 padding: EdgeInsets.symmetric(vertical: 5),
                 itemCount: snapshot.data!.tasks.length,
                 itemBuilder: (context, index) {
-                  final TaskModel task = snapshot.data!.tasks[index];
+                  TaskModel task = snapshot.data!.tasks[index];
                   return Row(
                     children: [
-                      CommonBadge(
-                        color: task.status == TOGGLE_NOT_STARTED
-                            ? LIGHT_GRAY
-                            : task.status == TOGGLE_INPROGRESS
-                                ? AMBER_COLOR
-                                : ACCENT_GREEN,
-                        size: 15,
-                      ),
+                      isMyTask
+                          ? CommonBadge(
+                              color: task.status == TOGGLE_NOT_STARTED
+                                  ? LIGHT_GRAY
+                                  : task.status == TOGGLE_INPROGRESS
+                                      ? AMBER_COLOR
+                                      : ACCENT_GREEN,
+                              size: 15,
+                            )
+                          : SizedBox(),
                       Expanded(
                         child: TaskCard(
                           task: task,
-                          optionEnable: false,
-                          eventButton: task.status == TOGGLE_NOT_STARTED
-                              ? processButton(
-                                  taskIsInProgress: false,
-                                  isMyTask: isMyTask,
-                                  task: task)
-                              : task.status == TOGGLE_INPROGRESS
+                          eventButton: isMyTask
+                              ? task.status == TOGGLE_NOT_STARTED
                                   ? processButton(
-                                      taskIsInProgress: true,
+                                      taskIsInProgress: false,
                                       isMyTask: isMyTask,
                                       task: task)
-                                  : task.status == TOGGLE_COMPLETE
-                                      ? SmallCommonButton(
-                                          text: LOG_HOURS_BUTTON,
-                                          buttonColor: BUTTON_GRAY_COLOR,
-                                          fontSize: 12,
-                                          onPressed: () {},
-                                        )
-                                      : SizedBox(),
+                                  : task.status == TOGGLE_INPROGRESS
+                                      ? processButton(
+                                          taskIsInProgress: true,
+                                          isMyTask: isMyTask,
+                                          task: task)
+                                      : task.status == TOGGLE_COMPLETE
+                                          ? SmallCommonButton(
+                                              text: LOG_HOURS_BUTTON,
+                                              buttonColor: BUTTON_GRAY_COLOR,
+                                              fontSize: 12,
+                                              onPressed: () {},
+                                            )
+                                          : SizedBox()
+                              : SmallCommonButton(
+                                  text: SIGN_UP,
+                                  fontSize: 12,
+                                  buttonColor: DARK_GRAY,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            VolunteerProjectTaskSignUp(
+                                                project: project),
+                                      ),
+                                    );
+                                  },
+                                ),
                           onTapItem: () async {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    TaskDetails(taskId: task.id),
+                                    TaskDetails(taskId: task.taskId!),
                               ),
                             );
                             if (isMyTask) {
                               _projectTaskBloc
-                                  .getProjectOwnTasks(project.projectId);
+                                  .getProjectEnrolledTasks(project.projectId);
                             } else {
                               _projectTaskBloc
                                   .getProjectAllTasks(project.projectId);
@@ -233,9 +253,11 @@ class _TaskTabState extends State<TaskTab> {
             buttonColor: DARK_PINK_COLOR,
             onPressed: () async {
               final TaskModel taskModel = TaskModel(
-                id: task.id,
+                enrollTaskId: task.enrollTaskId,
+                taskId: task.taskId,
                 projectId: task.projectId,
-                ownerId: task.ownerId,
+                taskOwnerId: task.taskOwnerId,
+                signUpUserId: task.signUpUserId,
                 taskName: task.taskName,
                 description: task.description,
                 memberRequirement: task.memberRequirement,
@@ -245,14 +267,13 @@ class _TaskTabState extends State<TaskTab> {
                 endDate: task.endDate,
                 estimatedHrs: task.estimatedHrs,
                 totalVolunteerHrs: task.totalVolunteerHrs,
-                members: task.members,
                 status: TOGGLE_COMPLETE,
               );
               final bool response =
-                  await _projectTaskBloc.updateTasks(taskModel);
+                  await _taskBloc.updateEnrollTasks(taskModel);
               if (response) {
                 if (isMyTask) {
-                  _projectTaskBloc.getProjectOwnTasks(project.projectId);
+                  _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
                 } else {
                   _projectTaskBloc.getProjectAllTasks(project.projectId);
                 }
@@ -273,9 +294,11 @@ class _TaskTabState extends State<TaskTab> {
                 fontColor: DARK_GRAY,
                 onPressed: () async {
                   final TaskModel taskModel = TaskModel(
+                    enrollTaskId: task.enrollTaskId,
+                    taskId: task.taskId,
                     projectId: task.projectId,
-                    ownerId: task.ownerId,
-                    id: task.id,
+                    taskOwnerId: task.taskOwnerId,
+                    signUpUserId: task.signUpUserId,
                     taskName: task.taskName,
                     description: task.description,
                     memberRequirement: task.memberRequirement,
@@ -285,14 +308,14 @@ class _TaskTabState extends State<TaskTab> {
                     endDate: task.endDate,
                     estimatedHrs: task.estimatedHrs,
                     totalVolunteerHrs: task.totalVolunteerHrs,
-                    members: task.members,
                     status: TOGGLE_INPROGRESS,
                   );
                   final bool response =
-                      await _projectTaskBloc.updateTasks(taskModel);
+                      await _taskBloc.updateEnrollTasks(taskModel);
                   if (response) {
                     if (isMyTask) {
-                      _projectTaskBloc.getProjectOwnTasks(project.projectId);
+                      _projectTaskBloc
+                          .getProjectEnrolledTasks(project.projectId);
                     } else {
                       _projectTaskBloc.getProjectAllTasks(project.projectId);
                     }

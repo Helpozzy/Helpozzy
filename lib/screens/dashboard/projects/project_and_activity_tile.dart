@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/helper/task_Helper.dart';
+import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -295,7 +295,7 @@ class _ProjectTileState extends State<ProjectTile> {
   }
 
   Widget taskDetails() {
-    return StreamBuilder<ProjectTaskHelper>(
+    return StreamBuilder<TaskHelper>(
       stream: _projectTaskBloc.getProjectTaskDetailsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

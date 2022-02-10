@@ -53,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Widget taskList() {
     return StreamBuilder<Tasks>(
-      stream: _projectTaskBloc.getProjectAllTasksStream,
+      stream: _projectTaskBloc.getProjectTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -71,6 +71,7 @@ class _TasksScreenState extends State<TasksScreen> {
               task: task,
               selected: task.isSelected! ? true : false,
               optionEnable: true,
+              eventButton: SizedBox(),
               onTapItem: () {
                 setState(() {
                   task.isSelected = !task.isSelected!;
@@ -102,7 +103,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Future onDelete(TaskModel task) async {
     CircularLoader().show(context);
-    final bool deleted = await _projectTaskBloc.deleteTask(task.id);
+    final bool deleted = await _projectTaskBloc.deleteTask(task.taskId!);
     if (deleted) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: TASK_DELETED_POPUP_MSG);

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:helpozzy/models/enrolled_task_model.dart';
-import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -318,7 +317,7 @@ class ApiProvider {
     try {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc();
-      task.id = documentReference.id;
+      task.enrollTaskId = documentReference.id;
       await documentReference.set(task.toJson());
       return true;
     } catch (e) {
@@ -329,7 +328,7 @@ class ApiProvider {
   Future<bool> updateTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('tasks').doc(task.id);
+          firestore.collection('tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
       return true;
     } catch (e) {
@@ -337,10 +336,10 @@ class ApiProvider {
     }
   }
 
-  Future<bool> updateEnrollTaskAPIProvider(EnrolledTaskModel task) async {
+  Future<bool> updateEnrollTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('enrolled_tasks').doc(task.id);
+          firestore.collection('enrolled_tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
       return true;
     } catch (e) {
@@ -370,12 +369,34 @@ class ApiProvider {
     return Tasks.fromJson(list: tasks);
   }
 
-  Future<bool> postEnrolledTasksAPIProvider(
-      EnrolledTaskModel enrolledTaskModel) async {
+  Future<Tasks> getProjectEnrolledTasksAPIProvider(
+      String projectId, bool isOwn) async {
+    final QuerySnapshot querySnapshot = isOwn
+        ? await firestore
+            .collection('enrolled_tasks')
+            .where('project_id', isEqualTo: projectId)
+            .where('owner_id',
+                isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+            .get()
+        : await firestore
+            .collection('enrolled_tasks')
+            .where('project_id', isEqualTo: projectId)
+            .get();
+
+    List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
+    List<Map<String, dynamic>> tasks = [];
+    tasksList.forEach((json) {
+      final task = json.data() as Map<String, dynamic>;
+      tasks.add(task);
+    });
+    return Tasks.fromJson(list: tasks);
+  }
+
+  Future<bool> postEnrolledTasksAPIProvider(TaskModel enrolledTaskModel) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('enrolled_tasks').doc();
-      enrolledTaskModel.id = documentReference.id;
+      enrolledTaskModel.enrollTaskId = documentReference.id;
       await documentReference.set(enrolledTaskModel.toJson());
       return true;
     } catch (e) {
@@ -383,7 +404,7 @@ class ApiProvider {
     }
   }
 
-  Future<EnrolledTasks> getEnrolledTasksAPIProvider() async {
+  Future<Tasks> getEnrolledTasksAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('enrolled_tasks')
         .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
@@ -395,7 +416,7 @@ class ApiProvider {
       final task = json.data() as Map<String, dynamic>;
       tasks.add(task);
     });
-    return EnrolledTasks.fromJson(list: tasks);
+    return Tasks.fromJson(list: tasks);
   }
 
   Future<TaskModel> getTaskInfoAPIProvider(String taskId) async {

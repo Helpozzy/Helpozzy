@@ -1,7 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
-import 'package:helpozzy/models/enrolled_task_model.dart';
-import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
@@ -80,13 +79,16 @@ class Repository {
   Future<Tasks> getProjectTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectTasksAPIProvider(projectId, isOwn);
 
-  Future<EnrolledTasks> getEnrolledTasksRepo() =>
+  Future<Tasks> getProjectEnrolledTasksRepo(String projectId, bool isOwn) =>
+      apiProvider.getProjectEnrolledTasksAPIProvider(projectId, isOwn);
+
+  Future<Tasks> getEnrolledTasksRepo() =>
       apiProvider.getEnrolledTasksAPIProvider();
 
-  Future<bool> updateEnrollTaskRepo(EnrolledTaskModel task) =>
+  Future<bool> updateEnrollTaskRepo(TaskModel task) =>
       apiProvider.updateEnrollTaskAPIProvider(task);
 
-  Future<bool> postEnrolledTaskRepo(EnrolledTaskModel enrolledTaskModel) =>
+  Future<bool> postEnrolledTaskRepo(TaskModel enrolledTaskModel) =>
       apiProvider.postEnrolledTasksAPIProvider(enrolledTaskModel);
 
   Future<TaskModel> getTaskInfoRepo(String taskId) =>

@@ -62,19 +62,19 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   }
 
   Future retriveTaskDetails() async {
-    _taskNameController.text = task!.taskName;
-    _taskDesController.text = task!.description;
-    if (task!.estimatedHrs < 10) {
+    _taskNameController.text = task!.taskName!;
+    _taskDesController.text = task!.description!;
+    if (task!.estimatedHrs! < 10) {
       hrsTrackerVal = double.parse(task!.estimatedHrs.toString());
     } else {
       _estimatedHoursController.text = task!.estimatedHrs.toString();
     }
     noOfMemberTrackerVal = double.parse(task!.memberRequirement.toString());
     minimumAgeTrackerVal = double.parse(task!.ageRestriction.toString());
-    _taskQualificationController.text = task!.qualification;
-    _taskStartDateController.text = task!.startDate;
-    _taskEndDateController.text = task!.endDate;
-    _taskMembersController.text = task!.members;
+    _taskQualificationController.text = task!.qualification!;
+    _taskStartDateController.text = task!.startDate!;
+    _taskEndDateController.text = task!.endDate!;
+    _taskMembersController.text = task!.members!;
     _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
         ? 0
         : task!.status == TOGGLE_INPROGRESS
@@ -668,9 +668,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   Future addOrUpdateData() async {
     CircularLoader().show(context);
     final TaskModel taskDetails = TaskModel(
-      ownerId: prefsObject.getString(CURRENT_USER_ID)!,
+      taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
       projectId: '',
-      id: fromEdit ? task!.id : '',
+      enrollTaskId: fromEdit ? task!.enrollTaskId : '',
       taskName: _taskNameController.text,
       description: _taskDesController.text,
       memberRequirement: noOfMemberTrackerVal.round(),
@@ -692,7 +692,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               : TOGGLE_COMPLETE,
     );
     final bool isUploaded = fromEdit
-        ? await _projectTaskBloc.updateTasks(taskDetails)
+        ? await _projectTaskBloc.updateTask(taskDetails)
         : await _projectTaskBloc.postTasks(taskDetails);
     if (isUploaded) {
       if (!fromEdit) await clearFields();

@@ -7,7 +7,7 @@ import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
-import 'package:helpozzy/screens/dashboard/projects/volunteer_project_sign_up.dart';
+import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_card.dart';
 import 'package:helpozzy/screens/rewards/rewards.dart';
@@ -276,7 +276,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectVolunteerSignUp(project: project),
+                            VolunteerProjectTaskSignUp(project: project),
                       ),
                     ),
                   );

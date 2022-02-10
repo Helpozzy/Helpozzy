@@ -1,8 +1,8 @@
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
-class ProjectTaskHelper {
-  ProjectTaskHelper.fromProject(List<TaskModel> tasks) {
+class TaskHelper {
+  TaskHelper({required List<TaskModel> tasks}) {
     tasks.forEach((task) {
       if (task.status == PROJECT_NOT_STARTED) {
         projectNotStarted++;

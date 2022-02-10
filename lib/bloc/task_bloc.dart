@@ -1,35 +1,25 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/task_helper.dart';
-import 'package:helpozzy/models/enrolled_task_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TaskBloc {
   final repo = Repository();
 
-  final enrolledTasksController = PublishSubject<EnrolledTasks>();
-  final tasksDetailsController = PublishSubject<ProjectTaskHelper>();
+  final enrolledTasksController = PublishSubject<Tasks>();
+  final tasksDetailsController = PublishSubject<TaskHelper>();
   final taskInfoController = PublishSubject<TaskModel>();
 
-  Stream<EnrolledTasks> get getEnrolledTasksStream =>
-      enrolledTasksController.stream;
-  Stream<ProjectTaskHelper> get getTaskDetailsStream =>
-      tasksDetailsController.stream;
+  Stream<Tasks> get getEnrolledTasksStream => enrolledTasksController.stream;
+  Stream<TaskHelper> get getTaskDetailsStream => tasksDetailsController.stream;
   Stream<TaskModel> get getTaskInfoStream => taskInfoController.stream;
 
   Future getEnrolledTasks() async {
-    final EnrolledTasks response = await repo.getEnrolledTasksRepo();
+    final Tasks response = await repo.getEnrolledTasksRepo();
     enrolledTasksController.sink.add(response);
   }
 
-  Future getProjectTaskDetails(String projectId) async {
-    final Tasks response = await repo.getProjectTasksRepo(projectId, false);
-    final ProjectTaskHelper projectHelper =
-        ProjectTaskHelper.fromProject(response.tasks);
-    tasksDetailsController.sink.add(projectHelper);
-  }
-
-  Future<bool> postEnrolledTask(EnrolledTaskModel enrolledTaskModel) async {
+  Future<bool> postEnrolledTask(TaskModel enrolledTaskModel) async {
     final bool response = await repo.postEnrolledTaskRepo(enrolledTaskModel);
     return response;
   }
@@ -39,7 +29,7 @@ class TaskBloc {
     taskInfoController.sink.add(response);
   }
 
-  Future<bool> updateEnrollTasks(EnrolledTaskModel task) async {
+  Future<bool> updateEnrollTasks(TaskModel task) async {
     final bool response = await repo.updateEnrollTaskRepo(task);
     return response;
   }

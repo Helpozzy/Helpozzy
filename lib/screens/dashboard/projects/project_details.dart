@@ -11,7 +11,7 @@ import 'package:helpozzy/widget/url_launcher.dart';
 import 'project_tabs/members_tab.dart';
 import 'project_tabs/other_details_tab.dart';
 import 'project_tabs/tasks_tab.dart';
-import 'volunteer_project_sign_up.dart';
+import 'volunteer_sign_up.dart';
 
 class ProjectDetailsInfo extends StatefulWidget {
   ProjectDetailsInfo({required this.project});
@@ -230,7 +230,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                         context,
                         CupertinoPageRoute(
                           builder: (context) =>
-                              ProjectVolunteerSignUp(project: project),
+                              VolunteerProjectTaskSignUp(project: project),
                         ),
                       ),
                     ),
