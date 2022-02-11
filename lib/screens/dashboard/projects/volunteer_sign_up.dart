@@ -3,9 +3,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
@@ -38,12 +40,14 @@ class _VolunteerProjectTaskSignUpState
   final TaskModel? task;
   final bool fromTask;
 
+  late SignUpAndUserModel userModel;
   late ThemeData _theme;
   late double height;
   late double width;
   final _formKey = GlobalKey<FormState>();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final NotificationBloc _notificationBloc = NotificationBloc();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -56,8 +60,7 @@ class _VolunteerProjectTaskSignUpState
     final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
     final Map<String, dynamic> json =
         jsonDecode(userData) as Map<String, dynamic>;
-    final SignUpAndUserModel userModel =
-        SignUpAndUserModel.fromJson(json: json);
+    userModel = SignUpAndUserModel.fromJson(json: json);
     _nameController.text = userModel.name!;
     _emailController.text = userModel.email!;
     _addressController.text = userModel.address!;
@@ -117,14 +120,31 @@ class _VolunteerProjectTaskSignUpState
         totalVolunteerHrs: task!.totalVolunteerHrs,
         members: task!.members,
         status: TOGGLE_NOT_STARTED,
+        isApprovedFromAdmin: false,
       );
       final ResponseModel response =
-          await _projectTaskBloc.enrollTask(taskSignUpVal);
+          await _projectTaskBloc.postEnrollTask(taskSignUpVal);
 
       if (response.success!) {
         CircularLoader().hide(context);
-        await ScaffoldSnakBar().show(context, msg: response.message!);
-        Navigator.of(context).pop();
+        final NotificationModel notification = NotificationModel(
+          type: 0,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Request',
+          subTitle: "${userModel.name} want's to join the ${task!.taskName}"
+              " from ${project!.projectName}",
+        );
+
+        final ResponseModel notificationResponse =
+            await _notificationBloc.postNotification(notification);
+        if (notificationResponse.success!) {
+          await ScaffoldSnakBar()
+              .show(context, msg: notificationResponse.message!);
+          Navigator.of(context).pop();
+        } else {
+          await ScaffoldSnakBar().show(context, msg: response.message!);
+          Navigator.of(context).pop();
+        }
       } else {
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.error!);

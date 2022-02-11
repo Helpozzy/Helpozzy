@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
@@ -309,27 +310,15 @@ class ApiProvider {
     return Users.fromJson(list: querySnapshot.docs);
   }
 
-  Future<ResponseModel> enrollTaskAPIProvider(TaskModel task) async {
-    try {
-      final DocumentReference documentReference =
-          firestore.collection('signed_up_tasks').doc();
-      task.enrollTaskId = documentReference.id;
-      await documentReference.set(task.toJson());
-      return ResponseModel(success: true, message: 'Enrolled successfully');
-    } catch (e) {
-      return ResponseModel(error: 'Task enrollment failed', success: false);
-    }
-  }
-
   Future<ResponseModel> postTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc();
       task.enrollTaskId = documentReference.id;
       await documentReference.set(task.toJson());
-      return ResponseModel(success: true, message: 'Enrolled successfully');
+      return ResponseModel(success: true, message: 'Task created');
     } catch (e) {
-      return ResponseModel(error: 'Task enrollment failed', success: false);
+      return ResponseModel(error: 'Task is not created', success: false);
     }
   }
 
@@ -340,8 +329,7 @@ class ApiProvider {
       await documentReference.update(task.toJson());
       return ResponseModel(success: true, message: 'Task is updated');
     } catch (e) {
-      return ResponseModel(
-          success: false, message: 'Fail! Task is not updated');
+      return ResponseModel(success: false, error: 'Fail! Task is not updated');
     }
   }
 
@@ -350,19 +338,18 @@ class ApiProvider {
       await firestore.collection('tasks').doc(taskId).delete();
       return ResponseModel(success: true, message: 'Task is deleted');
     } catch (e) {
-      return ResponseModel(
-          success: false, message: 'Fail, Task is not deleted');
+      return ResponseModel(success: false, error: 'Fail, Task is not deleted');
     }
   }
 
-  Future<bool> updateEnrollTaskAPIProvider(TaskModel task) async {
+  Future<ResponseModel> updateEnrollTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('signed_up_tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
-      return true;
+      return ResponseModel(success: true, message: 'Task Updated');
     } catch (e) {
-      return false;
+      return ResponseModel(success: false, error: 'Task not updated');
     }
   }
 
@@ -394,8 +381,9 @@ class ApiProvider {
         ? await firestore
             .collection('signed_up_tasks')
             .where('project_id', isEqualTo: projectId)
-            .where('owner_id',
+            .where('sign_up_uid',
                 isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+            .where('is_approved_from_admin', isEqualTo: true)
             .get()
         : await firestore
             .collection('signed_up_tasks')
@@ -411,22 +399,24 @@ class ApiProvider {
     return Tasks.fromJson(list: tasks);
   }
 
-  Future<bool> postEnrolledTasksAPIProvider(TaskModel enrolledTaskModel) async {
+  Future<ResponseModel> postEnrolledTasksAPIProvider(
+      TaskModel enrolledTaskModel) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('signed_up_tasks').doc();
       enrolledTaskModel.enrollTaskId = documentReference.id;
       await documentReference.set(enrolledTaskModel.toJson());
-      return true;
+      return ResponseModel(
+          success: true, message: 'Task signed up wait to admin approval');
     } catch (e) {
-      return false;
+      return ResponseModel(success: false, error: 'Fail! Task not enrolled');
     }
   }
 
   Future<Tasks> getEnrolledTasksAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('signed_up_tasks')
-        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('sign_up_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
     List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
@@ -486,5 +476,47 @@ class ApiProvider {
       reviews.add(review);
     });
     return Reviews.fromSnapshot(list: reviews);
+  }
+
+  //Notification API Provider
+  Future<ResponseModel> postNotificationAPIProvider(
+      NotificationModel notification) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('notifications').doc();
+      notification.id = documentReference.id;
+      await documentReference.set(notification.toJson());
+      return ResponseModel(
+        success: true,
+        message: 'Request sent to admin wait for approval',
+      );
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Fail to sent');
+    }
+  }
+
+  Future<ResponseModel> updateNotificationAPIProvider(
+      NotificationModel notification) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('notifications').doc(notification.id);
+      await documentReference.update(notification.toJson());
+      return ResponseModel(success: true, message: 'Request updated');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Fail to update');
+    }
+  }
+
+  Future<Notifications> getNotificationsAPIProvider() async {
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('notifications').get();
+
+    List<QueryDocumentSnapshot<Object?>> notificationsList = querySnapshot.docs;
+    List<Map<String, dynamic>> notifications = [];
+    notificationsList.forEach((json) {
+      final notification = json.data() as Map<String, dynamic>;
+      notifications.add(notification);
+    });
+    return Notifications.fromSnapshot(list: notifications);
   }
 }

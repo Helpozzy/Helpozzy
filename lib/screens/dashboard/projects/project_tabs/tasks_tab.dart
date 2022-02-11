@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
@@ -272,9 +273,9 @@ class _TaskTabState extends State<TaskTab> {
                 totalVolunteerHrs: task.totalVolunteerHrs,
                 status: TOGGLE_COMPLETE,
               );
-              final bool response =
+              final ResponseModel response =
                   await _taskBloc.updateEnrollTasks(taskModel);
-              if (response) {
+              if (response.success!) {
                 if (isMyTask) {
                   _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
                 } else {
@@ -313,9 +314,9 @@ class _TaskTabState extends State<TaskTab> {
                     totalVolunteerHrs: task.totalVolunteerHrs,
                     status: TOGGLE_INPROGRESS,
                   );
-                  final bool response =
+                  final ResponseModel response =
                       await _taskBloc.updateEnrollTasks(taskModel);
-                  if (response) {
+                  if (response.success!) {
                     if (isMyTask) {
                       _projectTaskBloc
                           .getProjectEnrolledTasks(project.projectId);

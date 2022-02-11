@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
+import 'package:helpozzy/screens/notification/notification_inbox.dart';
 import 'package:helpozzy/screens/profile/profile_screen.dart';
 import 'package:helpozzy/screens/sign_out_dialog/sign_out_dialog.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
     ExploreScreen(),
     // RewardsScreen(initialIndex: 1, fromBottomBar: true),
     // ChatListScreen(),
+    NotificationInbox(),
     ProfileScreen(),
     FullScreenSignOutDialog(),
   ];
@@ -46,14 +48,14 @@ class _HomeState extends State<Home> {
           bottomNavigationBar: BottomNavigationBar(
             elevation: 1,
             selectedLabelStyle:
-                TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            unselectedLabelStyle: TextStyle(fontSize: 12),
+                TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            unselectedLabelStyle: TextStyle(fontSize: 10),
             unselectedIconTheme: IconThemeData(color: DARK_GRAY),
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home, size: 17),
-                activeIcon: Icon(CupertinoIcons.home),
+                icon: Icon(CupertinoIcons.house, size: 16),
+                activeIcon: Icon(CupertinoIcons.house_fill, size: 20),
                 label: HOME_TAB,
                 backgroundColor: Colors.white,
               ),
@@ -63,25 +65,26 @@ class _HomeState extends State<Home> {
               //   backgroundColor: Colors.white,
               // ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search, size: 17),
-                activeIcon: Icon(CupertinoIcons.search),
+                icon: Icon(CupertinoIcons.search, size: 16),
+                activeIcon: Icon(CupertinoIcons.search, size: 20),
                 label: EXPLORE_TAB,
                 backgroundColor: Colors.white,
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(CupertinoIcons.chat_bubble),
-              //   label: INBOX_TAB,
-              //   backgroundColor: Colors.white,
-              // ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person, size: 17),
-                activeIcon: Icon(CupertinoIcons.person),
+                icon: Icon(CupertinoIcons.bell, size: 16),
+                activeIcon: Icon(CupertinoIcons.bell_fill, size: 20),
+                label: INBOX_TAB,
+                backgroundColor: Colors.white,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.person, size: 16),
+                activeIcon: Icon(CupertinoIcons.person_solid, size: 20),
                 label: PROFILE_TAB,
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.logout_rounded, size: 17),
-                activeIcon: Icon(Icons.logout_rounded),
+                icon: Icon(Icons.logout_rounded, size: 16),
+                activeIcon: Icon(Icons.logout_rounded, size: 20),
                 label: LOGOUT_TAB,
                 backgroundColor: Colors.white,
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
@@ -75,7 +76,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                           final TaskModel taskmodel =
                                               TaskModel();
                                           await _taskBloc
-                                              .postEnrolledTask(taskmodel);
+                                              .updateEnrollTasks(taskmodel);
                                         },
                                       ),
                             onTapItem: () async {
@@ -129,9 +130,9 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 status: task.status,
                 totalVolunteerHrs: task.totalVolunteerHrs,
               );
-              final bool response =
+              final ResponseModel response =
                   await _taskBloc.updateEnrollTasks(enrolledTaskModel);
-              if (response) {
+              if (response.success!) {
                 _taskBloc.getEnrolledTasks();
                 ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
               } else {
@@ -166,9 +167,9 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     status: task.status,
                     totalVolunteerHrs: task.totalVolunteerHrs,
                   );
-                  final bool response =
+                  final ResponseModel response =
                       await _taskBloc.updateEnrollTasks(enrolledTaskModel);
-                  if (response) {
+                  if (response.success!) {
                     _taskBloc.getEnrolledTasks();
                     ScaffoldSnakBar().show(
                       context,

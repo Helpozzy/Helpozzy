@@ -522,7 +522,7 @@ class _CreateProjectState extends State<CreateProject> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  users[index].name,
+                                  users[index].payload,
                                   style: _themeData.textTheme.bodyText2!
                                       .copyWith(fontWeight: FontWeight.w600),
                                 ),

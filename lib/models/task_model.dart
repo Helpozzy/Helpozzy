@@ -27,6 +27,7 @@ class TaskModel {
     this.members,
     this.status,
     this.isSelected,
+    this.isApprovedFromAdmin,
   });
 
   TaskModel.fromjson({required Map<String, dynamic> json}) {
@@ -46,6 +47,7 @@ class TaskModel {
     totalVolunteerHrs = json['total_volunteer_hours'];
     members = json['members'];
     status = json['status'];
+    isApprovedFromAdmin = json['is_approved_from_admin'];
   }
 
   Map<String, Object?> toJson() {
@@ -66,6 +68,7 @@ class TaskModel {
       'total_volunteer_hours': totalVolunteerHrs,
       'members': members,
       'status': status,
+      'is_approved_from_admin': isApprovedFromAdmin,
     };
   }
 
@@ -86,4 +89,5 @@ class TaskModel {
   late String? members;
   late String? status;
   late bool? isSelected = false;
+  late bool? isApprovedFromAdmin = false;
 }

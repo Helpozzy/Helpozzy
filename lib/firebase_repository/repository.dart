@@ -1,4 +1,5 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
+import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
@@ -73,9 +74,6 @@ class Repository {
   Future<ResponseModel> postTaskRepo(TaskModel task) =>
       apiProvider.postTaskAPIProvider(task);
 
-  Future<ResponseModel> enrollTaskRepo(TaskModel task) =>
-      apiProvider.enrollTaskAPIProvider(task);
-
   Future<ResponseModel> updateTaskRepo(TaskModel task) =>
       apiProvider.updateTaskAPIProvider(task);
 
@@ -91,10 +89,10 @@ class Repository {
   Future<Tasks> getEnrolledTasksRepo() =>
       apiProvider.getEnrolledTasksAPIProvider();
 
-  Future<bool> updateEnrollTaskRepo(TaskModel task) =>
+  Future<ResponseModel> updateEnrollTaskRepo(TaskModel task) =>
       apiProvider.updateEnrollTaskAPIProvider(task);
 
-  Future<bool> postEnrolledTaskRepo(TaskModel enrolledTaskModel) =>
+  Future<ResponseModel> postEnrolledTaskRepo(TaskModel enrolledTaskModel) =>
       apiProvider.postEnrolledTasksAPIProvider(enrolledTaskModel);
 
   Future<TaskModel> getTaskInfoRepo(String taskId) =>
@@ -108,4 +106,15 @@ class Repository {
 
   Future<Reviews> getProjectReviewsRepo(String projectId) =>
       apiProvider.getProjectReviewsAPIProvider(projectId);
+
+  //Notification API provider
+  Future<Notifications> getNotificationsRepo() =>
+      apiProvider.getNotificationsAPIProvider();
+
+  Future<ResponseModel> updateNotificationRepo(
+          NotificationModel notification) =>
+      apiProvider.updateNotificationAPIProvider(notification);
+
+  Future<ResponseModel> postNotificationRepo(NotificationModel notification) =>
+      apiProvider.postNotificationAPIProvider(notification);
 }

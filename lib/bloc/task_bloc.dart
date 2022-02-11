@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/task_helper.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,8 +20,9 @@ class TaskBloc {
     enrolledTasksController.sink.add(response);
   }
 
-  Future<bool> postEnrolledTask(TaskModel enrolledTaskModel) async {
-    final bool response = await repo.postEnrolledTaskRepo(enrolledTaskModel);
+  Future<ResponseModel> postEnrolledTask(TaskModel enrolledTaskModel) async {
+    final ResponseModel response =
+        await repo.postEnrolledTaskRepo(enrolledTaskModel);
     return response;
   }
 
@@ -29,8 +31,8 @@ class TaskBloc {
     taskInfoController.sink.add(response);
   }
 
-  Future<bool> updateEnrollTasks(TaskModel task) async {
-    final bool response = await repo.updateEnrollTaskRepo(task);
+  Future<ResponseModel> updateEnrollTasks(TaskModel task) async {
+    final ResponseModel response = await repo.updateEnrollTaskRepo(task);
     return response;
   }
 

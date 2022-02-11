@@ -114,7 +114,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               )
             : Center(
                 child: Text(
-                  'No Projects Available',
+                  NO_RECORD_FOUND,
                   style: _themeData.textTheme.headline6!
                       .copyWith(color: SHADOW_GRAY),
                 ),
@@ -150,7 +150,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               )
             : Center(
                 child: Text(
-                  'No Records Available',
+                  NO_RECORD_FOUND,
                   style: _themeData.textTheme.headline6!
                       .copyWith(color: SHADOW_GRAY),
                 ),

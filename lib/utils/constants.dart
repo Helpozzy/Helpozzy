@@ -292,6 +292,7 @@ const DELETE_BUTTON = 'Delete';
 const SEND_VERIFICATION_CODE_BUTTON = 'Send Verification Code';
 const START_BUTTON = 'START';
 const COMPLETED_BUTTON = 'Completed';
+const APPROVE_BUTTON = 'APPROVE';
 const DECLINE_BUTTON = 'DECLINE';
 const LOG_HOURS_BUTTON = 'Thank you! Click to log your hours';
 const SUBMIT_BUTTON = 'SUBMIT';
@@ -337,6 +338,9 @@ const TRANSFER_POINT_TAB = 'Transfer Points';
 const CHAT_TITLE = 'Chat';
 const ALL_USERS_TITLE = 'Select Person';
 const ENTER_MESSAGE_HINT = 'Enter Message';
+
+//Notification
+const NOTIFICATION_LABEL = 'Notifications';
 
 //Profile
 const CONTACT_TEXT = 'Contact';
