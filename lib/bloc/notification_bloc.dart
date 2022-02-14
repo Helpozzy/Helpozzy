@@ -13,12 +13,18 @@ class NotificationBloc {
 
   Future getNotifications() async {
     final Notifications response = await repo.getNotificationsRepo();
+    response.notifications.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
     notificationsController.sink.add(response);
   }
 
   Future<ResponseModel> postNotification(NotificationModel notification) async {
     final ResponseModel response =
         await repo.postNotificationRepo(notification);
+    return response;
+  }
+
+  Future<ResponseModel> removeNotification(String id) async {
+    final ResponseModel response = await repo.removeNotificationRepo(id);
     return response;
   }
 

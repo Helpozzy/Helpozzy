@@ -31,7 +31,7 @@ class TaskBloc {
     taskInfoController.sink.add(response);
   }
 
-  Future<ResponseModel> updateEnrollTasks(TaskModel task) async {
+  Future<ResponseModel> updateEnrollTask(TaskModel task) async {
     final ResponseModel response = await repo.updateEnrollTaskRepo(task);
     return response;
   }

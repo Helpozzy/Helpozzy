@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
+import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
+import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/task_model.dart';
+import 'package:helpozzy/screens/notification/task_notification_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -16,6 +20,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   late double width;
   late ThemeData _theme;
   final NotificationBloc _notificationBloc = NotificationBloc();
+  final TaskBloc _taskBloc = TaskBloc();
 
   @override
   void initState() {
@@ -36,7 +41,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: 15.0, horizontal: width * 0.05),
+                  vertical: 15.0, horizontal: width * 0.04),
               child: SmallInfoLabel(label: NOTIFICATION_LABEL),
             ),
             Expanded(child: notificationsList()),
@@ -61,39 +66,40 @@ class _NotificationInboxState extends State<NotificationInbox> {
                 separatorBuilder: (context, index) => CommonDivider(),
                 itemBuilder: (context, index) {
                   final NotificationModel notification = notifications[index];
-                  return ListTile(
-                    title: Text(
-                      notification.title!,
-                      style: _theme.textTheme.headline6!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      children: [
-                        Text(
-                          notification.subTitle!,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(color: DARK_GRAY),
-                        ),
-                        SizedBox(height: 6),
-                        Row(
-                          children: [
-                            SmallCommonButton(
-                              fontSize: 12,
-                              buttonColor: GREEN,
-                              text: APPROVE_BUTTON,
-                              onPressed: () {},
-                            ),
-                            SizedBox(width: 6),
-                            SmallCommonButton(
-                              fontSize: 12,
-                              buttonColor: DARK_GRAY,
-                              text: DECLINE_BUTTON,
-                              onPressed: () {},
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                  return TaskNotification(
+                    notification: notification,
+                    onApprove: () async {
+                      CircularLoader().show(context);
+                      final TaskModel task =
+                          TaskModel.fromjson(json: notification.payload!);
+                      task.status = TOGGLE_NOT_STARTED;
+                      task.isApprovedFromAdmin = true;
+                      final ResponseModel updateTaskResponse =
+                          await _taskBloc.updateEnrollTask(task);
+                      if (updateTaskResponse.success!) {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar()
+                            .show(context, msg: updateTaskResponse.message!);
+                        final ResponseModel notificationResponse =
+                            await _notificationBloc
+                                .removeNotification(notification.id!);
+                        if (notificationResponse.success!) {
+                          ScaffoldSnakBar().show(context,
+                              msg: notificationResponse.message!);
+                        } else {
+                          ScaffoldSnakBar()
+                              .show(context, msg: notificationResponse.error!);
+                        }
+                      } else {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar()
+                            .show(context, msg: updateTaskResponse.error!);
+                      }
+                    },
+                    onDecline: () async {
+                      await _notificationBloc
+                          .removeNotification(notification.id!);
+                    },
                   );
                 },
               )

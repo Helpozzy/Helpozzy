@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
-import 'package:helpozzy/bloc/project_task_bloc.dart';
+import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -46,8 +46,8 @@ class _VolunteerProjectTaskSignUpState
   late double width;
   final _formKey = GlobalKey<FormState>();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
-  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   final NotificationBloc _notificationBloc = NotificationBloc();
+  final TaskBloc _taskBloc = TaskBloc();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -123,16 +123,19 @@ class _VolunteerProjectTaskSignUpState
         isApprovedFromAdmin: false,
       );
       final ResponseModel response =
-          await _projectTaskBloc.postEnrollTask(taskSignUpVal);
+          await _taskBloc.postEnrolledTask(taskSignUpVal);
 
       if (response.success!) {
         CircularLoader().hide(context);
         final NotificationModel notification = NotificationModel(
           type: 0,
+          userId: task!.taskOwnerId,
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
           title: 'Request',
-          subTitle: "${userModel.name} want's to join the ${task!.taskName}"
-              " from ${project!.projectName}",
+          payload: taskSignUpVal.toJson(),
+          subTitle:
+              "${userModel.name} want's to volunteer in the ${task!.taskName}"
+              " of ${project!.projectName}",
         );
 
         final ResponseModel notificationResponse =

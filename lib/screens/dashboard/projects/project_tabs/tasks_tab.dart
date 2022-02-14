@@ -194,24 +194,27 @@ class _TaskTabState extends State<TaskTab> {
                                               onPressed: () {},
                                             )
                                           : SizedBox()
-                              : SmallCommonButton(
-                                  text: SIGN_UP,
-                                  fontSize: 12,
-                                  buttonColor: DARK_GRAY,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) =>
-                                            VolunteerProjectTaskSignUp(
-                                          fromTask: true,
-                                          project: project,
-                                          task: task,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                              : task.taskOwnerId ==
+                                      prefsObject.getString(CURRENT_USER_ID)
+                                  ? SmallCommonButton(
+                                      text: SIGN_UP,
+                                      fontSize: 12,
+                                      buttonColor: DARK_GRAY,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                VolunteerProjectTaskSignUp(
+                                              fromTask: true,
+                                              project: project,
+                                              task: task,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : SizedBox(),
                           onTapItem: () async {
                             await Navigator.push(
                               context,
@@ -274,7 +277,7 @@ class _TaskTabState extends State<TaskTab> {
                 status: TOGGLE_COMPLETE,
               );
               final ResponseModel response =
-                  await _taskBloc.updateEnrollTasks(taskModel);
+                  await _taskBloc.updateEnrollTask(taskModel);
               if (response.success!) {
                 if (isMyTask) {
                   _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
@@ -315,7 +318,7 @@ class _TaskTabState extends State<TaskTab> {
                     status: TOGGLE_INPROGRESS,
                   );
                   final ResponseModel response =
-                      await _taskBloc.updateEnrollTasks(taskModel);
+                      await _taskBloc.updateEnrollTask(taskModel);
                   if (response.success!) {
                     if (isMyTask) {
                       _projectTaskBloc

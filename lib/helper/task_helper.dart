@@ -4,9 +4,9 @@ import 'package:helpozzy/utils/constants.dart';
 class TaskHelper {
   TaskHelper({required List<TaskModel> tasks}) {
     tasks.forEach((task) {
-      if (task.status == PROJECT_NOT_STARTED) {
+      if (task.status == TOGGLE_NOT_STARTED) {
         projectNotStarted++;
-      } else if (task.status == PROJECT_IN_PROGRESS) {
+      } else if (task.status == TOGGLE_INPROGRESS) {
         projectInProgress++;
       } else {
         projectCompleted++;

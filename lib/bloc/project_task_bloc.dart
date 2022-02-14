@@ -37,11 +37,6 @@ class ProjectTaskBloc {
     return response;
   }
 
-  Future<ResponseModel> postEnrollTask(TaskModel task) async {
-    final ResponseModel response = await repo.postEnrolledTaskRepo(task);
-    return response;
-  }
-
   Future getProjectEnrolledTasks(String projectId) async {
     final Tasks response =
         await repo.getProjectEnrolledTasksRepo(projectId, true);

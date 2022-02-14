@@ -73,10 +73,10 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                         buttonColor: BUTTON_GRAY_COLOR,
                                         fontSize: 12,
                                         onPressed: () async {
-                                          final TaskModel taskmodel =
-                                              TaskModel();
-                                          await _taskBloc
-                                              .updateEnrollTasks(taskmodel);
+                                          // final TaskModel taskmodel =
+                                          //     TaskModel();
+                                          // await _taskBloc
+                                          //     .updateEnrollTask(taskmodel);
                                         },
                                       ),
                             onTapItem: () async {
@@ -131,7 +131,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 totalVolunteerHrs: task.totalVolunteerHrs,
               );
               final ResponseModel response =
-                  await _taskBloc.updateEnrollTasks(enrolledTaskModel);
+                  await _taskBloc.updateEnrollTask(enrolledTaskModel);
               if (response.success!) {
                 _taskBloc.getEnrolledTasks();
                 ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
@@ -168,7 +168,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     totalVolunteerHrs: task.totalVolunteerHrs,
                   );
                   final ResponseModel response =
-                      await _taskBloc.updateEnrollTasks(enrolledTaskModel);
+                      await _taskBloc.updateEnrollTask(enrolledTaskModel);
                   if (response.success!) {
                     _taskBloc.getEnrolledTasks();
                     ScaffoldSnakBar().show(

@@ -10,6 +10,7 @@ class Notifications {
 class NotificationModel {
   NotificationModel({
     this.id,
+    this.userId,
     this.type,
     this.title,
     this.subTitle,
@@ -19,6 +20,7 @@ class NotificationModel {
 
   NotificationModel.fromjson({required Map<String, dynamic> json}) {
     id = json['id'];
+    userId = json['user_id'];
     type = json['type'];
     title = json['title'];
     subTitle = json['sub_title'];
@@ -29,6 +31,7 @@ class NotificationModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'user_id': userId,
       'type': type,
       'title': title,
       'sub_title': subTitle,
@@ -38,9 +41,10 @@ class NotificationModel {
   }
 
   late String? id;
+  late String? userId;
   late int? type;
   late String? title;
   late String? subTitle;
-  late dynamic payload;
+  late Map<String, dynamic>? payload;
   late String? timeStamp;
 }

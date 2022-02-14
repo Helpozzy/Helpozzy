@@ -117,4 +117,7 @@ class Repository {
 
   Future<ResponseModel> postNotificationRepo(NotificationModel notification) =>
       apiProvider.postNotificationAPIProvider(notification);
+
+  Future<ResponseModel> removeNotificationRepo(String id) =>
+      apiProvider.removeNotificationAPIProvider(id);
 }

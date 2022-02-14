@@ -77,19 +77,21 @@ class _TaskDetailsState extends State<TaskDetails> {
               ),
             ),
           ),
-          task.status == TOGGLE_NOT_STARTED
-              ? startDeclineButton(task)
-              : task.status == TOGGLE_INPROGRESS
-                  ? completedButton(task)
-                  : Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.symmetric(vertical: 10.0),
-                      child: CommonButton(
-                        text: LOG_HOURS_BUTTON,
-                        color: BUTTON_GRAY_COLOR,
-                        onPressed: () {},
-                      ),
-                    )
+          task.status!.isNotEmpty
+              ? task.status == TOGGLE_NOT_STARTED
+                  ? startDeclineButton(task)
+                  : task.status == TOGGLE_INPROGRESS
+                      ? completedButton(task)
+                      : Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          child: CommonButton(
+                            text: LOG_HOURS_BUTTON,
+                            color: BUTTON_GRAY_COLOR,
+                            onPressed: () {},
+                          ),
+                        )
+              : SizedBox(),
         ],
       ),
     );

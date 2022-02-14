@@ -502,8 +502,6 @@ const TOGGLE_INPROGRESS = 'In Progress';
 const TOGGLE_COMPLETE = 'Complete';
 const TO = 'to';
 const COPY_LINK = 'Copy Link';
-const PROJECT_NOT_STARTED = 'Not Started';
-const PROJECT_IN_PROGRESS = 'In Progress';
 const PROJECT_COMPLETED = 'Completed';
 
 //Admin create task

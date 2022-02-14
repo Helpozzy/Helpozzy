@@ -273,12 +273,12 @@ class ApiProvider {
         projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
             ? await firestore
                 .collection('projects')
-                .where('status', isEqualTo: PROJECT_NOT_STARTED)
+                .where('status', isEqualTo: TOGGLE_NOT_STARTED)
                 .get()
             : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
                 ? await firestore
                     .collection('projects')
-                    .where('status', isEqualTo: PROJECT_IN_PROGRESS)
+                    .where('status', isEqualTo: TOGGLE_INPROGRESS)
                     .get()
                 : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                     ? await firestore
@@ -417,6 +417,7 @@ class ApiProvider {
     final QuerySnapshot querySnapshot = await firestore
         .collection('signed_up_tasks')
         .where('sign_up_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('is_approved_from_admin', isEqualTo: true)
         .get();
 
     List<QueryDocumentSnapshot<Object?>> tasksList = querySnapshot.docs;
@@ -501,6 +502,15 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('notifications').doc(notification.id);
       await documentReference.update(notification.toJson());
+      return ResponseModel(success: true, message: 'Request');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Failed');
+    }
+  }
+
+  Future<ResponseModel> removeNotificationAPIProvider(String id) async {
+    try {
+      await firestore.collection('notifications').doc(id).delete();
       return ResponseModel(success: true, message: 'Request updated');
     } catch (e) {
       return ResponseModel(success: false, error: 'Fail to update');
@@ -508,8 +518,10 @@ class ApiProvider {
   }
 
   Future<Notifications> getNotificationsAPIProvider() async {
-    final QuerySnapshot querySnapshot =
-        await firestore.collection('notifications').get();
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('notifications')
+        .where('user_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .get();
 
     List<QueryDocumentSnapshot<Object?>> notificationsList = querySnapshot.docs;
     List<Map<String, dynamic>> notifications = [];
