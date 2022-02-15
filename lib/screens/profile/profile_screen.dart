@@ -176,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icon(Icons.people_alt_outlined, size: 16),
                     SizedBox(width: 2),
                     Text(
-                      '${user.reviewsByPersons} review',
+                      '${user.reviewsByPersons} reviews',
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -203,7 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget address(SignUpAndUserModel user) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -212,24 +212,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               user.address!,
               maxLines: 2,
               style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.bold),
+                  .copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           SizedBox(width: 5),
-          GestureDetector(
+          InkWell(
             onTap: () => CommonUrlLauncher().launchCall(user.personalPhnNo!),
-            child: Row(
-              children: [
-                Text(
-                  CONTACT_TEXT,
-                  style: _theme.textTheme.bodyText2!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 3),
-                Icon(CupertinoIcons.phone)
-              ],
-            ),
+            child: Icon(CupertinoIcons.phone),
           ),
+          SizedBox(width: 6),
         ],
       ),
     );
@@ -249,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              user.about!.isNotEmpty ? user.about! : 'Not Available add now!',
+              user.about!.isNotEmpty ? user.about! : ADD_NOW,
               style: _theme.textTheme.bodyText2!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: user.about!.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY),

@@ -2,29 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'package:helpozzy/widget/common_widget.dart';
 
-class TaskNotification extends StatelessWidget {
+class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
-  final GestureTapCallback? onDecline;
-  final GestureTapCallback? onApprove;
-  TaskNotification({
-    required this.notification,
-    this.onApprove,
-    this.onDecline,
-  });
+  final List<Widget>? childrens;
+  NotificationTile({required this.notification, this.childrens});
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = Theme.of(context);
+    final ThemeData _theme = Theme.of(context);
+    final double width = MediaQuery.of(context).size.width;
     return ListTile(
+      contentPadding: EdgeInsets.symmetric(
+          vertical: width * 0.02, horizontal: width * 0.05),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             notification.title!,
             style: _theme.textTheme.bodyText2!.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: DARK_PINK_COLOR,
               fontSize: 16,
             ),
@@ -33,7 +30,7 @@ class TaskNotification extends StatelessWidget {
             DateFormatFromTimeStamp()
                 .dateFormatToEEEDDMMMYYYY(timeStamp: notification.timeStamp!),
             style: _theme.textTheme.bodyText2!
-                .copyWith(fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                .copyWith(fontSize: 10, color: BLUE_GRAY),
           )
         ],
       ),
@@ -42,29 +39,17 @@ class TaskNotification extends StatelessWidget {
         children: [
           Text(
             notification.subTitle!,
-            style: _theme.textTheme.bodyText2!
-                .copyWith(color: BLACK, fontSize: 12),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                SmallCommonButton(
-                  fontSize: 12,
-                  buttonColor: GREEN,
-                  text: APPROVE_BUTTON,
-                  onPressed: onApprove,
-                ),
-                SizedBox(width: 6),
-                SmallCommonButton(
-                  fontSize: 12,
-                  buttonColor: DARK_GRAY,
-                  text: DECLINE_BUTTON,
-                  onPressed: onDecline,
-                )
-              ],
+            style: _theme.textTheme.bodyText2!.copyWith(
+              color: SILVER_GRAY,
+              fontSize: 12,
             ),
           ),
+          childrens != null
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(children: childrens!),
+                )
+              : SizedBox(),
         ],
       ),
     );

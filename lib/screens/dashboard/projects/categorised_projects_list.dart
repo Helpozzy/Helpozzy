@@ -80,8 +80,10 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                 },
               )
             : Center(
-                child: Text('No projects available..',
-                    style: _theme.textTheme.headline6),
+                child: Text(
+                  NO_RECORD_FOUND,
+                  style: _theme.textTheme.headline6!.copyWith(color: GRAY),
+                ),
               );
       },
     );

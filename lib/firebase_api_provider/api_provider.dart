@@ -407,7 +407,7 @@ class ApiProvider {
       enrolledTaskModel.enrollTaskId = documentReference.id;
       await documentReference.set(enrolledTaskModel.toJson());
       return ResponseModel(
-          success: true, message: 'Task signed up wait to admin approval');
+          success: true, message: 'Task signed up wait for admin approval');
     } catch (e) {
       return ResponseModel(success: false, error: 'Fail! Task not enrolled');
     }
@@ -487,10 +487,7 @@ class ApiProvider {
           firestore.collection('notifications').doc();
       notification.id = documentReference.id;
       await documentReference.set(notification.toJson());
-      return ResponseModel(
-        success: true,
-        message: 'Request sent to admin wait for approval',
-      );
+      return ResponseModel(success: true);
     } catch (e) {
       return ResponseModel(success: false, error: 'Fail to sent');
     }
@@ -502,7 +499,7 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('notifications').doc(notification.id);
       await documentReference.update(notification.toJson());
-      return ResponseModel(success: true, message: 'Request');
+      return ResponseModel(success: true);
     } catch (e) {
       return ResponseModel(success: false, error: 'Failed');
     }
@@ -511,7 +508,7 @@ class ApiProvider {
   Future<ResponseModel> removeNotificationAPIProvider(String id) async {
     try {
       await firestore.collection('notifications').doc(id).delete();
-      return ResponseModel(success: true, message: 'Request updated');
+      return ResponseModel(success: true);
     } catch (e) {
       return ResponseModel(success: false, error: 'Fail to update');
     }
@@ -520,7 +517,7 @@ class ApiProvider {
   Future<Notifications> getNotificationsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('notifications')
-        .where('user_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('user_to', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
     List<QueryDocumentSnapshot<Object?>> notificationsList = querySnapshot.docs;

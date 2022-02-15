@@ -830,7 +830,7 @@ class CommonDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Divider(
       color: DIVIDER_COLOR,
-      height: 0.3,
+      height: 0.5,
     );
   }
 }

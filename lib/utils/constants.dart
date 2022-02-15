@@ -85,6 +85,9 @@ const DATA = 'data';
 const IS_TOKEN_EXPIRED = 'is_token_expire';
 const HTTP_CODE = 'code';
 
+//Loading
+const LOADING = 'Loading..';
+
 //Login types
 const LOGIN_VOLUNTEER = 'Volunteer';
 const LOGIN_ADMIN = 'Admin';
@@ -349,6 +352,7 @@ const PROJECT_PREFRENCES_TEXT = 'My Volunteering Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
+const ADD_NOW = 'Add now!';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';

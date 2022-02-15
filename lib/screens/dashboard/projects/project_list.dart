@@ -6,7 +6,7 @@ import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-import 'project_and_activity_tile.dart';
+import 'project_details_card.dart';
 import 'project_details.dart';
 
 class ProjectListScreen extends StatefulWidget {
@@ -105,7 +105,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                           projectTabType: projectTabType,
                           project: project,
                           isExpanded: snapshot.data!,
-                          adminProjectsBloc: _projectsBloc,
+                          projectsBloc: _projectsBloc,
                         ),
                       );
                     },

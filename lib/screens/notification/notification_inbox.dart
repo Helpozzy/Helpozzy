@@ -28,6 +28,29 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
+  Future onApproveTaskNotification(NotificationModel notification) async {
+    CircularLoader().show(context);
+    final TaskModel task = TaskModel.fromjson(json: notification.payload!);
+    task.status = TOGGLE_NOT_STARTED;
+    task.isApprovedFromAdmin = true;
+    final ResponseModel updateTaskResponse =
+        await _taskBloc.updateEnrollTask(task);
+    if (updateTaskResponse.success!) {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: 'Request Approved');
+      notification.userTo = notification.userFrom;
+      notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      notification.title = 'Request Approved';
+      notification.subTitle =
+          'Admin approved your request to volunteering in the ${task.taskName}';
+      notification.isUpdated = true;
+      await _notificationBloc.updateNotifications(notification);
+    } else {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -66,40 +89,32 @@ class _NotificationInboxState extends State<NotificationInbox> {
                 separatorBuilder: (context, index) => CommonDivider(),
                 itemBuilder: (context, index) {
                   final NotificationModel notification = notifications[index];
-                  return TaskNotification(
+                  return NotificationTile(
                     notification: notification,
-                    onApprove: () async {
-                      CircularLoader().show(context);
-                      final TaskModel task =
-                          TaskModel.fromjson(json: notification.payload!);
-                      task.status = TOGGLE_NOT_STARTED;
-                      task.isApprovedFromAdmin = true;
-                      final ResponseModel updateTaskResponse =
-                          await _taskBloc.updateEnrollTask(task);
-                      if (updateTaskResponse.success!) {
-                        CircularLoader().hide(context);
-                        ScaffoldSnakBar()
-                            .show(context, msg: updateTaskResponse.message!);
-                        final ResponseModel notificationResponse =
-                            await _notificationBloc
-                                .removeNotification(notification.id!);
-                        if (notificationResponse.success!) {
-                          ScaffoldSnakBar().show(context,
-                              msg: notificationResponse.message!);
-                        } else {
-                          ScaffoldSnakBar()
-                              .show(context, msg: notificationResponse.error!);
-                        }
-                      } else {
-                        CircularLoader().hide(context);
-                        ScaffoldSnakBar()
-                            .show(context, msg: updateTaskResponse.error!);
-                      }
-                    },
-                    onDecline: () async {
-                      await _notificationBloc
-                          .removeNotification(notification.id!);
-                    },
+                    childrens: notification.type == 0
+                        ? notification.isUpdated!
+                            ? []
+                            : [
+                                SmallCommonButton(
+                                  fontSize: 12,
+                                  buttonColor: GREEN,
+                                  text: APPROVE_BUTTON,
+                                  onPressed: () async {
+                                    await onApproveTaskNotification(
+                                        notification);
+                                    await _notificationBloc.getNotifications();
+                                  },
+                                ),
+                                SizedBox(width: 6),
+                                SmallCommonButton(
+                                  fontSize: 12,
+                                  buttonColor: DARK_GRAY,
+                                  text: DECLINE_BUTTON,
+                                  onPressed: () async => await _notificationBloc
+                                      .removeNotification(notification.id!),
+                                )
+                              ]
+                        : [],
                   );
                 },
               )

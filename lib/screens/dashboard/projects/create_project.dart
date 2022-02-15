@@ -679,7 +679,7 @@ class _CreateProjectState extends State<CreateProject> {
           .toString(),
       projectOwner: prefsObject.getString(CURRENT_USER_ID)!,
       collaboratorsCoadmin: _projCollaboraorController.text,
-      status: '',
+      status: TOGGLE_NOT_STARTED,
     );
 
     final bool isUploaded = await _projectsBloc.postProject(project);

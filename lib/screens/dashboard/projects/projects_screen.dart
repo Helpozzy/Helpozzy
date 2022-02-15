@@ -58,14 +58,12 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         fillColor: GRAY,
                         controller: _searchController,
                         hintText: SEARCH_PROJECT_HINT,
-                        validator: (val) {
-                          return null;
-                        },
+                        validator: (val) => null,
                       ),
                     ),
                   ),
                   Transform.scale(
-                    scale: 0.67,
+                    scale: 0.7,
                     child: FloatingActionButton(
                       elevation: 0,
                       onPressed: () => Navigator.push(

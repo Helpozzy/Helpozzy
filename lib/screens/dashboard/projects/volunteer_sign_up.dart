@@ -91,7 +91,25 @@ class _VolunteerProjectTaskSignUpState
       if (response.success!) {
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.message!);
-        Navigator.of(context).pop();
+        final NotificationModel notification = NotificationModel(
+          type: 1,
+          userTo: project!.projectOwner,
+          userFrom: prefsObject.getString(CURRENT_USER_ID),
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Project Signed-Up',
+          payload: projectSignUpVal.toJson(),
+          subTitle:
+              '${userModel.name} signed up in ${project!.projectName} for volunteering.',
+        );
+
+        final ResponseModel notificationResponse =
+            await _notificationBloc.postNotification(notification);
+        if (notificationResponse.success!) {
+          Navigator.of(context).pop();
+        } else {
+          await ScaffoldSnakBar().show(context, msg: response.error!);
+          Navigator.of(context).pop();
+        }
       } else {
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.error!);
@@ -127,11 +145,13 @@ class _VolunteerProjectTaskSignUpState
 
       if (response.success!) {
         CircularLoader().hide(context);
+        await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
           type: 0,
-          userId: task!.taskOwnerId,
+          userFrom: prefsObject.getString(CURRENT_USER_ID),
+          userTo: task!.taskOwnerId,
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: 'Request',
+          title: 'Task Request',
           payload: taskSignUpVal.toJson(),
           subTitle:
               "${userModel.name} want's to volunteer in the ${task!.taskName}"
@@ -141,11 +161,9 @@ class _VolunteerProjectTaskSignUpState
         final ResponseModel notificationResponse =
             await _notificationBloc.postNotification(notification);
         if (notificationResponse.success!) {
-          await ScaffoldSnakBar()
-              .show(context, msg: notificationResponse.message!);
           Navigator.of(context).pop();
         } else {
-          await ScaffoldSnakBar().show(context, msg: response.message!);
+          await ScaffoldSnakBar().show(context, msg: response.error!);
           Navigator.of(context).pop();
         }
       } else {

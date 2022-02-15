@@ -15,18 +15,18 @@ class ProjectTile extends StatefulWidget {
     required this.project,
     required this.projectTabType,
     required this.isExpanded,
-    required this.adminProjectsBloc,
+    required this.projectsBloc,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
-  final ProjectsBloc adminProjectsBloc;
+  final ProjectsBloc projectsBloc;
   @override
   _ProjectTileState createState() => _ProjectTileState(
       project: project,
       projectTabType: projectTabType,
       isExpanded: isExpanded,
-      adminProjectsBloc: adminProjectsBloc);
+      projectsBloc: projectsBloc);
 }
 
 class _ProjectTileState extends State<ProjectTile> {
@@ -34,12 +34,12 @@ class _ProjectTileState extends State<ProjectTile> {
     required this.project,
     required this.projectTabType,
     required this.isExpanded,
-    required this.adminProjectsBloc,
+    required this.projectsBloc,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
-  final ProjectsBloc adminProjectsBloc;
+  final ProjectsBloc projectsBloc;
   late ThemeData _theme;
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
@@ -114,26 +114,32 @@ class _ProjectTileState extends State<ProjectTile> {
                 ],
               ),
               SizedBox(height: 3),
-              Text(
-                project.organization,
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontSize: 12,
-                  color: DARK_PINK_COLOR,
-                ),
-              ),
-              SizedBox(height: 3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    DateFormatFromTimeStamp()
-                        .dateFormatToEEEDDMMMYYYY(timeStamp: project.startDate),
-                    style: _theme.textTheme.bodyText2!.copyWith(
-                      fontSize: 12,
-                      color: BLUE_COLOR,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        project.organization,
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          fontSize: 12,
+                          color: DARK_PINK_COLOR,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                            timeStamp: project.startDate),
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          fontSize: 12,
+                          color: BLUE_COLOR,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                   SmallCommonButtonWithIcon(
                     height: 20,
@@ -141,7 +147,7 @@ class _ProjectTileState extends State<ProjectTile> {
                     onPressed: () {
                       project.isProjectDetailsExpanded =
                           !project.isProjectDetailsExpanded;
-                      adminProjectsBloc.isExpanded(isExpanded);
+                      projectsBloc.isExpanded(isExpanded);
                       if (project.isProjectDetailsExpanded &&
                           project.isTaskDetailsExpanded) {
                         _projectTaskBloc

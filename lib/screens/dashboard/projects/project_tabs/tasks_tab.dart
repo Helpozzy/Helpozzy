@@ -194,7 +194,7 @@ class _TaskTabState extends State<TaskTab> {
                                               onPressed: () {},
                                             )
                                           : SizedBox()
-                              : task.taskOwnerId ==
+                              : task.taskOwnerId !=
                                       prefsObject.getString(CURRENT_USER_ID)
                                   ? SmallCommonButton(
                                       text: SIGN_UP,
