@@ -10,35 +10,36 @@ import 'project_details_card.dart';
 import 'project_details.dart';
 
 class ProjectListScreen extends StatefulWidget {
-  ProjectListScreen({required this.projectTabType});
+  ProjectListScreen({required this.projectTabType, required this.projectsBloc});
   final ProjectTabType projectTabType;
+  final ProjectsBloc projectsBloc;
   @override
-  _ProjectListScreenState createState() =>
-      _ProjectListScreenState(projectTabType: projectTabType);
+  _ProjectListScreenState createState() => _ProjectListScreenState(
+      projectTabType: projectTabType, projectsBloc: projectsBloc);
 }
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
-  _ProjectListScreenState({required this.projectTabType});
+  _ProjectListScreenState(
+      {required this.projectTabType, required this.projectsBloc});
   final ProjectTabType projectTabType;
+  final ProjectsBloc projectsBloc;
   late ThemeData _themeData;
   late double height;
   late double width;
   late bool isExpanded = false;
 
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
-
   @override
   void initState() {
-    _projectsBloc.getProjects(projectTabType: projectTabType);
+    projectsBloc.getProjects(projectTabType: projectTabType);
     if (projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
-      _projectsBloc.getOnGoingProjects(
+      projectsBloc.getOnGoingProjects(
           projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB);
     }
     if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
-      _projectsBloc.getProjectsActivityStatus();
+      projectsBloc.getProjectsActivityStatus();
     }
     if (projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
-      _projectsBloc.getProjectsActivityStatus();
+      projectsBloc.getProjectsActivityStatus();
     }
     super.initState();
   }
@@ -61,7 +62,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         ? ListDividerLabel(
                             label: LATEST_CONTRIBUTION_HOURS_LABEL)
                         : SizedBox(),
-        Expanded(child: projectList(_projectsBloc.getProjectsStream)),
+        Expanded(child: projectList(projectsBloc.getProjectsStream)),
         projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
             ? ListDividerLabel(label: DateTime.now().year.toString())
             : projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
@@ -76,14 +77,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     );
   }
 
-  Widget projectList(Stream<Projects>? stream) {
-    return StreamBuilder<Projects>(
+  Widget projectList(Stream<List<ProjectModel>>? stream) {
+    return StreamBuilder<List<ProjectModel>>(
       stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        final List<ProjectModel> projects = snapshot.data!.projectList;
+        final List<ProjectModel> projects = snapshot.data!;
         return projects.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
@@ -93,7 +94,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                   final ProjectModel project = projects[index];
                   return StreamBuilder<bool>(
                     initialData: false,
-                    stream: _projectsBloc.getProjectExpandStream,
+                    stream: projectsBloc.getProjectExpandStream,
                     builder: (context, snapshot) {
                       return InkWell(
                         onTap: () => Navigator.push(
@@ -105,7 +106,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                           projectTabType: projectTabType,
                           project: project,
                           isExpanded: snapshot.data!,
-                          projectsBloc: _projectsBloc,
+                          projectsBloc: projectsBloc,
                         ),
                       );
                     },
@@ -125,7 +126,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   Widget monthlyProjectsStatus() {
     return StreamBuilder<ProjectHelper>(
-      stream: _projectsBloc.getMonthlyProjectsStream,
+      stream: projectsBloc.getMonthlyProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());

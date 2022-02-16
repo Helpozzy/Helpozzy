@@ -702,7 +702,6 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
     this.onPressed,
     required this.width,
     required this.height,
-    this.borderColor = BLACK,
     this.fontColor = WHITE,
     this.iconColor = WHITE,
     this.iconSize,
@@ -714,7 +713,6 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
   final double height;
   final double width;
   final void Function()? onPressed;
-  final Color borderColor;
   final Color fontColor;
   final Color iconColor;
   final double? iconSize;
@@ -743,6 +741,7 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
                 fontSize: fontSize,
                 fontFamily: QUICKSAND,
                 color: fontColor,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

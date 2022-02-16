@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
-import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
@@ -27,7 +27,7 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
-  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ScrollController scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   late double currentPosition = 0.0;
@@ -36,8 +36,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   void initState() {
     super.initState();
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
+    _projectsBloc.getProjects();
     _categoryBloc.getCategories();
-    _userProjectsBloc.searchProjects('');
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -97,9 +97,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             height: 37,
             child: TextField(
               controller: _searchController,
-              onChanged: (val) {
-                _userProjectsBloc.searchProjects(val);
-              },
+              onChanged: (val) => _projectsBloc.searchProject(val),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
                 hintText: TYPE_KEYWORD_HINT,
@@ -119,7 +117,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 suffixIcon: IconButton(
                   onPressed: () {
                     _searchController.clear();
-                    _userProjectsBloc.searchProjects('');
+                    _projectsBloc.searchProject('');
                   },
                   icon: Icon(
                     Icons.close_rounded,
@@ -247,7 +245,7 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget projectListView() {
     return StreamBuilder<dynamic>(
-      stream: _userProjectsBloc.getSearchedProjectsStream,
+      stream: _projectsBloc.getProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Padding(

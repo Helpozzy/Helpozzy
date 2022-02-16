@@ -39,75 +39,61 @@ class _ProjectCardState extends State<ProjectCard> {
     return GestureDetector(
       onTap: onTapCard,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
         child: Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(6),
-                  topRight: Radius.circular(6),
-                ),
+                borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   project.imageUrl,
                   fit: BoxFit.cover,
-                  height: height / 5,
+                  height: height / 3.5,
                   width: double.infinity,
                 ),
               ),
-              Padding(
+              Container(
+                height: height / 3.5,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0.8),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: height / 3.5,
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                              timeStamp: project.startDate),
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: 16,
-                            color: PRIMARY_COLOR,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              project.isLiked = !project.isLiked;
-                            });
-                          },
-                          child: Icon(
-                            project.isLiked
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: project.isLiked ? Colors.red : DARK_GRAY,
-                            size: 19,
-                          ),
-                        ),
-                      ],
-                    ),
                     Text(
-                      project.projectName,
+                      DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                          timeStamp: project.startDate),
                       style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 22,
-                        fontFamily: QUICKSAND,
-                        color: BLUE_GRAY,
+                        fontSize: 11,
+                        color: LIGHT_GRAY,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      project.organization,
+                      project.projectName,
                       style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 14,
-                        fontFamily: QUICKSAND,
-                        color: BLACK,
+                        fontSize: 20,
+                        color: SILVER_GRAY,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -115,54 +101,49 @@ class _ProjectCardState extends State<ProjectCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              project.location,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                fontSize: 14,
-                                fontFamily: QUICKSAND,
-                                color: BLACK,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                project.location,
+                                style: _theme.textTheme.bodyText2!.copyWith(
+                                  fontSize: 11,
+                                  color: MATE_WHITE,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                RatingBar.builder(
-                                  initialRating: project.rating,
-                                  minRating: 1,
-                                  itemSize: 16,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  unratedColor: GRAY,
-                                  itemCount: 5,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 1.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: AMBER_COLOR,
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  RatingBar.builder(
+                                    initialRating: project.rating,
+                                    minRating: 1,
+                                    itemSize: 12,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    unratedColor: GRAY,
+                                    itemCount: 5,
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: AMBER_COLOR,
+                                    ),
+                                    onRatingUpdate: (rating) => print(rating),
                                   ),
-                                  onRatingUpdate: (rating) {
-                                    print(rating);
-                                  },
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '(${project.reviewCount} Reviews)',
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 12,
-                                    fontFamily: QUICKSAND,
-                                    color: DARK_GRAY,
-                                    fontWeight: FontWeight.w600,
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '(${project.reviewCount} Reviews)',
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 10,
+                                      color: GRAY,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Spacer(),
                         project.projectOwner ==
                                 prefsObject.getString(CURRENT_USER_ID)
                             ? SizedBox()
@@ -171,14 +152,31 @@ class _ProjectCardState extends State<ProjectCard> {
                                 : SmallCommonButton(
                                     fontSize: 12,
                                     text: SIGN_UP,
+                                    buttonColor: DARK_PINK_COLOR,
                                     onPressed: onPressedSignUpButton!,
                                   ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                       ],
                     ),
                   ],
                 ),
-              )
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() => project.isLiked = !project.isLiked);
+                  },
+                  icon: Icon(
+                    project.isLiked
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: project.isLiked ? Colors.red : WHITE,
+                    size: 19,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

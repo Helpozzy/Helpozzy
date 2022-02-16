@@ -422,6 +422,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                               if (response) {
                                 ScaffoldSnakBar().show(context,
                                     msg: REVIEW_POSTED_POPUP_MSG);
+                                selectedRating = 0.0;
+                                _reviewController.clear();
                                 _projectReviewsBloc
                                     .getProjectReviews(project.projectId);
                               } else {
@@ -500,9 +502,10 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                           ),
                           SizedBox(height: 5),
                           RatingBar.builder(
-                            initialRating: 0,
+                            initialRating: review.rating!,
                             minRating: 1,
                             itemSize: 15,
+                            ignoreGestures: true,
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,

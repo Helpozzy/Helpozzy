@@ -9,21 +9,26 @@ class ProjectsBloc {
   final repo = Repository();
 
   final projectDetailsExpandController = PublishSubject<bool>();
-  final projectsController = PublishSubject<Projects>();
+  final projectsController = PublishSubject<List<ProjectModel>>();
   final onGoingProjectsController = PublishSubject<Projects>();
-  final otherUserInfoController = PublishSubject<Users>();
-  final _searchUsersList = BehaviorSubject<dynamic>();
+  final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
+  final completedOwnProjectsController = PublishSubject<Projects>();
+  final categorisedProjectsController = PublishSubject<Projects>();
 
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
-  Stream<Projects> get getProjectsStream => projectsController.stream;
+  Stream<List<ProjectModel>> get getProjectsStream => projectsController.stream;
   Stream<Projects> get getOnGoingProjectsStream =>
       onGoingProjectsController.stream;
-  Stream<Users> get getOtherUsersStream => otherUserInfoController.stream;
+  Stream<List<SignUpAndUserModel>> get getOtherUsersStream =>
+      otherUserInfoController.stream;
   Stream<ProjectHelper> get getMonthlyProjectsStream =>
       projectsActivityStatusController.stream;
-  Stream<dynamic> get getSearchedUsersStream => _searchUsersList.stream;
+  Stream<Projects> get getCompletedProjectsStream =>
+      completedOwnProjectsController.stream;
+  Stream<Projects> get getCategorisedProjectsStream =>
+      categorisedProjectsController.stream;
 
   Future isExpanded(bool isExpanded) async {
     projectDetailsExpandController.sink.add(isExpanded);
@@ -37,7 +42,31 @@ class ProjectsBloc {
   Future getProjects({ProjectTabType? projectTabType}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
-    projectsController.sink.add(response);
+    projectsFromAPI = response.projectList;
+    projectsController.sink.add(response.projectList);
+  }
+
+  List<ProjectModel> projectsFromAPI = [];
+  List<ProjectModel> searchedProjectList = [];
+
+  Future searchProject(String searchText) async {
+    searchedProjectList = [];
+    if (searchText.isEmpty) {
+      projectsController.sink.add(projectsFromAPI);
+    } else {
+      projectsFromAPI.forEach((project) {
+        if (project.projectName
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            project.location.toLowerCase().contains(searchText.toLowerCase()) ||
+            project.organization
+                .toLowerCase()
+                .contains(searchText.toLowerCase())) {
+          searchedProjectList.add(project);
+        }
+      });
+      projectsController.sink.add(searchedProjectList);
+    }
   }
 
   Future getProjectsActivityStatus() async {
@@ -55,25 +84,35 @@ class ProjectsBloc {
   Future getOtherUsersInfo() async {
     final Users response = await repo.getOtherUserInfoRepo();
     usersFromAPI = response.peoples;
-    otherUserInfoController.sink.add(response);
+    otherUserInfoController.sink.add(response.peoples);
   }
 
   List<SignUpAndUserModel> usersFromAPI = [];
-  dynamic searchedUserList = [];
+  List<SignUpAndUserModel> searchedUserList = [];
 
   Future searchUsers(String searchText) async {
     searchedUserList = [];
     if (searchText.isEmpty) {
-      _searchUsersList.sink.add([]);
+      otherUserInfoController.sink.add(usersFromAPI);
     } else {
-      usersFromAPI.forEach((project) {
-        if (project.email!.toLowerCase().contains(searchText.toLowerCase()) ||
-            project.name!.toLowerCase().contains(searchText.toLowerCase())) {
-          searchedUserList.add(project);
+      usersFromAPI.forEach((user) {
+        if (user.email!.toLowerCase().contains(searchText.toLowerCase()) ||
+            user.name!.toLowerCase().contains(searchText.toLowerCase())) {
+          searchedUserList.add(user);
         }
       });
-      _searchUsersList.sink.add(searchedUserList);
+      otherUserInfoController.sink.add(searchedUserList);
     }
+  }
+
+  Future getOwnCompletedProjects() async {
+    final Projects response = await repo.getuserCompletedProjectsRepo();
+    completedOwnProjectsController.sink.add(response);
+  }
+
+  Future getCategorisedProjects(int categoryId) async {
+    final Projects response = await repo.getCategorisedProjectsRepo(categoryId);
+    categorisedProjectsController.sink.add(response);
   }
 
   void dispose() {
@@ -81,7 +120,8 @@ class ProjectsBloc {
     projectsActivityStatusController.close();
     projectsController.close();
     otherUserInfoController.close();
-    _searchUsersList.close();
     onGoingProjectsController.close();
+    completedOwnProjectsController.close();
+    categorisedProjectsController.close();
   }
 }

@@ -157,22 +157,14 @@ class _ProjectTileState extends State<ProjectTile> {
                     icon: project.isProjectDetailsExpanded
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    borderColor: project.isProjectDetailsExpanded
-                        ? WHITE
-                        : PRIMARY_COLOR,
                     fontSize: 10,
                     iconSize: 15,
                     text: project.isProjectDetailsExpanded
                         ? HIDE_DETAILS_BUTTON
                         : SHOW_DETAILS_BUTTON,
-                    buttonColor:
-                        project.isProjectDetailsExpanded ? PRIMARY_COLOR : GRAY,
-                    iconColor: project.isProjectDetailsExpanded
-                        ? WHITE
-                        : PRIMARY_COLOR,
-                    fontColor: project.isProjectDetailsExpanded
-                        ? WHITE
-                        : PRIMARY_COLOR,
+                    buttonColor: GRAY,
+                    iconColor: PRIMARY_COLOR,
+                    fontColor: PRIMARY_COLOR,
                   ),
                 ],
               ),
@@ -187,7 +179,7 @@ class _ProjectTileState extends State<ProjectTile> {
                   : SizedBox(),
               project.isTaskDetailsExpanded && project.isProjectDetailsExpanded
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 21.0, top: 6),
+                      padding: const EdgeInsets.only(right: 21.0, top: 10),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
@@ -246,13 +238,14 @@ class _ProjectTileState extends State<ProjectTile> {
             icon: project.isTaskDetailsExpanded
                 ? Icons.keyboard_arrow_up_rounded
                 : Icons.keyboard_arrow_down_rounded,
-            borderColor: project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
             fontSize: 10,
             iconSize: 15,
-            text: 'Task Details',
-            buttonColor: project.isTaskDetailsExpanded ? PRIMARY_COLOR : GRAY,
-            iconColor: project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
-            fontColor: project.isTaskDetailsExpanded ? WHITE : PRIMARY_COLOR,
+            text: project.isTaskDetailsExpanded
+                ? HIDE_TASK_DETAILS_BUTTON
+                : SHOW_TASK_DETAILS_BUTTON,
+            buttonColor: GRAY,
+            iconColor: PRIMARY_COLOR,
+            fontColor: PRIMARY_COLOR,
           ),
         ],
       ),

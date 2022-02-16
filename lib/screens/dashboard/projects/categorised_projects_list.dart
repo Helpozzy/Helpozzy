@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/user_projects_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
@@ -20,11 +20,11 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
   late ThemeData _theme;
   late double height;
   late double width;
-  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
-    _userProjectsBloc.getCategorisedProjects(widget.categoryId);
+    _projectsBloc.getCategorisedProjects(widget.categoryId);
     super.initState();
   }
 
@@ -42,7 +42,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
 
   Widget projectListView() {
     return StreamBuilder<Projects>(
-      stream: _userProjectsBloc.getCategorisedProjectsStream,
+      stream: _projectsBloc.getCategorisedProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(

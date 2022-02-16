@@ -27,36 +27,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future loadData() async {
     final List<String> months = _dateFormatFromTimeStamp.getPreviousSixMonths();
     data = <ChartDataModel>[
-      ChartDataModel(
-        x: months[5],
-        yHrsValue: 25,
-        yProjectsValue: 22,
-      ),
-      ChartDataModel(
-        x: months[4],
-        yHrsValue: 45,
-        yProjectsValue: 55,
-      ),
-      ChartDataModel(
-        x: months[3],
-        yHrsValue: 25,
-        yProjectsValue: 36,
-      ),
-      ChartDataModel(
-        x: months[2],
-        yHrsValue: 35,
-        yProjectsValue: 55,
-      ),
-      ChartDataModel(
-        x: months[1],
-        yHrsValue: 30,
-        yProjectsValue: 50,
-      ),
-      ChartDataModel(
-        x: months[0],
-        yHrsValue: 25,
-        yProjectsValue: 15,
-      ),
+      ChartDataModel(x: months[5], y: 25),
+      ChartDataModel(x: months[4], y: 45),
+      ChartDataModel(x: months[3], y: 25),
+      ChartDataModel(x: months[2], y: 35),
+      ChartDataModel(x: months[1], y: 30),
+      ChartDataModel(x: months[0], y: 25),
     ];
     setState(() {});
   }
@@ -75,8 +51,31 @@ class _ReportsScreenState extends State<ReportsScreen> {
             Container(
               height: height / 2,
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: ReportGraph(
-                chartData: data,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                    child: ReportGraph(chartData: data),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      CHART_HOURS_VERTICAL_LABEL,
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      CHART_MONTHS_LABEL,
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: width * 0.05),
@@ -92,56 +91,33 @@ class _ReportsScreenState extends State<ReportsScreen> {
     Reports reports = Reports.fromJson(list: data);
     return ListView.separated(
       shrinkWrap: true,
-      separatorBuilder: (context, index) => Divider(height: 0.5),
+      separatorBuilder: (context, index) => CommonDivider(),
       physics: ScrollPhysics(),
       itemCount: reports.monthlyReports.length,
       itemBuilder: (context, index) {
         ChartDataModel report = reports.monthlyReports[index];
-        return ListTile(
-          contentPadding:
+        return Padding(
+          padding:
               EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
-          title: Text(
-            report.x.toString(),
-            style: _theme.textTheme.headline6!
-                .copyWith(fontWeight: FontWeight.w600),
-          ),
-          subtitle: Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              keyValueTile(
-                key: PROJECTS_LABEL,
-                value: report.yHrsValue.toString(),
+              Text(
+                report.x.toString(),
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.w600),
               ),
-              keyValueTile(
-                key: TOTAL_HRS_LABEL,
-                value: report.yProjectsValue.toString(),
+              Text(
+                PROJECTS_LABEL + report.y.toString(),
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: DARK_GRAY,
+                ),
               ),
             ],
           ),
         );
       },
-    );
-  }
-
-  Widget keyValueTile({String? key, String? value}) {
-    return Row(
-      children: [
-        Text(
-          key!,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: DARK_GRAY,
-          ),
-        ),
-        Text(
-          value!,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 12,
-            color: DARK_GRAY,
-          ),
-        ),
-      ],
     );
   }
 }

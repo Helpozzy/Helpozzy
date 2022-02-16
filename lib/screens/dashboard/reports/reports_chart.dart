@@ -13,8 +13,6 @@ class ReportGraph extends StatefulWidget {
 class _ReportGraphState extends State<ReportGraph> {
   _ReportGraphState({required this.chartData});
   final List<ChartDataModel>? chartData;
-  late double _columnWidth;
-  late double _columnSpacing;
 
   TooltipBehavior? _tooltipBehavior;
 
@@ -31,8 +29,6 @@ class _ReportGraphState extends State<ReportGraph> {
   }
 
   Future initialize() async {
-    _columnWidth = 0.75;
-    _columnSpacing = 0.4;
     _tooltipBehavior = TooltipBehavior(
       enable: true,
       elevation: 0,
@@ -49,7 +45,7 @@ class _ReportGraphState extends State<ReportGraph> {
   Widget _buildSpacingColumnChart() {
     return SfCartesianChart(
       backgroundColor: WHITE,
-      title: ChartTitle(text: 'Volunteering Summary'),
+      title: ChartTitle(text: REPORT_VOLUNTEERING_SUMMARY),
       primaryXAxis:
           CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
       primaryYAxis: NumericAxis(
@@ -69,22 +65,13 @@ class _ReportGraphState extends State<ReportGraph> {
     return <ColumnSeries<ChartDataModel, String>>[
       ColumnSeries<ChartDataModel, String>(
         dataSource: chartData!,
-        width: _columnWidth,
-        spacing: _columnSpacing,
-        color: const Color.fromRGBO(169, 169, 169, 1),
+        width: 0.7,
+        spacing: 0.4,
+        color: PRIMARY_COLOR,
         xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-        yValueMapper: (ChartDataModel sales, _) => sales.yHrsValue,
-        name: 'Hours',
+        yValueMapper: (ChartDataModel sales, _) => sales.y,
+        name: CHART_HOURS_LABEL,
       ),
-      ColumnSeries<ChartDataModel, String>(
-        dataSource: chartData!,
-        width: _columnWidth,
-        spacing: _columnSpacing,
-        color: const Color.fromRGBO(252, 216, 20, 1),
-        xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-        yValueMapper: (ChartDataModel sales, _) => sales.yProjectsValue,
-        name: 'Projects',
-      )
     ];
   }
 }

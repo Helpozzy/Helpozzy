@@ -13,7 +13,6 @@ const BLACK = Color(0xFF232323);
 const BUTTON_GRAY_COLOR = Color(0xFF707070);
 const SILVER_GRAY = Color(0xFFADB3BC);
 const DARK_BLACK = Color.fromRGBO(1, 3, 7, 0.97);
-const PISTACHIO = Color(0xFFE4F6E8);
 const GREEN = Color(0xFF69B479);
 const LIGHT_BLUE = Color(0xFFE7EDF8);
 const TRANSPARENT_WHITE = Color.fromRGBO(255, 255, 255, 0.1);
@@ -385,8 +384,10 @@ const SELECT_OTHER = 'Other';
 const SLECT_DECLINE_TO_ANSWER = 'Decline to answer';
 
 //Report screen
-const REPORT_BY_MONTH_TAB = 'By Month';
-const REPORT_BY_PROJECT_TAB = 'By Project';
+const REPORT_VOLUNTEERING_SUMMARY = 'Volunteering Summary';
+const CHART_HOURS_VERTICAL_LABEL = 'H\no\nu\nr\ns';
+const CHART_HOURS_LABEL = 'Hours';
+const CHART_MONTHS_LABEL = 'Months';
 
 // Project Tab
 const PROJECT_UPCOMING_TAB = 'Upcoming';
@@ -476,6 +477,8 @@ const TASK_LIST_BUTTON = 'Task List';
 const MEMBERS_LIST_BUTTON = 'Members List';
 const HIDE_DETAILS_BUTTON = 'Hide Details ';
 const SHOW_DETAILS_BUTTON = 'Show Details';
+const HIDE_TASK_DETAILS_BUTTON = 'Hide Task Details ';
+const SHOW_TASK_DETAILS_BUTTON = 'Show Task Details';
 
 const SEARCH_MEMBERS_HINT = 'Search Members';
 

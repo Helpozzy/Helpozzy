@@ -287,13 +287,13 @@ class ApiProvider {
                         .get()
                     : projectTabType ==
                             ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                        ? await firestore.collection('projects').get()
-                        : await firestore
+                        ? await firestore
                             .collection('projects')
                             .where('project_owner',
                                 isNotEqualTo:
                                     prefsObject.getString(CURRENT_USER_ID)!)
-                            .get();
+                            .get()
+                        : await firestore.collection('projects').get();
 
     List<QueryDocumentSnapshot<Object?>> projectsList = querySnapshot.docs;
     List<Map<String, dynamic>> projects = [];

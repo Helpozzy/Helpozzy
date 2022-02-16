@@ -12,6 +12,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
+import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -483,8 +484,8 @@ class _CreateProjectState extends State<CreateProject> {
   }
 
   Widget expandSearchUserList() {
-    return StreamBuilder<dynamic>(
-      stream: _projectsBloc.getSearchedUsersStream,
+    return StreamBuilder<List<SignUpAndUserModel>>(
+      stream: _projectsBloc.getOtherUsersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -493,8 +494,8 @@ class _CreateProjectState extends State<CreateProject> {
             child: LinearLoader(),
           );
         }
-        final List<dynamic> users = snapshot.data;
-        return users.isNotEmpty
+        final List<SignUpAndUserModel> users = snapshot.data!;
+        return _searchEmailController.text.isNotEmpty && users.isNotEmpty
             ? PreferredSize(
                 preferredSize: Size(width, height),
                 child: ListView.builder(
@@ -510,7 +511,7 @@ class _CreateProjectState extends State<CreateProject> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        _searchEmailController.text = users[index].email;
+                        _searchEmailController.text = users[index].email!;
                         _projectsBloc.searchUsers('');
                       },
                       child: Column(
@@ -522,12 +523,12 @@ class _CreateProjectState extends State<CreateProject> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  users[index].payload,
+                                  users[index].name!,
                                   style: _themeData.textTheme.bodyText2!
                                       .copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  users[index].email,
+                                  users[index].email!,
                                   style: _themeData.textTheme.bodyText2!
                                       .copyWith(fontSize: 12),
                                 ),

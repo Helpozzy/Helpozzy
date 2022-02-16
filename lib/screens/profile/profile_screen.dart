@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/user_projects_bloc.dart';
 import 'package:helpozzy/bloc/project_categories_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -28,13 +28,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final CategoryBloc _categoryBloc = CategoryBloc();
-  final UserProjectsBloc _userProjectsBloc = UserProjectsBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _categoryBloc.getCategories();
-    _userProjectsBloc.getOwnCompletedProjects();
+    _projectsBloc.getOwnCompletedProjects();
     super.initState();
   }
 
@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           StreamBuilder<Projects>(
-            stream: _userProjectsBloc.getCompletedProjectsStream,
+            stream: _projectsBloc.getCompletedProjectsStream,
             builder: (context, projectSnapshot) {
               if (!projectSnapshot.hasData) {
                 return Padding(
@@ -352,10 +352,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget ownProjectsList() {
     return StreamBuilder<Projects>(
-      stream: _userProjectsBloc.getCompletedProjectsStream,
+      stream: _projectsBloc.getCompletedProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          _userProjectsBloc.getOwnCompletedProjects();
+          _projectsBloc.getOwnCompletedProjects();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Center(child: LinearLoader()),

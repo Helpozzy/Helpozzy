@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -16,10 +17,12 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   late TabController _tabController;
   late double width;
   final TextEditingController _searchController = TextEditingController();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
     _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
+    _tabController.addListener(() => FocusScope.of(context).unfocus());
     super.initState();
   }
 
@@ -58,6 +61,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         fillColor: GRAY,
                         controller: _searchController,
                         hintText: SEARCH_PROJECT_HINT,
+                        onChanged: (val) => _projectsBloc.searchProject(val),
                         validator: (val) => null,
                       ),
                     ),
@@ -66,12 +70,15 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     scale: 0.7,
                     child: FloatingActionButton(
                       elevation: 0,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateProject(),
-                        ),
-                      ),
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateProject(),
+                          ),
+                        );
+                      },
                       backgroundColor: GRAY,
                       child: Icon(
                         CupertinoIcons.add,
@@ -119,14 +126,21 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           controller: _tabController,
           children: [
             ProjectListScreen(
-                projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB),
+              projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
+              projectsBloc: _projectsBloc,
+            ),
             ProjectListScreen(
-                projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB),
+              projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB,
+              projectsBloc: _projectsBloc,
+            ),
             ProjectListScreen(
-                projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB),
+              projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
+              projectsBloc: _projectsBloc,
+            ),
             ProjectListScreen(
-                projectTabType:
-                    ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB),
+              projectTabType: ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
+              projectsBloc: _projectsBloc,
+            ),
           ],
         ),
       );
