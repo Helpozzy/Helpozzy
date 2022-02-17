@@ -35,9 +35,7 @@ class _MembersScreenState extends State<MembersScreen> {
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(context).show(
         title: MEMBERS_APPBAR,
-        onBack: () {
-          Navigator.of(context).pop();
-        },
+        onBack: () => Navigator.of(context).pop(),
       ),
       body: body(),
     );
@@ -50,23 +48,21 @@ class _MembersScreenState extends State<MembersScreen> {
       },
       child: Column(
         children: [
-          Padding(
+          Container(
+            height: 40,
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
             child: CommonRoundedTextfield(
               fillColor: GRAY,
               controller: _searchController,
               hintText: SEARCH_MEMBERS_HINT,
-              textAlignCenter: false,
+              textAlignCenter: true,
               prefixIcon: Icon(
                 CupertinoIcons.search,
-                color: PRIMARY_COLOR,
+                color: DARK_GRAY,
+                size: 24,
               ),
-              validator: (val) {
-                return null;
-              },
-              onChanged: (val) {
-                _membersBloc.searchMembers(searchText: val);
-              },
+              validator: (val) => null,
+              onChanged: (val) => _membersBloc.searchMembers(searchText: val),
             ),
           ),
           volunteerFilteringSection(),
@@ -77,36 +73,40 @@ class _MembersScreenState extends State<MembersScreen> {
   }
 
   Widget volunteerFilteringSection() {
-    return Row(
-      children: [
-        selectShowOption(
-          buttonText: FILTERS_HINT,
-          icon: Icons.tune_rounded,
-          buttonColor: GRAY,
-          borderColor: PRIMARY_COLOR,
-          iconColor: PRIMARY_COLOR,
-          fontColor: PRIMARY_COLOR,
-          onPressed: () {},
-        ),
-        popupButton(),
-        StreamBuilder<bool>(
-            initialData: favVolunteers,
-            stream: _membersBloc.getFavVolunteersStream,
-            builder: (context, snapshot) {
-              return selectShowOption(
-                buttonText: FAVORITE_HINT,
-                buttonColor: snapshot.data! ? PRIMARY_COLOR : GRAY,
-                borderColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                iconColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                fontColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                icon: Icons.favorite_border_rounded,
-                onPressed: () {
-                  favVolunteers = !favVolunteers;
-                  _membersBloc.changeFavVal(favVolunteers);
-                },
-              );
-            }),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selectShowOption(
+            buttonText: FILTERS_HINT,
+            icon: Icons.tune_rounded,
+            buttonColor: GRAY,
+            borderColor: PRIMARY_COLOR,
+            iconColor: PRIMARY_COLOR,
+            fontColor: PRIMARY_COLOR,
+            onPressed: () {},
+          ),
+          popupButton(),
+          StreamBuilder<bool>(
+              initialData: favVolunteers,
+              stream: _membersBloc.getFavVolunteersStream,
+              builder: (context, snapshot) {
+                return selectShowOption(
+                  buttonText: FAVORITE_HINT,
+                  buttonColor: snapshot.data! ? PRIMARY_COLOR : GRAY,
+                  borderColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
+                  iconColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
+                  fontColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
+                  icon: Icons.favorite_border_rounded,
+                  onPressed: () {
+                    favVolunteers = !favVolunteers;
+                    _membersBloc.changeFavVal(favVolunteers);
+                  },
+                );
+              }),
+        ],
+      ),
     );
   }
 
@@ -165,20 +165,15 @@ class _MembersScreenState extends State<MembersScreen> {
     required Color fontColor,
     required Color iconColor,
   }) {
-    return Container(
-      width: width / 3,
-      child: Transform.scale(
-        scale: 0.6,
-        child: CommonButtonWithIcon(
-          icon: icon,
-          text: buttonText,
-          onPressed: onPressed,
-          fontSize: 16,
-          buttonColor: buttonColor,
-          fontColor: fontColor,
-          iconColor: iconColor,
-        ),
-      ),
+    return SmallCommonButtonWithIcon(
+      icon: icon,
+      text: buttonText,
+      onPressed: onPressed,
+      fontSize: 12,
+      iconSize: 13,
+      buttonColor: buttonColor,
+      fontColor: fontColor,
+      iconColor: iconColor,
     );
   }
 

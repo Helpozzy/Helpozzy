@@ -142,8 +142,6 @@ class _ProjectTileState extends State<ProjectTile> {
                     ],
                   ),
                   SmallCommonButtonWithIcon(
-                    height: 20,
-                    width: 135,
                     onPressed: () {
                       project.isProjectDetailsExpanded =
                           !project.isProjectDetailsExpanded;
@@ -226,8 +224,6 @@ class _ProjectTileState extends State<ProjectTile> {
           ),
           SizedBox(height: 3),
           SmallCommonButtonWithIcon(
-            height: 20,
-            width: 135,
             onPressed: () {
               setState(() => project.isTaskDetailsExpanded =
                   !project.isTaskDetailsExpanded);

@@ -81,18 +81,26 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         maxHeight: height / 4,
         child: Stack(
           children: [
-            SizedBox(
+            Image.asset(
+              project.imageUrl,
+              fit: BoxFit.cover,
               height: height / 4,
               width: double.infinity,
-              child: Image.asset(
-                project.imageUrl,
-                fit: BoxFit.cover,
-              ),
             ),
             Container(
               height: height / 4,
               width: double.infinity,
-              color: BLACK.withOpacity(0.3),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.8),
+                  ],
+                ),
+              ),
             ),
             Positioned(
               left: 10,

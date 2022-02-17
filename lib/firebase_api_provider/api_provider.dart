@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
@@ -119,27 +118,6 @@ class ApiProvider {
       print(onError.toString());
     });
     return true;
-  }
-
-  Future<bool> postCategoriesAPIProvider(List list) async {
-    final DocumentReference documentRef =
-        firestore.collection('projects_categories').doc('categories');
-    await documentRef.set({'categories': list}).catchError((onError) {
-      print(onError.toString());
-    });
-    return true;
-  }
-
-  Future<Categories> getCategoriesAPIProvider() async {
-    final DocumentReference documentRef =
-        firestore.collection('projects_categories').doc('categories');
-
-    final DocumentSnapshot categoriesDoc = await documentRef.get();
-
-    final Map<String, dynamic> json =
-        categoriesDoc.data() as Map<String, dynamic>;
-
-    return Categories.fromJson(items: json['categories']);
   }
 
   Future<Projects> getUserProjectsAPIProvider() async {

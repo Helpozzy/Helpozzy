@@ -299,78 +299,24 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Icon(
-                CupertinoIcons.search,
-                color: BLACK,
-              ),
+        CommonSimpleTextfield(
+          controller: _searchEmailController,
+          hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
+          validator: (val) {
+            return null;
+          },
+          onChanged: (val) {
+            _projectsBloc.searchUsers(val);
+          },
+          prefixIcon: Icon(
+            CupertinoIcons.search,
+            color: BLACK,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.group_outlined,
+              color: PRIMARY_COLOR,
             ),
-            SizedBox(width: 10),
-            Expanded(
-              child: CommonSimpleTextfield(
-                controller: _searchEmailController,
-                hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
-                validator: (val) {
-                  return null;
-                },
-                onChanged: (val) {
-                  _projectsBloc.searchUsers(val);
-                },
-              ),
-            ),
-          ],
-        ),
-        expandSearchUserList(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.link,
-                    color: BLACK,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    COPY_LINK,
-                    style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.w600, color: PRIMARY_COLOR),
-                  )
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  value: postOnLocalCheck,
-                  onChanged: (val) {
-                    setState(() {
-                      postOnLocalCheck = !postOnLocalCheck;
-                    });
-                  },
-                ),
-                Text(
-                  POST_ON_LOCAL_FEED,
-                  style: _themeData.textTheme.bodyText2!.copyWith(
-                      fontWeight: FontWeight.bold, color: PRIMARY_COLOR),
-                ),
-              ],
-            ),
-          ],
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: CommonButtonWithIcon(
-            icon: Icons.group_outlined,
-            text: MEMBERS_LIST_BUTTON,
-            fontSize: 12,
-            iconSize: 15,
             onPressed: () {
               Navigator.push(
                 context,
@@ -380,7 +326,27 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               );
             },
           ),
-        )
+        ),
+        expandSearchUserList(),
+        // TextButton(
+        //   onPressed: () {},
+        //   child: Row(
+        //     children: [
+        //       Icon(
+        //         Icons.link,
+        //         color: BLACK,
+        //       ),
+        //       SizedBox(width: 5),
+        //       Text(
+        //         COPY_LINK,
+        //         style: _themeData.textTheme.bodyText2!.copyWith(
+        //           fontWeight: FontWeight.w600,
+        //           color: PRIMARY_COLOR,
+        //         ),
+        //       )
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

@@ -700,8 +700,6 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
     this.buttonColor = PRIMARY_COLOR,
     this.fontSize = 18,
     this.onPressed,
-    required this.width,
-    required this.height,
     this.fontColor = WHITE,
     this.iconColor = WHITE,
     this.iconSize,
@@ -710,8 +708,6 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
   final String text;
   final Color buttonColor;
   final double fontSize;
-  final double height;
-  final double width;
   final void Function()? onPressed;
   final Color fontColor;
   final Color iconColor;
@@ -725,7 +721,7 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
           color: buttonColor,
           borderRadius: BorderRadius.circular(100),
         ),
-        padding: EdgeInsets.only(top: 3.0, bottom: 3.0, right: 10.0, left: 6.0),
+        padding: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 12.0, left: 8.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -961,7 +957,7 @@ class LinearLoader extends StatelessWidget {
     return SizedBox(
       width: width / 2.5,
       child: LinearProgressIndicator(
-        color: LIGHT_ACCENT_GRAY,
+        color: GRAY,
         minHeight: 12,
       ),
     );

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
-import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
@@ -26,7 +25,6 @@ class _ExploreScreenState extends State<ExploreScreen>
   late ThemeData _themeData;
 
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
-  final CategoryBloc _categoryBloc = CategoryBloc();
   final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ScrollController scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -37,7 +35,6 @@ class _ExploreScreenState extends State<ExploreScreen>
     super.initState();
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _projectsBloc.getProjects();
-    _categoryBloc.getCategories();
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -179,67 +176,55 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget categoryView() {
-    return StreamBuilder<Categories>(
-      stream: _categoryBloc.getCategoriesStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          _categoryBloc.getCategories();
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Center(child: LinearLoader()),
-          );
-        }
-        return Column(
-          children: [
-            GridView.count(
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              children: snapshot.data!.categories.map((CategoryModel category) {
-                return InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CategorisedProjectsScreen(categoryId: category.id),
+    return Column(
+      children: [
+        GridView.count(
+          physics: NeverScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          children: categoriesList.map((CategoryModel category) {
+            return InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CategorisedProjectsScreen(categoryId: category.id!),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CachedNetworkImage(
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error_outline_rounded),
+                    imageUrl: category.imgUrl!,
+                    fit: BoxFit.fill,
+                    color: PRIMARY_COLOR,
+                    height: width * 0.1,
+                    width: width * 0.1,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    category.label!,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: _themeData.textTheme.bodyText2!.copyWith(
+                      fontSize: 10,
+                      color: DARK_GRAY_FONT_COLOR,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CachedNetworkImage(
-                        placeholder: (context, url) =>
-                            Center(child: LinearLoader()),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error_outline_rounded),
-                        imageUrl: category.imgUrl,
-                        fit: BoxFit.fill,
-                        color: PRIMARY_COLOR,
-                        height: width * 0.1,
-                        width: width * 0.1,
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        category.label,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: _themeData.textTheme.bodyText2!.copyWith(
-                          fontSize: 10,
-                          color: DARK_GRAY_FONT_COLOR,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-            Divider(),
-          ],
-        );
-      },
+                  )
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+        Divider(),
+      ],
     );
   }
 
@@ -257,7 +242,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             ? ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(8),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final ProjectModel project = snapshot.data[index];

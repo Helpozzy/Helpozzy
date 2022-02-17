@@ -39,28 +39,28 @@ class _ProjectCardState extends State<ProjectCard> {
     return GestureDetector(
       onTap: onTapCard,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
         child: Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
                   project.imageUrl,
                   fit: BoxFit.cover,
-                  height: height / 3.5,
+                  height: height / 4,
                   width: double.infinity,
                 ),
               ),
               Container(
-                height: height / 3.5,
+                height: height / 4,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -73,7 +73,7 @@ class _ProjectCardState extends State<ProjectCard> {
                 ),
               ),
               Container(
-                height: height / 3.5,
+                height: height / 4,
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Column(

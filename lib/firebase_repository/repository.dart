@@ -2,7 +2,6 @@ import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
@@ -37,12 +36,6 @@ class Repository {
 
   Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
       apiProvider.editProfileAPIProvider(json);
-
-  Future<bool> postCategoriesRepo(List categories) =>
-      apiProvider.postCategoriesAPIProvider(categories);
-
-  Future<Categories> getCategoriesRepo() =>
-      apiProvider.getCategoriesAPIProvider();
 
   Future<Projects> getuserProjectsRepo() =>
       apiProvider.getUserProjectsAPIProvider();

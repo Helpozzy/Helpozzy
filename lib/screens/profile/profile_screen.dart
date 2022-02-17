@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
@@ -27,13 +26,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double height;
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
-  final CategoryBloc _categoryBloc = CategoryBloc();
   final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _categoryBloc.getCategories();
     _projectsBloc.getOwnCompletedProjects();
     super.initState();
   }
@@ -271,76 +268,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Center(child: LinearLoader()),
                 );
               }
+              late List<CategoryModel> availCategory = [];
+              categoriesList.forEach((category) {
+                projectSnapshot.data!.projectList.forEach((project) {
+                  if (project.categoryId == category.id) {
+                    availCategory.add(category);
+                  }
+                });
+              });
               return Container(
                 height: width * 0.25,
-                child: StreamBuilder<Categories>(
-                  stream: _categoryBloc.getCategoriesStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      _categoryBloc.getCategories();
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Center(child: LinearLoader()),
-                      );
-                    }
-                    late List<CategoryModel> availCategory = [];
-                    snapshot.data!.categories.forEach((category) {
-                      projectSnapshot.data!.projectList.forEach((project) {
-                        if (project.categoryId == category.id) {
-                          availCategory.add(category);
-                        }
-                      });
-                    });
-                    return ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: availCategory.map((category) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategorisedProjectsScreen(
-                                    categoryId: category.id),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: width / 5.7,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CachedNetworkImage(
-                                  placeholder: (context, url) => Center(
-                                    child: LinearLoader(),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error_outline_rounded),
-                                  imageUrl: category.imgUrl,
-                                  fit: BoxFit.fill,
-                                  color: PRIMARY_COLOR,
-                                  height: width * 0.1,
-                                  width: width * 0.1,
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  category.label,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 3,
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    fontSize: 10,
-                                    color: PRIMARY_COLOR,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: availCategory.map((category) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategorisedProjectsScreen(
+                                categoryId: category.id!),
                           ),
                         );
-                      }).toList(),
+                      },
+                      child: Container(
+                        width: width / 5.7,
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CachedNetworkImage(
+                              placeholder: (context, url) => Center(
+                                child: LinearLoader(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline_rounded),
+                              imageUrl: category.imgUrl!,
+                              fit: BoxFit.fill,
+                              color: PRIMARY_COLOR,
+                              height: width * 0.1,
+                              width: width * 0.1,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              category.label!,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                fontSize: 10,
+                                color: PRIMARY_COLOR,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     );
-                  },
+                  }).toList(),
                 ),
               );
             },

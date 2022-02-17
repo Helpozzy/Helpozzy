@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/project_categories_bloc.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/password_set_screen.dart';
@@ -21,7 +20,6 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
   final SignUpAndUserModel signupAndUserModel;
 
   static final _formKey = GlobalKey<FormState>();
-  final CategoryBloc _categoryBloc = CategoryBloc();
   late double width;
   late double height;
   late ThemeData _theme;
@@ -31,16 +29,15 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
 
   @override
   void initState() {
-    _categoryBloc.getCategories();
     super.initState();
   }
 
-  Future onContinue(List<CategoryModel> categories) async {
+  Future onContinue() async {
     if (_formKey.currentState!.validate()) {
       selectedAreaOfInterests = [];
-      categories.forEach((category) {
-        if (category.isSelected) {
-          selectedAreaOfInterests.add(category.id);
+      categoriesList.forEach((category) {
+        if (category.isSelected!) {
+          selectedAreaOfInterests.add(category.id!);
         }
       });
       signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
@@ -65,36 +62,22 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: SCREEN_BACKGROUND,
-      body: StreamBuilder<Categories>(
-        stream: _categoryBloc.getCategoriesStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Center(
-                child: CircularProgressIndicator(color: PRIMARY_COLOR),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CommonWidget(context).showBackForwardButton(
+                onPressedForward: () => onContinue(),
               ),
-            );
-          }
-          final List<CategoryModel> categories = snapshot.data!.categories;
-          return SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CommonWidget(context).showBackForwardButton(
-                    onPressedForward: () => onContinue(categories),
-                  ),
-                  TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
-                  targetFields(),
-                  TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
-                  categoryView(categories),
-                  SizedBox(height: 25),
-                ],
-              ),
-            ),
-          );
-        },
+              TopInfoLabel(label: CURRENT_YEAR_TARGET_HOURS),
+              targetFields(),
+              TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
+              categoryView(),
+              SizedBox(height: 25),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -178,16 +161,16 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
     );
   }
 
-  Widget categoryView(List<CategoryModel> categories) {
+  Widget categoryView() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: (2), childAspectRatio: 2.2),
       physics: NeverScrollableScrollPhysics(),
-      itemCount: categories.length,
+      itemCount: categoriesList.length,
       shrinkWrap: true,
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       itemBuilder: (context, index) {
-        final CategoryModel category = categories[index];
+        final CategoryModel category = categoriesList[index];
         return Card(
           elevation: 3,
           shape:
@@ -202,7 +185,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                   ),
                   errorWidget: (context, url, error) =>
                       Icon(Icons.error_outline_rounded),
-                  imageUrl: category.imgUrl,
+                  imageUrl: category.imgUrl!,
                   fit: BoxFit.fill,
                   color: PRIMARY_COLOR,
                   height: width * 0.09,
@@ -211,7 +194,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    category.label,
+                    category.label!,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: _theme.textTheme.bodyText2!.copyWith(

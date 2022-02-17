@@ -57,7 +57,6 @@ class CommonUrlLauncher {
     }
   }
 
-  Future shareToOtherApp({required String subject}) async {
-    Share.share(HELPOZZY_TEXT, subject: subject);
-  }
+  Future shareToOtherApp({required String subject}) async =>
+      await Share.share(subject);
 }
