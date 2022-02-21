@@ -23,7 +23,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       {required this.projectTabType, required this.projectsBloc});
   final ProjectTabType projectTabType;
   final ProjectsBloc projectsBloc;
-  late ThemeData _themeData;
+  late ThemeData _theme;
   late double height;
   late double width;
   late bool isExpanded = false;
@@ -46,7 +46,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _themeData = Theme.of(context);
+    _theme = Theme.of(context);
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Column(
@@ -60,16 +60,12 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         ? RECENTLY_COMPLETED_LABEL
                         : LATEST_CONTRIBUTION_HOURS_LABEL),
         Expanded(child: projectList(projectsBloc.getProjectsStream)),
-        projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB ||
-                projectTabType ==
-                    ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
+        projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
             ? ListDividerLabel(label: DateTime.now().year.toString())
             : SizedBox(),
-        projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+        projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
             ? Expanded(child: monthlyProjectsStatus())
-            : projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                ? Expanded(child: monthlyProjectsStatus())
-                : SizedBox(),
+            : SizedBox(),
       ],
     );
   }
@@ -111,10 +107,26 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 },
               )
             : Center(
-                child: Text(
-                  NO_RECORD_FOUND,
-                  style: _themeData.textTheme.headline6!
-                      .copyWith(color: SHADOW_GRAY),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        NO_PROJECTS_FOUNDS,
+                        style: _theme.textTheme.headline5!.copyWith(
+                            color: DARK_GRAY, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        PLEASE_VISIT_OTHER,
+                        textAlign: TextAlign.center,
+                        style: _theme.textTheme.bodyText2!
+                            .copyWith(color: DARK_GRAY),
+                      ),
+                    ],
+                  ),
                 ),
               );
       },
@@ -148,9 +160,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               )
             : Center(
                 child: Text(
-                  NO_RECORD_FOUND,
-                  style: _themeData.textTheme.headline6!
-                      .copyWith(color: SHADOW_GRAY),
+                  NO_ACTIVITIES_FOUNDS,
+                  style: _theme.textTheme.headline5!.copyWith(
+                    color: DARK_GRAY,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               );
       },

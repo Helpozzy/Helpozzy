@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: SCREEN_BACKGROUND,
       body: Column(
         children: [
-          topIconSection(SELECT_CATEGORY),
+          topIconSection(SELECT_USER_TYPE),
           volunteerList(),
         ],
       ),
@@ -44,15 +44,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       children: [
         CommonWidget(context).showBackButton(),
+        SizedBox(height: height / 10),
         TopAppLogo(size: height / 6),
-        Container(
-          margin: EdgeInsets.symmetric(vertical: height * 0.05),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: _theme.textTheme.headline6!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
+        SizedBox(height: 35),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style:
+              _theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );

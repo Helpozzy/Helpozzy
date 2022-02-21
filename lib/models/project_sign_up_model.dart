@@ -21,10 +21,12 @@ class ProjectSignUpModel {
     this.state,
     this.zipCode,
     this.personalPhnNo,
+    this.isApprovedFromAdmin = false,
   });
 
   ProjectSignUpModel.fromJson({required Map<String, dynamic> json}) {
     signUpUserId = json['signup_uid'];
+    ownerId = json['owner_id'];
     projectId = json['project_id'];
     name = json['name'];
     email = json['email'];
@@ -33,11 +35,13 @@ class ProjectSignUpModel {
     state = json['state'];
     zipCode = json['zip_code'];
     personalPhnNo = json['personal_phn_no'];
+    isApprovedFromAdmin = json['is_approved_from_admin'];
   }
 
   Map<String, dynamic> toJson() {
     return {
       'signup_uid': signUpUserId,
+      'owner_id': ownerId,
       'project_id': projectId,
       'name': name,
       'email': email,
@@ -46,10 +50,12 @@ class ProjectSignUpModel {
       'state': state,
       'zip_code': zipCode,
       'personal_phn_no': personalPhnNo,
+      'is_approved_from_admin': isApprovedFromAdmin,
     };
   }
 
   late String? signUpUserId;
+  late String? ownerId;
   late String? projectId;
   late String? name;
   late String? email;
@@ -58,4 +64,5 @@ class ProjectSignUpModel {
   late String? state;
   late String? zipCode;
   late String? personalPhnNo;
+  late bool? isApprovedFromAdmin;
 }

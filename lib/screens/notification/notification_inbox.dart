@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
+import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/notification/task_notification_card.dart';
@@ -40,15 +41,39 @@ class _NotificationInboxState extends State<NotificationInbox> {
       ScaffoldSnakBar().show(context, msg: 'Request Approved');
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-      notification.title = 'Request Approved';
+      notification.title = 'Task Request Approved';
       notification.subTitle =
-          'Admin approved your request to volunteering in the ${task.taskName}';
+          'Your ${task.taskName} sign-up request is approved for ';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
     } else {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
     }
+  }
+
+  Future onApproveProjectNotification(NotificationModel notification) async {
+    CircularLoader().show(context);
+    final ProjectSignUpModel signUpProject =
+        ProjectSignUpModel.fromJson(json: notification.payload!);
+
+    signUpProject.isApprovedFromAdmin = true;
+    // final ResponseModel updateTaskResponse =
+    //     await _taskBloc.updateEnrollTask(task);
+    // if (updateTaskResponse.success!) {
+    //   CircularLoader().hide(context);
+    //   ScaffoldSnakBar().show(context, msg: 'Request Approved');
+    //   notification.userTo = notification.userFrom;
+    //   notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+    //   notification.title = 'Project Request Approved';
+    //   notification.subTitle =
+    //       'Your ${signUpProject.taskName} sign-up request is approved for ';
+    //   notification.isUpdated = true;
+    //   await _notificationBloc.updateNotifications(notification);
+    // } else {
+    //   CircularLoader().hide(context);
+    //   ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
+    // }
   }
 
   @override
@@ -91,38 +116,35 @@ class _NotificationInboxState extends State<NotificationInbox> {
                   final NotificationModel notification = notifications[index];
                   return NotificationTile(
                     notification: notification,
-                    childrens: notification.type == 0
-                        ? notification.isUpdated!
-                            ? []
-                            : [
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: GREEN,
-                                  text: APPROVE_BUTTON,
-                                  onPressed: () async {
-                                    await onApproveTaskNotification(
-                                        notification);
-                                    await _notificationBloc.getNotifications();
-                                  },
-                                ),
-                                SizedBox(width: 6),
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: DARK_GRAY,
-                                  text: DECLINE_BUTTON,
-                                  onPressed: () async => await _notificationBloc
-                                      .removeNotification(notification.id!),
-                                )
-                              ]
-                        : [],
+                    childrens: notification.isUpdated!
+                        ? []
+                        : [
+                            SmallCommonButton(
+                              fontSize: 12,
+                              buttonColor: GREEN,
+                              text: APPROVE_BUTTON,
+                              onPressed: () async {
+                                await onApproveTaskNotification(notification);
+                                await _notificationBloc.getNotifications();
+                              },
+                            ),
+                            SizedBox(width: 6),
+                            SmallCommonButton(
+                              fontSize: 12,
+                              buttonColor: DARK_GRAY,
+                              text: DECLINE_BUTTON,
+                              onPressed: () async => await _notificationBloc
+                                  .removeNotification(notification.id!),
+                            )
+                          ],
                   );
                 },
               )
             : Center(
                 child: Text(
-                  NO_RECORD_FOUND,
-                  style:
-                      _theme.textTheme.headline6!.copyWith(color: SHADOW_GRAY),
+                  NO_NOTIFICATIONS_FOUND,
+                  style: _theme.textTheme.headline5!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
                 ),
               );
       },

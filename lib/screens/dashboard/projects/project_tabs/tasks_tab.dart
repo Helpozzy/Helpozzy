@@ -240,8 +240,9 @@ class _TaskTabState extends State<TaskTab> {
             : Container(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
-                  NO_RECORD_FOUND,
-                  style: _theme.textTheme.bodyText2!.copyWith(color: GRAY),
+                  NO_TASKS_FOUND,
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
                 ),
               );
       },

@@ -96,9 +96,26 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                   },
                 )
               : Center(
-                  child: Text(
-                    NO_RECORD_FOUND,
-                    style: _theme.textTheme.headline6!.copyWith(color: GRAY),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          NO_TASKS_FOUND,
+                          style: _theme.textTheme.headline5!.copyWith(
+                              color: DARK_GRAY, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          GO_FOR_NEW_SIGNUP,
+                          textAlign: TextAlign.center,
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(color: DARK_GRAY),
+                        ),
+                      ],
+                    ),
                   ),
                 );
         },

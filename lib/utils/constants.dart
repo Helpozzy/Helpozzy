@@ -88,10 +88,6 @@ const HTTP_CODE = 'code';
 //Loading
 const LOADING = 'Loading..';
 
-//Login types
-const LOGIN_VOLUNTEER = 'Volunteer';
-const LOGIN_ADMIN = 'Admin';
-
 // Routes
 const INTRO = 'intro';
 const DASHBOARD = 'dashboard';
@@ -245,7 +241,7 @@ const LATEST_CONTRIBUTION_HOURS_LABEL = 'Latest Contribution Hours';
 const ONGOING_PROJECT_LABEL = 'Ongoing Projects';
 
 //Sign-UP screen
-const SELECT_USER_TYPE = 'Select your type';
+const SELECT_USER_TYPE = 'Select your user type?';
 const SELECT_CATEGORY = 'Select your volunteering choice?';
 const FIRST_NAME = 'First Name';
 const LAST_NAME = 'Last Name';
@@ -328,7 +324,9 @@ const MY_TASKS_LABEL = 'My Tasks';
 const TASK_CREATED_ON = 'Task created on : ';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
-const NO_RECORD_FOUND = 'No record found';
+const NO_TASKS_FOUND = 'No tasks found';
+const GO_FOR_NEW_SIGNUP =
+    'Please visit projects section and sign-up for new volunteering tasks';
 
 //Tabbar title
 const DETAILS_TAB = 'Details';
@@ -344,6 +342,7 @@ const ENTER_MESSAGE_HINT = 'Enter Message';
 
 //Notification
 const NOTIFICATION_LABEL = 'Notifications';
+const NO_NOTIFICATIONS_FOUND = 'No new notice/messages';
 
 //Profile
 const CONTACT_TEXT = 'Contact';
@@ -375,8 +374,6 @@ const SCHOOL_NAME_LABEL = 'School Name';
 const GRADE_LEVEL_LABEL = 'Grade Level';
 
 //Drop Down items
-const SELECT_VOLUNTEER = 'Volunteer';
-const SELECT_ADMIN = 'Admin';
 const SELECT_PARENT = 'Parent';
 const SELECT_GAURDIAN = 'Guardian';
 const SELECT_MALE = 'Male';
@@ -389,12 +386,18 @@ const REPORT_VOLUNTEERING_SUMMARY = 'Volunteering Summary';
 const CHART_HOURS_VERTICAL_LABEL = 'H\no\nu\nr\ns';
 const CHART_HOURS_LABEL = 'Hours';
 const CHART_MONTHS_LABEL = 'Months';
+const CHART_YEARS_LABEL = 'Years';
 
 // Project Tab
 const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
 const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
+
+//Project
+const NO_PROJECTS_FOUNDS = 'No projects found';
+const PLEASE_VISIT_OTHER = 'Please visit other categories section';
+const NO_ACTIVITIES_FOUNDS = 'No activities found';
 
 //Reorts
 const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
@@ -461,7 +464,7 @@ const NAME_TEXT = 'NAME';
 const REVIEWS_TEXT = 'REVIEWS';
 const RATING_TEXT = 'RATINGS';
 
-//Admin Appbar title
+//Appbar title
 const CREATE_PROJECT_APPBAR = 'Create Project';
 const TASKS_APPBAR = 'Tasks';
 const CREATE_TASK_APPBAR = 'Create Task';
@@ -469,10 +472,11 @@ const EDIT_TASK_APPBAR = 'Edit Task';
 const MEMBERS_APPBAR = 'Members';
 const PROJECTS_APPBAR = 'Projects';
 
-//Admin Button
-const PUBLISH_PROJECT_BUTTON = 'PUBLISH PROJECT';
-const UPDATE_TASK_BUTTON = 'UPDATE';
-const ADD_TASK_BUTTON = 'ADD TASK';
+//Button
+const PUBLISH_PROJECT_BUTTON = 'Publish Project';
+const UPDATE_TASK_BUTTON = 'Update';
+const ADD_PROJECT_BUTTON = 'New Project';
+const ADD_TASK_BUTTON = 'New Task';
 const ADD_NEW_TASK_BUTTON = 'Create New Task';
 const TASK_LIST_BUTTON = 'Task List';
 const MEMBERS_LIST_BUTTON = 'Members List';
@@ -482,7 +486,7 @@ const HIDE_TASK_DETAILS_BUTTON = 'Hide Task Details ';
 const SHOW_TASK_DETAILS_BUTTON = 'Show Task Details';
 const SEARCH_MEMBERS_HINT = 'Search Members';
 
-//Admin create project
+//Create project
 const PROJECT_NAME_LABEL = 'Project Name';
 const PROJECT_DESCRIPTION_LABEL = 'Project Description';
 const PROJECT_LOCATION_LABEL = 'Project Location';
@@ -511,7 +515,7 @@ const TO = 'to';
 const COPY_LINK = 'Copy Link';
 const PROJECT_COMPLETED = 'Completed';
 
-//Admin create task
+//Create task
 const TASK_NAME_LABEL = 'Task Name';
 const TASK_DESCRIPTION_LABEL = 'Description';
 const TASK_TIMELINE_LABEL = 'Timeline';
@@ -545,8 +549,6 @@ const SAMPLE_LONG_TEXT =
     " and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 //Dropdowns
-List<String> loginModes = [SELECT_VOLUNTEER, SELECT_ADMIN];
-
 List<String> gendersItems = [
   SELECT_MALE,
   SELECT_FEMALE,

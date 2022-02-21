@@ -293,6 +293,8 @@ class SimpleFieldWithLabel extends StatelessWidget {
     required this.label,
     required this.hintText,
     required this.validator,
+    this.prefixIcon,
+    this.suffixIcon,
     this.onChanged,
     this.onTap,
     this.maxLength,
@@ -306,6 +308,8 @@ class SimpleFieldWithLabel extends StatelessWidget {
   final GestureTapCallback? onTap;
   final TextInputType keyboardType;
   final int? maxLength;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -319,6 +323,8 @@ class SimpleFieldWithLabel extends StatelessWidget {
           controller: controller,
           hintText: hintText,
           validator: validator,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
           maxLength: maxLength,
           keyboardType: keyboardType,
           onTap: onTap,

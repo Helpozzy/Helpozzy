@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
@@ -44,11 +45,36 @@ class _CreateProjectState extends State<CreateProject> {
   late double width;
   late double height;
   late int selectedCategoryId;
+  late GooglePlace googlePlace;
+  List<AutocompletePrediction> predictions = [];
+  late DetailsResult? detailsResult;
 
   @override
   void initState() {
     _projectsBloc.getOtherUsersInfo();
+    String? apiKey = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';
+    googlePlace = GooglePlace(apiKey);
     super.initState();
+  }
+
+  Future<void> autoCompleteSearch(String value) async {
+    var result = await googlePlace.autocomplete.get(value);
+    if (result != null && result.predictions != null && mounted) {
+      setState(() {
+        predictions = result.predictions!;
+      });
+    }
+  }
+
+  void getDetails(String placeId) async {
+    var result = await this.googlePlace.details.get(placeId);
+    if (result != null && result.result != null && mounted) {
+      setState(() {
+        detailsResult = result.result!;
+        _projLocationController.text = detailsResult!.formattedAddress!;
+      });
+      predictions.clear();
+    }
   }
 
   @override
@@ -110,11 +136,54 @@ class _CreateProjectState extends State<CreateProject> {
                     ),
                     Divider(),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: width * 0.03, horizontal: width * 0.05),
-                      child: SmallInfoLabel(label: PROJECT_LOCATION_LABEL),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: SimpleFieldWithLabel(
+                        prefixIcon: Icon(
+                          CupertinoIcons.search,
+                          color: PRIMARY_COLOR,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: () => _projLocationController.clear(),
+                          icon: Icon(
+                            Icons.close,
+                            color: PRIMARY_COLOR,
+                          ),
+                        ),
+                        label: PROJECT_LOCATION_LABEL,
+                        controller: _projLocationController,
+                        hintText: PROJECT_LOCATION_HINT,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Enter Search';
+                          }
+                          return null;
+                        },
+                        onChanged: (val) {
+                          if (val.isNotEmpty) {
+                            autoCompleteSearch(val);
+                          } else {
+                            if (predictions.length > 0 && mounted) {
+                              setState(() => predictions = []);
+                            }
+                          }
+                        },
+                      ),
                     ),
-                    locationCard(),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: predictions.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(
+                            CupertinoIcons.location,
+                            color: PRIMARY_COLOR,
+                          ),
+                          title: Text(predictions[index].description!),
+                          onTap: () => getDetails(predictions[index].placeId!),
+                        );
+                      },
+                    ),
                     Divider(),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -253,17 +322,6 @@ class _CreateProjectState extends State<CreateProject> {
           }).toList(),
         ),
       ],
-    );
-  }
-
-  Widget locationCard() {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: width * 0.05),
-      child: ListTile(
-        onTap: () async {},
-        title: Text('Select location'),
-        trailing: Icon(Icons.pin_drop_rounded),
-      ),
     );
   }
 

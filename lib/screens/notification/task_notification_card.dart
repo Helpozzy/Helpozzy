@@ -27,8 +27,8 @@ class NotificationTile extends StatelessWidget {
             ),
           ),
           Text(
-            DateFormatFromTimeStamp()
-                .dateFormatToEEEDDMMMYYYY(timeStamp: notification.timeStamp!),
+            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYYatTime(
+                timeStamp: notification.timeStamp!),
             style: _theme.textTheme.bodyText2!
                 .copyWith(fontSize: 10, color: BLUE_GRAY),
           )

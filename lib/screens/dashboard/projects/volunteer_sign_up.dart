@@ -96,10 +96,10 @@ class _VolunteerProjectTaskSignUpState
           userTo: project!.projectOwner,
           userFrom: prefsObject.getString(CURRENT_USER_ID),
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: 'Project Signed-Up',
+          title: 'New project sign-up request',
           payload: projectSignUpVal.toJson(),
           subTitle:
-              '${userModel.name} signed up in ${project!.projectName} for volunteering.',
+              "${userModel.name} want's to signed up in ${project!.projectName} for volunteering.",
         );
 
         final ResponseModel notificationResponse =
@@ -151,11 +151,11 @@ class _VolunteerProjectTaskSignUpState
           userFrom: prefsObject.getString(CURRENT_USER_ID),
           userTo: task!.taskOwnerId,
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: 'Task Request',
+          title: 'New task sign-up request',
           payload: taskSignUpVal.toJson(),
           subTitle:
               "${userModel.name} want's to volunteer in the ${task!.taskName}"
-              " of ${project!.projectName}",
+              " of project ${project!.projectName}",
         );
 
         final ResponseModel notificationResponse =

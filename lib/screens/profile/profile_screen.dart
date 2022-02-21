@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
@@ -9,12 +8,10 @@ import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
-import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
-import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -57,36 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       profileSection(user!),
-                      CommonDividerWithVal(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
-                      address(user),
-                      CommonDividerWithVal(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
                       aboutMe(user),
-                      CommonDividerWithVal(
-                        height: 1,
-                        color: DARK_GRAY,
-                      ),
                       projectPref(),
                     ],
-                  ),
-                ),
-                ListDividerLabel(label: VOLUNTEER_REPORT_TEXT),
-                ListTile(
-                  onTap: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReportsScreen(),
-                    ),
-                  ),
-                  title: Text(MONTHLY_REPORTS_LABEL),
-                  trailing: Icon(
-                    Icons.stacked_bar_chart_sharp,
-                    color: DARK_PINK_COLOR,
                   ),
                 ),
                 ownProjectsList(),
@@ -198,34 +168,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget address(SignUpAndUserModel user) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              user.address!,
-              maxLines: 2,
-              style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.w600),
-            ),
-          ),
-          SizedBox(width: 5),
-          InkWell(
-            onTap: () => CommonUrlLauncher().launchCall(user.personalPhnNo!),
-            child: Icon(CupertinoIcons.phone),
-          ),
-          SizedBox(width: 6),
-        ],
-      ),
-    );
-  }
-
   Widget aboutMe(SignUpAndUserModel user) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.only(bottom: 8.0, top: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -239,8 +184,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Text(
               user.about!.isNotEmpty ? user.about! : ADD_NOW,
               style: _theme.textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: user.about!.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY),
+                fontWeight: FontWeight.w600,
+                color: user.about!.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY,
+              ),
             ),
           ),
         ],
@@ -250,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget projectPref() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

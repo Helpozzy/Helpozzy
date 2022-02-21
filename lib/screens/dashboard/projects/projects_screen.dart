@@ -21,7 +21,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
+    _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     _tabController.addListener(() => FocusScope.of(context).unfocus());
     super.initState();
   }
@@ -41,22 +41,22 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   PreferredSize topSearchWithTab() => PreferredSize(
-        preferredSize: Size(width, width / 4),
+        preferredSize: Size(width, width / 5),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: width * 0.05, right: 5.0),
+              padding: EdgeInsets.only(left: width * 0.03, right: width * 0.03),
               child: Row(
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 42,
+                      height: 38,
                       child: CommonRoundedTextfield(
                         textAlignCenter: true,
                         prefixIcon: Icon(
                           CupertinoIcons.search,
                           color: DARK_GRAY,
-                          size: 20,
+                          size: 18,
                         ),
                         fillColor: GRAY,
                         controller: _searchController,
@@ -66,25 +66,20 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       ),
                     ),
                   ),
-                  Transform.scale(
-                    scale: 0.7,
-                    child: FloatingActionButton(
-                      elevation: 0,
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateProject(),
-                          ),
-                        );
-                      },
-                      backgroundColor: GRAY,
-                      child: Icon(
-                        CupertinoIcons.add,
-                        color: PRIMARY_COLOR,
-                      ),
-                    ),
+                  SizedBox(width: 8),
+                  SmallCommonButtonWithIcon(
+                    text: ADD_PROJECT_BUTTON,
+                    icon: Icons.add,
+                    fontSize: 13,
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateProject(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -97,14 +92,13 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   TabBar _tabBar() => TabBar(
         controller: _tabController,
         indicatorColor: DARK_PINK_COLOR,
-        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorSize: TabBarIndicatorSize.label,
         indicatorWeight: 3.0,
         isScrollable: true,
         tabs: [
           _tab(PROJECT_UPCOMING_TAB),
           _tab(PROJECT_INPROGRESS_TAB),
           _tab(PROJECT_COMPLETED_TAB),
-          _tab(PROJECT_CONTRIBUTION_TRACKER_TAB),
         ],
       );
 
@@ -135,10 +129,6 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             ),
             ProjectListScreen(
               projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
-              projectsBloc: _projectsBloc,
-            ),
-            ProjectListScreen(
-              projectTabType: ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
               projectsBloc: _projectsBloc,
             ),
           ],

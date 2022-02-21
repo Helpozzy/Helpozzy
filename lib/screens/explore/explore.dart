@@ -197,7 +197,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 children: [
                   CachedNetworkImage(
                     placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
+                        Center(child: LinearLoader()),
                     errorWidget: (context, url, error) =>
                         Icon(Icons.error_outline_rounded),
                     imageUrl: category.imgUrl!,

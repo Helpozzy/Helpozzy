@@ -22,15 +22,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget body(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (ctx, state) {
-        if (state is AuthenticateState) {
+        if (state is AuthenticateState)
           Navigator.pushNamedAndRemoveUntil(
               context, HOME_SCREEN, (route) => false);
-        } else {
+        else
           Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
-        }
       },
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -45,9 +44,12 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          TopAppLogo(size: height / 5),
           Positioned(
-            top: height / 1.6,
+            top: height / 3.5,
+            child: TopAppLogo(size: height / 5),
+          ),
+          Positioned(
+            top: height / 2,
             child: Container(
               width: width,
               padding: EdgeInsets.symmetric(horizontal: width * 0.02),

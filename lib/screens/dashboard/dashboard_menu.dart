@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/common_screen.dart';
 import 'package:helpozzy/screens/dashboard/my_task/my_enrolled_tasks.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_list.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -21,6 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late double width;
   late ThemeData _theme;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
   late int _processIndex = 2;
   late double currentPosition = 0.0;
 
@@ -83,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
               ),
             ),
-            typeSelectionGrid(),
+            menuGrid(),
           ],
         ),
       ),
@@ -265,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget typeSelectionGrid() {
+  Widget menuGrid() {
     return FutureBuilder<DashboardMenus>(
       future: getMenuList(),
       builder: (context, snapshot) {
@@ -280,21 +282,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           children: snapshot.data!.menus.map((MenuModel menu) {
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => menu.id == 0
-                        ? ProjectsScreen()
-                        : menu.id == 1
-                            ? MyEnrolledTask()
-                            : menu.id == 2
-                                ? ReportsScreen()
-                                : CommonSampleScreen(
-                                    '${menu.label}\nCurrently Not Available'),
-                  ),
-                );
-              },
+              onTap: () async => await onMenuTap(menu),
               child: Card(
                 margin: EdgeInsets.all(8.0),
                 elevation: 0,
@@ -330,6 +318,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }).toList(),
         );
       },
+    );
+  }
+
+  Future onMenuTap(MenuModel menu) async {
+    switch (menu.id) {
+      case 0:
+        pagesNavigation(child: ProjectsScreen());
+        break;
+      case 1:
+        pagesNavigation(child: MyEnrolledTask());
+        break;
+      case 2:
+        pagesNavigation(child: ReportsScreen());
+        break;
+      case 3:
+        pagesNavigation(
+          child: Scaffold(
+            appBar: CommonAppBar(context).show(title: TIME_TRACKER_TILE),
+            body: ProjectListScreen(
+              projectTabType: ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
+              projectsBloc: _projectsBloc,
+            ),
+          ),
+        );
+        break;
+    }
+  }
+
+  Future pagesNavigation({required Widget child}) async {
+    await Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => child),
     );
   }
 }

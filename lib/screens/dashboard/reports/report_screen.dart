@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/report_chart_model.dart';
-import 'package:helpozzy/screens/dashboard/reports/reports_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportsScreen extends StatefulWidget {
   @override
@@ -14,20 +14,41 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late ThemeData _theme;
   late double height;
   late double width;
+  late String yAxisLabel = CHART_YEARS_LABEL;
   late List<ChartDataModel> data = [];
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
 
   @override
   void initState() {
-    loadData();
+    loadYear();
     super.initState();
   }
 
-  Future loadData() async {
-    final List<String> months = _dateFormatFromTimeStamp.getPreviousSixMonths();
+  Future loadYear() async {
+    yAxisLabel = CHART_YEARS_LABEL;
+    final List<String> years = _dateFormatFromTimeStamp.getYear();
     data = <ChartDataModel>[
-      ChartDataModel(x: months[5], y: 25),
+      ChartDataModel(x: years[4], y: 45),
+      ChartDataModel(x: years[3], y: 25),
+      ChartDataModel(x: years[2], y: 35),
+      ChartDataModel(x: years[1], y: 30),
+      ChartDataModel(x: years[0], y: 25),
+    ];
+    setState(() {});
+  }
+
+  Future loadMonths(int year) async {
+    yAxisLabel = CHART_MONTHS_LABEL;
+    final List<String> months = _dateFormatFromTimeStamp.getMonths(year);
+    data = <ChartDataModel>[
+      ChartDataModel(x: months[11], y: 25),
+      ChartDataModel(x: months[10], y: 45),
+      ChartDataModel(x: months[9], y: 25),
+      ChartDataModel(x: months[8], y: 35),
+      ChartDataModel(x: months[7], y: 45),
+      ChartDataModel(x: months[6], y: 25),
+      ChartDataModel(x: months[5], y: 35),
       ChartDataModel(x: months[4], y: 45),
       ChartDataModel(x: months[3], y: 25),
       ChartDataModel(x: months[2], y: 35),
@@ -55,7 +76,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                    child: ReportGraph(chartData: data),
+                    child: reportView(),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -69,7 +90,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      CHART_MONTHS_LABEL,
+                      yAxisLabel,
                       textAlign: TextAlign.center,
                       style: _theme.textTheme.bodyText2!
                           .copyWith(fontWeight: FontWeight.w600),
@@ -85,6 +106,46 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ),
     );
+  }
+
+  Widget reportView() {
+    return SfCartesianChart(
+      backgroundColor: WHITE,
+      title: ChartTitle(text: REPORT_VOLUNTEERING_SUMMARY),
+      primaryXAxis:
+          CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
+      primaryYAxis: NumericAxis(
+          maximum: 60,
+          minimum: 0,
+          interval: 10,
+          axisLine: const AxisLine(width: 0),
+          majorTickLines: const MajorTickLines(size: 0)),
+      series: _getDefaultColumn(),
+      legend: Legend(isVisible: true),
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+        elevation: 0,
+        opacity: 0.7,
+        activationMode: ActivationMode.singleTap,
+        canShowMarker: true,
+        color: BLACK,
+      ),
+    );
+  }
+
+  ///Get the column series
+  List<ColumnSeries<ChartDataModel, String>> _getDefaultColumn() {
+    return <ColumnSeries<ChartDataModel, String>>[
+      ColumnSeries<ChartDataModel, String>(
+        dataSource: data,
+        width: 0.7,
+        spacing: 0.4,
+        color: PRIMARY_COLOR,
+        xValueMapper: (ChartDataModel sales, _) => sales.x as String,
+        yValueMapper: (ChartDataModel sales, _) => sales.y,
+        name: CHART_HOURS_LABEL,
+      ),
+    ];
   }
 
   Widget monthlyReportList() {

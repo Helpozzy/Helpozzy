@@ -80,9 +80,26 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                 },
               )
             : Center(
-                child: Text(
-                  NO_RECORD_FOUND,
-                  style: _theme.textTheme.headline6!.copyWith(color: GRAY),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        NO_PROJECTS_FOUNDS,
+                        style: _theme.textTheme.headline5!.copyWith(
+                            color: DARK_GRAY, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        PLEASE_VISIT_OTHER,
+                        textAlign: TextAlign.center,
+                        style: _theme.textTheme.bodyText2!
+                            .copyWith(color: DARK_GRAY),
+                      ),
+                    ],
+                  ),
                 ),
               );
       },
