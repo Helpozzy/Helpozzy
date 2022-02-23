@@ -194,6 +194,15 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   },
                 ),
               ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    vertical: width * 0.06, horizontal: width * 0.1),
+                child: CommonButton(
+                  text: SUBMIT_BUTTON,
+                  onPressed: () => onRegister(),
+                ),
+              ),
             ],
           ),
         ),

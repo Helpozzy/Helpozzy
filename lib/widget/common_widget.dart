@@ -104,6 +104,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     required this.validator,
     this.onChanged,
     this.maxLength,
+    this.maxLines,
     this.fillColor,
     this.onTap,
     this.readOnly = false,
@@ -120,6 +121,7 @@ class CommonRoundedTextfield extends StatelessWidget {
   final GestureTapCallback? onTap;
   final bool readOnly;
   final int? maxLength;
+  final int? maxLines;
   final Color? fillColor;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -136,6 +138,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
+      maxLines: maxLines,
       textAlign: textAlignCenter! ? TextAlign.center : TextAlign.left,
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
@@ -566,6 +569,33 @@ Future<void> showLoadingDialog(
       );
     },
   );
+}
+
+//Radio tile
+class RadioTile extends StatelessWidget {
+  const RadioTile({
+    Key? key,
+    required this.label,
+    required this.widget,
+  }) : super(key: key);
+  final String label;
+  final Widget widget;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        widget,
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                color: DARK_GRAY,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
 }
 
 //Top Icon on Intro

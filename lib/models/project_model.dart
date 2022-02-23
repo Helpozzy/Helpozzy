@@ -23,6 +23,8 @@ class ProjectModel {
     required this.contactNumber,
     required this.organization,
     required this.location,
+    required this.projectLocationLati,
+    required this.projectLocationLongi,
     required this.reviewCount,
     required this.enrollmentCount,
     required this.rating,
@@ -89,6 +91,8 @@ class ProjectModel {
   late String contactNumber;
   late String organization;
   late String location;
+  late double projectLocationLati;
+  late double projectLocationLongi;
   late int reviewCount;
   late double rating;
   late String aboutOrganizer;

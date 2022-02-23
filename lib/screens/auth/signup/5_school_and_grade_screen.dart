@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
+import 'package:helpozzy/screens/auth/signup/6_target_and_area_of_interest.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -74,6 +74,15 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.10),
                   child: selectGradeDropDown(),
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                      vertical: width * 0.06, horizontal: width * 0.1),
+                  child: CommonButton(
+                    text: CONTINUE_BUTTON,
+                    onPressed: () => onContinue(),
+                  ),
                 ),
               ],
             ),

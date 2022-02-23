@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/living_info_screen.dart';
+import 'package:helpozzy/screens/auth/signup/3_living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -147,7 +147,21 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 dateOfBirthField(),
                 TopInfoLabel(label: SELECT_GENDER),
                 genderDropDown(),
-                SizedBox(height: 25),
+                StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.emailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          vertical: width * 0.06, horizontal: width * 0.1),
+                      child: CommonButton(
+                        text: CONTINUE_BUTTON,
+                        onPressed: () => onContinue(snapshot),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),

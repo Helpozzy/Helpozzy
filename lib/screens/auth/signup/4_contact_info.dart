@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
-import 'package:helpozzy/screens/auth/signup/school_and_grade_screen.dart';
+import 'package:helpozzy/screens/auth/signup/6_target_and_area_of_interest.dart';
+import 'package:helpozzy/screens/auth/signup/5_school_and_grade_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
@@ -29,33 +29,11 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
   final SignUpBloc _signUpBloc = SignUpBloc();
   late double width;
   late double height;
-  late bool showParentFields = true;
-
-  @override
-  void initState() {
-    getAgeFromDOB();
-    super.initState();
-  }
-
-  Future getAgeFromDOB() async {
-    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(signupAndUserModel.dateOfBirth!));
-    final currentDate = DateTime.now();
-    final Duration duration = currentDate.difference(dateOfBirth);
-    final int diff = (duration.inDays / 365).floor();
-    if (diff > 18) {
-      showParentFields = false;
-    } else {
-      showParentFields = true;
-    }
-  }
 
   Future streamOncontinue(AsyncSnapshot<bool> snapshot) async {
     FocusScope.of(context).unfocus();
-    signupAndUserModel.parentEmail =
-        showParentFields ? _parentEmailController.text : '';
-    signupAndUserModel.relationshipWithParent =
-        showParentFields ? _relationController.text : '';
+    signupAndUserModel.parentEmail = _parentEmailController.text;
+    signupAndUserModel.relationshipWithParent = _relationController.text;
 
     if (_formKey.currentState!.validate()) {
       if (snapshot.data!) {
@@ -77,32 +55,6 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
     }
   }
 
-  Future onContinue() async {
-    FocusScope.of(context).unfocus();
-    signupAndUserModel.parentEmail =
-        showParentFields ? _parentEmailController.text : '';
-    signupAndUserModel.relationshipWithParent =
-        showParentFields ? _relationController.text : '';
-
-    if (_formKey.currentState!.validate()) {
-      if (signupAndUserModel.volunteerType == 1) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  SchoolAndGradeScreen(signupAndUserModel: signupAndUserModel)),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TargetAndAreaOfInterest(
-                  signupAndUserModel: signupAndUserModel)),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -115,38 +67,43 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              showParentFields
-                  ? StreamBuilder<bool>(
-                      initialData: false,
-                      stream: _signUpBloc.parentEmailVerifiedStream,
-                      builder: (context, snapshot) {
-                        return CommonWidget(context).showBackForwardButton(
-                          onPressedForward: () => streamOncontinue(snapshot),
-                        );
-                      })
-                  : CommonWidget(context).showBackForwardButton(
-                      onPressedForward: () => onContinue(),
-                    ),
-              showParentFields
-                  ? TopInfoLabel(label: ENTER_PARENT_EMAIL)
-                  : SizedBox(),
-              showParentFields ? emailSection() : SizedBox(),
-              showParentFields ? SizedBox(height: 10) : SizedBox(),
-              showParentFields
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.16,
-                        vertical: 4.0,
-                      ),
-                      child: TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
-                    )
-                  : SizedBox(),
-              showParentFields
-                  ? Container(
-                      margin: EdgeInsets.symmetric(horizontal: width * 0.10),
-                      child: selectRelationshipDropdown(),
-                    )
-                  : SizedBox(),
+              StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.parentEmailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return CommonWidget(context).showBackForwardButton(
+                      onPressedForward: () => streamOncontinue(snapshot),
+                    );
+                  }),
+              TopInfoLabel(label: ENTER_PARENT_EMAIL),
+              emailSection(),
+              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.16,
+                  vertical: 4.0,
+                ),
+                child: TextfieldLabelSmall(label: RELATIONSHIP_STATUS),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: width * 0.10),
+                child: selectRelationshipDropdown(),
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    vertical: width * 0.06, horizontal: width * 0.1),
+                child: StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.parentEmailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return CommonButton(
+                      text: CONTINUE_BUTTON,
+                      onPressed: () => streamOncontinue(snapshot),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

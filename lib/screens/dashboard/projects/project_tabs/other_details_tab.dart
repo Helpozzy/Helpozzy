@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
@@ -31,28 +30,16 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final ProjectReviewsBloc _projectReviewsBloc = ProjectReviewsBloc();
   final CommonUrlLauncher _commonUrlLauncher = CommonUrlLauncher();
-
   late GoogleMapController mapController;
-
-  late double? addressLat = 0.0;
-  late double? addressLong = 0.0;
   late double selectedRating = 0.0;
   final Set<Marker> _markers = {};
   Future _mapFuture = Future.delayed(Duration(seconds: 2), () => true);
 
   @override
   void initState() {
-    getLatLong();
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     _projectReviewsBloc.getProjectReviews(project.projectId);
     super.initState();
-  }
-
-  Future getLatLong() async {
-    List<Location> locations = await locationFromAddress(project.location);
-    addressLat = locations[0].latitude;
-    addressLong = locations[0].longitude;
-    setState(() {});
   }
 
   @override
@@ -580,7 +567,10 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                       icon: BitmapDescriptor.defaultMarkerWithHue(
                           BitmapDescriptor.hueGreen),
                       markerId: markerId,
-                      position: LatLng(addressLat!, addressLong!),
+                      position: LatLng(
+                        project.projectLocationLati,
+                        project.projectLocationLongi,
+                      ),
                       infoWindow: InfoWindow(
                           title: project.projectName,
                           snippet: project.location),
@@ -589,7 +579,10 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                     mapController.moveCamera(
                       CameraUpdate.newCameraPosition(
                         CameraPosition(
-                          target: LatLng(addressLat!, addressLong!),
+                          target: LatLng(
+                            project.projectLocationLati,
+                            project.projectLocationLongi,
+                          ),
                           zoom: 11,
                         ),
                       ),
@@ -599,7 +592,10 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   mapToolbarEnabled: false,
                   markers: _markers,
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(addressLat!, addressLong!),
+                    target: LatLng(
+                      project.projectLocationLati,
+                      project.projectLocationLongi,
+                    ),
                     zoom: 11.0,
                   ),
                 ),
@@ -611,8 +607,11 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
                   child: IconButton(
-                    onPressed: () async => await _commonUrlLauncher
-                        .openSystemMap(addressLat!, addressLong!),
+                    onPressed: () async =>
+                        await _commonUrlLauncher.openSystemMap(
+                      project.projectLocationLati,
+                      project.projectLocationLongi,
+                    ),
                     icon: Icon(
                       Icons.directions,
                       color: GREEN,

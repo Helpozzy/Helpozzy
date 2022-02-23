@@ -72,6 +72,8 @@ enum SearchBottomSheetType {
   SCHOOL_BOTTOMSHEET,
 }
 
+enum OrganizationTypes { CORP, LLC, PARTNERSHIP, SOLE_PROP }
+
 //Font family
 const QUICKSAND = 'Quicksand';
 

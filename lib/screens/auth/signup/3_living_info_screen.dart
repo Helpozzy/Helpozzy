@@ -3,10 +3,10 @@ import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/auth/signup/search_bottomsheets/city_search_bottomsheet.dart';
-import 'package:helpozzy/screens/auth/signup/target_and_area_of_interest.dart';
+import 'package:helpozzy/screens/auth/signup/6_target_and_area_of_interest.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'contact_info.dart';
+import '4_contact_info.dart';
 
 class LivingInfoScreen extends StatefulWidget {
   LivingInfoScreen({required this.signupAndUserModel});
@@ -32,6 +32,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   late double height;
   late List<StateModel>? states = [];
   late List<CityModel>? cities = [];
+  late bool showParentFields = false;
 
   @override
   void initState() {
@@ -59,15 +60,28 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     signupAndUserModel.address =
         _houseNoController.text + ', ' + _streetController.text;
     if (_formKey.currentState!.validate()) {
+      final bool requiredParentInfo = await getAgeFromDOB();
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => signupAndUserModel.volunteerType == 0
-              ? TargetAndAreaOfInterest(signupAndUserModel: signupAndUserModel)
-              : ContactInfoScreen(signupAndUserModel: signupAndUserModel),
+          builder: (context) => requiredParentInfo
+              ? ContactInfoScreen(signupAndUserModel: signupAndUserModel)
+              : TargetAndAreaOfInterest(signupAndUserModel: signupAndUserModel),
         ),
       );
     }
+  }
+
+  Future<bool> getAgeFromDOB() async {
+    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(signupAndUserModel.dateOfBirth!));
+    final currentDate = DateTime.now();
+    final Duration duration = currentDate.difference(dateOfBirth);
+    final int diff = (duration.inDays / 365).floor();
+    if (diff > 18)
+      return false;
+    else
+      return true;
   }
 
   @override
@@ -136,7 +150,15 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                   }
                 },
               ),
-              SizedBox(height: 25),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    vertical: width * 0.06, horizontal: width * 0.1),
+                child: CommonButton(
+                  text: CONTINUE_BUTTON,
+                  onPressed: () => onContinue(),
+                ),
+              ),
             ],
           ),
         ),

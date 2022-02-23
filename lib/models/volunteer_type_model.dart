@@ -1,10 +1,8 @@
 class VolunteerTypes {
   VolunteerTypes.fromJson(List<dynamic> json) {
     json.forEach((element) {
-      if (element['id'] != 2) {
-        if (element['id'] != 3) {
-          volunteers.add(VolunteerModel.fromjson(json: element));
-        }
+      if (element['id'] != 3) {
+        volunteers.add(VolunteerModel.fromjson(json: element));
       }
     });
   }

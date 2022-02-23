@@ -48,6 +48,8 @@ class _CreateProjectState extends State<CreateProject> {
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   late DetailsResult? detailsResult;
+  late double latitude = 0.0;
+  late double longitude = 0.0;
 
   @override
   void initState() {
@@ -69,11 +71,12 @@ class _CreateProjectState extends State<CreateProject> {
   void getDetails(String placeId) async {
     var result = await this.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
-      setState(() {
-        detailsResult = result.result!;
-        _projLocationController.text = detailsResult!.formattedAddress!;
-      });
+      detailsResult = result.result!;
+      _projLocationController.text = detailsResult!.formattedAddress!;
+      latitude = detailsResult!.geometry!.location!.lat!;
+      longitude = detailsResult!.geometry!.location!.lng!;
       predictions.clear();
+      setState(() {});
     }
   }
 
@@ -143,7 +146,13 @@ class _CreateProjectState extends State<CreateProject> {
                           color: PRIMARY_COLOR,
                         ),
                         suffixIcon: IconButton(
-                          onPressed: () => _projLocationController.clear(),
+                          onPressed: () {
+                            longitude = 0.0;
+                            latitude = 0.0;
+                            predictions.clear();
+                            _projLocationController.clear();
+                            setState(() {});
+                          },
                           icon: Icon(
                             Icons.close,
                             color: PRIMARY_COLOR,
@@ -174,13 +183,27 @@ class _CreateProjectState extends State<CreateProject> {
                       shrinkWrap: true,
                       itemCount: predictions.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Icon(
-                            CupertinoIcons.location,
-                            color: PRIMARY_COLOR,
-                          ),
-                          title: Text(predictions[index].description!),
+                        return GestureDetector(
                           onTap: () => getDetails(predictions[index].placeId!),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: width * 0.06),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  CupertinoIcons.location,
+                                  color: PRIMARY_COLOR,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    predictions[index].description!,
+                                    maxLines: 3,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -586,7 +609,9 @@ class _CreateProjectState extends State<CreateProject> {
       contactName: '',
       contactNumber: '',
       imageUrl: '',
-      location: '',
+      location: _projLocationController.text,
+      projectLocationLati: latitude,
+      projectLocationLongi: longitude,
       organization: '',
       rating: 0.0,
       reviewCount: 0,

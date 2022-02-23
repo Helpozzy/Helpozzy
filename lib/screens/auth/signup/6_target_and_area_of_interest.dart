@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/password_set_screen.dart';
+import 'package:helpozzy/screens/auth/signup/7_password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -74,7 +74,15 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
               targetFields(),
               TopInfoLabel(label: CHOOSE_YOUR_AREA_OF_INTEREST),
               categoryView(),
-              SizedBox(height: 25),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    vertical: width * 0.06, horizontal: width * 0.1),
+                child: CommonButton(
+                  text: CONTINUE_BUTTON,
+                  onPressed: () => onContinue(),
+                ),
+              ),
             ],
           ),
         ),

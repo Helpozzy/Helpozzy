@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/screens/auth/login/login.dart';
-import 'package:helpozzy/screens/auth/signup/volunteering_screen.dart';
+import 'package:helpozzy/screens/auth/signup/1_volunteering_screen.dart';
 import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
 import 'package:helpozzy/screens/home/home.dart';

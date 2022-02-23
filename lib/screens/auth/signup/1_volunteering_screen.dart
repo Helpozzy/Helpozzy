@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/volunteer_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
-import 'package:helpozzy/screens/auth/signup/personal_info_screen.dart';
+import 'package:helpozzy/screens/auth/signup/2_personal_info_screen.dart';
+import 'package:helpozzy/screens/auth/signup/organization_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -62,7 +63,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       stream: _volunteerBloc.volunteersListStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator(color: PRIMARY_COLOR);
+          return Padding(
+            padding: EdgeInsets.only(top: width * 0.2),
+            child: CircularProgressIndicator(color: PRIMARY_COLOR),
+          );
         }
         return Expanded(
           child: ListView.builder(
@@ -85,8 +89,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PersonalInfoScreen(
-                            signupAndUserModel: signupAndUserModel),
+                        builder: (context) => index == 2
+                            ? OrganizationSignUp()
+                            : PersonalInfoScreen(
+                                signupAndUserModel: signupAndUserModel),
                       ),
                     );
                   },
