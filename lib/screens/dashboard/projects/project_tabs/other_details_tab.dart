@@ -561,9 +561,9 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   indoorViewEnabled: true,
                   onMapCreated: (GoogleMapController controller) async {
                     mapController = controller;
-                    final int markerIdVal1 = generateIds();
-                    final MarkerId markerId = MarkerId(markerIdVal1.toString());
-                    final Marker marker1 = Marker(
+                    final int markerIdVal = generateIds();
+                    final MarkerId markerId = MarkerId(markerIdVal.toString());
+                    final Marker marker = Marker(
                       icon: BitmapDescriptor.defaultMarkerWithHue(
                           BitmapDescriptor.hueGreen),
                       markerId: markerId,
@@ -572,21 +572,11 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                         project.projectLocationLongi,
                       ),
                       infoWindow: InfoWindow(
-                          title: project.projectName,
-                          snippet: project.location),
-                    );
-                    _markers.add(marker1);
-                    mapController.moveCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                          target: LatLng(
-                            project.projectLocationLati,
-                            project.projectLocationLongi,
-                          ),
-                          zoom: 11,
-                        ),
+                        title: project.projectName,
+                        snippet: project.location,
                       ),
                     );
+                    _markers.add(marker);
                     setState(() {});
                   },
                   mapToolbarEnabled: false,

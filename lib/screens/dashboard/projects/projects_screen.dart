@@ -5,6 +5,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 import 'create_project.dart';
+import 'my_project_tab.dart';
 import 'project_list.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
+    _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
     _tabController.addListener(() => FocusScope.of(context).unfocus());
     super.initState();
   }
@@ -31,7 +32,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CommonAppBar(context).show(
-        elevation: 1,
+        elevation: 0.4,
         backButton: true,
         title: PROJECTS_APPBAR,
         bottom: topSearchWithTab(),
@@ -45,7 +46,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: width * 0.03, right: width * 0.03),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.03),
               child: Row(
                 children: [
                   Expanded(
@@ -92,10 +93,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   TabBar _tabBar() => TabBar(
         controller: _tabController,
         indicatorColor: DARK_PINK_COLOR,
-        indicatorSize: TabBarIndicatorSize.label,
-        indicatorWeight: 3.0,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorWeight: 2.5,
         isScrollable: true,
         tabs: [
+          _tab(MY_PROJECTS_TAB),
           _tab(PROJECT_UPCOMING_TAB),
           _tab(PROJECT_INPROGRESS_TAB),
           _tab(PROJECT_COMPLETED_TAB),
@@ -119,6 +121,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
+            MyProjectTab(projectsBloc: _projectsBloc),
             ProjectListScreen(
               projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
               projectsBloc: _projectsBloc,

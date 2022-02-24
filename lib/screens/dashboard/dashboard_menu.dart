@@ -34,9 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Color getColor(int index) {
     if (index == _processIndex) {
-      return AMBER_COLOR;
+      return BLACK;
     } else if (index < _processIndex) {
-      return AMBER_COLOR;
+      return BLACK;
     } else {
       return LIGHT_GRAY;
     }
@@ -59,8 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             topContainerWithProgress(),
             CommonDivider(),
             Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 8.0),
+              padding: EdgeInsets.only(
+                  left: width * 0.08, right: width * 0.06, top: 10.0),
               child: StreamBuilder<SignUpAndUserModel>(
                 stream: _userInfoBloc.userStream,
                 builder: (context, snapshot) {
@@ -77,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return Text(
                     'Hi, ${snapshot.data!.name}',
                     style: _theme.textTheme.headline6!.copyWith(
-                      color: DARK_PINK_COLOR,
+                      color: PRIMARY_COLOR,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -130,7 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             '50',
             style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: width * 0.08,
-                color: AMBER_COLOR,
+                color: BLACK,
                 fontWeight: FontWeight.bold),
           ),
           Text(
@@ -180,8 +180,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Stack(
           children: [
             Container(
-              height: height / 7.5,
-              width: width - 15,
+              height: height / 6.5,
+              width: double.infinity,
+              alignment: Alignment.center,
               child: Timeline.tileBuilder(
                 padding: EdgeInsets.symmetric(vertical: 2.0),
                 shrinkWrap: true,
@@ -197,10 +198,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Text(
                         index == items.length - 1
-                            ? '${items[index]}\nTarget'
+                            ? '${items[index]}\nMy Goal'
                             : '${items[index]}',
                         textAlign: TextAlign.center,
-                        maxLines: 2,
+                        maxLines: 3,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontWeight: index == items.length - 1
                               ? FontWeight.bold
@@ -214,9 +215,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   indicatorBuilder: (ctx, index) {
                     Color color;
                     if (items[index] == _processIndex) {
-                      color = AMBER_COLOR;
+                      color = BLACK;
                     } else if (items[index] < _processIndex) {
-                      color = AMBER_COLOR;
+                      color = BLACK;
                     } else {
                       color = LIGHT_GRAY;
                     }
@@ -278,13 +279,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           physics: ScrollPhysics(),
           crossAxisCount: 2,
           shrinkWrap: true,
-          childAspectRatio: 1,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          childAspectRatio: 1.05,
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           children: snapshot.data!.menus.map((MenuModel menu) {
             return GestureDetector(
               onTap: () async => await onMenuTap(menu),
               child: Card(
-                margin: EdgeInsets.all(8.0),
+                margin: EdgeInsets.all(12.0),
                 elevation: 0,
                 color: GRAY,
                 shape: RoundedRectangleBorder(
@@ -296,8 +297,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: EdgeInsets.symmetric(vertical: 12.0),
                       child: Image.asset(
                         menu.asset,
-                        height: width / 5.5,
-                        width: width / 5.5,
+                        height: width / 5.7,
+                        width: width / 5.7,
                         color: PRIMARY_COLOR,
                       ),
                     ),
@@ -305,12 +306,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Text(
                       menu.label.toUpperCase(),
                       textAlign: TextAlign.center,
-                      style: _theme.textTheme.headline6!.copyWith(
+                      style: _theme.textTheme.bodyText2!.copyWith(
                         color: DARK_PINK_COLOR,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

@@ -51,14 +51,17 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        ListDividerLabel(
-            label: projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-                ? NEW_PROJECT_LABEL
-                : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
-                    ? ONGOING_PROJECT_LABEL
-                    : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                        ? RECENTLY_COMPLETED_LABEL
-                        : LATEST_CONTRIBUTION_HOURS_LABEL),
+        projectTabType == ProjectTabType.OWN_TAB ||
+                projectTabType == ProjectTabType.MY_ENROLLED_TAB
+            ? SizedBox()
+            : ListDividerLabel(
+                label: projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+                    ? NEW_PROJECT_LABEL
+                    : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+                        ? ONGOING_PROJECT_LABEL
+                        : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                            ? RECENTLY_COMPLETED_LABEL
+                            : LATEST_CONTRIBUTION_HOURS_LABEL),
         Expanded(child: projectList(projectsBloc.getProjectsStream)),
         projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
             ? ListDividerLabel(label: DateTime.now().year.toString())

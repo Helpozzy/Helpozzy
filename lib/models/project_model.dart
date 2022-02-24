@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Projects {
-  Projects.fromJson({required List<Map<String, dynamic>> list}) {
+  Projects.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
-      projectList.add(ProjectModel.fromjson(json: element));
+      final task = element.data() as Map<String, dynamic>;
+      projectList.add(ProjectModel.fromjson(json: task));
     });
   }
 
@@ -44,6 +47,8 @@ class ProjectModel {
     imageUrl = json['image_url'];
     organization = json['oraganization'];
     location = json['location'];
+    projectLocationLati = json['location_latitude'];
+    projectLocationLongi = json['location_longitude'];
     contactName = json['contact_person_name'];
     contactNumber = json['contact_number'];
     reviewCount = json['review_count'];
@@ -68,6 +73,8 @@ class ProjectModel {
       'image_url': imageUrl,
       'oraganization': organization,
       'location': location,
+      'location_latitude': projectLocationLati,
+      'location_longitude': projectLocationLongi,
       'contact_person_name': contactName,
       'contact_number': contactNumber,
       'review_count': reviewCount,

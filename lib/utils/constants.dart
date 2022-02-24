@@ -53,13 +53,16 @@ const MATE_WHITE = Color(0xFFFDEFFF);
 const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 const APP_ICON_URL =
     'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/helpozzy_icon%2Fhelpozzy_icon.png?alt=media&token=4e4a5fa0-ea75-4fbe-8f36-7db01347da3f';
-
+const ANDROID_MAP_API_KEY = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 late SharedPreferences prefsObject;
 
 //Enum
 enum ProjectTabType {
+  MY_PROJECTS_TAB,
+  OWN_TAB,
+  MY_ENROLLED_TAB,
   PROJECT_UPCOMING_TAB,
   PROJECT_INPROGRESS_TAB,
   PROJECT_COMPLETED_TAB,
@@ -205,6 +208,15 @@ const TASK_NOT_CREATED_ERROR_POPUP_MSG =
 const REVIEW_POSTED_POPUP_MSG = 'Review posted';
 const REVIEW_NOT_POSTED_ERROR_POPUP_MSG = 'Try again! Review not posted';
 
+//Oraganization sign up
+const ORAGANIZATION_SIGN_UP_LABEL = 'Oraganization Sign Up';
+const LEGAL_ORGANIZATION_NAME_LABEL = 'Legal Oraganization Name';
+const ORAGANIZATION_DISCRIPTION_LABEL = 'Oraganization Discription';
+const ORAGANIZATION_TYPE_LABEL = 'Organization Type';
+const OTHER_LABEL = 'Other';
+const TAX_ID_NUMBER_LABEL = 'Tax ID Number';
+const INVITE_OTHER_ADMIN_LABEL = 'Invite Other Admin';
+
 //Reset password
 const RESET_PASSWORD = 'Forgot your password?';
 const RESER_PASS_MSG =
@@ -224,7 +236,7 @@ const SEARCH_BY_CATEGORY = 'Search by category';
 const CURRENT_OPEN_PROJECT_LABEL =
     'Current available volunteering opportunities';
 const YOUR_HOURS_1 = 'You have ';
-const YOUR_HOURS_2 = ' hours for - ';
+const YOUR_HOURS_2 = ' volunteer hours for - ';
 const DETAILS = 'Details';
 const REDEEM = 'Redeem';
 const FOOD_BANK = 'Food\nBank';
@@ -297,6 +309,7 @@ const APPROVE_BUTTON = 'APPROVE';
 const DECLINE_BUTTON = 'DECLINE';
 const LOG_HOURS_BUTTON = 'Thank you! Click to log your hours';
 const SUBMIT_BUTTON = 'SUBMIT';
+const ADD_NEW_ADMIN = 'Add New Admin';
 
 //User Project Details Text
 const CURRENT_LOCATION = 'Current Location';
@@ -344,7 +357,7 @@ const ENTER_MESSAGE_HINT = 'Enter Message';
 
 //Notification
 const NOTIFICATION_LABEL = 'Notifications';
-const NO_NOTIFICATIONS_FOUND = 'No new notice/messages';
+const NO_NOTIFICATIONS_FOUND = 'No new notifications';
 
 //Profile
 const CONTACT_TEXT = 'Contact';
@@ -391,6 +404,9 @@ const CHART_MONTHS_LABEL = 'Months';
 const CHART_YEARS_LABEL = 'Years';
 
 // Project Tab
+const MY_PROJECTS_TAB = 'My Projects';
+const OWN_TAB = 'Own';
+const ENROLLED_TAB = 'Enrolled';
 const PROJECT_UPCOMING_TAB = 'Upcoming';
 const PROJECT_INPROGRESS_TAB = 'In-Progress';
 const PROJECT_COMPLETED_TAB = 'Completed';
@@ -458,10 +474,10 @@ const AVAILABLE_POINT = 'Available points to redeem :';
 //User Project Sign-up
 const CONTACT_PRO_LEAD = 'Contact Project Lead';
 
-//Admin Module text
+//Project expansion text
 const LOCATION = 'Location';
 const CONTACT = 'Contact';
-const ENROLLMENT_STATUS = 'Enrollment Status';
+const ENROLLMENTS_LABEL = 'Enrollments';
 const NAME_TEXT = 'NAME';
 const REVIEWS_TEXT = 'REVIEWS';
 const RATING_TEXT = 'RATINGS';
@@ -502,7 +518,7 @@ const TIMELINE_LABEL = 'Timeline';
 const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';
 const PROJECT_NAME_HINT = 'Enter Name';
 const PROJECT_DESCRIPTION_HINT = 'Enter Description';
-const PROJECT_LOCATION_HINT = 'Enter Location';
+const PROJECT_LOCATION_HINT = 'Search Location';
 const PROJECT_START_DATE_HINT = 'Start Date';
 const PROJECT_END_DATE_HINT = 'End Date';
 const PROJECT_START_TIME_HINT = 'Start Time';

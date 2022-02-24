@@ -44,6 +44,7 @@ class _CreateProjectState extends State<CreateProject> {
   late ThemeData _themeData;
   late double width;
   late double height;
+  late String? location = '';
   late int selectedCategoryId;
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
@@ -54,17 +55,14 @@ class _CreateProjectState extends State<CreateProject> {
   @override
   void initState() {
     _projectsBloc.getOtherUsersInfo();
-    String? apiKey = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';
-    googlePlace = GooglePlace(apiKey);
+    googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     super.initState();
   }
 
   Future<void> autoCompleteSearch(String value) async {
     var result = await googlePlace.autocomplete.get(value);
     if (result != null && result.predictions != null && mounted) {
-      setState(() {
-        predictions = result.predictions!;
-      });
+      setState(() => predictions = result.predictions!);
     }
   }
 
@@ -72,9 +70,10 @@ class _CreateProjectState extends State<CreateProject> {
     var result = await this.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
       detailsResult = result.result!;
-      _projLocationController.text = detailsResult!.formattedAddress!;
+      location = detailsResult!.formattedAddress!;
       latitude = detailsResult!.geometry!.location!.lat!;
       longitude = detailsResult!.geometry!.location!.lng!;
+      _projLocationController.clear();
       predictions.clear();
       setState(() {});
     }
@@ -138,134 +137,9 @@ class _CreateProjectState extends State<CreateProject> {
                       child: projectCategoryDropdown(),
                     ),
                     Divider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: SimpleFieldWithLabel(
-                        prefixIcon: Icon(
-                          CupertinoIcons.search,
-                          color: PRIMARY_COLOR,
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            longitude = 0.0;
-                            latitude = 0.0;
-                            predictions.clear();
-                            _projLocationController.clear();
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: PRIMARY_COLOR,
-                          ),
-                        ),
-                        label: PROJECT_LOCATION_LABEL,
-                        controller: _projLocationController,
-                        hintText: PROJECT_LOCATION_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter Search';
-                          }
-                          return null;
-                        },
-                        onChanged: (val) {
-                          if (val.isNotEmpty) {
-                            autoCompleteSearch(val);
-                          } else {
-                            if (predictions.length > 0 && mounted) {
-                              setState(() => predictions = []);
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: predictions.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () => getDetails(predictions[index].placeId!),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: width * 0.06),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  CupertinoIcons.location,
-                                  color: PRIMARY_COLOR,
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    predictions[index].description!,
-                                    maxLines: 3,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    projectLocationView(),
                     Divider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: width * 0.03, horizontal: width * 0.05),
-                      child: SmallInfoLabel(label: TASKS_LABEL),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CommonButtonWithIcon(
-                            icon: Icons.add,
-                            text: ADD_NEW_TASK_BUTTON,
-                            fontSize: 12,
-                            iconSize: 15,
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) =>
-                                        CreateEditTask(fromEdit: false)),
-                              );
-                              await _projectTaskBloc.getProjectAllTasks('');
-                            },
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              selectedTaskBloc = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TasksScreen(),
-                                ),
-                              );
-                              setState(() {});
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(CupertinoIcons.list_bullet,
-                                    color: PURPLE_BLUE_COLOR),
-                                SizedBox(width: 5),
-                                Text(
-                                  TASK_LIST_BUTTON,
-                                  style: _themeData.textTheme.bodyText2!
-                                      .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: PURPLE_BLUE_COLOR),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: taskList(),
-                    ),
+                    taskWidget(),
                     Divider(),
                     Padding(
                       padding: EdgeInsets.only(
@@ -310,6 +184,180 @@ class _CreateProjectState extends State<CreateProject> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget projectLocationView() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: SimpleFieldWithLabel(
+            prefixIcon: Icon(
+              CupertinoIcons.search,
+              color: PRIMARY_COLOR,
+              size: 18,
+            ),
+            suffixIcon: IconButton(
+              onPressed: () {
+                longitude = 0.0;
+                latitude = 0.0;
+                predictions.clear();
+                location = '';
+                _projLocationController.clear();
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.close,
+                color: PRIMARY_COLOR,
+                size: 18,
+              ),
+            ),
+            label: PROJECT_LOCATION_LABEL,
+            controller: _projLocationController,
+            hintText: PROJECT_LOCATION_HINT,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Enter location of project';
+              }
+              return null;
+            },
+            onChanged: (val) {
+              if (val.isNotEmpty) {
+                autoCompleteSearch(val);
+              } else {
+                if (predictions.length > 0 && mounted) {
+                  setState(() => predictions = []);
+                }
+              }
+            },
+          ),
+        ),
+        SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: predictions.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => getDetails(predictions[index].placeId!),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: width * 0.06),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.location,
+                      color: PRIMARY_COLOR,
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        predictions[index].description!,
+                        maxLines: 3,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        location != null && location!.isNotEmpty
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: width * 0.05),
+                child: Card(
+                  elevation: 4,
+                  color: GRAY,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: width * 0.05),
+                    title: Text(
+                      LOCATION,
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      location!,
+                      style: _themeData.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: DARK_GRAY,
+                      ),
+                    ),
+                    trailing: Icon(
+                      CupertinoIcons.map_pin_ellipse,
+                      color: PRIMARY_COLOR,
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox(),
+      ],
+    );
+  }
+
+  Widget taskWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: width * 0.03, horizontal: width * 0.05),
+          child: SmallInfoLabel(label: TASKS_LABEL),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CommonButtonWithIcon(
+                icon: Icons.add,
+                text: ADD_NEW_TASK_BUTTON,
+                fontSize: 12,
+                iconSize: 15,
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => CreateEditTask(fromEdit: false)),
+                  );
+                  await _projectTaskBloc.getProjectAllTasks('');
+                },
+              ),
+              TextButton(
+                onPressed: () async {
+                  selectedTaskBloc = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TasksScreen(),
+                    ),
+                  );
+                  setState(() {});
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(CupertinoIcons.list_bullet, color: PURPLE_BLUE_COLOR),
+                    SizedBox(width: 5),
+                    Text(
+                      TASK_LIST_BUTTON,
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: PURPLE_BLUE_COLOR),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          child: taskList(),
+        ),
+      ],
     );
   }
 

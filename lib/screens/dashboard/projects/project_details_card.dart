@@ -218,11 +218,17 @@ class _ProjectTileState extends State<ProjectTile> {
             },
           ),
           projectExpandDetails(
-            title: ENROLLMENT_STATUS,
-            detail: project.enrollmentCount.toString() + MEMBERS_SIGNED_UP,
+            title: STATUS_LABEL,
+            detail: project.status,
             hasIcon: false,
           ),
           SizedBox(height: 3),
+          projectExpandDetails(
+            title: ENROLLMENTS_LABEL,
+            detail: project.enrollmentCount.toString() + MEMBERS_SIGNED_UP,
+            hasIcon: false,
+          ),
+          SizedBox(height: 4),
           SmallCommonButtonWithIcon(
             onPressed: () {
               setState(() => project.isTaskDetailsExpanded =

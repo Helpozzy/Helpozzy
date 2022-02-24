@@ -41,18 +41,18 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                 CommonWidget(context).showBackForwardButton(
                   onPressedForward: () {},
                 ),
-                TopInfoLabel(label: 'Oraganization Sign Up'),
-                textfieldLabel('Legal Oraganization Name'),
+                TopInfoLabel(label: ORAGANIZATION_SIGN_UP_LABEL),
+                textfieldLabel(LEGAL_ORGANIZATION_NAME_LABEL),
                 organizationName(),
-                textfieldLabel('Oraganization Discription'),
+                textfieldLabel(ORAGANIZATION_DISCRIPTION_LABEL),
                 organizationDiscription(),
-                textfieldLabel('Organization Type'),
+                textfieldLabel(ORAGANIZATION_TYPE_LABEL),
                 organizationTypes(),
-                textfieldLabel('Other'),
+                textfieldLabel(OTHER_LABEL),
                 organizationOtherType(),
-                textfieldLabel('Tax ID Number'),
+                textfieldLabel(TAX_ID_NUMBER_LABEL),
                 taxIdNumber(),
-                textfieldLabel('Invite Other Admin'),
+                textfieldLabel(INVITE_OTHER_ADMIN_LABEL),
                 inviteOtherMember(),
                 Container(
                   width: double.infinity,
@@ -255,26 +255,40 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
   Widget inviteOtherMember() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: CommonRoundedTextfield(
-              controller: _organizationNameContntroller,
-              hintText: 'Email Adress',
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return 'Please enter Invitees/Admins';
-                }
-                return null;
-              },
+          Row(
+            children: [
+              Expanded(
+                child: CommonRoundedTextfield(
+                  controller: _organizationNameContntroller,
+                  hintText: 'Email Adress',
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Please enter Invitees/Admins';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                '0/3',
+                style: _theme.textTheme.bodyText2!
+                    .copyWith(fontWeight: FontWeight.w600, color: DARK_GRAY),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: SmallCommonButtonWithIcon(
+              fontSize: 14,
+              iconSize: 14,
+              text: ADD_NEW_ADMIN,
+              icon: Icons.add,
+              onPressed: () {},
             ),
-          ),
-          SizedBox(width: 10),
-          Text(
-            '0/3',
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w600, color: DARK_GRAY),
-          ),
+          )
         ],
       ),
     );

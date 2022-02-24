@@ -104,7 +104,6 @@ class CommonRoundedTextfield extends StatelessWidget {
     required this.validator,
     this.onChanged,
     this.maxLength,
-    this.maxLines,
     this.fillColor,
     this.onTap,
     this.readOnly = false,
@@ -121,7 +120,6 @@ class CommonRoundedTextfield extends StatelessWidget {
   final GestureTapCallback? onTap;
   final bool readOnly;
   final int? maxLength;
-  final int? maxLines;
   final Color? fillColor;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -138,7 +136,6 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
-      maxLines: maxLines,
       textAlign: textAlignCenter! ? TextAlign.center : TextAlign.left,
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
