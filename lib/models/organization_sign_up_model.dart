@@ -1,6 +1,7 @@
 class OrganizationSignUpModel {
   OrganizationSignUpModel({
     this.legalOrganizationName,
+    this.discription,
     this.organizationType,
     this.other,
     this.taxIdNumber,

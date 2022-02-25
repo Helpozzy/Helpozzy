@@ -3,7 +3,6 @@ import 'package:helpozzy/bloc/volunteer_bloc.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/screens/auth/signup/2_personal_info_screen.dart';
-import 'package:helpozzy/screens/auth/signup/organization_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -84,15 +83,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: LIGHT_BLACK,
                   text: _item.type,
                   onPressed: () {
-                    SignUpAndUserModel signupAndUserModel =
-                        SignUpAndUserModel(volunteerType: index);
+                    SignUpAndUserModel signupAndUserModel = SignUpAndUserModel(
+                      volunteerType: index,
+                      isOrganization: index == 2 ? true : false,
+                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => index == 2
-                            ? OrganizationSignUp()
-                            : PersonalInfoScreen(
-                                signupAndUserModel: signupAndUserModel),
+                        builder: (context) => PersonalInfoScreen(
+                            signupAndUserModel: signupAndUserModel),
                       ),
                     );
                   },

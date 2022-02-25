@@ -47,7 +47,7 @@ class _CreateProjectState extends State<CreateProject> {
   late String? location = '';
   late int selectedCategoryId;
   late GooglePlace googlePlace;
-  List<AutocompletePrediction> predictions = [];
+  late List<AutocompletePrediction> predictions = [];
   late DetailsResult? detailsResult;
   late double latitude = 0.0;
   late double longitude = 0.0;
@@ -66,7 +66,7 @@ class _CreateProjectState extends State<CreateProject> {
     }
   }
 
-  void getDetails(String placeId) async {
+  Future<void> getDetails(String placeId) async {
     var result = await this.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
       detailsResult = result.result!;
@@ -280,11 +280,14 @@ class _CreateProjectState extends State<CreateProject> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
-                      location!,
-                      style: _themeData.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: DARK_GRAY,
+                    subtitle: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: Text(
+                        location!,
+                        style: _themeData.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: DARK_GRAY,
+                        ),
                       ),
                     ),
                     trailing: Icon(

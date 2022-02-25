@@ -36,6 +36,8 @@ class SignUpAndUserModel {
     this.rating,
     this.reviewsByPersons,
     this.joiningDate,
+    this.isOrganization = false,
+    this.organizationDetails,
   });
 
   SignUpAndUserModel.fromJson({required Map<String, dynamic> json}) {
@@ -71,6 +73,8 @@ class SignUpAndUserModel {
     reviewsByPersons = json['review_by_persons'];
     pointGifted = json['point_gifted'];
     joiningDate = json['date_of_joining'];
+    isOrganization = json['is_organization'];
+    organizationDetails = json['organization_details'];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,8 @@ class SignUpAndUserModel {
       'rating': rating,
       'review_by_persons': reviewsByPersons,
       'point_gifted': pointGifted,
+      'is_organization': isOrganization,
+      'organization_details': organizationDetails,
     };
   }
 
@@ -125,4 +131,6 @@ class SignUpAndUserModel {
   late double? rating;
   late int? reviewsByPersons;
   late String? joiningDate;
+  late Map<String, dynamic>? organizationDetails;
+  late bool? isOrganization;
 }

@@ -15,10 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(AppLoaded());
   }
 
-  @override
-  Stream<AuthState> mapEventToState(
-    AuthEvent event,
-  ) async* {
+  Stream<AuthState> mapEventToState(AuthEvent event) async* {
     if (event is AppLoaded) {
       await Future.delayed(Duration(seconds: 3));
       try {

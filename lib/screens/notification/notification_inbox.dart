@@ -43,7 +43,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Task Request Approved';
       notification.subTitle =
-          'Your ${task.taskName} sign-up request is approved for ';
+          'Your ${task.taskName} sign-up request is approved';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
     } else {

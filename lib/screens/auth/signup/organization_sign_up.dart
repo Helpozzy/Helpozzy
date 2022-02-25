@@ -1,23 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/models/organization_sign_up_model.dart';
+import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/screens/auth/signup/7_password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class OrganizationSignUp extends StatefulWidget {
-  const OrganizationSignUp({Key? key}) : super(key: key);
-
+  const OrganizationSignUp({Key? key, required this.signupAndUserModel})
+      : super(key: key);
+  final SignUpAndUserModel signupAndUserModel;
   @override
-  _OrganizationSignUpState createState() => _OrganizationSignUpState();
+  _OrganizationSignUpState createState() =>
+      _OrganizationSignUpState(signupAndUserModel: signupAndUserModel);
 }
 
 class _OrganizationSignUpState extends State<OrganizationSignUp> {
+  _OrganizationSignUpState({required this.signupAndUserModel});
+  final SignUpAndUserModel signupAndUserModel;
   static final _formKey = GlobalKey<FormState>();
   final TextEditingController _organizationNameContntroller =
+      TextEditingController();
+  final TextEditingController _organizationDiscriptionContntroller =
+      TextEditingController();
+  final TextEditingController _organizationOtherContntroller =
+      TextEditingController();
+  final TextEditingController _organizationTaxIdNumberContntroller =
       TextEditingController();
   late OrganizationTypes _organizationType = OrganizationTypes.CORP;
   late ThemeData _theme;
   late double width;
   late double height;
   late bool nonProfitOrganization = false;
+
+  Future onContinue() async {
+    FocusScope.of(context).unfocus();
+    final OrganizationSignUpModel organizationSignUpModel =
+        OrganizationSignUpModel(
+      isNonProfitOrganization: nonProfitOrganization,
+      legalOrganizationName: _organizationNameContntroller.text,
+      discription: _organizationDiscriptionContntroller.text,
+      organizationType: _organizationType.index == 0
+          ? LLC_RADIO
+          : _organizationType.index == 1
+              ? PARTNERSHIP_RADIO
+              : _organizationType.index == 2
+                  ? CORP_RADIO
+                  : SOLE_PROP_RADIO,
+      other: _organizationOtherContntroller.text,
+      otherAdmins: [],
+      taxIdNumber: _organizationTaxIdNumberContntroller.text,
+    );
+    signupAndUserModel.organizationDetails = organizationSignUpModel.toJson();
+
+    if (_formKey.currentState!.validate()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              SetPasswordScreen(signupAndUserModel: signupAndUserModel),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +106,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                   ),
                   child: CommonButton(
                     text: CONTINUE_BUTTON,
-                    onPressed: () {},
+                    onPressed: () async => await onContinue(),
                   ),
                 ),
               ],
@@ -93,7 +137,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
         controller: _organizationNameContntroller,
-        hintText: 'Organization Name',
+        hintText: ORGANIZATION_NAME_HINT,
         validator: (val) {
           if (val!.isEmpty) {
             return 'Please enter organization name';
@@ -109,7 +153,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
         controller: _organizationNameContntroller,
-        hintText: 'Organization Description',
+        hintText: ORGANIZATION_DISCRIPTION_HINT,
         validator: (val) {
           if (val!.isEmpty) {
             return 'Please enter organization discription';
@@ -134,7 +178,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   RadioTile(
-                    label: 'Corp.',
+                    label: CORP_RADIO,
                     widget: Radio(
                       value: OrganizationTypes.CORP,
                       groupValue: _organizationType,
@@ -144,7 +188,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                     ),
                   ),
                   RadioTile(
-                    label: 'LLC',
+                    label: LLC_RADIO,
                     widget: Radio(
                       value: OrganizationTypes.LLC,
                       groupValue: _organizationType,
@@ -161,7 +205,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   RadioTile(
-                    label: 'Partnership',
+                    label: PARTNERSHIP_RADIO,
                     widget: Radio(
                       value: OrganizationTypes.PARTNERSHIP,
                       groupValue: _organizationType,
@@ -171,7 +215,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                     ),
                   ),
                   RadioTile(
-                    label: 'Sole Prop.',
+                    label: SOLE_PROP_RADIO,
                     widget: Radio(
                       value: OrganizationTypes.SOLE_PROP,
                       groupValue: _organizationType,
@@ -196,7 +240,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
               },
             ),
             Text(
-              'Are You A Non-profit Organization?',
+              NON_PROFIT_ORGANIZATION_CHECKBOX,
               style: _theme.textTheme.bodyText2!.copyWith(
                 color: DARK_GRAY,
                 fontWeight: FontWeight.w600,
@@ -213,7 +257,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
         controller: _organizationNameContntroller,
-        hintText: 'Enter Structure',
+        hintText: ENTER_STRUCTURE_HINT,
         validator: (val) {
           if (val!.isEmpty) {
             return 'Please enter structure';
@@ -232,7 +276,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
           Expanded(
             child: CommonRoundedTextfield(
               controller: _organizationNameContntroller,
-              hintText: 'XX_XXXXXXX',
+              hintText: TAX_ID_NUM_HINT,
               validator: (val) {
                 if (val!.isEmpty) {
                   return 'Please enter tax id number';
@@ -262,7 +306,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
               Expanded(
                 child: CommonRoundedTextfield(
                   controller: _organizationNameContntroller,
-                  hintText: 'Email Adress',
+                  hintText: INVITEES_EMAIL_ADDRESS_HINT,
                   validator: (val) {
                     if (val!.isEmpty) {
                       return 'Please enter Invitees/Admins';
@@ -286,7 +330,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
               iconSize: 14,
               text: ADD_NEW_ADMIN,
               icon: Icons.add,
-              onPressed: () {},
+              onPressed: () async => await onContinue(),
             ),
           )
         ],

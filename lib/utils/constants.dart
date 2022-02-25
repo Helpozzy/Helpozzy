@@ -75,7 +75,7 @@ enum SearchBottomSheetType {
   SCHOOL_BOTTOMSHEET,
 }
 
-enum OrganizationTypes { CORP, LLC, PARTNERSHIP, SOLE_PROP }
+enum OrganizationTypes { LLC, PARTNERSHIP, CORP, SOLE_PROP }
 
 //Font family
 const QUICKSAND = 'Quicksand';
@@ -216,6 +216,16 @@ const ORAGANIZATION_TYPE_LABEL = 'Organization Type';
 const OTHER_LABEL = 'Other';
 const TAX_ID_NUMBER_LABEL = 'Tax ID Number';
 const INVITE_OTHER_ADMIN_LABEL = 'Invite Other Admin';
+const CORP_RADIO = 'Corp.';
+const LLC_RADIO = 'LLC';
+const PARTNERSHIP_RADIO = 'Partnership';
+const SOLE_PROP_RADIO = 'Sole Prop.';
+const NON_PROFIT_ORGANIZATION_CHECKBOX = 'Are You A Non-profit Organization?';
+const ORGANIZATION_NAME_HINT = 'Organization Name';
+const ORGANIZATION_DISCRIPTION_HINT = 'Organization Description';
+const ENTER_STRUCTURE_HINT = 'Enter Structure';
+const TAX_ID_NUM_HINT = 'XX_XXXXXXX';
+const INVITEES_EMAIL_ADDRESS_HINT = 'Email Address';
 
 //Reset password
 const RESET_PASSWORD = 'Forgot your password?';
