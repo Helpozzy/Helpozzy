@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -187,13 +186,8 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
             padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: width * 0.03),
             child: Row(
               children: [
-                CachedNetworkImage(
-                  placeholder: (context, url) => Center(
-                    child: LinearLoader(),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      Icon(Icons.error_outline_rounded),
-                  imageUrl: category.imgUrl!,
+                Image.asset(
+                  category.asset!,
                   fit: BoxFit.fill,
                   color: PRIMARY_COLOR,
                   height: width * 0.09,

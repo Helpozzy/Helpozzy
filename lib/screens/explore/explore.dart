@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
@@ -195,12 +194,8 @@ class _ExploreScreenState extends State<ExploreScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        Center(child: LinearLoader()),
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error_outline_rounded),
-                    imageUrl: category.imgUrl!,
+                  Image.asset(
+                    category.asset!,
                     fit: BoxFit.fill,
                     color: PRIMARY_COLOR,
                     height: width * 0.1,

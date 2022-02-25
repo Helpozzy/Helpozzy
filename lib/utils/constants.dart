@@ -613,50 +613,42 @@ List<MenuModel> dashBoardMenuList = [
 List<CategoryModel> categoriesList = [
   CategoryModel(
     id: 0,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fvolunteer.png?alt=media&token=a4a728d6-bede-4d1a-b646-09bba03c5e32',
+    asset: 'assets/images/volunteer.png',
     label: 'Volunteer',
   ),
   CategoryModel(
     id: 1,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Ffood_bank.png?alt=media&token=d62432e5-b02d-40d5-a818-bebcd7009790',
+    asset: 'assets/images/food_bank.png',
     label: 'Food Bank',
   ),
   CategoryModel(
     id: 2,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fteaching.png?alt=media&token=7cf3e0e9-9d4a-4103-ac78-2581d038f146',
+    asset: 'assets/images/teaching.png',
     label: 'Teaching',
   ),
   CategoryModel(
     id: 3,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fhomeless_shelter.png?alt=media&token=a2088370-2dee-40f8-9571-1bc05191dfcb',
+    asset: 'assets/images/homeless_shelter.png',
     label: 'Homeless Shelter',
   ),
   CategoryModel(
     id: 4,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fanimal_care.png?alt=media&token=7c004cec-9bfa-4cc3-8c00-ca32b4df224c',
+    asset: 'assets/images/animal_care.png',
     label: 'Animal Care',
   ),
   CategoryModel(
     id: 5,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fcenior_center.png?alt=media&token=dee3d41e-e8f2-49a2-9cde-c6f875a7f022',
+    asset: 'assets/images/cenior_center.png',
     label: 'Senior Center',
   ),
   CategoryModel(
     id: 6,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fchildren_and_youth.png?alt=media&token=89434803-99a9-4631-aa68-c06e2e9fcf87',
+    asset: 'assets/images/children_and_youth.png',
     label: 'Children and Youth',
   ),
   CategoryModel(
     id: 7,
-    imgUrl:
-        'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/project_categories%2Fother.png?alt=media&token=b97112a7-7c08-4d38-8d3d-276e2984f9d6',
+    asset: 'assets/images/other.png',
     label: 'Other',
   ),
 ];

@@ -1,20 +1,20 @@
 class CategoryModel {
   CategoryModel({
     this.id,
-    this.imgUrl,
+    this.asset,
     this.label,
     this.isSelected = false,
   });
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'img_url': imgUrl,
+      'img_url': asset,
       'label': label,
     };
   }
 
   late int? id;
-  late String? imgUrl;
+  late String? asset;
   late String? label;
   late bool? isSelected;
 }
