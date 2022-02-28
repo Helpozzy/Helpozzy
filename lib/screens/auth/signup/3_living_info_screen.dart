@@ -63,7 +63,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     var result = await this.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
       detailsResult = result.result!;
-      location = detailsResult!.formattedAddress!;
+      location = detailsResult!.name! + detailsResult!.formattedAddress!;
       latitude = detailsResult!.geometry!.location!.lat!;
       longitude = detailsResult!.geometry!.location!.lng!;
       _addressLocationController.clear();
@@ -89,26 +89,31 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     // signupAndUserModel.zipCode = _zipCodeController.text;
     signupAndUserModel.address = location;
     // _houseNoController.text + ', ' + _streetController.text;
-    if (_formKey.currentState!.validate() && location!.isNotEmpty) {
-      if (signupAndUserModel.isOrganization!) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                OrganizationSignUp(signupAndUserModel: signupAndUserModel),
-          ),
-        );
+    if (_formKey.currentState!.validate()) {
+      if (location != null || location!.isNotEmpty) {
+        if (signupAndUserModel.isOrganization!) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  OrganizationSignUp(signupAndUserModel: signupAndUserModel),
+            ),
+          );
+        } else {
+          final bool requiredParentInfo = await getAgeFromDOB();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => requiredParentInfo
+                  ? ContactInfoScreen(signupAndUserModel: signupAndUserModel)
+                  : TargetAndAreaOfInterest(
+                      signupAndUserModel: signupAndUserModel),
+            ),
+          );
+        }
       } else {
-        final bool requiredParentInfo = await getAgeFromDOB();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => requiredParentInfo
-                ? ContactInfoScreen(signupAndUserModel: signupAndUserModel)
-                : TargetAndAreaOfInterest(
-                    signupAndUserModel: signupAndUserModel),
-          ),
-        );
+        ScaffoldSnakBar()
+            .show(context, msg: 'Please select location to move forward');
       }
     }
   }
@@ -228,7 +233,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                 longitude = 0.0;
                 latitude = 0.0;
                 predictions.clear();
-                location = '';
                 _addressLocationController.clear();
                 setState(() {});
               },
@@ -241,12 +245,8 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             // label: PROJECT_LOCATION_LABEL,
             controller: _addressLocationController,
             hintText: PROJECT_LOCATION_HINT,
-            validator: (val) {
-              if (val!.isEmpty) {
-                return 'Enter location of project';
-              }
-              return null;
-            },
+            validator: (val) => null,
+
             onChanged: (val) {
               if (val.isNotEmpty) {
                 autoCompleteSearch(val);
@@ -266,7 +266,9 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
               onTap: () => getDetails(predictions[index].placeId!),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: width * 0.1),
+                  vertical: 8.0,
+                  horizontal: width * 0.1,
+                ),
                 child: Row(
                   children: [
                     Icon(
@@ -286,7 +288,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             );
           },
         ),
-        location != null && location!.isNotEmpty
+        detailsResult != null
             ? Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: 4.0, horizontal: width * 0.08),
@@ -307,7 +309,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                     subtitle: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
-                        location!,
+                        detailsResult!.name! + detailsResult!.formattedAddress!,
                         style: _theme.textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,

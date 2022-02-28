@@ -5,14 +5,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
-import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/user_model.dart';
-import 'package:helpozzy/screens/auth/signup/search_bottomsheets/common_search_bottomsheet.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -46,9 +45,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _zipCodeController = TextEditingController();
+  // final TextEditingController _stateController = TextEditingController();
+  // final TextEditingController _cityController = TextEditingController();
+  // final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _personalPhoneController =
       TextEditingController();
@@ -62,15 +61,62 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late CountryCode? countryCode;
   late SignUpAndUserModel? userModel;
 
+  late GooglePlace googlePlace;
+  late String? addressLocation = '';
+  late List<AutocompletePrediction> addressPredictions = [];
+  late DetailsResult? addressDetailsResult;
+
+  late String? schoolLocation = '';
+  late List<AutocompletePrediction> schoolPredictions = [];
+  late DetailsResult? schoolDetailsResult;
+
   @override
   void initState() {
     listenUser();
+    googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     countryCode = _personalPhoneController.text.isNotEmpty
         ? CountryCode(code: countryCode!.dialCode!)
         : CountryCode(code: '+1', name: 'US');
     _cityBloc.getStates();
-    listenState();
+    // listenState();
     super.initState();
+  }
+
+  Future<void> autoCompleteAddressSearch(String value) async {
+    var result = await googlePlace.autocomplete.get(value);
+    if (result != null && result.predictions != null && mounted) {
+      setState(() => addressPredictions = result.predictions!);
+    }
+  }
+
+  Future<void> getAddressDetails(String placeId) async {
+    var result = await this.googlePlace.details.get(placeId);
+    if (result != null && result.result != null && mounted) {
+      addressDetailsResult = result.result!;
+      addressLocation = addressDetailsResult!.formattedAddress!;
+      _addressController.clear();
+      addressPredictions.clear();
+      setState(() {});
+    }
+  }
+
+  Future<void> autoCompleteSchoolSearch(String value) async {
+    var result = await googlePlace.autocomplete.get(value);
+    if (result != null && result.predictions != null && mounted) {
+      setState(() => schoolPredictions = result.predictions!);
+    }
+  }
+
+  Future<void> getSchoolDetails(String placeId) async {
+    var result = await this.googlePlace.details.get(placeId);
+    if (result != null && result.result != null && mounted) {
+      schoolDetailsResult = result.result!;
+      schoolLocation =
+          schoolDetailsResult!.name! + schoolDetailsResult!.formattedAddress!;
+      _schoolController.clear();
+      schoolPredictions.clear();
+      setState(() {});
+    }
   }
 
   Future listenUser() async {
@@ -85,26 +131,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         dateTime: DateTime.fromMillisecondsSinceEpoch(
             int.parse(userModel!.dateOfBirth!)));
     _genderController.text = userModel!.gender!;
-    _stateController.text = userModel!.state!;
-    _cityController.text = userModel!.city!;
-    _zipCodeController.text = userModel!.zipCode!;
+    // _stateController.text = userModel!.state!;
+    // _cityController.text = userModel!.city!;
+    // _zipCodeController.text = userModel!.zipCode!;
     countryCode = CountryCode(code: userModel!.countryCode!);
     _personalPhoneController.text = userModel!.personalPhnNo!;
     _parentEmailController.text = userModel!.parentEmail!;
     _relationController.text = userModel!.relationshipWithParent!;
     _schoolController.text = userModel!.schoolName!;
     _gradeLevelController.text = userModel!.gradeLevel!;
+    setState(() {});
   }
 
-  Future listenState() async {
-    final States statesList = await _cityBloc.getStates();
-    setState(() => states = statesList.states);
-  }
+  // Future listenState() async {
+  //   final States statesList = await _cityBloc.getStates();
+  //   setState(() => states = statesList.states);
+  // }
 
-  Future listenCities(String stateName) async {
-    final Cities citiesList = await _cityBloc.getCities(stateName);
-    setState(() => cities = citiesList.cities);
-  }
+  // Future listenCities(String stateName) async {
+  //   final Cities citiesList = await _cityBloc.getCities(stateName);
+  //   setState(() => cities = citiesList.cities);
+  // }
 
   Future postModifiedData() async {
     CircularLoader().show(context);
@@ -117,15 +164,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       about: _aboutController.text,
       email: _emailController.text,
       gender: _genderController.text,
-      address: _addressController.text,
-      state: _stateController.text,
-      city: _cityController.text,
-      zipCode: _zipCodeController.text,
+      address: addressLocation,
+      // state: _stateController.text,
+      // city: _cityController.text,
+      // zipCode: _zipCodeController.text,
       countryCode: countryCode!.code!,
       personalPhnNo: _personalPhoneController.text,
       parentEmail: _parentEmailController.text,
       relationshipWithParent: _relationController.text,
-      schoolName: _schoolController.text,
+      schoolName: schoolLocation,
       gradeLevel: _gradeLevelController.text,
       areaOfInterests: userModel!.areaOfInterests,
       currentYearTargetHours: userModel!.currentYearTargetHours,
@@ -358,29 +405,137 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         labelWithTopPadding(LIVING_INFO_LABEL),
         SizedBox(height: 10),
         TextfieldLabelSmall(label: ADDRESS_LABEL),
+        addressLocationView(),
+        // CommonSimpleTextfield(
+        //   controller: _addressController,
+        //   hintText: ADDRESS_HINT,
+        //   validator: (val) => null,
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 15.0),
+        //   child: Row(
+        //     children: [
+        //       Expanded(child: selectStateDropDown(states!)),
+        //       cities!.isNotEmpty ? SizedBox(width: 10) : SizedBox(),
+        //       cities!.isNotEmpty
+        //           ? Expanded(child: selectCitiesDropDown(cities!))
+        //           : SizedBox(),
+        //     ],
+        //   ),
+        // ),
+        // TextfieldLabelSmall(label: ZIPCODE_LABEL),
+        // CommonSimpleTextfield(
+        //   controller: _zipCodeController,
+        //   hintText: ENTER_ZIP_CODE,
+        //   validator: (val) => null,
+        // ),
+      ],
+    );
+  }
+
+  Widget addressLocationView() {
+    return Column(
+      children: [
         CommonSimpleTextfield(
+          prefixIcon: Icon(
+            CupertinoIcons.search,
+            color: PRIMARY_COLOR,
+            size: 18,
+          ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              addressPredictions.clear();
+              addressLocation = '';
+              _addressController.clear();
+              setState(() {});
+            },
+            icon: Icon(
+              Icons.close,
+              color: PRIMARY_COLOR,
+              size: 18,
+            ),
+          ),
           controller: _addressController,
           hintText: ADDRESS_HINT,
           validator: (val) => null,
+          onChanged: (val) {
+            if (val.isNotEmpty) {
+              autoCompleteAddressSearch(val);
+            } else {
+              if (addressPredictions.length > 0 && mounted) {
+                setState(() => addressPredictions = []);
+              }
+            }
+          },
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: Row(
-            children: [
-              Expanded(child: selectStateDropDown(states!)),
-              cities!.isNotEmpty ? SizedBox(width: 10) : SizedBox(),
-              cities!.isNotEmpty
-                  ? Expanded(child: selectCitiesDropDown(cities!))
-                  : SizedBox(),
-            ],
-          ),
+        SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: addressPredictions.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () =>
+                  getAddressDetails(addressPredictions[index].placeId!),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 4.0, horizontal: width * 0.03),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.location,
+                      color: PRIMARY_COLOR,
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        addressPredictions[index].description!,
+                        maxLines: 3,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-        TextfieldLabelSmall(label: ZIPCODE_LABEL),
-        CommonSimpleTextfield(
-          controller: _zipCodeController,
-          hintText: ENTER_ZIP_CODE,
-          validator: (val) => null,
-        ),
+        addressLocation != null && addressLocation!.isNotEmpty
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 4.0, horizontal: width * 0.02),
+                child: Card(
+                  elevation: 4,
+                  color: GRAY,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 2.0,
+                      horizontal: width * 0.05,
+                    ),
+                    title: Text(
+                      LOCATION,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: Text(
+                        addressLocation!,
+                        style: _theme.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: DARK_GRAY,
+                        ),
+                      ),
+                    ),
+                    trailing: Icon(
+                      CupertinoIcons.map_pin_ellipse,
+                      color: PRIMARY_COLOR,
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox(),
       ],
     );
   }
@@ -420,59 +575,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         StreamBuilder<bool>(
-            initialData: false,
-            stream: _editProfileBloc.parentEmailVerifiedStream,
-            builder: (context, snapshotEmailVerified) {
-              return CommonSimpleTextfield(
-                controller: _parentEmailController,
-                hintText: ENTER_EMAIL_HINT,
-                suffixIcon: Icon(
-                  snapshotEmailVerified.data!
-                      ? CupertinoIcons.checkmark_seal_fill
-                      : userModel!.parentEmail == _parentEmailController.text
-                          ? CupertinoIcons.checkmark_seal_fill
-                          : CupertinoIcons.checkmark_seal,
-                  size: 18,
-                  color: snapshotEmailVerified.data!
-                      ? ACCENT_GREEN
-                      : userModel!.parentEmail == _parentEmailController.text
-                          ? ACCENT_GREEN
-                          : DARK_GRAY,
-                ),
-                onChanged: (val) {
-                  setState(() => _parentEmailController.selection =
-                      TextSelection.fromPosition(
-                          TextPosition(offset: val.length)));
-                },
-                validator: (parentEmail) {
-                  if (parentEmail!.isEmpty) {
-                    return 'Please enter parents/guardian email';
-                  } else if (parentEmail.isNotEmpty &&
-                      !EmailValidator.validate(parentEmail)) {
-                    return 'Please enter valid email';
-                  }
-                  return null;
-                },
-              );
-            }),
-        InkWell(
-          onTap: () async {
-            FocusScope.of(context).unfocus();
-            if (_parentEmailController.text.trim().isNotEmpty)
-              _editProfileBloc
-                  .sentOtpOfParentEmail(_parentEmailController.text);
-            else
-              PlatformAlertDialog().show(context,
-                  title: ALERT, content: 'Parent/Guardian email is empty');
+          initialData: false,
+          stream: _editProfileBloc.parentEmailVerifiedStream,
+          builder: (context, snapshotEmailVerified) {
+            return CommonSimpleTextfield(
+              controller: _parentEmailController,
+              hintText: ENTER_EMAIL_HINT,
+              suffixIcon: Icon(
+                snapshotEmailVerified.data!
+                    ? CupertinoIcons.checkmark_seal_fill
+                    : userModel!.parentEmail == _parentEmailController.text
+                        ? CupertinoIcons.checkmark_seal_fill
+                        : CupertinoIcons.checkmark_seal,
+                size: 18,
+                color: snapshotEmailVerified.data!
+                    ? ACCENT_GREEN
+                    : userModel!.parentEmail == _parentEmailController.text
+                        ? ACCENT_GREEN
+                        : DARK_GRAY,
+              ),
+              onChanged: (val) {
+                setState(() => _parentEmailController.selection =
+                    TextSelection.fromPosition(
+                        TextPosition(offset: val.length)));
+              },
+              validator: (parentEmail) {
+                if (parentEmail!.isEmpty) {
+                  return 'Please enter parents/guardian email';
+                } else if (parentEmail.isNotEmpty &&
+                    !EmailValidator.validate(parentEmail)) {
+                  return 'Please enter valid email';
+                }
+                return null;
+              },
+            );
           },
-          child: Container(
-            alignment: Alignment.centerRight,
-            padding:
-                EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
-            child: Text(
-              SEND_VERIFICATION_CODE_BUTTON,
-              style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
-            ),
+        ),
+        Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            text: SEND_VERIFICATION_CODE_BUTTON,
+            onPressed: () async {
+              FocusScope.of(context).unfocus();
+              if (_parentEmailController.text.trim().isNotEmpty)
+                _editProfileBloc
+                    .sentOtpOfParentEmail(_parentEmailController.text);
+              else
+                PlatformAlertDialog().show(context,
+                    title: ALERT, content: 'Parent/Guardian email is empty');
+            },
           ),
         ),
         StreamBuilder<bool>(
@@ -675,90 +828,215 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }).toList());
   }
 
-  Widget selectStateDropDown(List<StateModel> states) {
+  Widget schoolInfo() {
     return Column(
       children: [
-        TextfieldLabelSmall(label: STATE_LABEL),
-        DropdownButtonFormField<StateModel>(
-          hint: Text(
-            _stateController.text.isNotEmpty
-                ? _stateController.text
-                : states.isEmpty
-                    ? 'Loading..'
-                    : SEARCH_STATE_NAME_HINT,
-          ),
-          icon: Icon(Icons.expand_more_outlined),
-          decoration: inputSimpleDecoration(getHint: SEARCH_STATE_NAME_HINT),
-          isExpanded: true,
-          onChanged: (StateModel? newValue) async {
-            setState(() => _stateController.text = newValue!.stateName!);
-            cities!.clear();
-            listenCities(newValue!.stateName!);
-          },
-          validator: (val) {
-            if (val == null) {
-              return 'Please search state';
-            }
-            return null;
-          },
-          items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
-            return DropdownMenuItem<StateModel>(
-              value: value,
-              child: Text(
-                value!.stateName!,
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.bodyText2,
-              ),
-            );
-          }).toList(),
+        labelWithTopPadding(SCHOOL_INFO_LABEL),
+        Column(
+          children: [
+            SizedBox(height: 10),
+            TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
+            schoolLocationView(),
+            // schoolField(),
+            SizedBox(width: 10),
+            selectGradeDropDown(),
+          ],
         ),
       ],
     );
   }
 
-  Widget selectCitiesDropDown(List<CityModel> cities) {
-    return cities.isNotEmpty
-        ? Column(
-            children: [
-              TextfieldLabelSmall(label: CITY_LABEL),
-              DropdownButtonFormField<CityModel>(
-                  hint: Text(_stateController.text.isEmpty
-                      ? _cityController.text.isNotEmpty
-                          ? _cityController.text
-                          : SEARCH_CITY_NAME_HINT
-                      : cities.isEmpty
-                          ? 'Loading..'
-                          : SEARCH_CITY_NAME_HINT),
-                  icon: Icon(Icons.expand_more_outlined),
-                  decoration:
-                      inputSimpleDecoration(getHint: SEARCH_CITY_NAME_HINT),
-                  isExpanded: true,
-                  onChanged: (CityModel? newValue) {
-                    setState(() {
-                      _cityController.text = newValue!.cityName!;
-                    });
-                  },
-                  validator: (val) {
-                    if (val == null) {
-                      return 'Please search city';
-                    }
-                    return null;
-                  },
-                  items: cities
-                      .map<DropdownMenuItem<CityModel>>((CityModel? value) {
-                    return DropdownMenuItem<CityModel>(
-                      value: value,
+  Widget schoolLocationView() {
+    return Column(
+      children: [
+        CommonSimpleTextfield(
+          prefixIcon: Icon(
+            CupertinoIcons.search,
+            color: PRIMARY_COLOR,
+            size: 18,
+          ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              schoolPredictions.clear();
+              schoolLocation = '';
+              _schoolController.clear();
+              setState(() {});
+            },
+            icon: Icon(
+              Icons.close,
+              color: PRIMARY_COLOR,
+              size: 18,
+            ),
+          ),
+          controller: _schoolController,
+          hintText: SEARCH_SCHOOL_HINT,
+          validator: (val) {
+            return null;
+          },
+          onChanged: (val) {
+            if (val.isNotEmpty) {
+              autoCompleteSchoolSearch(val);
+            } else {
+              if (schoolPredictions.length > 0 && mounted) {
+                setState(() => schoolPredictions = []);
+              }
+            }
+          },
+        ),
+        SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: schoolPredictions.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => getSchoolDetails(schoolPredictions[index].placeId!),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 4.0, horizontal: width * 0.02),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.location,
+                      color: PRIMARY_COLOR,
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
                       child: Text(
-                        value!.cityName!,
-                        textAlign: TextAlign.center,
-                        style: _theme.textTheme.bodyText2,
+                        schoolPredictions[index].description!,
+                        maxLines: 3,
                       ),
-                    );
-                  }).toList()),
-            ],
-          )
-        : SizedBox();
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        schoolLocation != null && schoolLocation!.isNotEmpty
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: width * 0.02,
+                ),
+                child: Card(
+                  elevation: 4,
+                  color: GRAY,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: 2.0, horizontal: width * 0.05),
+                    title: Text(
+                      LOCATION,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: Text(
+                        schoolLocation!,
+                        style: _theme.textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: DARK_GRAY,
+                        ),
+                      ),
+                    ),
+                    trailing: Icon(
+                      CupertinoIcons.map_pin_ellipse,
+                      color: PRIMARY_COLOR,
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox(),
+      ],
+    );
   }
+  // Widget selectStateDropDown(List<StateModel> states) {
+  //   return Column(
+  //     children: [
+  //       TextfieldLabelSmall(label: STATE_LABEL),
+  //       DropdownButtonFormField<StateModel>(
+  //         hint: Text(
+  //           _stateController.text.isNotEmpty
+  //               ? _stateController.text
+  //               : states.isEmpty
+  //                   ? 'Loading..'
+  //                   : SEARCH_STATE_NAME_HINT,
+  //         ),
+  //         icon: Icon(Icons.expand_more_outlined),
+  //         decoration: inputSimpleDecoration(getHint: SEARCH_STATE_NAME_HINT),
+  //         isExpanded: true,
+  //         onChanged: (StateModel? newValue) async {
+  //           setState(() => _stateController.text = newValue!.stateName!);
+  //           cities!.clear();
+  //           listenCities(newValue!.stateName!);
+  //         },
+  //         validator: (val) {
+  //           if (val == null) {
+  //             return 'Please search state';
+  //           }
+  //           return null;
+  //         },
+  //         items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
+  //           return DropdownMenuItem<StateModel>(
+  //             value: value,
+  //             child: Text(
+  //               value!.stateName!,
+  //               textAlign: TextAlign.center,
+  //               style: _theme.textTheme.bodyText2,
+  //             ),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget selectCitiesDropDown(List<CityModel> cities) {
+  //   return cities.isNotEmpty
+  //       ? Column(
+  //           children: [
+  //             TextfieldLabelSmall(label: CITY_LABEL),
+  //             DropdownButtonFormField<CityModel>(
+  //                 hint: Text(_stateController.text.isEmpty
+  //                     ? _cityController.text.isNotEmpty
+  //                         ? _cityController.text
+  //                         : SEARCH_CITY_NAME_HINT
+  //                     : cities.isEmpty
+  //                         ? 'Loading..'
+  //                         : SEARCH_CITY_NAME_HINT),
+  //                 icon: Icon(Icons.expand_more_outlined),
+  //                 decoration:
+  //                     inputSimpleDecoration(getHint: SEARCH_CITY_NAME_HINT),
+  //                 isExpanded: true,
+  //                 onChanged: (CityModel? newValue) {
+  //                   setState(() {
+  //                     _cityController.text = newValue!.cityName!;
+  //                   });
+  //                 },
+  //                 validator: (val) {
+  //                   if (val == null) {
+  //                     return 'Please search city';
+  //                   }
+  //                   return null;
+  //                 },
+  //                 items: cities
+  //                     .map<DropdownMenuItem<CityModel>>((CityModel? value) {
+  //                   return DropdownMenuItem<CityModel>(
+  //                     value: value,
+  //                     child: Text(
+  //                       value!.cityName!,
+  //                       textAlign: TextAlign.center,
+  //                       style: _theme.textTheme.bodyText2,
+  //                     ),
+  //                   );
+  //                 }).toList()),
+  //           ],
+  //         )
+  //       : SizedBox();
+  // }
 
   Widget selectRelationshipDropdown() {
     return DropdownButtonFormField<String>(
@@ -793,53 +1071,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget schoolInfo() {
-    return Column(
-      children: [
-        labelWithTopPadding(SCHOOL_INFO_LABEL),
-        Column(
-          children: [
-            schoolField(),
-            SizedBox(width: 10),
-            selectGradeDropDown(),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget schoolField() {
-    return Column(
-      children: [
-        SizedBox(height: 10),
-        TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
-        CommonSimpleTextfield(
-          controller: _schoolController,
-          readOnly: true,
-          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-          hintText: SEARCH_SCHOOL_HINT,
-          validator: (val) {
-            if (val!.isNotEmpty && val == SEARCH_SCHOOL_HINT) {
-              return 'Please search school';
-            }
-            return null;
-          },
-          onTap: () async {
-            final SchoolDetailsModel school =
-                await SearchBottomSheet().modalBottomSheetMenu(
-              context: context,
-              searchBottomSheetType: SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
-              state: _stateController.text,
-              city: _cityController.text,
-            );
-            setState(() {
-              _schoolController.text = school.schoolName;
-            });
-          },
-        ),
-      ],
-    );
-  }
+  // Widget schoolField() {
+  //   return Column(
+  //     children: [
+  //       SizedBox(height: 10),
+  //       TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
+  //       CommonSimpleTextfield(
+  //         controller: _schoolController,
+  //         readOnly: true,
+  //         suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+  //         hintText: SEARCH_SCHOOL_HINT,
+  //         validator: (val) {
+  //           if (val!.isNotEmpty && val == SEARCH_SCHOOL_HINT) {
+  //             return 'Please search school';
+  //           }
+  //           return null;
+  //         },
+  //         onTap: () async {
+  //           final SchoolDetailsModel school =
+  //               await SearchBottomSheet().modalBottomSheetMenu(
+  //             context: context,
+  //             searchBottomSheetType: SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
+  //             state: _stateController.text,
+  //             city: _cityController.text,
+  //           );
+  //           setState(() {
+  //             _schoolController.text = school.schoolName;
+  //           });
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget selectGradeDropDown() {
     return Column(
