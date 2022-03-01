@@ -503,8 +503,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: EdgeInsets.symmetric(
                     vertical: 4.0, horizontal: width * 0.02),
                 child: Card(
-                  elevation: 4,
-                  color: GRAY,
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(
@@ -514,7 +513,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     title: Text(
                       LOCATION,
-                      style: _theme.textTheme.bodyText2!.copyWith(
+                      style: _theme.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -522,7 +521,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
                         addressLocation!,
-                        style: _theme.textTheme.bodySmall!.copyWith(
+                        style: _theme.textTheme.bodyText2!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,
                         ),
@@ -919,8 +918,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   horizontal: width * 0.02,
                 ),
                 child: Card(
-                  elevation: 4,
-                  color: GRAY,
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(

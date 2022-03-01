@@ -299,10 +299,10 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: width * 0.05),
+                        vertical: 4.0, horizontal: width * 0.05),
                     title: Text(
                       RESIDENTAL_ADDRESS,
-                      style: _theme.textTheme.bodyText2!.copyWith(
+                      style: _theme.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -310,7 +310,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
                         detailsResult!.name! + detailsResult!.formattedAddress!,
-                        style: _theme.textTheme.bodySmall!.copyWith(
+                        style: _theme.textTheme.bodyText2!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,
                         ),

@@ -3,46 +3,48 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Projects {
   Projects.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
-      final task = element.data() as Map<String, dynamic>;
-      projectList.add(ProjectModel.fromjson(json: task));
+      final project = element.data() as Map<String, dynamic>;
+      projectList.add(ProjectModel.fromjson(json: project));
     });
   }
-
   late List<ProjectModel> projectList = [];
 }
 
 class ProjectModel {
   ProjectModel({
-    required this.projectId,
-    required this.categoryId,
-    required this.projectName,
-    required this.description,
-    required this.startDate,
-    required this.endDate,
-    required this.projectOwner,
-    required this.collaboratorsCoadmin,
-    required this.imageUrl,
-    required this.contactName,
-    required this.contactNumber,
-    required this.organization,
-    required this.location,
-    required this.projectLocationLati,
-    required this.projectLocationLongi,
-    required this.reviewCount,
-    required this.enrollmentCount,
-    required this.rating,
-    required this.aboutOrganizer,
-    required this.status,
+    this.projectId,
+    this.ownerId,
+    this.signUpUserId,
+    this.categoryId,
+    this.projectName,
+    this.description,
+    this.startDate,
+    this.endDate,
+    this.collaboratorsCoadmin,
+    this.imageUrl,
+    this.contactName,
+    this.contactNumber,
+    this.organization,
+    this.location,
+    this.projectLocationLati,
+    this.projectLocationLongi,
+    this.reviewCount,
+    this.enrollmentCount,
+    this.rating,
+    this.aboutOrganizer,
+    this.status,
+    this.isApprovedFromAdmin = false,
   });
 
   ProjectModel.fromjson({required Map<String, dynamic> json}) {
     projectId = json['project_id'];
+    signUpUserId = json['signup_uid'];
+    ownerId = json['owner_id'];
     categoryId = json['category_id'];
     projectName = json['project_name'];
     description = json['description'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    projectOwner = json['project_owner'];
     collaboratorsCoadmin = json['collaborators_or_co_admin'];
     imageUrl = json['image_url'];
     organization = json['oraganization'];
@@ -58,17 +60,19 @@ class ProjectModel {
         : double.parse(json['rating'].toString());
     aboutOrganizer = json['about_organizer'];
     status = json['status'];
+    isApprovedFromAdmin = json['is_approved_from_admin'];
   }
 
   Map<String, Object?> toJson() {
     return {
       'project_id': projectId,
+      'signup_uid': signUpUserId,
+      'owner_id': ownerId,
       'category_id': categoryId,
       'project_name': projectName,
       'description': description,
       'start_date': startDate,
       'end_date': endDate,
-      'project_owner': projectOwner,
       'collaborators_or_co_admin': collaboratorsCoadmin,
       'image_url': imageUrl,
       'oraganization': organization,
@@ -82,30 +86,33 @@ class ProjectModel {
       'rating': rating,
       'about_organizer': aboutOrganizer,
       'status': status,
+      'is_approved_from_admin': isApprovedFromAdmin,
     };
   }
 
-  late String projectId;
-  late int categoryId;
-  late String projectName;
-  late String description;
-  late String startDate;
-  late String endDate;
-  late String projectOwner;
-  late String collaboratorsCoadmin;
-  late String imageUrl;
-  late String contactName;
-  late String contactNumber;
-  late String organization;
-  late String location;
-  late double projectLocationLati;
-  late double projectLocationLongi;
-  late int reviewCount;
-  late double rating;
-  late String aboutOrganizer;
-  late String status;
-  late int enrollmentCount;
-  late bool isLiked = false;
-  late bool isProjectDetailsExpanded = false;
-  late bool isTaskDetailsExpanded = false;
+  late String? projectId;
+  late String? signUpUserId;
+  late String? ownerId;
+  late int? categoryId;
+  late String? projectName;
+  late String? description;
+  late String? startDate;
+  late String? endDate;
+  late String? collaboratorsCoadmin;
+  late String? imageUrl;
+  late String? contactName;
+  late String? contactNumber;
+  late String? organization;
+  late String? location;
+  late double? projectLocationLati;
+  late double? projectLocationLongi;
+  late int? reviewCount;
+  late double? rating;
+  late String? aboutOrganizer;
+  late String? status;
+  late int? enrollmentCount;
+  late bool? isApprovedFromAdmin;
+  late bool? isLiked = false;
+  late bool? isProjectDetailsExpanded = false;
+  late bool? isTaskDetailsExpanded = false;
 }

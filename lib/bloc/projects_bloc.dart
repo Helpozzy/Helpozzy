@@ -55,11 +55,13 @@ class ProjectsBloc {
       projectsController.sink.add(projectsFromAPI);
     } else {
       projectsFromAPI.forEach((project) {
-        if (project.projectName
+        if (project.projectName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
-            project.location.toLowerCase().contains(searchText.toLowerCase()) ||
-            project.organization
+            project.location!
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            project.organization!
                 .toLowerCase()
                 .contains(searchText.toLowerCase())) {
           searchedProjectList.add(project);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
-import 'package:helpozzy/models/project_sign_up_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/notification/task_notification_card.dart';
@@ -54,8 +54,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
   Future onApproveProjectNotification(NotificationModel notification) async {
     CircularLoader().show(context);
-    final ProjectSignUpModel signUpProject =
-        ProjectSignUpModel.fromJson(json: notification.payload!);
+    final ProjectModel signUpProject =
+        ProjectModel.fromjson(json: notification.payload!);
 
     signUpProject.isApprovedFromAdmin = true;
     // final ResponseModel updateTaskResponse =

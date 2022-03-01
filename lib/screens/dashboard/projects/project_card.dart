@@ -50,7 +50,7 @@ class _ProjectCardState extends State<ProjectCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
-                  project.imageUrl,
+                  project.imageUrl!,
                   fit: BoxFit.cover,
                   height: height / 4,
                   width: double.infinity,
@@ -82,7 +82,7 @@ class _ProjectCardState extends State<ProjectCard> {
                   children: [
                     Text(
                       DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                          timeStamp: project.startDate),
+                          timeStamp: project.startDate!),
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 11,
                         color: LIGHT_GRAY,
@@ -90,7 +90,7 @@ class _ProjectCardState extends State<ProjectCard> {
                       ),
                     ),
                     Text(
-                      project.projectName,
+                      project.projectName!,
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 20,
                         color: SILVER_GRAY,
@@ -106,7 +106,7 @@ class _ProjectCardState extends State<ProjectCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                project.location,
+                                project.location!,
                                 style: _theme.textTheme.bodyText2!.copyWith(
                                   fontSize: 11,
                                   color: MATE_WHITE,
@@ -117,7 +117,7 @@ class _ProjectCardState extends State<ProjectCard> {
                               Row(
                                 children: [
                                   RatingBar.builder(
-                                    initialRating: project.rating,
+                                    initialRating: project.rating!,
                                     minRating: 1,
                                     itemSize: 12,
                                     direction: Axis.horizontal,
@@ -144,7 +144,7 @@ class _ProjectCardState extends State<ProjectCard> {
                             ],
                           ),
                         ),
-                        project.projectOwner ==
+                        project.ownerId ==
                                 prefsObject.getString(CURRENT_USER_ID)
                             ? SizedBox()
                             : project.status == PROJECT_COMPLETED
@@ -166,13 +166,13 @@ class _ProjectCardState extends State<ProjectCard> {
                 right: 0,
                 child: IconButton(
                   onPressed: () {
-                    setState(() => project.isLiked = !project.isLiked);
+                    setState(() => project.isLiked = !project.isLiked!);
                   },
                   icon: Icon(
-                    project.isLiked
+                    project.isLiked!
                         ? Icons.favorite_rounded
                         : Icons.favorite_border_rounded,
-                    color: project.isLiked ? Colors.red : WHITE,
+                    color: project.isLiked! ? Colors.red : WHITE,
                     size: 19,
                   ),
                 ),

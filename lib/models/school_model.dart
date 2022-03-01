@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Schools {
-  Schools.fromJson({required List<Map<String, dynamic>> list}) {
+  Schools.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
     for (int i = 0; i < list.length; i++) {
+      final project = list[i].data() as Map<String, dynamic>;
       if (list[i]['city'] != null) {
-        schools.add(SchoolDetailsModel.fromjson(json: list[i]));
+        schools.add(SchoolDetailsModel.fromjson(json: project));
       }
     }
   }

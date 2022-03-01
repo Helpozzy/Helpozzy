@@ -271,14 +271,14 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(
-                      vertical: 8.0,
+                      vertical: 4.0,
                       horizontal: width * 0.05,
                     ),
                     title: Text(
                       addressName!,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: _theme.textTheme.bodyText2!.copyWith(
+                      style: _theme.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                         color: DARK_GRAY_FONT_COLOR,
@@ -288,7 +288,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
                         formatAddress!,
-                        style: _theme.textTheme.bodySmall!.copyWith(
+                        style: _theme.textTheme.bodyText2!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,
                         ),

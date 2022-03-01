@@ -265,18 +265,17 @@ class _CreateProjectState extends State<CreateProject> {
         location != null && location!.isNotEmpty
             ? Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: width * 0.05),
+                    vertical: 4.0, horizontal: width * 0.05),
                 child: Card(
-                  elevation: 4,
-                  color: GRAY,
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: width * 0.05),
+                        vertical: 4.0, horizontal: width * 0.05),
                     title: Text(
                       LOCATION,
-                      style: _themeData.textTheme.bodyText2!.copyWith(
+                      style: _themeData.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -284,7 +283,7 @@ class _CreateProjectState extends State<CreateProject> {
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
                         location!,
-                        style: _themeData.textTheme.bodySmall!.copyWith(
+                        style: _themeData.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,
                         ),
@@ -675,7 +674,7 @@ class _CreateProjectState extends State<CreateProject> {
       endDate: DateTime.parse(_projEndDateController.text)
           .millisecondsSinceEpoch
           .toString(),
-      projectOwner: prefsObject.getString(CURRENT_USER_ID)!,
+      ownerId: prefsObject.getString(CURRENT_USER_ID)!,
       collaboratorsCoadmin: _projCollaboraorController.text,
       status: TOGGLE_NOT_STARTED,
     );

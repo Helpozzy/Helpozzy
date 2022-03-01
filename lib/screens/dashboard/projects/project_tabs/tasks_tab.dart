@@ -90,11 +90,11 @@ class _TaskTabState extends State<TaskTab> {
           if (isMyTask) {
             setState(() => myTaskExpanded = !myTaskExpanded);
             _projectTaskBloc.myTaskIsExpanded(myTaskExpanded);
-            _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
+            _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
           } else {
             setState(() => allTasksExpanded = !allTasksExpanded);
             _projectTaskBloc.allTaskIsExpanded(allTasksExpanded);
-            _projectTaskBloc.getProjectAllTasks(project.projectId);
+            _projectTaskBloc.getProjectAllTasks(project.projectId!);
           }
         },
         child: Card(
@@ -225,10 +225,10 @@ class _TaskTabState extends State<TaskTab> {
                             );
                             if (isMyTask) {
                               _projectTaskBloc
-                                  .getProjectEnrolledTasks(project.projectId);
+                                  .getProjectEnrolledTasks(project.projectId!);
                             } else {
                               _projectTaskBloc
-                                  .getProjectAllTasks(project.projectId);
+                                  .getProjectAllTasks(project.projectId!);
                             }
                           },
                         ),
@@ -281,9 +281,9 @@ class _TaskTabState extends State<TaskTab> {
                   await _taskBloc.updateEnrollTask(taskModel);
               if (response.success!) {
                 if (isMyTask) {
-                  _projectTaskBloc.getProjectEnrolledTasks(project.projectId);
+                  _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
                 } else {
-                  _projectTaskBloc.getProjectAllTasks(project.projectId);
+                  _projectTaskBloc.getProjectAllTasks(project.projectId!);
                 }
                 ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
               } else {
@@ -323,9 +323,9 @@ class _TaskTabState extends State<TaskTab> {
                   if (response.success!) {
                     if (isMyTask) {
                       _projectTaskBloc
-                          .getProjectEnrolledTasks(project.projectId);
+                          .getProjectEnrolledTasks(project.projectId!);
                     } else {
-                      _projectTaskBloc.getProjectAllTasks(project.projectId);
+                      _projectTaskBloc.getProjectAllTasks(project.projectId!);
                     }
                     ScaffoldSnakBar().show(
                       context,

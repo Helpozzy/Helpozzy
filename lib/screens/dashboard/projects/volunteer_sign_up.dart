@@ -9,7 +9,6 @@ import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/project_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -74,16 +73,29 @@ class _VolunteerProjectTaskSignUpState
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       CircularLoader().show(context);
-      final ProjectSignUpModel projectSignUpVal = ProjectSignUpModel(
+      final ProjectModel projectSignUpVal = ProjectModel(
         signUpUserId: prefsObject.getString(CURRENT_USER_ID),
         projectId: project!.projectId,
-        name: _nameController.text,
-        email: _emailController.text,
-        address: _addressController.text,
-        city: _cityController.text,
-        state: _stateController.text,
-        personalPhnNo: _phnController.text,
-        zipCode: _zipCodeController.text,
+        ownerId: project!.ownerId,
+        description: project!.description,
+        projectName: project!.projectName,
+        organization: project!.organization,
+        startDate: project!.startDate,
+        endDate: project!.endDate,
+        location: project!.location,
+        projectLocationLati: project!.projectLocationLati,
+        projectLocationLongi: project!.projectLocationLongi,
+        rating: project!.rating,
+        reviewCount: project!.reviewCount,
+        status: project!.status,
+        enrollmentCount: project!.enrollmentCount,
+        imageUrl: project!.imageUrl,
+        isApprovedFromAdmin: project!.isApprovedFromAdmin,
+        aboutOrganizer: project!.aboutOrganizer,
+        categoryId: project!.categoryId,
+        collaboratorsCoadmin: project!.collaboratorsCoadmin,
+        contactName: project!.contactName,
+        contactNumber: project!.contactNumber,
       );
       final ResponseModel response =
           await _projectSignUpBloc.postVolunteerProjectSignUp(projectSignUpVal);
@@ -93,7 +105,7 @@ class _VolunteerProjectTaskSignUpState
         await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
           type: 1,
-          userTo: project!.projectOwner,
+          userTo: project!.ownerId,
           userFrom: prefsObject.getString(CURRENT_USER_ID),
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
           title: 'New project sign-up request',
@@ -205,7 +217,7 @@ class _VolunteerProjectTaskSignUpState
                 children: [
                   InkWell(
                     onTap: () async => await CommonUrlLauncher()
-                        .launchCall(project!.contactNumber),
+                        .launchCall(project!.contactNumber!),
                     child: Icon(
                       CupertinoIcons.phone,
                       color: PRIMARY_COLOR,
@@ -408,7 +420,7 @@ class _VolunteerProjectTaskSignUpState
           height: height / 4,
           width: double.infinity,
           child: Image.asset(
-            project!.imageUrl,
+            project!.imageUrl!,
             fit: BoxFit.cover,
           ),
         ),
@@ -435,7 +447,7 @@ class _VolunteerProjectTaskSignUpState
           child: Container(
             width: width - 30,
             child: Text(
-              fromTask ? task!.taskName! : project!.projectName,
+              fromTask ? task!.taskName! : project!.projectName!,
               maxLines: 2,
               style: _theme.textTheme.headline6!.copyWith(
                 color: WHITE,
@@ -449,7 +461,7 @@ class _VolunteerProjectTaskSignUpState
           left: 16,
           bottom: fromTask ? 15 : 28,
           child: Text(
-            fromTask ? project!.projectName : project!.organization,
+            fromTask ? project!.projectName! : project!.organization!,
             maxLines: 2,
             style: _theme.textTheme.headline5!.copyWith(
               color: GRAY,
@@ -467,7 +479,7 @@ class _VolunteerProjectTaskSignUpState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     RatingBar.builder(
-                      initialRating: project!.rating,
+                      initialRating: project!.rating!,
                       ignoreGestures: true,
                       minRating: 1,
                       itemSize: 14,
@@ -502,13 +514,13 @@ class _VolunteerProjectTaskSignUpState
                 bottom: 11,
                 child: InkWell(
                   onTap: () {
-                    setState(() => project!.isLiked = !project!.isLiked);
+                    setState(() => project!.isLiked = !project!.isLiked!);
                   },
                   child: Icon(
-                    project!.isLiked
+                    project!.isLiked!
                         ? Icons.favorite_rounded
                         : Icons.favorite_border_rounded,
-                    color: project!.isLiked ? Colors.red : WHITE,
+                    color: project!.isLiked! ? Colors.red : WHITE,
                     size: 19,
                   ),
                 ),
@@ -538,7 +550,7 @@ class _VolunteerProjectTaskSignUpState
               Text(
                 DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
                     timeStamp:
-                        fromTask ? task!.startDate! : project!.startDate),
+                        fromTask ? task!.startDate! : project!.startDate!),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,
@@ -561,7 +573,8 @@ class _VolunteerProjectTaskSignUpState
               SizedBox(height: 3),
               Text(
                 DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                    timeStamp: fromTask ? task!.endDate! : project!.endDate),
+                  timeStamp: fromTask ? task!.endDate! : project!.endDate!,
+                ),
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: 12,
                   color: BLUE_COLOR,

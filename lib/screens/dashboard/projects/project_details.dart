@@ -82,7 +82,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         child: Stack(
           children: [
             Image.asset(
-              project.imageUrl,
+              project.imageUrl!,
               fit: BoxFit.cover,
               height: height / 4,
               width: double.infinity,
@@ -121,7 +121,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     child: Container(
                       width: width - 30,
                       child: Text(
-                        project.projectName,
+                        project.projectName!,
                         maxLines: 2,
                         style: _theme.textTheme.headline6!.copyWith(
                           color: WHITE,
@@ -137,7 +137,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     left: 16,
                     bottom: 28,
                     child: Text(
-                      project.organization,
+                      project.organization!,
                       maxLines: 2,
                       style: _theme.textTheme.headline5!.copyWith(
                         color: GRAY,
@@ -156,7 +156,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         RatingBar.builder(
-                          initialRating: project.rating,
+                          initialRating: project.rating!,
                           ignoreGestures: true,
                           minRating: 1,
                           itemSize: 14,
@@ -189,13 +189,13 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     bottom: 11,
                     child: InkWell(
                       onTap: () {
-                        setState(() => project.isLiked = !project.isLiked);
+                        setState(() => project.isLiked = !project.isLiked!);
                       },
                       child: Icon(
-                        project.isLiked
+                        project.isLiked!
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
-                        color: project.isLiked ? Colors.red : WHITE,
+                        color: project.isLiked! ? Colors.red : WHITE,
                         size: 19,
                       ),
                     ),
@@ -227,7 +227,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               ),
             ],
           ),
-          project.projectOwner == prefsObject.getString(CURRENT_USER_ID)
+          project.ownerId == prefsObject.getString(CURRENT_USER_ID)
               ? SizedBox()
               : project.status == PROJECT_COMPLETED
                   ? SizedBox()
@@ -269,10 +269,10 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
 
   Widget contactPersontile() {
     return ListDividerLabel(
-      label: PROJECT_LEAD_LABEL + project.contactName,
+      label: PROJECT_LEAD_LABEL + project.contactName!,
       hasIcon: true,
       suffixIcon: InkWell(
-        onTap: () => CommonUrlLauncher().launchCall(project.contactNumber),
+        onTap: () => CommonUrlLauncher().launchCall(project.contactNumber!),
         child: Icon(
           CupertinoIcons.phone,
           size: 18,

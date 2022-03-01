@@ -9,11 +9,6 @@ class CityBloc {
   Stream<List<CityModel>> get searchedCitiesStream =>
       _searchCitiesController.stream;
 
-  Future<bool> postCities(List citiesList) async {
-    final bool posted = await repo.postCitiesRepo(citiesList);
-    return posted;
-  }
-
   Future<States> getStates() async {
     final States states = await repo.getStateRepo();
     return states;

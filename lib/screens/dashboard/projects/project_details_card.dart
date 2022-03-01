@@ -86,7 +86,7 @@ class _ProjectTileState extends State<ProjectTile> {
                   Row(
                     children: [
                       Text(
-                        project.projectName,
+                        project.projectName!,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 13,
                           color: DARK_PINK_COLOR,
@@ -94,8 +94,7 @@ class _ProjectTileState extends State<ProjectTile> {
                         ),
                       ),
                       SizedBox(width: 3),
-                      project.projectOwner ==
-                              prefsObject.getString(CURRENT_USER_ID)
+                      project.ownerId == prefsObject.getString(CURRENT_USER_ID)
                           ? CommonBadge(color: PINK_COLOR, size: 8)
                           : SizedBox(),
                     ],
@@ -123,7 +122,7 @@ class _ProjectTileState extends State<ProjectTile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        project.organization,
+                        project.organization!,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 12,
                           color: DARK_PINK_COLOR,
@@ -132,7 +131,7 @@ class _ProjectTileState extends State<ProjectTile> {
                       SizedBox(height: 2),
                       Text(
                         DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                            timeStamp: project.startDate),
+                            timeStamp: project.startDate!),
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 12,
                           color: BLUE_COLOR,
@@ -144,20 +143,20 @@ class _ProjectTileState extends State<ProjectTile> {
                   SmallCommonButtonWithIcon(
                     onPressed: () {
                       project.isProjectDetailsExpanded =
-                          !project.isProjectDetailsExpanded;
+                          !project.isProjectDetailsExpanded!;
                       projectsBloc.isExpanded(isExpanded);
-                      if (project.isProjectDetailsExpanded &&
-                          project.isTaskDetailsExpanded) {
+                      if (project.isProjectDetailsExpanded! &&
+                          project.isTaskDetailsExpanded!) {
                         _projectTaskBloc
-                            .getProjectTaskDetails(project.projectId);
+                            .getProjectTaskDetails(project.projectId!);
                       }
                     },
-                    icon: project.isProjectDetailsExpanded
+                    icon: project.isProjectDetailsExpanded!
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
                     fontSize: 10,
                     iconSize: 15,
-                    text: project.isProjectDetailsExpanded
+                    text: project.isProjectDetailsExpanded!
                         ? HIDE_DETAILS_BUTTON
                         : SHOW_DETAILS_BUTTON,
                     buttonColor: GRAY,
@@ -166,23 +165,24 @@ class _ProjectTileState extends State<ProjectTile> {
                   ),
                 ],
               ),
-              project.isProjectDetailsExpanded
+              project.isProjectDetailsExpanded!
                   ? Padding(
                       padding: const EdgeInsets.only(right: 21.0, top: 6),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
-              project.isProjectDetailsExpanded
+              project.isProjectDetailsExpanded!
                   ? projectDetails(project)
                   : SizedBox(),
-              project.isTaskDetailsExpanded && project.isProjectDetailsExpanded
+              project.isTaskDetailsExpanded! &&
+                      project.isProjectDetailsExpanded!
                   ? Padding(
                       padding: const EdgeInsets.only(right: 21.0, top: 10),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
-              project.isProjectDetailsExpanded
-                  ? project.isTaskDetailsExpanded
+              project.isProjectDetailsExpanded!
+                  ? project.isTaskDetailsExpanded!
                       ? taskDetails()
                       : SizedBox()
                   : SizedBox()
@@ -201,25 +201,25 @@ class _ProjectTileState extends State<ProjectTile> {
         children: [
           projectExpandDetails(
             title: LOCATION,
-            detail: project.location,
+            detail: project.location!,
             hasIcon: true,
             icon: Icons.directions,
             iconOnPressed: () {
-              CommonUrlLauncher().launchMap(project.location);
+              CommonUrlLauncher().launchMap(project.location!);
             },
           ),
           projectExpandDetails(
             title: CONTACT,
-            detail: project.contactName + '\n' + project.contactNumber,
+            detail: project.contactName! + '\n' + project.contactNumber!,
             hasIcon: true,
             icon: Icons.call_rounded,
             iconOnPressed: () {
-              CommonUrlLauncher().launchCall(project.contactNumber);
+              CommonUrlLauncher().launchCall(project.contactNumber!);
             },
           ),
           projectExpandDetails(
             title: STATUS_LABEL,
-            detail: project.status,
+            detail: project.status!,
             hasIcon: false,
           ),
           SizedBox(height: 3),
@@ -232,17 +232,17 @@ class _ProjectTileState extends State<ProjectTile> {
           SmallCommonButtonWithIcon(
             onPressed: () {
               setState(() => project.isTaskDetailsExpanded =
-                  !project.isTaskDetailsExpanded);
-              if (project.isTaskDetailsExpanded) {
-                _projectTaskBloc.getProjectTaskDetails(project.projectId);
+                  !project.isTaskDetailsExpanded!);
+              if (project.isTaskDetailsExpanded!) {
+                _projectTaskBloc.getProjectTaskDetails(project.projectId!);
               }
             },
-            icon: project.isTaskDetailsExpanded
+            icon: project.isTaskDetailsExpanded!
                 ? Icons.keyboard_arrow_up_rounded
                 : Icons.keyboard_arrow_down_rounded,
             fontSize: 10,
             iconSize: 15,
-            text: project.isTaskDetailsExpanded
+            text: project.isTaskDetailsExpanded!
                 ? HIDE_TASK_DETAILS_BUTTON
                 : SHOW_TASK_DETAILS_BUTTON,
             buttonColor: GRAY,

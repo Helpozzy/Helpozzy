@@ -38,7 +38,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _projectReviewsBloc.getProjectReviews(project.projectId);
+    _projectReviewsBloc.getProjectReviews(project.projectId!);
     super.initState();
   }
 
@@ -90,7 +90,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
-              project.aboutOrganizer,
+              project.aboutOrganizer!,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: 12,
                 fontFamily: QUICKSAND,
@@ -173,7 +173,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
-              project.description,
+              project.description!,
               style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
             ),
           ),
@@ -194,7 +194,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
             child: Row(
               children: [
                 Text(
-                  'Contact ' + project.organization,
+                  'Contact ' + project.organization!,
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -412,7 +412,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                                 selectedRating = 0.0;
                                 _reviewController.clear();
                                 _projectReviewsBloc
-                                    .getProjectReviews(project.projectId);
+                                    .getProjectReviews(project.projectId!);
                               } else {
                                 ScaffoldSnakBar().show(context,
                                     msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
@@ -568,8 +568,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                           BitmapDescriptor.hueGreen),
                       markerId: markerId,
                       position: LatLng(
-                        project.projectLocationLati,
-                        project.projectLocationLongi,
+                        project.projectLocationLati!,
+                        project.projectLocationLongi!,
                       ),
                       infoWindow: InfoWindow(
                         title: project.projectName,
@@ -583,8 +583,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   markers: _markers,
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
-                      project.projectLocationLati,
-                      project.projectLocationLongi,
+                      project.projectLocationLati!,
+                      project.projectLocationLongi!,
                     ),
                     zoom: 11.0,
                   ),
@@ -599,8 +599,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                   child: IconButton(
                     onPressed: () async =>
                         await _commonUrlLauncher.openSystemMap(
-                      project.projectLocationLati,
-                      project.projectLocationLongi,
+                      project.projectLocationLati!,
+                      project.projectLocationLongi!,
                     ),
                     icon: Icon(
                       Icons.directions,

@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Reviews {
-  Reviews.fromSnapshot({required List<Map<String, dynamic>> list}) {
+  Reviews.fromSnapshot({required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
-      reviews.add(ReviewModel.fromjson(json: element));
+      final review = element.data() as Map<String, dynamic>;
+      reviews.add(ReviewModel.fromjson(json: review));
     });
   }
   late List<ReviewModel> reviews = [];

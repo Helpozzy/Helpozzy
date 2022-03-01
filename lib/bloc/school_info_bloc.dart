@@ -17,11 +17,6 @@ class SchoolsInfoBloc {
   Stream<List<SchoolDetailsModel>> get searchedSchoolsStream =>
       _searchSchoolController.stream;
 
-  Future<bool> postSchools(List schoolsList) async {
-    final bool posted = await repo.postSchoolsRepo(schoolsList);
-    return posted;
-  }
-
   List<StateModel> statesFromAPI = [];
 
   Future getStates() async {

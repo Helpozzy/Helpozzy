@@ -326,21 +326,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  project.projectName,
+                                  project.projectName!,
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     color: BLUE_GRAY,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  project.organization,
+                                  project.organization!,
                                   style: _theme.textTheme.bodyText2!
                                       .copyWith(color: DARK_GRAY),
                                 ),
                                 Text(
                                   DateFormatFromTimeStamp()
                                       .dateFormatToEEEDDMMMYYYY(
-                                          timeStamp: project.startDate),
+                                          timeStamp: project.startDate!),
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     color: DARK_BLUE,
                                     fontWeight: FontWeight.bold,

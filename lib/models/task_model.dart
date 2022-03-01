@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Tasks {
-  Tasks.fromJson({required List<Map<String, dynamic>> list}) {
+  Tasks.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
-      tasks.add(TaskModel.fromjson(json: element));
+      final task = element.data() as Map<String, dynamic>;
+      tasks.add(TaskModel.fromjson(json: task));
     });
   }
 
