@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
+import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -22,6 +23,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   late ThemeData _theme;
   final NotificationBloc _notificationBloc = NotificationBloc();
   final TaskBloc _taskBloc = TaskBloc();
+  final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
 
   @override
   void initState() {
@@ -58,22 +60,22 @@ class _NotificationInboxState extends State<NotificationInbox> {
         ProjectModel.fromjson(json: notification.payload!);
 
     signUpProject.isApprovedFromAdmin = true;
-    // final ResponseModel updateTaskResponse =
-    //     await _taskBloc.updateEnrollTask(task);
-    // if (updateTaskResponse.success!) {
-    //   CircularLoader().hide(context);
-    //   ScaffoldSnakBar().show(context, msg: 'Request Approved');
-    //   notification.userTo = notification.userFrom;
-    //   notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-    //   notification.title = 'Project Request Approved';
-    //   notification.subTitle =
-    //       'Your ${signUpProject.taskName} sign-up request is approved for ';
-    //   notification.isUpdated = true;
-    //   await _notificationBloc.updateNotifications(notification);
-    // } else {
-    //   CircularLoader().hide(context);
-    //   ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
-    // }
+    final ResponseModel updateProjectResponse =
+        await _projectSignUpBloc.updateSignedUpProject(signUpProject);
+    if (updateProjectResponse.success!) {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: 'Request Approved');
+      notification.userTo = notification.userFrom;
+      notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      notification.title = 'Project Request Approved';
+      notification.subTitle =
+          'Your ${signUpProject.projectName} sign-up request is approved';
+      notification.isUpdated = true;
+      await _notificationBloc.updateNotifications(notification);
+    } else {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: updateProjectResponse.error!);
+    }
   }
 
   @override
@@ -88,8 +90,11 @@ class _NotificationInboxState extends State<NotificationInbox> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 15.0, horizontal: width * 0.04),
+              padding: EdgeInsets.only(
+                top: 15.0,
+                left: width * 0.04,
+                right: width * 0.04,
+              ),
               child: SmallInfoLabel(label: NOTIFICATION_LABEL),
             ),
             Expanded(child: notificationsList()),
@@ -124,18 +129,22 @@ class _NotificationInboxState extends State<NotificationInbox> {
                               buttonColor: GREEN,
                               text: APPROVE_BUTTON,
                               onPressed: () async {
-                                await onApproveTaskNotification(notification);
+                                notification.type == 0
+                                    ? await onApproveProjectNotification(
+                                        notification)
+                                    : await onApproveTaskNotification(
+                                        notification);
                                 await _notificationBloc.getNotifications();
                               },
                             ),
                             SizedBox(width: 6),
                             SmallCommonButton(
                               fontSize: 12,
-                              buttonColor: DARK_GRAY,
+                              buttonColor: SILVER_GRAY,
                               text: DECLINE_BUTTON,
                               onPressed: () async => await _notificationBloc
                                   .removeNotification(notification.id!),
-                            )
+                            ),
                           ],
                   );
                 },

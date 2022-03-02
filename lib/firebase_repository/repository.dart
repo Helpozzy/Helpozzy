@@ -42,7 +42,7 @@ class Repository {
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
 
   Future<ResponseModel> postProjectSignupRepo(ProjectModel projectSignUpVal) =>
-      apiProvider.postProjectSignupProvider(projectSignUpVal);
+      apiProvider.postProjectSignupAPIProvider(projectSignUpVal);
 
   Future<bool> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);
@@ -64,6 +64,12 @@ class Repository {
 
   Future<Tasks> getProjectTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectTasksAPIProvider(projectId, isOwn);
+
+  Future<ResponseModel> updateEnrolledProjectRepo(ProjectModel project) =>
+      apiProvider.updateEnrolledProjectAPIProvider(project);
+
+  Future<Projects> getEnrolledProjectRepo() =>
+      apiProvider.getEnrolledProjectsAPIProvider();
 
   Future<Tasks> getProjectEnrolledTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectEnrolledTasksAPIProvider(projectId, isOwn);

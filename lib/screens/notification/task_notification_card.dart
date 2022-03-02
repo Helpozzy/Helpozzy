@@ -14,7 +14,9 @@ class NotificationTile extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
-          vertical: width * 0.02, horizontal: width * 0.05),
+        vertical: width * 0.02,
+        horizontal: width * 0.04,
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -23,14 +25,13 @@ class NotificationTile extends StatelessWidget {
             style: _theme.textTheme.bodyText2!.copyWith(
               fontWeight: FontWeight.w600,
               color: DARK_PINK_COLOR,
-              fontSize: 16,
             ),
           ),
           Text(
             DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYYatTime(
                 timeStamp: notification.timeStamp!),
             style: _theme.textTheme.bodyText2!
-                .copyWith(fontSize: 10, color: BLUE_GRAY),
+                .copyWith(fontSize: 10, color: SILVER_GRAY),
           )
         ],
       ),
@@ -40,7 +41,7 @@ class NotificationTile extends StatelessWidget {
           Text(
             notification.subTitle!,
             style: _theme.textTheme.bodyText2!.copyWith(
-              color: SILVER_GRAY,
+              color: BLUE_GRAY,
               fontSize: 12,
             ),
           ),

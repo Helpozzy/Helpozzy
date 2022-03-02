@@ -127,58 +127,6 @@ class ApiProvider {
     return Users.fromJson(list: querySnapshot.docs);
   }
 
-  Future<ResponseModel> postProjectSignupProvider(
-      ProjectModel projectSignUpVal) async {
-    final QuerySnapshot querySnapshot = await firestore
-        .collection('project_signed_up')
-        .where('owner_id', isEqualTo: projectSignUpVal.signUpUserId)
-        .where('project_id', isEqualTo: projectSignUpVal.projectId)
-        .get();
-    late ResponseModel responseModel;
-    if (querySnapshot.docs.isEmpty) {
-      responseModel = await projectSignUpAPIProvider(projectSignUpVal);
-    } else {
-      for (int i = 0; i < querySnapshot.docs.length; i++) {
-        if (querySnapshot.docs[i].exists) {
-          responseModel =
-              ResponseModel(message: 'Already enrolled', success: true);
-        } else {
-          responseModel = await projectSignUpAPIProvider(projectSignUpVal);
-        }
-      }
-    }
-    return responseModel;
-  }
-
-  Future<ResponseModel> projectSignUpAPIProvider(
-      ProjectModel projectSignUpVal) async {
-    try {
-      await firestore
-          .collection('project_signed_up')
-          .doc()
-          .set(projectSignUpVal.toJson())
-          .whenComplete(() async {
-        final DocumentSnapshot documentSnapshot = await firestore
-            .collection('projects')
-            .doc(projectSignUpVal.projectId)
-            .get();
-
-        final ProjectModel projectModel = ProjectModel.fromjson(
-            json: documentSnapshot.data() as Map<String, dynamic>);
-
-        await firestore
-            .collection('projects')
-            .doc(projectSignUpVal.projectId)
-            .update(<String, dynamic>{
-          'enrollment_count': projectModel.enrollmentCount! + 1
-        });
-      });
-      return ResponseModel(message: 'Enrolled successfully', success: true);
-    } catch (e) {
-      return ResponseModel(error: 'Project enrollment failed', success: false);
-    }
-  }
-
   Future<bool> postProjectAPIProvider(ProjectModel project) async {
     try {
       final DocumentReference documentReference =
@@ -201,7 +149,7 @@ class ApiProvider {
             .get()
         : projectTabType == ProjectTabType.MY_ENROLLED_TAB
             ? await firestore
-                .collection('project_signed_up')
+                .collection('signed_up_projects')
                 .where('owner_id',
                     isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
                 .get()
@@ -346,6 +294,83 @@ class ApiProvider {
         .get();
 
     return Tasks.fromJson(list: querySnapshot.docs);
+  }
+
+  Future<ResponseModel> postProjectSignupAPIProvider(
+      ProjectModel projectSignUpVal) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('signed_up_projects')
+        .where('owner_id', isEqualTo: projectSignUpVal.signUpUserId)
+        .where('project_id', isEqualTo: projectSignUpVal.projectId)
+        .get();
+    late ResponseModel responseModel;
+    if (querySnapshot.docs.isEmpty) {
+      responseModel = await projectSignUpAPIProvider(projectSignUpVal);
+    } else {
+      for (int i = 0; i < querySnapshot.docs.length; i++) {
+        if (querySnapshot.docs[i].exists) {
+          responseModel =
+              ResponseModel(message: 'Already enrolled', success: true);
+        } else {
+          responseModel = await projectSignUpAPIProvider(projectSignUpVal);
+        }
+      }
+    }
+    return responseModel;
+  }
+
+  Future<ResponseModel> projectSignUpAPIProvider(
+      ProjectModel projectSignUpVal) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await firestore.collection('signed_up_projects').doc().get();
+
+      projectSignUpVal.enrolledId = documentSnapshot.id;
+
+      documentSnapshot.reference
+          .set(projectSignUpVal.toJson())
+          .whenComplete(() async {
+        final DocumentSnapshot documentSnapshot = await firestore
+            .collection('projects')
+            .doc(projectSignUpVal.projectId)
+            .get();
+
+        final ProjectModel projectModel = ProjectModel.fromjson(
+            json: documentSnapshot.data() as Map<String, dynamic>);
+
+        await firestore
+            .collection('projects')
+            .doc(projectSignUpVal.projectId)
+            .update(<String, dynamic>{
+          'enrollment_count': projectModel.enrollmentCount! + 1
+        });
+      });
+      return ResponseModel(message: 'Enrolled successfully', success: true);
+    } catch (e) {
+      return ResponseModel(error: 'Project enrollment failed', success: false);
+    }
+  }
+
+  Future<Projects> getEnrolledProjectsAPIProvider() async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('signed_up_projects')
+        .where('sign_up_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('is_approved_from_admin', isEqualTo: true)
+        .get();
+
+    return Projects.fromJson(list: querySnapshot.docs);
+  }
+
+  Future<ResponseModel> updateEnrolledProjectAPIProvider(
+      ProjectModel project) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('signed_up_projects').doc(project.enrolledId);
+      await documentReference.update(project.toJson());
+      return ResponseModel(success: true, message: 'Task Updated');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Task not updated');
+    }
   }
 
   Future<TaskModel> getTaskInfoAPIProvider(String taskId) async {

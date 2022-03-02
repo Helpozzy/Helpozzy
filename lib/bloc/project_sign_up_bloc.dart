@@ -17,9 +17,15 @@ class ProjectSignUpBloc {
     return response;
   }
 
-  Future getProjectTasks(String projectId) async {
-    // final Projects response = await repo.getProjectTasksRepo(projectId);
-    // projectTasksController.sink.add(response);
+  Future getEnrolledProjects() async {
+    final Projects response = await repo.getEnrolledProjectRepo();
+    projectSignUpController.sink.add(response);
+  }
+
+  Future<ResponseModel> updateSignedUpProject(ProjectModel project) async {
+    final ResponseModel response =
+        await repo.updateEnrolledProjectRepo(project);
+    return response;
   }
 
   void dispose() {

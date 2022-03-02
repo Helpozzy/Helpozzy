@@ -90,7 +90,7 @@ class _VolunteerProjectTaskSignUpState
         status: project!.status,
         enrollmentCount: project!.enrollmentCount,
         imageUrl: project!.imageUrl,
-        isApprovedFromAdmin: project!.isApprovedFromAdmin,
+        isApprovedFromAdmin: false,
         aboutOrganizer: project!.aboutOrganizer,
         categoryId: project!.categoryId,
         collaboratorsCoadmin: project!.collaboratorsCoadmin,
@@ -104,7 +104,7 @@ class _VolunteerProjectTaskSignUpState
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
-          type: 1,
+          type: 0,
           userTo: project!.ownerId,
           userFrom: prefsObject.getString(CURRENT_USER_ID),
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -159,7 +159,7 @@ class _VolunteerProjectTaskSignUpState
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
-          type: 0,
+          type: 1,
           userFrom: prefsObject.getString(CURRENT_USER_ID),
           userTo: task!.taskOwnerId,
           timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
