@@ -150,8 +150,9 @@ class ApiProvider {
         : projectTabType == ProjectTabType.MY_ENROLLED_TAB
             ? await firestore
                 .collection('signed_up_projects')
-                .where('owner_id',
+                .where('signup_uid',
                     isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+                .where('is_approved_from_admin', isEqualTo: true)
                 .get()
             : projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
                 ? await firestore
@@ -345,7 +346,8 @@ class ApiProvider {
           'enrollment_count': projectModel.enrollmentCount! + 1
         });
       });
-      return ResponseModel(message: 'Enrolled successfully', success: true);
+      return ResponseModel(
+          message: 'Project signed up wait for admin approval', success: true);
     } catch (e) {
       return ResponseModel(error: 'Project enrollment failed', success: false);
     }

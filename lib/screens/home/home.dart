@@ -59,17 +59,18 @@ class _HomeState extends State<Home> {
                 label: HOME_TAB,
                 backgroundColor: Colors.white,
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(CupertinoIcons.gift),
-              //   label: REWARD_TAB,
-              //   backgroundColor: Colors.white,
-              // ),
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.search, size: 16),
                 activeIcon: Icon(CupertinoIcons.search, size: 20),
                 label: EXPLORE_TAB,
                 backgroundColor: Colors.white,
               ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(CupertinoIcons.gift_alt, size: 18),
+              //   activeIcon: Icon(CupertinoIcons.gift_alt_fill, size: 20),
+              //   label: REWARD_TAB,
+              //   backgroundColor: Colors.white,
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.bell, size: 16),
                 activeIcon: Icon(CupertinoIcons.bell_fill, size: 20),

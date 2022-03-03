@@ -6,8 +6,8 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class PointsTabScreen extends StatefulWidget {
-  PointsTabScreen({required this.tabController});
-  final TabController tabController;
+  PointsTabScreen({this.tabController});
+  final TabController? tabController;
   @override
   _PointsTabScreenState createState() =>
       _PointsTabScreenState(tabController: tabController);
@@ -15,8 +15,8 @@ class PointsTabScreen extends StatefulWidget {
 
 class _PointsTabScreenState extends State<PointsTabScreen>
     with SingleTickerProviderStateMixin {
-  _PointsTabScreenState({required this.tabController});
-  final TabController tabController;
+  _PointsTabScreenState({this.tabController});
+  final TabController? tabController;
   late ThemeData _theme;
   late double height;
   late double width;
@@ -85,15 +85,17 @@ class _PointsTabScreenState extends State<PointsTabScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  userRewardsDetails.totalPoint <= 50
-                      ? 'assets/images/medal_bronze.png'
-                      : userRewardsDetails.totalPoint <= 100
-                          ? 'assets/images/medal_silver.png'
-                          : userRewardsDetails.totalPoint <= 150
-                              ? 'assets/images/medal_gold.png'
-                              : userRewardsDetails.totalPoint <= 200
-                                  ? 'assets/images/trophy.png'
-                                  : 'assets/images/medal_bronze.png',
+                  userRewardsDetails.totalPoint <= 25
+                      ? 'assets/images/medal_beginer.png'
+                      : userRewardsDetails.totalPoint <= 50
+                          ? 'assets/images/medal_bronze.png'
+                          : userRewardsDetails.totalPoint <= 100
+                              ? 'assets/images/medal_silver.png'
+                              : userRewardsDetails.totalPoint <= 150
+                                  ? 'assets/images/medal_gold.png'
+                                  : userRewardsDetails.totalPoint <= 200
+                                      ? 'assets/images/trophy.png'
+                                      : 'assets/images/medal_beginer.png',
                   height: height / 5.8,
                   width: height / 5.8,
                 ),
@@ -102,7 +104,17 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      SILVER_MEMBER,
+                      userRewardsDetails.totalPoint <= 25
+                          ? BEGINNER_MEMBER
+                          : userRewardsDetails.totalPoint <= 50
+                              ? BRONZE_MEMBER
+                              : userRewardsDetails.totalPoint <= 100
+                                  ? SILVER_MEMBER
+                                  : userRewardsDetails.totalPoint <= 150
+                                      ? GOLD_MEMBER
+                                      : userRewardsDetails.totalPoint <= 200
+                                          ? LIFETIME_ACHIEVMENT
+                                          : BEGINNER_MEMBER,
                       style: _theme.textTheme.headline5!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: height / 35,
@@ -124,24 +136,24 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                         color: DARK_PINK_COLOR,
                       ),
                     ),
-                    Text(
-                      POINT_TO_REDEEM,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Container(
-                      height: 36,
-                      width: height / 4.5,
-                      margin: EdgeInsets.only(top: 7),
-                      child: CommonButton(
-                        text: REDEEM_MY_POINT,
-                        color: LIGHT_BLACK,
-                        fontSize: 12,
-                        onPressed: () => tabController.animateTo(3),
-                      ),
-                    ),
+                    // Text(
+                    //   POINT_TO_REDEEM,
+                    //   style: _theme.textTheme.bodyText2!.copyWith(
+                    //     fontSize: 10,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
+                    // Container(
+                    //   height: 36,
+                    //   width: height / 4.5,
+                    //   margin: EdgeInsets.only(top: 7),
+                    //   child: CommonButton(
+                    //     text: REDEEM_MY_POINT,
+                    //     color: LIGHT_BLACK,
+                    //     fontSize: 12,
+                    //     onPressed: () => tabController!.animateTo(3),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],

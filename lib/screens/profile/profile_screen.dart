@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
+import 'package:helpozzy/screens/profile/points_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
@@ -56,6 +58,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       aboutMe(user),
                       projectPref(),
                     ],
+                  ),
+                ),
+                ListDividerLabel(label: SERVICE_RECORDS),
+                ListTile(
+                  title: Text(POINT_TAB),
+                  trailing: Icon(
+                    CupertinoIcons.list_bullet_below_rectangle,
+                    color: DARK_PINK_COLOR,
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => PointsScreen(),
+                    ),
                   ),
                 ),
                 ownProjectsList(),
@@ -297,10 +313,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
-            ListView.builder(
+            ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: projects.length,
+              separatorBuilder: (context, index) => CommonDivider(),
               itemBuilder: (context, index) {
                 final ProjectModel project = projects[index];
                 return InkWell(
@@ -313,51 +330,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10, horizontal: width * 0.05),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: width * 0.05,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  project.projectName!,
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    color: BLUE_GRAY,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  project.organization!,
-                                  style: _theme.textTheme.bodyText2!
-                                      .copyWith(color: DARK_GRAY),
-                                ),
-                                Text(
-                                  DateFormatFromTimeStamp()
-                                      .dateFormatToEEEDDMMMYYYY(
-                                          timeStamp: project.startDate!),
-                                  style: _theme.textTheme.bodyText2!.copyWith(
-                                    color: DARK_BLUE,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                CommonDivider(),
-                              ],
+                            Text(
+                              project.projectName!,
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                color: BLUE_GRAY,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 16,
-                            )
+                            Text(
+                              project.organization!,
+                              style: _theme.textTheme.bodyText2!
+                                  .copyWith(color: DARK_GRAY),
+                            ),
+                            Text(
+                              DateFormatFromTimeStamp()
+                                  .dateFormatToEEEDDMMMYYYY(
+                                      timeStamp: project.startDate!),
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                color: DARK_BLUE,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            CommonDivider(),
                           ],
                         ),
-                      ),
-                      CommonDivider(),
-                    ],
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

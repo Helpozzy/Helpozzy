@@ -65,17 +65,17 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
     return Row(
       children: [
         columnKeyName(COLUMN_ONE),
-        columnKeyName(COLUMN_ONE),
-        columnKeyName(COLUMN_ONE),
-        columnKeyName(COLUMN_ONE),
-        columnKeyName(COLUMN_ONE),
+        columnKeyName(COLUMN_TWO),
+        columnKeyName(COLUMN_THREE),
+        columnKeyName(COLUMN_FOUR),
+        columnKeyName(COLUMN_FIVE),
       ],
     );
   }
 
   Widget columnKeyName(String text) {
     return Container(
-      height: 80,
+      height: width * 0.17,
       width: width / 5,
       alignment: Alignment.center,
       color: TABLE_ROW_GRAY_COLOR,
@@ -114,21 +114,21 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
 
   Widget rewardCategory(RewardsDetailsModel reward, String label) {
     return Container(
-      height: 116,
+      height: width * 0.23,
       width: width / 5,
       alignment: Alignment.center,
       decoration: BoxDecoration(
           border: Border.all(
         color: ACCENT_GRAY,
-        width: 0.3,
+        width: 0.5,
       )),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             reward.asset,
-            height: 50,
-            width: 50,
+            height: width * 0.11,
+            width: width * 0.11,
           ),
           SizedBox(height: 2),
           Text(
@@ -136,8 +136,9 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
             maxLines: 2,
             textAlign: TextAlign.center,
             style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontSize: 10,
+              color: DARK_PINK_COLOR,
+              fontWeight: FontWeight.w800,
             ),
           )
         ],
@@ -147,7 +148,7 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
 
   Widget pointsListView(List<PointsModel> points) {
     return SizedBox(
-      height: 116,
+      height: width * 0.23,
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -156,47 +157,39 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
         itemBuilder: (context, index) {
           final PointsModel data = points[index];
           return Container(
-            height: 116,
+            height: width * 0.25,
             width: width / 5,
             decoration: BoxDecoration(
                 border: Border.all(
               color: ACCENT_GRAY,
-              width: 0.3,
+              width: 0.5,
             )),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      data.rating.toString(),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 12,
-                      color: DARK_PINK_COLOR,
-                    )
-                  ],
-                ),
-                SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text(
+                //       data.rating.toString(),
+                //       style: _theme.textTheme.bodyText2!.copyWith(
+                //         fontSize: 18,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //     Icon(
+                //       Icons.star,
+                //       size: 12,
+                //       color: DARK_PINK_COLOR,
+                //     )
+                //   ],
+                // ),
                 Text(
-                  '${data.points} Points',
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  '(${data.hrs})',
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  data.hrs,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(fontWeight: FontWeight.w600, fontSize: 12),
                 ),
               ],
             ),

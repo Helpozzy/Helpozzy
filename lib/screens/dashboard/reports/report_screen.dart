@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/report_chart_model.dart';
+import 'package:helpozzy/screens/dashboard/reports/pvsa_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -68,7 +70,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: width * 0.02),
             Container(
               height: height / 2,
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -100,6 +101,20 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
             ),
             SizedBox(height: width * 0.05),
+            ListDividerLabel(label: 'Service Accomplishments'),
+            ListTile(
+              title: Text('Service Detail'),
+              trailing: Icon(
+                CupertinoIcons.list_bullet_below_rectangle,
+                color: DARK_PINK_COLOR,
+              ),
+              onTap: () => Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => PVSAChart(),
+                ),
+              ),
+            ),
             ListDividerLabel(label: MONTHLY_REPORTS_LABEL),
             monthlyReportList(),
           ],

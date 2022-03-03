@@ -111,7 +111,6 @@ const HOME_SCREEN = 'home_screen';
 const EXPLORE_SCREEN = 'explore_screen';
 const PROJECT_DETAILS_SCREEN = 'project_details_screen';
 const REWARDS_SCREEN = 'rewards_screen';
-
 const COMING_SOON_SCREEN_TEXT = 'Coming Soon!';
 
 //Bottom Tabbar
@@ -434,6 +433,8 @@ const MONTHY_HOURS = 'Monthly Hours';
 const PROJECT_HOURS_LABEL = 'Project Hours';
 const PROJECTS_LABEL = 'Projects : ';
 const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
+const SERVICE_RECORDS = 'Service records';
+const PVSA_CHART = 'PVSA Chart';
 
 //Project sign up
 const VOLUNTEER_EMAIL_LABEL = 'Volunteer Email';
@@ -461,7 +462,11 @@ const TOP_REWARD_DETAILS =
 const SECOND_REWARD_DETAILS_TEXT = '60 minutes contribution = 1 points';
 
 //Points Tab
+const BEGINNER_MEMBER = 'BEGINNER MEMBER';
+const BRONZE_MEMBER = 'BRONZE MEMBER';
 const SILVER_MEMBER = 'SILVER MEMBER';
+const GOLD_MEMBER = 'GOLD MEMBER';
+const LIFETIME_ACHIEVMENT = 'LIFETIME ACHIEVMENT';
 const POINT_TO_REDEEM = 'Points to Redeem';
 const MEMBER_SINCE = 'Member since';
 const MEMBERSHIP_NUMBER = 'Membership number';
@@ -664,28 +669,53 @@ List<CategoryModel> categoriesList = [
 ];
 
 Map<String, dynamic> rewardsList = {
+  'Beginner': {
+    'asset': 'assets/images/medal_beginer.png',
+    'points': [
+      {
+        'rating': 10,
+        'points': 10,
+        'hrs': '1-25\nhrs',
+      },
+      {
+        'rating': 10,
+        'points': 10,
+        'hrs': '1-49\nhrs',
+      },
+      {
+        'rating': 10,
+        'points': 10,
+        'hrs': '1-99\nhrs',
+      },
+      {
+        'rating': 10,
+        'points': 10,
+        'hrs': '1-99\nhrs',
+      },
+    ],
+  },
   'Bronze': {
     'asset': 'assets/images/medal_bronze.png',
     'points': [
       {
         'rating': 50,
         'points': 50,
-        'hrs': '26-49 hrs',
+        'hrs': '26-49\nhrs',
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '50-74 hrs',
+        'hrs': '50-74\nhrs',
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '100-174 hrs',
+        'hrs': '100-174\nhrs',
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '100-249 hrs',
+        'hrs': '100-249\nhrs',
       },
     ],
   },
@@ -695,22 +725,22 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 100,
         'points': 100,
-        'hrs': '50-74 hrs',
+        'hrs': '50-74\nhrs',
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '75-99 hrs',
+        'hrs': '75-99\nhrs',
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '175-249 hrs',
+        'hrs': '175-249\nhrs',
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '250-499 hrs',
+        'hrs': '250-499\nhrs',
       },
     ],
   },
@@ -720,22 +750,22 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 150,
         'points': 150,
-        'hrs': '75+ hrs',
+        'hrs': '75+\nhrs',
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '100+ hrs',
+        'hrs': '100+\nhrs',
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '50-74 hrs',
+        'hrs': '250+\nhrs',
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '50-74 hrs',
+        'hrs': '500+\nhrs',
       },
     ],
   },
@@ -745,22 +775,22 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 200,
         'points': 200,
-        'hrs': '50-74 hrs',
+        'hrs': '4,000+\nhrs',
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '50-74 hrs',
+        'hrs': '4,000+\nhrs',
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '50-74 hrs',
+        'hrs': '4,000+\nhrs',
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '50-74 hrs',
+        'hrs': '4,000+\nhrs',
       },
     ],
   },
