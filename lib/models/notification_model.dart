@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Notifications {
-  Notifications.fromSnapshot({required List<Map<String, dynamic>> list}) {
+  Notifications.fromSnapshot(
+      {required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
-      notifications.add(NotificationModel.fromjson(json: element));
+      final notification = element.data() as Map<String, dynamic>;
+      notifications.add(NotificationModel.fromjson(json: notification));
     });
   }
   late List<NotificationModel> notifications = [];

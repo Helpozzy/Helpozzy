@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Cities {
-  Cities.fromJson({required List<Map<String, dynamic>> items}) {
-    items.forEach((element) {
-      cities.add(CityModel.fromJson(json: element));
+  Cities.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
+    list.forEach((element) {
+      final Map<String, dynamic> city = element.data() as Map<String, dynamic>;
+      cities.add(CityModel.fromJson(json: city));
     });
     cities.sort((a, b) =>
         a.cityName!.toLowerCase().compareTo(b.cityName!.toLowerCase()));
@@ -40,9 +43,10 @@ class CityModel {
 }
 
 class States {
-  States.fromJson({required List<Map<String, dynamic>> items}) {
-    items.forEach((element) {
-      states.add(StateModel.fromJson(json: element));
+  States.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
+    list.forEach((element) {
+      final Map<String, dynamic> state = element.data() as Map<String, dynamic>;
+      states.add(StateModel.fromJson(json: state));
     });
     states.sort((a, b) =>
         a.stateName!.toLowerCase().compareTo(b.stateName!.toLowerCase()));

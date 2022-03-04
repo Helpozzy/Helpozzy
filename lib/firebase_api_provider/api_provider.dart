@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -12,18 +11,11 @@ import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class ApiProvider {
-  Future<States> getCitiesAPIProvider() async {
+  Future<States> getStatesAPIProvider() async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('states').get();
 
-    List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
-    List<Map<String, dynamic>> cities = [];
-    cityList.forEach((element) {
-      final Map<String, dynamic> city = element.data() as Map<String, dynamic>;
-      cities.add(city);
-    });
-
-    return States.fromJson(items: cities);
+    return States.fromJson(list: querySnapshot.docs);
   }
 
   Future<Cities> getCitiesByStateNameAPIProvider(String stateName) async {
@@ -32,14 +24,7 @@ class ApiProvider {
         .where('state_name', isEqualTo: stateName)
         .get();
 
-    List<QueryDocumentSnapshot<Object?>> cityList = querySnapshot.docs;
-    List<Map<String, dynamic>> cities = [];
-    cityList.forEach((element) {
-      final Map<String, dynamic> city = element.data() as Map<String, dynamic>;
-      cities.add(city);
-    });
-
-    return Cities.fromJson(items: cities);
+    return Cities.fromJson(list: querySnapshot.docs);
   }
 
   Future<Schools> getSchoolsAPIProvider({String? state, String? city}) async {
@@ -96,7 +81,7 @@ class ApiProvider {
   Future<Projects> getUserCompltedProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('projects')
-        .where('owner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
     return Projects.fromJson(list: querySnapshot.docs);
@@ -141,6 +126,11 @@ class ApiProvider {
 
   Future<Projects> getProjectsAPIProvider(
       {ProjectTabType? projectTabType}) async {
+    final QuerySnapshot signedUpQuerySnapshot = await firestore
+        .collection('signed_up_projects')
+        .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+        .get();
+
     final QuerySnapshot querySnapshot = projectTabType == ProjectTabType.OWN_TAB
         ? await firestore
             .collection('projects')
@@ -187,7 +177,10 @@ class ApiProvider {
                                 .get()
                             : await firestore.collection('projects').get();
 
-    return Projects.fromJson(list: querySnapshot.docs);
+    return Projects.fromJson(
+      list: querySnapshot.docs,
+      signedUpList: signedUpQuerySnapshot.docs,
+    );
   }
 
   Future<Users> otherUserInfoAPIProvider() async {
@@ -459,12 +452,6 @@ class ApiProvider {
         .where('user_to', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
-    List<QueryDocumentSnapshot<Object?>> notificationsList = querySnapshot.docs;
-    List<Map<String, dynamic>> notifications = [];
-    notificationsList.forEach((json) {
-      final notification = json.data() as Map<String, dynamic>;
-      notifications.add(notification);
-    });
-    return Notifications.fromSnapshot(list: notifications);
+    return Notifications.fromSnapshot(list: querySnapshot.docs);
   }
 }

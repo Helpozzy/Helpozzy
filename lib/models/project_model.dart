@@ -1,12 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Projects {
-  Projects.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
+  Projects.fromJson(
+      {List<QueryDocumentSnapshot<Object?>>? signedUpList,
+      required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
       final project = element.data() as Map<String, dynamic>;
       projectList.add(ProjectModel.fromjson(json: project));
     });
   }
+  // getFinalList() {
+  //   List<User> result = [];
+  //   followingList.forEach((aElement) {
+  //     User value = followersList.firstWhere(
+  //         (bElement) => bElement.id == aElement.id,
+  //         orElse: () => null);
+  //     if (value != null) {
+  //       result.add(value);
+  //     }
+  //   });
+  //   print(result);
+  // }
+
   late List<ProjectModel> projectList = [];
 }
 
