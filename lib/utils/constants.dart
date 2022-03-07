@@ -289,6 +289,7 @@ const SCHOOL_STATE = 'State of School';
 const SCHOOL_CITY = 'City of School';
 const SCHOOL_NAME = 'School Name';
 const GRADE_LEVEL = 'Grade Level';
+const EMAIL_OTP_TEXT = 'Helpozzy email verification!';
 
 //School search type
 const STATE_BOTTOMSHEET = 'State Bottomsheet';

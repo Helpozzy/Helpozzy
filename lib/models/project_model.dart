@@ -9,18 +9,6 @@ class Projects {
       projectList.add(ProjectModel.fromjson(json: project));
     });
   }
-  // getFinalList() {
-  //   List<User> result = [];
-  //   followingList.forEach((aElement) {
-  //     User value = followersList.firstWhere(
-  //         (bElement) => bElement.id == aElement.id,
-  //         orElse: () => null);
-  //     if (value != null) {
-  //       result.add(value);
-  //     }
-  //   });
-  //   print(result);
-  // }
 
   late List<ProjectModel> projectList = [];
 }

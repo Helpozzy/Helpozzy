@@ -12,7 +12,7 @@ import 'screens/rewards/rewards.dart';
 
 class HelpozzyApp extends MaterialApp {
   @override
-  String get title => "Helpozzy";
+  String get title => HELPOZZY_TEXT;
 
   @override
   ThemeData get theme => ThemeData(

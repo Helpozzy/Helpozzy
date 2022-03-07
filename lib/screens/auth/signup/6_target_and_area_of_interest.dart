@@ -26,11 +26,6 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
   late List<int> selectedAreaOfInterests = [];
   final TextEditingController _targetHoursController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future onContinue() async {
     if (_formKey.currentState!.validate()) {
       selectedAreaOfInterests = [];
