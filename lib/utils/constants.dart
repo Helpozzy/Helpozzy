@@ -424,6 +424,7 @@ const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
 //Project
 const NO_PROJECTS_FOUNDS = 'No projects found';
+const NO_PREFRENCES_FOUNDS = 'No prefrences found';
 const PLEASE_VISIT_OTHER = 'Please visit other categories section';
 const NO_ACTIVITIES_FOUNDS = 'No activities found';
 

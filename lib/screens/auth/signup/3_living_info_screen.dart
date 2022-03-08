@@ -63,7 +63,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     var result = await this.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
       detailsResult = result.result!;
-      location = detailsResult!.name! + detailsResult!.formattedAddress!;
+      location = detailsResult!.formattedAddress!;
       latitude = detailsResult!.geometry!.location!.lat!;
       longitude = detailsResult!.geometry!.location!.lng!;
       _addressLocationController.clear();
@@ -288,7 +288,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
             );
           },
         ),
-        detailsResult != null
+        location != null && location!.isNotEmpty
             ? Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: 4.0, horizontal: width * 0.08),
@@ -309,7 +309,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                     subtitle: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Text(
-                        detailsResult!.name! + detailsResult!.formattedAddress!,
+                        location!,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontWeight: FontWeight.w600,
                           color: DARK_GRAY,

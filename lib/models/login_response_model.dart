@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginResponseModel {
+class AuthResponseModel {
   User? user;
   bool? success;
   String? message;
   String? error;
 
-  LoginResponseModel({
+  AuthResponseModel({
     this.user,
     this.success = false,
     this.message = '',

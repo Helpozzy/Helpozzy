@@ -14,7 +14,9 @@ class UserInfoBloc {
 
   Future<SignUpAndUserModel> getUser(String uId) async {
     final SignUpAndUserModel response = await repo.userInfoRepo(uId);
-    prefsObject.setString(CURRENT_USER_PROFILE_URL, response.profileUrl!);
+    response.profileUrl != null
+        ? prefsObject.setString(CURRENT_USER_PROFILE_URL, response.profileUrl!)
+        : prefsObject.setString(CURRENT_USER_PROFILE_URL, APP_ICON_URL);
     final String userData = jsonEncode(response.toJson());
     prefsObject.setString(CURRENT_USER_DATA, userData);
     userController.sink.add(response);

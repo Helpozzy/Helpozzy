@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/firebase_repository/auth_repository.dart';
+import 'package:helpozzy/models/login_response_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/provider/email_verfication_provider.dart';
+import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc {
@@ -30,15 +32,23 @@ class SignUpBloc {
   Stream<bool> get showPassStream => showPasswordController.stream;
   Stream<bool> get showConfirmPassStream => showConfirmPassController.stream;
 
-  Future<bool> registerUser(
+  Future<ResponseModel> registerUser(
       SignUpAndUserModel signupAndUserModel, String password) async {
-    final User? result = await auth.signUp(signupAndUserModel.email!, password);
+    final AuthResponseModel? result =
+        await auth.signUp(signupAndUserModel.email!, password);
     try {
       final bool response = await repo.postSignUpDetailsRepo(
-          result!.uid, signupAndUserModel.toJson());
-      return response;
+          result!.user!.uid, signupAndUserModel.toJson());
+      prefsObject.setString(CURRENT_USER_ID, result.user!.uid);
+      return ResponseModel(
+        success: response,
+        message: result.message,
+      );
     } catch (e) {
-      return false;
+      return ResponseModel(
+        success: false,
+        message: result!.message,
+      );
     }
   }
 

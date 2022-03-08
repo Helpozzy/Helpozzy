@@ -112,6 +112,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.textAlignCenter = true,
+    this.textCapitalization = TextCapitalization.none,
   });
   final TextEditingController controller;
   final String hintText;
@@ -126,6 +127,7 @@ class CommonRoundedTextfield extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool? textAlignCenter;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +142,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       style: _theme.textTheme.bodyText1,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
+      textCapitalization: textCapitalization,
       decoration: inputRoundedDecoration(
         fillColor: fillColor,
         getHint: hintText,

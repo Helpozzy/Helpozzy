@@ -46,11 +46,11 @@ class LoginInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginSucceed extends LoginState {
-  final LoginResponseModel loginResponse;
+  final AuthResponseModel loginResponse;
   LoginSucceed({required this.loginResponse});
 }
 
 class LoginFailed extends LoginState {
-  final LoginResponseModel loginResponse;
+  final AuthResponseModel loginResponse;
   LoginFailed({required this.loginResponse});
 }

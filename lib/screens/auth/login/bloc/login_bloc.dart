@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final email = state.email;
       final password = state.password;
       yield state.copyWith(state, isLoading: true);
-      LoginResponseModel loginResponse =
+      AuthResponseModel loginResponse =
           await authRepository.signIn(email, password);
       if (loginResponse.user != null) {
         prefsObject.setString(CURRENT_USER_ID, loginResponse.user!.uid);

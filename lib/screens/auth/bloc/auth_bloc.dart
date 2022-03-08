@@ -21,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         var isSignedIn = await authRepository.isSignedIn();
         if (isSignedIn) {
-          final LoginResponseModel? authResponse =
+          final AuthResponseModel? authResponse =
               await authRepository.getCurrentUser();
           if (authResponse!.user != null)
             yield AuthenticateState(authResponse: authResponse);

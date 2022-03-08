@@ -69,7 +69,9 @@ class SignUpAndUserModel {
     currentYearTargetHours = json['current_year_target_hours'];
     rating = json['rating'] is double
         ? json['rating']
-        : double.parse(json['rating'].toString());
+        : double.parse(
+            json['rating'] != null ? json['rating'].toString() : '0',
+          );
     reviewsByPersons = json['review_by_persons'];
     pointGifted = json['point_gifted'];
     joiningDate = json['date_of_joining'];

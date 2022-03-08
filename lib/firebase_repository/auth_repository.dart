@@ -8,20 +8,27 @@ class AuthRepository {
   AuthRepository();
 
   // Sign Up with email and password
-
-  Future<User?> signUp(String email, String password) async {
+  Future<AuthResponseModel> signUp(String email, String password) async {
     try {
-      var auth = await firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential auth = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      return auth.user;
+      return AuthResponseModel(
+        user: auth.user,
+        message: SUCCESSFULL,
+        success: true,
+      );
     } on FirebaseAuthException catch (e) {
       print('Auth ${e.toString()}');
+      return AuthResponseModel(
+        user: null,
+        message: e.toString().split('] ')[1],
+        success: false,
+      );
     }
-    return null;
   }
 
   // Sign In with email and password
-  Future<LoginResponseModel> signIn(String email, String password) async {
+  Future<AuthResponseModel> signIn(String email, String password) async {
     UserCredential auth;
     try {
       auth = await firebaseAuth.signInWithEmailAndPassword(
@@ -34,17 +41,17 @@ class AuthRepository {
             await collectionReference.doc(auth.user!.uid).get();
 
         if (documentSnapshot.exists) {
-          return LoginResponseModel(user: auth.user, success: true);
+          return AuthResponseModel(user: auth.user, success: true);
         } else {
-          return LoginResponseModel(
+          return AuthResponseModel(
               success: false, error: "User not exist. Please retry.");
         }
       } else {
-        return LoginResponseModel(
+        return AuthResponseModel(
             success: false, error: "Auth failed. Please retry.");
       }
     } on FirebaseAuthException catch (e) {
-      return LoginResponseModel(success: false, error: e.toString());
+      return AuthResponseModel(success: false, error: e.toString());
     }
   }
 
@@ -70,7 +77,7 @@ class AuthRepository {
   }
 
   //get current user
-  Future<LoginResponseModel?> getCurrentUser() async {
+  Future<AuthResponseModel?> getCurrentUser() async {
     if (firebaseAuth.currentUser != null) {
       final CollectionReference collectionReference =
           firestore.collection('users');
@@ -79,16 +86,16 @@ class AuthRepository {
           await collectionReference.doc(firebaseAuth.currentUser!.uid).get();
 
       if (documentSnapshot.exists) {
-        return LoginResponseModel(
+        return AuthResponseModel(
           user: firebaseAuth.currentUser,
           success: true,
         );
       } else {
-        return LoginResponseModel(
+        return AuthResponseModel(
             success: false, error: "User not exist. Please retry.");
       }
     } else {
-      return LoginResponseModel(
+      return AuthResponseModel(
           success: false, error: "Auth failed. Please retry.");
     }
   }

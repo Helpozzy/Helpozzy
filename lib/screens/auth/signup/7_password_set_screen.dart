@@ -45,11 +45,14 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
           .registerUser(signupAndUserModel, _confirmPassController.text)
           .then((response) {
         CircularLoader().hide(context);
-        if (response)
+        if (response.success!)
           Navigator.pushNamedAndRemoveUntil(
-              context, HOME_SCREEN, (route) => false);
+            context,
+            HOME_SCREEN,
+            (route) => false,
+          );
         else
-          ScaffoldSnakBar().show(context, msg: SIGN_UP_FAILED_POPUP_MSG);
+          ScaffoldSnakBar().show(context, msg: response.message!);
       });
     }
   }
@@ -90,17 +93,24 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       key: popupKey,
                       margin: EdgeInsets.symmetric(horizontal: width * 0.06),
                       padding: EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: width * 0.04),
+                        vertical: 6.0,
+                        horizontal: width * 0.03,
+                      ),
                       message:
                           '- At least 8 characters—the more characters, the better.'
                           '\n- A mixture of both uppercase and lowercase letters.'
                           '\n- A mixture of letters and numbers.'
                           '\n- Inclusion of at least one special character'
                           '\n e.g., ! @ # ? ]',
-                      textStyle: _theme.textTheme.bodyText2,
+                      textStyle: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: WHITE,
+                      ),
                       decoration: BoxDecoration(
-                          color: WHITE,
-                          borderRadius: BorderRadius.circular(12)),
+                        color: UNSELECTED_TAB_COLOR.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: IconButton(
                         onPressed: () {
                           final dynamic tooltip = popupKey.currentState;
@@ -130,7 +140,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                                 ? CupertinoIcons.eye_slash
                                 : CupertinoIcons.eye,
                             color: DARK_GRAY,
-                            size: 18,
+                            size: 16,
                           ),
                         ),
                         onPressed: () {
@@ -146,9 +156,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                         } else if (password.isNotEmpty &&
                             !checkPassStrength(password)) {
                           return "Password must contains 'A-z, Special char, 1-9'";
-                        } else {
-                          return null;
                         }
+                        return null;
                       },
                     );
                   },
@@ -173,7 +182,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                                 ? CupertinoIcons.eye_slash
                                 : CupertinoIcons.eye,
                             color: DARK_GRAY,
-                            size: 18,
+                            size: 16,
                           ),
                         ),
                         onPressed: () {
@@ -186,9 +195,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                           return 'Please enter confirm password';
                         } else if (confirmPass != _passController.text) {
                           return 'Does not match';
-                        } else {
-                          return null;
                         }
+                        return null;
                       },
                     );
                   },

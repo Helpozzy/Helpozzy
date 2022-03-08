@@ -111,9 +111,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         return 'Please enter first name';
                       } else if (fname.isNotEmpty && fname.length <= 3) {
                         return 'Please enter more than 3 charcters';
-                      } else {
-                        return null;
                       }
+                      return null;
                     },
                   ),
                 ),
@@ -133,9 +132,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         return 'Please enter last name';
                       } else if (lname.isNotEmpty && lname.length <= 3) {
                         return 'Please enter more than 3 charcters';
-                      } else {
-                        return null;
                       }
+                      return null;
                     },
                   ),
                 ),
@@ -212,19 +210,21 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               onPressed: () async {
                 FocusScope.of(context).unfocus();
                 if (_emailController.text.trim().isNotEmpty) {
+                  CircularLoader().show(context);
                   final bool response =
                       await _signUpBloc.sentOtp(_emailController.text);
                   if (response) {
+                    CircularLoader().hide(context);
                     ScaffoldSnakBar().show(
                       context,
                       msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
                     );
                   } else {
+                    CircularLoader().hide(context);
                     ScaffoldSnakBar().show(context, msg: FAILED_POPUP_MSG);
                   }
                 } else {
-                  PlatformAlertDialog()
-                      .show(context, title: ALERT, content: 'Email is empty');
+                  ScaffoldSnakBar().show(context, msg: 'Email is empty');
                 }
               },
             ),

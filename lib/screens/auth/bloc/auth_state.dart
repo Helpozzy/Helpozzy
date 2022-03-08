@@ -10,7 +10,7 @@ abstract class AuthState extends Equatable {
 class AuthInitial extends AuthState {}
 
 class AuthenticateState extends AuthState {
-  final LoginResponseModel authResponse;
+  final AuthResponseModel authResponse;
   AuthenticateState({required this.authResponse});
 }
 

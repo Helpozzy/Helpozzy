@@ -109,7 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: CommonUserProfileOrPlaceholder(
                 size: width / 5,
-                imgUrl: user.profileUrl!,
+                imgUrl:
+                    user.profileUrl != null ? user.profileUrl! : APP_ICON_URL,
               ),
             ),
           ),
@@ -158,7 +159,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icon(Icons.people_alt_outlined, size: 16),
                     SizedBox(width: 2),
                     Text(
-                      '${user.reviewsByPersons} reviews',
+                      user.reviewsByPersons != null
+                          ? '${user.reviewsByPersons} reviews'
+                          : '0 reviews',
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -197,10 +200,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              user.about!.isNotEmpty ? user.about! : ADD_NOW,
+              user.about != null && user.about!.isNotEmpty
+                  ? user.about!
+                  : ADD_NOW,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontWeight: FontWeight.w600,
-                color: user.about!.isNotEmpty ? PRIMARY_COLOR : BLUE_GRAY,
+                color: user.about != null && user.about!.isNotEmpty
+                    ? PRIMARY_COLOR
+                    : BLUE_GRAY,
               ),
             ),
           ),
@@ -237,52 +244,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 });
               });
-              return Container(
-                height: width * 0.25,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: availCategory.map((category) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategorisedProjectsScreen(
-                                categoryId: category.id!),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: width / 5.7,
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              category.asset!,
-                              fit: BoxFit.fill,
-                              color: PRIMARY_COLOR,
-                              height: width * 0.1,
-                              width: width * 0.1,
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              category.label!,
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                fontSize: 10,
-                                color: PRIMARY_COLOR,
-                                fontWeight: FontWeight.bold,
+              return availCategory.isNotEmpty
+                  ? Container(
+                      height: width * 0.25,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: availCategory.map((category) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CategorisedProjectsScreen(
+                                          categoryId: category.id!),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: width / 5.7,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    category.asset!,
+                                    fit: BoxFit.fill,
+                                    color: PRIMARY_COLOR,
+                                    height: width * 0.1,
+                                    width: width * 0.1,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    category.label!,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 10,
+                                      color: PRIMARY_COLOR,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        NO_PREFRENCES_FOUNDS,
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          color: DARK_GRAY,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     );
-                  }).toList(),
-                ),
-              );
             },
           ),
         ],
