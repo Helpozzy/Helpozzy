@@ -90,7 +90,9 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 7.0),
             child: Text(
-              project.aboutOrganizer!,
+              project.aboutOrganizer!.isNotEmpty
+                  ? project.aboutOrganizer!
+                  : 'No details found',
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: 12,
                 fontFamily: QUICKSAND,

@@ -24,6 +24,8 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       TextEditingController();
   final TextEditingController _organizationOtherContntroller =
       TextEditingController();
+  final TextEditingController _organizationEmailContntroller =
+      TextEditingController();
   final TextEditingController _organizationTaxIdNumberContntroller =
       TextEditingController();
   late OrganizationTypes _organizationType = OrganizationTypes.CORP;
@@ -152,7 +154,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
-        controller: _organizationNameContntroller,
+        controller: _organizationDiscriptionContntroller,
         hintText: ORGANIZATION_DISCRIPTION_HINT,
         validator: (val) {
           if (val!.isEmpty) {
@@ -256,7 +258,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
-        controller: _organizationNameContntroller,
+        controller: _organizationOtherContntroller,
         hintText: ENTER_STRUCTURE_HINT,
         validator: (val) {
           if (val!.isEmpty) {
@@ -275,7 +277,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
         children: [
           Expanded(
             child: CommonRoundedTextfield(
-              controller: _organizationNameContntroller,
+              controller: _organizationTaxIdNumberContntroller,
               hintText: TAX_ID_NUM_HINT,
               validator: (val) {
                 if (val!.isEmpty) {
@@ -305,7 +307,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
             children: [
               Expanded(
                 child: CommonRoundedTextfield(
-                  controller: _organizationNameContntroller,
+                  controller: _organizationEmailContntroller,
                   hintText: INVITEES_EMAIL_ADDRESS_HINT,
                   validator: (val) {
                     if (val!.isEmpty) {

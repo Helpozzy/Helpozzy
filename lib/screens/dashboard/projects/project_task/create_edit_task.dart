@@ -643,12 +643,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       memberRequirement: noOfMemberTrackerVal.round(),
       ageRestriction: minimumAgeTrackerVal.round(),
       qualification: _taskQualificationController.text,
-      startDate: DateTime.parse(_taskStartDateController.text)
-          .millisecondsSinceEpoch
-          .toString(),
-      endDate: DateTime.parse(_taskEndDateController.text)
-          .millisecondsSinceEpoch
-          .toString(),
+      startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+      endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
       estimatedHrs: hrsTrackerVal.round(),
       totalVolunteerHrs: 0,
       members: _taskMembersController.text,
@@ -664,6 +660,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     if (response.success!) {
       if (!fromEdit) await clearFields();
       CircularLoader().hide(context);
+      Navigator.of(context).pop();
       ScaffoldSnakBar().show(
         context,
         msg: fromEdit

@@ -171,99 +171,104 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         }
         final SignUpAndUserModel user = snapshot.data!;
-        _processIndex = 50;
-        List<int> items =
-            List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
-                .take((user.currentYearTargetHours! / 23).round())
-                .toList();
+        if (user.currentYearTargetHours != null) {
+          _processIndex = 50;
+          List<int> items =
+              List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
+                  .take((user.currentYearTargetHours! / 23).round())
+                  .toList();
 
-        return Stack(
-          children: [
-            Container(
-              height: height / 6.5,
-              width: double.infinity,
-              alignment: Alignment.center,
-              child: Timeline.tileBuilder(
-                padding: EdgeInsets.symmetric(vertical: 2.0),
-                shrinkWrap: true,
-                theme: TimelineThemeData(
-                  direction: Axis.horizontal,
-                  connectorTheme: ConnectorThemeData(thickness: 3.0),
-                ),
-                builder: TimelineTileBuilder.connected(
-                  connectionDirection: ConnectionDirection.before,
-                  itemExtentBuilder: (ctx, index) => width / 9.5,
-                  contentsBuilder: (ctx, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Text(
-                        index == items.length - 1
-                            ? '${items[index]}\nMy Goal'
-                            : '${items[index]}',
-                        textAlign: TextAlign.center,
-                        maxLines: 3,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontWeight: index == items.length - 1
-                              ? FontWeight.bold
-                              : FontWeight.w600,
-                          fontSize: 12,
-                          color: DARK_GRAY,
-                        ),
-                      ),
-                    );
-                  },
-                  indicatorBuilder: (ctx, index) {
-                    Color color;
-                    if (items[index] == _processIndex) {
-                      color = BLACK;
-                    } else if (items[index] < _processIndex) {
-                      color = BLACK;
-                    } else {
-                      color = LIGHT_GRAY;
-                    }
-
-                    if (items[index] <= _processIndex) {
-                      return Container(
-                        height: width * 0.025,
-                        width: width * 0.025,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: color,
+          return Stack(
+            children: [
+              Container(
+                height: height / 6.5,
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Timeline.tileBuilder(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  shrinkWrap: true,
+                  theme: TimelineThemeData(
+                    direction: Axis.horizontal,
+                    connectorTheme: ConnectorThemeData(thickness: 3.0),
+                  ),
+                  builder: TimelineTileBuilder.connected(
+                    connectionDirection: ConnectionDirection.before,
+                    itemExtentBuilder: (ctx, index) => width / 9.5,
+                    contentsBuilder: (ctx, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          index == items.length - 1
+                              ? '${items[index]}\nMy Goal'
+                              : '${items[index]}',
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontWeight: index == items.length - 1
+                                ? FontWeight.bold
+                                : FontWeight.w600,
+                            fontSize: 12,
+                            color: DARK_GRAY,
+                          ),
                         ),
                       );
-                    } else {
-                      return Container(
-                        height: width * 0.025,
-                        width: width * 0.025,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: color,
-                        ),
-                      );
-                    }
-                  },
-                  connectorBuilder: (ctx, index, type) {
-                    if (items[index] > 0) {
+                    },
+                    indicatorBuilder: (ctx, index) {
+                      Color color;
                       if (items[index] == _processIndex) {
-                        final color = getColor(items[index]);
-                        return DecoratedLineConnector(
-                          decoration: BoxDecoration(color: color),
+                        color = BLACK;
+                      } else if (items[index] < _processIndex) {
+                        color = BLACK;
+                      } else {
+                        color = LIGHT_GRAY;
+                      }
+
+                      if (items[index] <= _processIndex) {
+                        return Container(
+                          height: width * 0.025,
+                          width: width * 0.025,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: color,
+                          ),
                         );
                       } else {
-                        return SolidLineConnector(
-                            color: getColor(items[index]));
+                        return Container(
+                          height: width * 0.025,
+                          width: width * 0.025,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: color,
+                          ),
+                        );
                       }
-                    } else {
-                      return null;
-                    }
-                  },
-                  itemCount: items.length,
+                    },
+                    connectorBuilder: (ctx, index, type) {
+                      if (items[index] > 0) {
+                        if (items[index] == _processIndex) {
+                          final color = getColor(items[index]);
+                          return DecoratedLineConnector(
+                            decoration: BoxDecoration(color: color),
+                          );
+                        } else {
+                          return SolidLineConnector(
+                            color: getColor(items[index]),
+                          );
+                        }
+                      } else {
+                        return null;
+                      }
+                    },
+                    itemCount: items.length,
+                  ),
                 ),
               ),
-            ),
-            achievedScoreDetails(user),
-          ],
-        );
+              achievedScoreDetails(user),
+            ],
+          );
+        } else {
+          return SizedBox();
+        }
       },
     );
   }

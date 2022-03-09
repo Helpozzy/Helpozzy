@@ -798,6 +798,25 @@ Map<String, dynamic> rewardsList = {
   },
 };
 
+dynamic randomProjectImage = [
+  "assets/images/volunteer_1.jpg",
+  "assets/images/volunteer_2.jpg",
+  "assets/images/children_youth_1.jpg",
+  "assets/images/children_youth_2.jpg",
+  "assets/images/food_bank_1.jpg",
+  "assets/images/food_bank_2.jpg",
+  "assets/images/senior_center_1.jpg",
+  "assets/images/senior_center_2.jpg",
+  "assets/images/teaching_1.jpg",
+  "assets/images/teaching_2.jpg",
+  "assets/images/animal_care_1.jpg",
+  "assets/images/animal_care_2.jpg",
+  "assets/images/homeless_seleter_1.jpg",
+  "assets/images/homeless_seleter_2.jpg",
+  "assets/images/other_1.jpg",
+  "assets/images/other_2.jpg",
+];
+
 int generateIds() {
   final rng = Random();
   int randomInt;

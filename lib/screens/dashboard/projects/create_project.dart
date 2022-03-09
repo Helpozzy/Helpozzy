@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
@@ -64,6 +66,15 @@ class _CreateProjectState extends State<CreateProject> {
     if (result != null && result.predictions != null && mounted) {
       setState(() => predictions = result.predictions!);
     }
+  }
+
+  String img() {
+    int min = 0;
+    int max = randomProjectImage.length - 1;
+    Random rnd = new Random();
+    int r = min + rnd.nextInt(max - min);
+    final String imageAsset = randomProjectImage[r].toString();
+    return imageAsset;
   }
 
   Future<void> getDetails(String placeId) async {
@@ -216,12 +227,7 @@ class _CreateProjectState extends State<CreateProject> {
             label: PROJECT_LOCATION_LABEL,
             controller: _projLocationController,
             hintText: PROJECT_LOCATION_HINT,
-            validator: (val) {
-              if (val!.isEmpty) {
-                return 'Enter location of project';
-              }
-              return null;
-            },
+            validator: (val) => null,
             onChanged: (val) {
               if (val.isNotEmpty) {
                 autoCompleteSearch(val);
@@ -330,13 +336,13 @@ class _CreateProjectState extends State<CreateProject> {
               ),
               TextButton(
                 onPressed: () async {
-                  selectedTaskBloc = await Navigator.push(
+                  List<TaskModel> selectedItems = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TasksScreen(),
                     ),
                   );
-                  setState(() {});
+                  selectedTaskBloc.getSelectedTasks(tasks: selectedItems);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -651,14 +657,13 @@ class _CreateProjectState extends State<CreateProject> {
 
   Future onAddProject() async {
     CircularLoader().show(context);
-
     final ProjectModel project = ProjectModel(
       projectId: '',
       categoryId: selectedCategoryId,
-      aboutOrganizer: '',
+      aboutOrganizer: SAMPLE_LONG_TEXT,
       contactName: '',
       contactNumber: '',
-      imageUrl: '',
+      imageUrl: img(),
       location: _projLocationController.text,
       projectLocationLati: latitude,
       projectLocationLongi: longitude,
@@ -668,12 +673,8 @@ class _CreateProjectState extends State<CreateProject> {
       enrollmentCount: 0,
       projectName: _projNameController.text,
       description: _projDesController.text,
-      startDate: DateTime.parse(_projStartDateController.text)
-          .millisecondsSinceEpoch
-          .toString(),
-      endDate: DateTime.parse(_projEndDateController.text)
-          .millisecondsSinceEpoch
-          .toString(),
+      startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+      endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
       ownerId: prefsObject.getString(CURRENT_USER_ID)!,
       collaboratorsCoadmin: _projCollaboraorController.text,
       status: TOGGLE_NOT_STARTED,
@@ -683,6 +684,7 @@ class _CreateProjectState extends State<CreateProject> {
     if (isUploaded) {
       await clearFields();
       CircularLoader().hide(context);
+      Navigator.of(context).pop();
       ScaffoldSnakBar()
           .show(context, msg: PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG);
     } else {

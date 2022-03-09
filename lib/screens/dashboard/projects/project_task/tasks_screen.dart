@@ -5,7 +5,6 @@ import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-
 import 'create_edit_task.dart';
 import 'task_widget.dart';
 
@@ -21,7 +20,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   void initState() {
-    _projectTaskBloc.getProjectAllTasks('9pAPDbwbmKhrORI1RXWb');
+    _projectTaskBloc.getProjectAllTasks('');
     super.initState();
   }
 
@@ -37,10 +36,7 @@ class _TasksScreenState extends State<TasksScreen> {
         },
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pop(context, _projectTaskBloc);
-              _projectTaskBloc.getSelectedTasks(tasks: selectedItems);
-            },
+            onPressed: () => Navigator.pop(context, selectedItems),
             icon: Icon(
               Icons.check,
               color: DARK_PINK_COLOR,

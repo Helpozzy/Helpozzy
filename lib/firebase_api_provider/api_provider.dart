@@ -240,10 +240,16 @@ class ApiProvider {
             .where('owner_id',
                 isEqualTo: prefsObject.getString(CURRENT_USER_ID))
             .get()
-        : await firestore
-            .collection('tasks')
-            .where('project_id', isEqualTo: projectId)
-            .get();
+        : projectId.isNotEmpty
+            ? await firestore
+                .collection('tasks')
+                .where('project_id', isEqualTo: projectId)
+                .get()
+            : await firestore
+                .collection('tasks')
+                .where('owner_id',
+                    isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+                .get();
 
     return Tasks.fromJson(list: querySnapshot.docs);
   }
