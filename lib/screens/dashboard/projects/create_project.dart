@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -47,12 +49,13 @@ class _CreateProjectState extends State<CreateProject> {
   late double width;
   late double height;
   late String? location = '';
-  late int selectedCategoryId;
+  late int selectedCategoryId = 7;
   late GooglePlace googlePlace;
   late List<AutocompletePrediction> predictions = [];
   late DetailsResult? detailsResult;
   late double latitude = 0.0;
   late double longitude = 0.0;
+  late List<TaskModel> selectedItems = [];
 
   @override
   void initState() {
@@ -69,11 +72,26 @@ class _CreateProjectState extends State<CreateProject> {
   }
 
   String img() {
+    final List<String> images = selectedCategoryId == 0
+        ? volunteerProjectImage
+        : selectedCategoryId == 1
+            ? fooBankProjectImage
+            : selectedCategoryId == 2
+                ? teachingProjectImage
+                : selectedCategoryId == 3
+                    ? homelessSeleterProjectImage
+                    : selectedCategoryId == 4
+                        ? animalCareProjectImage
+                        : selectedCategoryId == 5
+                            ? seniorCenterProjectImage
+                            : selectedCategoryId == 6
+                                ? childrenYouthProjectImage
+                                : otherProjectImage;
     int min = 0;
-    int max = randomProjectImage.length - 1;
-    Random rnd = new Random();
+    int max = images.length - 1;
+    Random rnd = Random();
     int r = min + rnd.nextInt(max - min);
-    final String imageAsset = randomProjectImage[r].toString();
+    final String imageAsset = images[r].toString();
     return imageAsset;
   }
 
@@ -336,7 +354,7 @@ class _CreateProjectState extends State<CreateProject> {
               ),
               TextButton(
                 onPressed: () async {
-                  List<TaskModel> selectedItems = await Navigator.push(
+                  selectedItems = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TasksScreen(),
@@ -656,13 +674,17 @@ class _CreateProjectState extends State<CreateProject> {
   }
 
   Future onAddProject() async {
+    final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
+    final Map<String, dynamic> json =
+        jsonDecode(userData) as Map<String, dynamic>;
+    final currentUser = SignUpAndUserModel.fromJson(json: json);
+
     CircularLoader().show(context);
     final ProjectModel project = ProjectModel(
-      projectId: '',
       categoryId: selectedCategoryId,
       aboutOrganizer: SAMPLE_LONG_TEXT,
-      contactName: '',
-      contactNumber: '',
+      contactName: currentUser.name,
+      contactNumber: currentUser.personalPhnNo,
       imageUrl: img(),
       location: _projLocationController.text,
       projectLocationLati: latitude,
@@ -680,8 +702,14 @@ class _CreateProjectState extends State<CreateProject> {
       status: TOGGLE_NOT_STARTED,
     );
 
-    final bool isUploaded = await _projectsBloc.postProject(project);
-    if (isUploaded) {
+    final ResponseModel response = await _projectsBloc.postProject(project);
+    if (response.success!) {
+      if (selectedItems.isNotEmpty) {
+        for (int i = 0; i < selectedItems.length; i++) {
+          selectedItems[i].projectId = response.returnValue;
+          await _projectTaskBloc.updateTask(selectedItems[i]);
+        }
+      }
       await clearFields();
       CircularLoader().hide(context);
       Navigator.of(context).pop();

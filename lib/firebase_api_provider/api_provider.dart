@@ -112,15 +112,19 @@ class ApiProvider {
     return Users.fromJson(list: querySnapshot.docs);
   }
 
-  Future<bool> postProjectAPIProvider(ProjectModel project) async {
+  Future<ResponseModel> postProjectAPIProvider(ProjectModel project) async {
     try {
       final DocumentReference documentReference =
           firestore.collection('projects').doc();
       project.projectId = documentReference.id;
       await documentReference.set(project.toJson());
-      return true;
+      return ResponseModel(
+        success: true,
+        message: 'Project created',
+        returnValue: documentReference.id,
+      );
     } catch (e) {
-      return false;
+      return ResponseModel(success: false, error: 'Failed project not created');
     }
   }
 
@@ -247,6 +251,7 @@ class ApiProvider {
                 .get()
             : await firestore
                 .collection('tasks')
+                .where('task_id', isEqualTo: null)
                 .where('owner_id',
                     isEqualTo: prefsObject.getString(CURRENT_USER_ID))
                 .get();

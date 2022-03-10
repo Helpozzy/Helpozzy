@@ -109,8 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: CommonUserProfileOrPlaceholder(
                 size: width / 5,
-                imgUrl:
-                    user.profileUrl != null ? user.profileUrl! : APP_ICON_URL,
+                imgUrl: user.profileUrl!,
               ),
             ),
           ),
@@ -129,12 +128,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(width: 5),
                     InkWell(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfileScreen(user: user),
-                        ),
-                      ),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(user: user),
+                          ),
+                        );
+                        await _userInfoBloc
+                            .getUser(prefsObject.getString(CURRENT_USER_ID)!);
+                      },
                       child: Icon(
                         Icons.edit,
                         color: DARK_GRAY,

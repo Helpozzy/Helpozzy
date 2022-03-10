@@ -6,9 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
-import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
-import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/user_model.dart';
@@ -36,8 +34,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late double width;
   XFile? _imageFile;
   final CommonPicker _commonPicker = CommonPicker();
-  final CityBloc _cityBloc = CityBloc();
-  final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final EditProfileBloc _editProfileBloc = EditProfileBloc();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -59,7 +55,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late List<StateModel>? states = [];
   late List<CityModel>? cities = [];
   late CountryCode? countryCode;
-  late SignUpAndUserModel? userModel;
 
   late GooglePlace googlePlace;
   late String? addressLocation = '';
@@ -75,9 +70,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     listenUser();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     countryCode = _personalPhoneController.text.isNotEmpty
-        ? CountryCode(code: countryCode!.dialCode!)
+        ? countryCode!.dialCode != null
+            ? CountryCode(code: countryCode!.dialCode!)
+            : CountryCode(code: '+1', name: 'US')
         : CountryCode(code: '+1', name: 'US');
-    _cityBloc.getStates();
+    // _cityBloc.getStates();
     // listenState();
     super.initState();
   }
@@ -120,26 +117,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future listenUser() async {
-    userModel =
-        await _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _firstNameController.text = userModel!.name!.split(' ')[0];
-    _lastNameController.text = userModel!.name!.split(' ')[1];
-    _aboutController.text = userModel!.about!;
-    _addressController.text = userModel!.address!;
-    _emailController.text = userModel!.email!;
+    _firstNameController.text = user.name!.split(' ')[0];
+    _lastNameController.text = user.name!.split(' ')[1];
+    _aboutController.text = user.about!;
+    _addressController.text = user.address!;
+    _emailController.text = user.email!;
     _dateOfBirthController.text = DateFormatFromTimeStamp().dateFormatToYMD(
-        dateTime: DateTime.fromMillisecondsSinceEpoch(
-            int.parse(userModel!.dateOfBirth!)));
-    _genderController.text = userModel!.gender!;
-    // _stateController.text = userModel!.state!;
-    // _cityController.text = userModel!.city!;
-    // _zipCodeController.text = userModel!.zipCode!;
-    countryCode = CountryCode(code: userModel!.countryCode!);
-    _personalPhoneController.text = userModel!.personalPhnNo!;
-    _parentEmailController.text = userModel!.parentEmail!;
-    _relationController.text = userModel!.relationshipWithParent!;
-    _schoolController.text = userModel!.schoolName!;
-    _gradeLevelController.text = userModel!.gradeLevel!;
+        dateTime:
+            DateTime.fromMillisecondsSinceEpoch(int.parse(user.dateOfBirth!)));
+    _genderController.text = user.gender!;
+    // _stateController.text = user.state!;
+    // _cityController.text = user.city!;
+    // _zipCodeController.text = user.zipCode!;
+    countryCode = CountryCode(code: user.countryCode!);
+    _personalPhoneController.text = user.personalPhnNo!;
+    _parentEmailController.text =
+        user.parentEmail != null ? user.parentEmail! : '';
+    _relationController.text =
+        user.relationshipWithParent != null ? user.relationshipWithParent! : '';
+    _schoolController.text = user.schoolName != null ? user.schoolName! : '';
+    _gradeLevelController.text =
+        user.gradeLevel != null ? user.gradeLevel! : '';
     setState(() {});
   }
 
@@ -174,15 +172,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       relationshipWithParent: _relationController.text,
       schoolName: schoolLocation,
       gradeLevel: _gradeLevelController.text,
-      areaOfInterests: userModel!.areaOfInterests,
-      currentYearTargetHours: userModel!.currentYearTargetHours,
-      dateOfBirth: userModel!.dateOfBirth,
-      joiningDate: userModel!.joiningDate,
-      pointGifted: userModel!.pointGifted,
-      profileUrl: profileUrl.isEmpty ? userModel!.profileUrl : profileUrl,
-      rating: userModel!.rating,
-      reviewsByPersons: userModel!.reviewsByPersons,
-      volunteerType: userModel!.volunteerType,
+      areaOfInterests: user.areaOfInterests,
+      currentYearTargetHours: user.currentYearTargetHours,
+      dateOfBirth: user.dateOfBirth,
+      joiningDate: user.joiningDate,
+      pointGifted: user.pointGifted,
+      profileUrl: profileUrl.isEmpty ? user.profileUrl : profileUrl,
+      rating: user.rating,
+      reviewsByPersons: user.reviewsByPersons,
+      volunteerType: user.volunteerType,
     );
     final bool response =
         await _editProfileBloc.editProfile(signUpAndUserModel);
@@ -206,7 +204,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     late String downloadUrl;
     try {
       final String imageName =
-          userModel!.name! + DateTime.now().millisecondsSinceEpoch.toString();
+          user.name! + DateTime.now().millisecondsSinceEpoch.toString();
 
       final storageUploadTask = await FirebaseStorage.instance
           .ref()
@@ -240,14 +238,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     if (snapshot.data!) {
                       await postModifiedData();
                     } else {
-                      if (userModel!.parentEmail ==
-                          _parentEmailController.text) {
-                        await postModifiedData();
+                      if (user.parentEmail != null) {
+                        if (user.parentEmail == _parentEmailController.text) {
+                          await postModifiedData();
+                        } else {
+                          PlatformAlertDialog().show(context,
+                              title: ALERT,
+                              content:
+                                  'Parent/Guardian email is not verified, Please verify your email.');
+                        }
                       } else {
-                        PlatformAlertDialog().show(context,
-                            title: ALERT,
-                            content:
-                                'Parent/Guardian email is not verified, Please verify your email.');
+                        await postModifiedData();
                       }
                     }
                   }
@@ -311,14 +312,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: contactInfo(),
               ),
               Divider(),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: width * 0.05,
-                  right: width * 0.05,
-                  bottom: width * 0.04,
-                ),
-                child: schoolInfo(),
-              ),
+              user.schoolName != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.04,
+                      ),
+                      child: schoolInfo(),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
@@ -561,10 +564,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
           },
         ),
-        TextfieldLabelSmall(label: PARENT_GUARDIAN_EMAIL_LABEL),
-        parentEmailSection(),
-        TextfieldLabelSmall(label: RELATION_LABEL),
-        selectRelationshipDropdown(),
+        user.parentEmail != null
+            ? TextfieldLabelSmall(label: PARENT_GUARDIAN_EMAIL_LABEL)
+            : SizedBox(),
+        user.parentEmail != null ? parentEmailSection() : SizedBox(),
+        user.relationshipWithParent != null
+            ? TextfieldLabelSmall(label: RELATION_LABEL)
+            : SizedBox(),
+        user.relationshipWithParent != null
+            ? selectRelationshipDropdown()
+            : SizedBox(),
       ],
     );
   }
@@ -583,13 +592,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               suffixIcon: Icon(
                 snapshotEmailVerified.data!
                     ? CupertinoIcons.checkmark_seal_fill
-                    : userModel!.parentEmail == _parentEmailController.text
+                    : user.parentEmail == _parentEmailController.text
                         ? CupertinoIcons.checkmark_seal_fill
                         : CupertinoIcons.checkmark_seal,
                 size: 18,
                 color: snapshotEmailVerified.data!
                     ? ACCENT_GREEN
-                    : userModel!.parentEmail == _parentEmailController.text
+                    : user.parentEmail == _parentEmailController.text
                         ? ACCENT_GREEN
                         : DARK_GRAY,
               ),

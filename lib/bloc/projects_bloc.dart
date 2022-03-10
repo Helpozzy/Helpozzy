@@ -1,6 +1,7 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
@@ -34,8 +35,8 @@ class ProjectsBloc {
     projectDetailsExpandController.sink.add(isExpanded);
   }
 
-  Future<bool> postProject(ProjectModel project) async {
-    final bool response = await repo.postProjectRepo(project);
+  Future<ResponseModel> postProject(ProjectModel project) async {
+    final ResponseModel response = await repo.postProjectRepo(project);
     return response;
   }
 

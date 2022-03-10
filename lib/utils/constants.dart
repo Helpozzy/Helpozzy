@@ -377,6 +377,7 @@ const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
 const ADD_NOW = 'Add now!';
+const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';
@@ -798,21 +799,35 @@ Map<String, dynamic> rewardsList = {
   },
 };
 
-dynamic randomProjectImage = [
+List<String> volunteerProjectImage = [
   "assets/images/volunteer_1.jpg",
   "assets/images/volunteer_2.jpg",
+];
+List<String> childrenYouthProjectImage = [
   "assets/images/children_youth_1.jpg",
   "assets/images/children_youth_2.jpg",
+];
+List<String> fooBankProjectImage = [
   "assets/images/food_bank_1.jpg",
   "assets/images/food_bank_2.jpg",
+];
+List<String> seniorCenterProjectImage = [
   "assets/images/senior_center_1.jpg",
   "assets/images/senior_center_2.jpg",
+];
+List<String> teachingProjectImage = [
   "assets/images/teaching_1.jpg",
   "assets/images/teaching_2.jpg",
+];
+List<String> animalCareProjectImage = [
   "assets/images/animal_care_1.jpg",
   "assets/images/animal_care_2.jpg",
+];
+List<String> homelessSeleterProjectImage = [
   "assets/images/homeless_seleter_1.jpg",
   "assets/images/homeless_seleter_2.jpg",
+];
+List<String> otherProjectImage = [
   "assets/images/other_1.jpg",
   "assets/images/other_2.jpg",
 ];

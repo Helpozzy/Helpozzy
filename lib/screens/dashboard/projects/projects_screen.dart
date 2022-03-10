@@ -72,13 +72,24 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     text: ADD_PROJECT_BUTTON,
                     icon: Icons.add,
                     fontSize: 13,
-                    onPressed: () {
+                    onPressed: () async {
                       FocusScope.of(context).unfocus();
-                      Navigator.push(
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateProject(),
                         ),
+                      );
+                      await _projectsBloc.getProjects(
+                        projectTabType: _tabController.index == 0
+                            ? ProjectTabType.MY_PROJECTS_TAB
+                            : _tabController.index == 1
+                                ? ProjectTabType.PROJECT_UPCOMING_TAB
+                                : _tabController.index == 2
+                                    ? ProjectTabType.PROJECT_INPROGRESS_TAB
+                                    : _tabController.index == 3
+                                        ? ProjectTabType.PROJECT_COMPLETED_TAB
+                                        : null,
                       );
                     },
                   ),

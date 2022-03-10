@@ -44,7 +44,7 @@ class Repository {
   Future<ResponseModel> postProjectSignupRepo(ProjectModel projectSignUpVal) =>
       apiProvider.postProjectSignupAPIProvider(projectSignUpVal);
 
-  Future<bool> postProjectRepo(ProjectModel project) =>
+  Future<ResponseModel> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);
 
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
