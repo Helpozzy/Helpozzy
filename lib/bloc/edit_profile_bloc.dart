@@ -1,5 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/provider/email_verfication_provider.dart';
 import 'package:rxdart/rxdart.dart';
 

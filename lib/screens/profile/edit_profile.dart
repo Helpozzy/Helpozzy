@@ -9,7 +9,7 @@ import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -312,16 +312,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: contactInfo(),
               ),
               Divider(),
-              user.schoolName != null
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                        left: width * 0.05,
-                        right: width * 0.05,
-                        bottom: width * 0.04,
-                      ),
-                      child: schoolInfo(),
-                    )
-                  : SizedBox(),
+              user.isOrganization!
+                  ? SizedBox()
+                  : user.schoolName != null && user.schoolName!.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            left: width * 0.05,
+                            right: width * 0.05,
+                            bottom: width * 0.04,
+                          ),
+                          child: schoolInfo(),
+                        )
+                      : SizedBox(),
             ],
           ),
         ),
@@ -501,44 +503,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           },
         ),
-        addressLocation != null && addressLocation!.isNotEmpty
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: 4.0, horizontal: width * 0.02),
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 2.0,
-                      horizontal: width * 0.05,
-                    ),
-                    title: Text(
-                      LOCATION,
-                      style: _theme.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: Text(
-                        addressLocation!,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: DARK_GRAY,
-                        ),
-                      ),
-                    ),
-                    trailing: Icon(
-                      CupertinoIcons.map_pin_ellipse,
-                      color: PRIMARY_COLOR,
-                    ),
-                  ),
-                ),
-              )
-            : SizedBox(),
+        user.address != null && user.address!.isNotEmpty
+            ? locationCard(user.address!)
+            : addressLocation != null && addressLocation!.isNotEmpty
+                ? locationCard(addressLocation!)
+                : SizedBox(),
       ],
+    );
+  }
+
+  Widget locationCard(String address) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: width * 0.02),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 2.0,
+            horizontal: width * 0.05,
+          ),
+          title: Text(
+            LOCATION,
+            style: _theme.textTheme.bodySmall!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: Text(
+              address,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: DARK_GRAY,
+              ),
+            ),
+          ),
+          trailing: Icon(
+            CupertinoIcons.map_pin_ellipse,
+            color: PRIMARY_COLOR,
+          ),
+        ),
+      ),
     );
   }
 
@@ -564,14 +570,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
           },
         ),
-        user.parentEmail != null
+        user.parentEmail != null && user.parentEmail!.isNotEmpty
             ? TextfieldLabelSmall(label: PARENT_GUARDIAN_EMAIL_LABEL)
             : SizedBox(),
-        user.parentEmail != null ? parentEmailSection() : SizedBox(),
-        user.relationshipWithParent != null
+        user.parentEmail != null && user.parentEmail!.isNotEmpty
+            ? parentEmailSection()
+            : SizedBox(),
+        user.relationshipWithParent != null &&
+                user.relationshipWithParent!.isNotEmpty
             ? TextfieldLabelSmall(label: RELATION_LABEL)
             : SizedBox(),
-        user.relationshipWithParent != null
+        user.relationshipWithParent != null &&
+                user.relationshipWithParent!.isNotEmpty
             ? selectRelationshipDropdown()
             : SizedBox(),
       ],

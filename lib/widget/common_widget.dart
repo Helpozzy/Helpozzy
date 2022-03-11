@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class CommonWidget {
@@ -105,6 +106,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.onChanged,
     this.maxLength,
     this.fillColor,
+    this.inputFormatters,
     this.onTap,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
@@ -122,6 +124,7 @@ class CommonRoundedTextfield extends StatelessWidget {
   final bool readOnly;
   final int? maxLength;
   final Color? fillColor;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType keyboardType;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -140,6 +143,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       maxLength: maxLength,
       textAlign: textAlignCenter! ? TextAlign.center : TextAlign.left,
       style: _theme.textTheme.bodyText1,
+      inputFormatters: inputFormatters,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       textCapitalization: textCapitalization,

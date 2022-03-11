@@ -115,14 +115,30 @@ class _ProjectTileState extends State<ProjectTile> {
               SizedBox(height: 3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        project.organization!,
+                        project.organization != null &&
+                                project.organization!.isNotEmpty
+                            ? project.organization!
+                            : project.categoryId == 0
+                                ? VOLUNTEER_0
+                                : project.categoryId == 1
+                                    ? FOOD_BANK_1
+                                    : project.categoryId == 2
+                                        ? TEACHING_2
+                                        : project.categoryId == 3
+                                            ? HOMELESS_SHELTER_3
+                                            : project.categoryId == 4
+                                                ? ANIMAL_CARE_4
+                                                : project.categoryId == 5
+                                                    ? SENIOR_CENTER_5
+                                                    : project.categoryId == 6
+                                                        ? CHILDREN_AND_YOUTH_6
+                                                        : OTHER_7,
                         style: _theme.textTheme.bodyText2!.copyWith(
                           fontSize: 12,
                           color: DARK_PINK_COLOR,

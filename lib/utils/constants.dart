@@ -372,12 +372,15 @@ const NO_NOTIFICATIONS_FOUND = 'No new notifications';
 //Profile
 const CONTACT_TEXT = 'Contact';
 const ABOUT_TEXT = 'About';
+const ORGANIZATION_DETAILS_TEXT = 'Organization Details';
 const PROJECT_PREFRENCES_TEXT = 'My Volunteering Prefrences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
 const ADD_NOW = 'Add now!';
 const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
+const PROFIT_ORGANIZATION = '• Profile Organization';
+const NON_PROFIT_ORGANIZATION = '• Non Profit organization';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';
@@ -428,6 +431,16 @@ const NO_PROJECTS_FOUNDS = 'No projects found';
 const NO_PREFRENCES_FOUNDS = 'No prefrences found';
 const PLEASE_VISIT_OTHER = 'Please visit other categories section';
 const NO_ACTIVITIES_FOUNDS = 'No activities found';
+
+// Project categories
+const VOLUNTEER_0 = 'Volunteer';
+const FOOD_BANK_1 = 'Food Bank';
+const TEACHING_2 = 'Teaching';
+const HOMELESS_SHELTER_3 = 'Homeless Shelter';
+const ANIMAL_CARE_4 = 'Animal Care';
+const SENIOR_CENTER_5 = 'Senior Center';
+const CHILDREN_AND_YOUTH_6 = 'Children and Youth';
+const OTHER_7 = 'Other';
 
 //Reorts
 const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
@@ -632,42 +645,42 @@ List<CategoryModel> categoriesList = [
   CategoryModel(
     id: 0,
     asset: 'assets/images/volunteer.png',
-    label: 'Volunteer',
+    label: VOLUNTEER_0,
   ),
   CategoryModel(
     id: 1,
     asset: 'assets/images/food_bank.png',
-    label: 'Food Bank',
+    label: FOOD_BANK_1,
   ),
   CategoryModel(
     id: 2,
     asset: 'assets/images/teaching.png',
-    label: 'Teaching',
+    label: TEACHING_2,
   ),
   CategoryModel(
     id: 3,
     asset: 'assets/images/homeless_shelter.png',
-    label: 'Homeless Shelter',
+    label: HOMELESS_SHELTER_3,
   ),
   CategoryModel(
     id: 4,
     asset: 'assets/images/animal_care.png',
-    label: 'Animal Care',
+    label: ANIMAL_CARE_4,
   ),
   CategoryModel(
     id: 5,
     asset: 'assets/images/cenior_center.png',
-    label: 'Senior Center',
+    label: SENIOR_CENTER_5,
   ),
   CategoryModel(
     id: 6,
     asset: 'assets/images/children_and_youth.png',
-    label: 'Children and Youth',
+    label: CHILDREN_AND_YOUTH_6,
   ),
   CategoryModel(
     id: 7,
     asset: 'assets/images/other.png',
-    label: 'Other',
+    label: OTHER_7,
   ),
 ];
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/volunteer_bloc.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/screens/auth/signup/2_personal_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';

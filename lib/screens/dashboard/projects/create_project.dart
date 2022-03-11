@@ -11,7 +11,7 @@ import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -686,7 +686,7 @@ class _CreateProjectState extends State<CreateProject> {
       contactName: currentUser.name,
       contactNumber: currentUser.personalPhnNo,
       imageUrl: img(),
-      location: _projLocationController.text,
+      location: location,
       projectLocationLati: latitude,
       projectLocationLongi: longitude,
       organization: '',

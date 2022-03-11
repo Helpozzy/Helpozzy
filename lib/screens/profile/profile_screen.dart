@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
@@ -56,6 +57,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       profileSection(user!),
                       aboutMe(user),
+                      user.organizationDetails != null &&
+                              user.organizationDetails!.legalOrganizationName !=
+                                  null
+                          ? organizationDetails(user.organizationDetails!)
+                          : SizedBox(),
                       projectPref(),
                     ],
                   ),
@@ -219,9 +225,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget projectPref() {
+  Widget organizationDetails(OrganizationSignUpModel organizationDetails) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ORGANIZATION_DETAILS_TEXT,
+            style: _theme.textTheme.bodyText2!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text(
+            organizationDetails.legalOrganizationName!,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: DARK_PINK_COLOR,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            '• ' + organizationDetails.discription!,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+          Text(
+            organizationDetails.isNonProfitOrganization!
+                ? NON_PROFIT_ORGANIZATION
+                : PROFIT_ORGANIZATION,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: DARK_GRAY,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget projectPref() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -375,7 +423,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Text(
-                              project.organization!,
+                              project.organization != null &&
+                                      project.organization!.isNotEmpty
+                                  ? project.organization!
+                                  : project.categoryId == 0
+                                      ? VOLUNTEER_0
+                                      : project.categoryId == 1
+                                          ? FOOD_BANK_1
+                                          : project.categoryId == 2
+                                              ? TEACHING_2
+                                              : project.categoryId == 3
+                                                  ? HOMELESS_SHELTER_3
+                                                  : project.categoryId == 4
+                                                      ? ANIMAL_CARE_4
+                                                      : project.categoryId == 5
+                                                          ? SENIOR_CENTER_5
+                                                          : project.categoryId ==
+                                                                  6
+                                                              ? CHILDREN_AND_YOUTH_6
+                                                              : OTHER_7,
                               style: _theme.textTheme.bodyText2!
                                   .copyWith(color: DARK_GRAY),
                             ),

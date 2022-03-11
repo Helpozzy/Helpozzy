@@ -137,7 +137,24 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     left: 16,
                     bottom: 28,
                     child: Text(
-                      project.organization!,
+                       project.organization != null &&
+                                project.organization!.isNotEmpty
+                            ? project.organization!
+                            : project.categoryId == 0
+                                ? VOLUNTEER_0
+                                : project.categoryId == 1
+                                    ? FOOD_BANK_1
+                                    : project.categoryId == 2
+                                        ? TEACHING_2
+                                        : project.categoryId == 3
+                                            ? HOMELESS_SHELTER_3
+                                            : project.categoryId == 4
+                                                ? ANIMAL_CARE_4
+                                                : project.categoryId == 5
+                                                    ? SENIOR_CENTER_5
+                                                    : project.categoryId == 6
+                                                        ? CHILDREN_AND_YOUTH_6
+                                                        : OTHER_7,
                       maxLines: 2,
                       style: _theme.textTheme.headline5!.copyWith(
                         color: GRAY,

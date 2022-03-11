@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/auth/signup/7_password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class OrganizationSignUp extends StatefulWidget {
   const OrganizationSignUp({Key? key, required this.signupAndUserModel})
@@ -34,6 +35,12 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
   late double height;
   late bool nonProfitOrganization = false;
 
+  MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(
+    mask: 'XX_XXXXXXX',
+    filter: {'X': RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
   Future onContinue() async {
     FocusScope.of(context).unfocus();
     final OrganizationSignUpModel organizationSignUpModel =
@@ -52,7 +59,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       otherAdmins: [],
       taxIdNumber: _organizationTaxIdNumberContntroller.text,
     );
-    signupAndUserModel.organizationDetails = organizationSignUpModel.toJson();
+    signupAndUserModel.organizationDetails = organizationSignUpModel;
 
     if (_formKey.currentState!.validate()) {
       Navigator.push(
@@ -279,6 +286,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
             child: CommonRoundedTextfield(
               controller: _organizationTaxIdNumberContntroller,
               hintText: TAX_ID_NUM_HINT,
+              inputFormatters: [maskFormatter],
               validator: (val) {
                 if (val!.isEmpty) {
                   return 'Please enter tax id number';

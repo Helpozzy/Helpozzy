@@ -2,7 +2,7 @@ import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/response_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 

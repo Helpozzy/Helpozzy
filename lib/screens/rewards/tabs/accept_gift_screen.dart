@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class AcceptGiftScreen extends StatefulWidget {

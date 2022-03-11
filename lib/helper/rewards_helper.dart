@@ -1,4 +1,4 @@
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 
 class UserRewardsDetailsHelper {
   UserRewardsDetailsHelper.fromUsers(Users users) {

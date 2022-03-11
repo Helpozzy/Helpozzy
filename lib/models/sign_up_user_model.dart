@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:helpozzy/models/organization_sign_up_model.dart';
 
 class Users {
   Users.fromJson({required List<QueryDocumentSnapshot> list}) {
@@ -76,7 +77,9 @@ class SignUpAndUserModel {
     pointGifted = json['point_gifted'];
     joiningDate = json['date_of_joining'];
     isOrganization = json['is_organization'];
-    organizationDetails = json['organization_details'];
+    organizationDetails = json['organization_details'] != null
+        ? OrganizationSignUpModel.fromJson(json: json['organization_details'])
+        : json['organization_details'];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,7 +108,9 @@ class SignUpAndUserModel {
       'review_by_persons': reviewsByPersons,
       'point_gifted': pointGifted,
       'is_organization': isOrganization,
-      'organization_details': organizationDetails,
+      'organization_details': organizationDetails != null
+          ? organizationDetails!.toJson()
+          : organizationDetails,
     };
   }
 
@@ -133,6 +138,6 @@ class SignUpAndUserModel {
   late double? rating;
   late int? reviewsByPersons;
   late String? joiningDate;
-  late Map<String, dynamic>? organizationDetails;
+  late OrganizationSignUpModel? organizationDetails;
   late bool? isOrganization;
 }

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/organization_sign_up_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/my_task/my_enrolled_tasks.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_list.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
@@ -108,7 +109,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           SizedBox(height: 7),
-          timelineProgress()
+          timelineProgress(),
+          organizationDetails(),
         ],
       ),
     );
@@ -269,6 +271,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
         } else {
           return SizedBox();
         }
+      },
+    );
+  }
+
+  Widget organizationDetails() {
+    return StreamBuilder<SignUpAndUserModel>(
+      stream: _userInfoBloc.userStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Text(
+            LOADING,
+            style: _theme.textTheme.headline6!.copyWith(
+              color: DARK_GRAY,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }
+        final OrganizationSignUpModel? organizationDetails =
+            snapshot.data!.organizationDetails;
+        return organizationDetails != null &&
+                organizationDetails.legalOrganizationName != null
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                child: Column(
+                  children: [
+                    Text(
+                      organizationDetails.legalOrganizationName!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: width * 0.06,
+                        color: BLACK,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      organizationDetails.discription!,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                          color: BLUE_GRAY, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10)
+                  ],
+                ),
+              )
+            : SizedBox();
       },
     );
   }

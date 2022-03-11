@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MembersBloc {

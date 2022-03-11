@@ -6,7 +6,7 @@ import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/school_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 

@@ -15,7 +15,7 @@ class OrganizationSignUpModel {
     organizationType = json['organization_type'];
     other = json['other'];
     taxIdNumber = json['tax_id_number'];
-    otherAdmins = json['other_admins'];
+    otherAdmins = json['other_admins'] != null ? json['other_admins'] : [];
     isNonProfitOrganization = json['is_non_profit_organization'];
   }
 
@@ -36,6 +36,6 @@ class OrganizationSignUpModel {
   late String? organizationType;
   late String? other;
   late String? taxIdNumber;
-  late List<String>? otherAdmins;
+  late List<dynamic>? otherAdmins;
   late bool? isNonProfitOrganization;
 }

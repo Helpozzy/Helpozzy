@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
-import 'package:helpozzy/models/user_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/auth/signup/organization_sign_up.dart';
 import 'package:helpozzy/screens/auth/signup/6_target_and_area_of_interest.dart';
 import 'package:helpozzy/utils/constants.dart';
