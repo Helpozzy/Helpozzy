@@ -249,6 +249,7 @@ class CommonSimpleTextfield extends StatelessWidget {
     required this.validator,
     this.onChanged,
     this.maxLength,
+    this.inputFormatters,
     this.onTap,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
@@ -262,6 +263,7 @@ class CommonSimpleTextfield extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final GestureTapCallback? onTap;
+  final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
   final int? maxLength;
   final TextInputType keyboardType;
@@ -279,6 +281,7 @@ class CommonSimpleTextfield extends StatelessWidget {
       readOnly: readOnly,
       maxLength: maxLength,
       maxLines: maxLines,
+      inputFormatters: inputFormatters,
       style: _theme.textTheme.bodyText2,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,

@@ -19,7 +19,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
   _OrganizationSignUpState({required this.signupAndUserModel});
   final SignUpAndUserModel signupAndUserModel;
   static final _formKey = GlobalKey<FormState>();
-  final TextEditingController _organizationNameContntroller =
+  final TextEditingController _organizationNameController =
       TextEditingController();
   final TextEditingController _organizationDiscriptionContntroller =
       TextEditingController();
@@ -46,7 +46,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
     final OrganizationSignUpModel organizationSignUpModel =
         OrganizationSignUpModel(
       isNonProfitOrganization: nonProfitOrganization,
-      legalOrganizationName: _organizationNameContntroller.text,
+      legalOrganizationName: _organizationNameController.text,
       discription: _organizationDiscriptionContntroller.text,
       organizationType: _organizationType.index == 0
           ? LLC_RADIO
@@ -145,7 +145,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
-        controller: _organizationNameContntroller,
+        controller: _organizationNameController,
         hintText: ORGANIZATION_NAME_HINT,
         validator: (val) {
           if (val!.isEmpty) {

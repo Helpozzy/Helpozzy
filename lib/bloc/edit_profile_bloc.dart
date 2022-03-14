@@ -8,13 +8,20 @@ class EditProfileBloc {
   final EmailVerificationProvider _emailVerificationProvider =
       EmailVerificationProvider();
 
+  final PublishSubject<bool> organizationDetailsExpand = PublishSubject<bool>();
   final PublishSubject<bool> parentsOtpSentController = PublishSubject<bool>();
   final PublishSubject<bool> parentsEmailVerifiedController =
       PublishSubject<bool>();
 
+  Stream<bool> get getOrganizationDetailsExpandedStream =>
+      organizationDetailsExpand.stream;
   Stream<bool> get parentOtpSentStream => parentsOtpSentController.stream;
   Stream<bool> get parentEmailVerifiedStream =>
       parentsEmailVerifiedController.stream;
+
+  Future organizationDetailsIsExpanded(bool expand) async {
+    organizationDetailsExpand.sink.add(expand);
+  }
 
   Future<bool> editProfile(SignUpAndUserModel signupAndUserModel) async {
     final bool response =
@@ -34,6 +41,7 @@ class EditProfileBloc {
   }
 
   void dispose() {
+    organizationDetailsExpand.close();
     parentsOtpSentController.close();
     parentsEmailVerifiedController.close();
   }

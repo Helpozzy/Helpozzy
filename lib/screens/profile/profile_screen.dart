@@ -68,6 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ListDividerLabel(label: SERVICE_RECORDS),
                 ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: width * 0.04),
                   title: Text(POINT_TAB),
                   trailing: Icon(
                     CupertinoIcons.list_bullet_below_rectangle,

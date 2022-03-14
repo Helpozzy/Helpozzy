@@ -9,12 +9,14 @@ import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/cities_model.dart';
+import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({required this.user});
@@ -52,9 +54,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _relationController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
+
+  //Organization
+  final TextEditingController _organizationNameController =
+      TextEditingController();
+  final TextEditingController _organizationDiscriptionContntroller =
+      TextEditingController();
+  final TextEditingController _organizationOtherContntroller =
+      TextEditingController();
+  final TextEditingController _organizationTaxIdNumberContntroller =
+      TextEditingController();
+  late OrganizationTypes _organizationType = OrganizationTypes.CORP;
+  late bool nonProfitOrganization = false;
+
+  MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(
+    mask: 'XX_XXXXXXX',
+    filter: {'X': RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
   late List<StateModel>? states = [];
   late List<CityModel>? cities = [];
   late CountryCode? countryCode;
+  late bool organizationExpanded = false;
 
   late GooglePlace googlePlace;
   late String? addressLocation = '';
@@ -138,6 +160,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _schoolController.text = user.schoolName != null ? user.schoolName! : '';
     _gradeLevelController.text =
         user.gradeLevel != null ? user.gradeLevel! : '';
+    if (user.isOrganization!) {
+      final OrganizationSignUpModel organizationDetails =
+          user.organizationDetails!;
+      _organizationNameController.text =
+          organizationDetails.legalOrganizationName!;
+      _organizationDiscriptionContntroller.text =
+          organizationDetails.discription!;
+      _organizationType = organizationDetails.organizationType! == LLC_RADIO
+          ? OrganizationTypes.LLC
+          : organizationDetails.organizationType! == PARTNERSHIP_RADIO
+              ? OrganizationTypes.PARTNERSHIP
+              : organizationDetails.organizationType! == CORP_RADIO
+                  ? OrganizationTypes.CORP
+                  : OrganizationTypes.SOLE_PROP;
+      nonProfitOrganization = organizationDetails.isNonProfitOrganization!;
+      _organizationOtherContntroller.text = organizationDetails.other!;
+      _organizationTaxIdNumberContntroller.text =
+          organizationDetails.taxIdNumber!;
+    }
     setState(() {});
   }
 
@@ -159,6 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
     final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
       name: _firstNameController.text + ' ' + _lastNameController.text,
+      isOrganization: user.isOrganization,
       about: _aboutController.text,
       email: _emailController.text,
       gender: _genderController.text,
@@ -182,6 +224,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       reviewsByPersons: user.reviewsByPersons,
       volunteerType: user.volunteerType,
     );
+    //Edit Organization
+    if (user.isOrganization!) {
+      final OrganizationSignUpModel organizationSignUpModel =
+          OrganizationSignUpModel(
+        isNonProfitOrganization: nonProfitOrganization,
+        legalOrganizationName: _organizationNameController.text,
+        discription: _organizationDiscriptionContntroller.text,
+        organizationType: _organizationType.index == 0
+            ? LLC_RADIO
+            : _organizationType.index == 1
+                ? PARTNERSHIP_RADIO
+                : _organizationType.index == 2
+                    ? CORP_RADIO
+                    : SOLE_PROP_RADIO,
+        other: _organizationOtherContntroller.text,
+        otherAdmins: user.organizationDetails!.otherAdmins,
+        taxIdNumber: _organizationTaxIdNumberContntroller.text,
+      );
+      signUpAndUserModel.organizationDetails = organizationSignUpModel;
+    }
     final bool response =
         await _editProfileBloc.editProfile(signUpAndUserModel);
     if (response) {
@@ -324,6 +386,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: schoolInfo(),
                         )
                       : SizedBox(),
+              user.isOrganization! ? organizationDetails() : SizedBox(),
             ],
           ),
         ),
@@ -514,13 +577,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget locationCard(String address) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: width * 0.02),
+      padding: EdgeInsets.symmetric(vertical: 4.0),
       child: Card(
-        elevation: 2,
+        elevation: 0,
+        color: GRAY,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(
-            vertical: 2.0,
+            vertical: 5.0,
             horizontal: width * 0.05,
           ),
           title: Text(
@@ -1155,6 +1219,220 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               );
             }).toList()),
+      ],
+    );
+  }
+
+  Widget organizationDetails() {
+    return StreamBuilder<bool>(
+      initialData: organizationExpanded,
+      stream: _editProfileBloc.getOrganizationDetailsExpandedStream,
+      builder: (context, snapshot) {
+        return InkWell(
+          onTap: () {
+            setState(() => organizationExpanded = !organizationExpanded);
+            _editProfileBloc
+                .organizationDetailsIsExpanded(organizationExpanded);
+          },
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.06),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: SmallInfoLabel(
+                        label: 'Organization Details',
+                      ),
+                    ),
+                    Icon(
+                      snapshot.data!
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded,
+                    ),
+                  ],
+                ),
+                snapshot.data! ? expandedOrganizationDetails() : SizedBox(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget expandedOrganizationDetails() {
+    return Column(
+      children: [
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: LEGAL_ORGANIZATION_NAME_LABEL),
+        organizationName(),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: ORAGANIZATION_DISCRIPTION_LABEL),
+        organizationDiscription(),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: ORAGANIZATION_TYPE_LABEL),
+        organizationTypes(),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: OTHER_LABEL),
+        organizationOtherType(),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: TAX_ID_NUMBER_LABEL),
+        taxIdNumber(),
+      ],
+    );
+  }
+
+  //Organization Details
+
+  Widget organizationName() {
+    return CommonSimpleTextfield(
+      controller: _organizationNameController,
+      hintText: ORGANIZATION_NAME_HINT,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Please enter organization name';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget organizationDiscription() {
+    return CommonSimpleTextfield(
+      controller: _organizationDiscriptionContntroller,
+      hintText: ORGANIZATION_DISCRIPTION_HINT,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Please enter organization discription';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget organizationTypes() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                RadioTile(
+                  label: CORP_RADIO,
+                  widget: Radio(
+                    value: OrganizationTypes.CORP,
+                    groupValue: _organizationType,
+                    onChanged: (OrganizationTypes? value) {
+                      setState(() => _organizationType = value!);
+                    },
+                  ),
+                ),
+                RadioTile(
+                  label: LLC_RADIO,
+                  widget: Radio(
+                    value: OrganizationTypes.LLC,
+                    groupValue: _organizationType,
+                    onChanged: (OrganizationTypes? value) {
+                      setState(() => _organizationType = value!);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                RadioTile(
+                  label: PARTNERSHIP_RADIO,
+                  widget: Radio(
+                    value: OrganizationTypes.PARTNERSHIP,
+                    groupValue: _organizationType,
+                    onChanged: (OrganizationTypes? value) {
+                      setState(() => _organizationType = value!);
+                    },
+                  ),
+                ),
+                RadioTile(
+                  label: SOLE_PROP_RADIO,
+                  widget: Radio(
+                    value: OrganizationTypes.SOLE_PROP,
+                    groupValue: _organizationType,
+                    onChanged: (OrganizationTypes? value) {
+                      setState(() => _organizationType = value!);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox(
+              value: nonProfitOrganization,
+              onChanged: (val) {
+                setState(() => nonProfitOrganization = val!);
+              },
+            ),
+            Text(
+              NON_PROFIT_ORGANIZATION_CHECKBOX,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                color: DARK_GRAY,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget organizationOtherType() {
+    return CommonSimpleTextfield(
+      controller: _organizationOtherContntroller,
+      hintText: ENTER_STRUCTURE_HINT,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Please enter structure';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget taxIdNumber() {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonSimpleTextfield(
+            controller: _organizationTaxIdNumberContntroller,
+            hintText: TAX_ID_NUM_HINT,
+            inputFormatters: [maskFormatter],
+            validator: (val) {
+              if (val!.isEmpty) {
+                return 'Please enter tax id number';
+              }
+              return null;
+            },
+          ),
+        ),
+        SizedBox(width: 10),
+        Text(
+          '0/9',
+          style: _theme.textTheme.bodyText2!
+              .copyWith(fontWeight: FontWeight.w600, color: DARK_GRAY),
+        ),
       ],
     );
   }

@@ -78,7 +78,11 @@ class _DetailsTabScreenState extends State<DetailsTabScreen> {
       height: width * 0.17,
       width: width / 5,
       alignment: Alignment.center,
-      color: TABLE_ROW_GRAY_COLOR,
+      decoration: BoxDecoration(
+          border: Border.all(
+        color: GRAY,
+        width: 0.5,
+      )),
       child: Text(
         text,
         textAlign: TextAlign.center,
