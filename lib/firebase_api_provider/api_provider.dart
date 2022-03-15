@@ -128,6 +128,28 @@ class ApiProvider {
     }
   }
 
+  Future<ResponseModel> updateProjectAPIProvider(ProjectModel project) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('projects').doc(project.projectId);
+      await documentReference.update(project.toJson());
+      return ResponseModel(success: true, message: 'Project is updated');
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: 'Fail! Project is not updated');
+    }
+  }
+
+  Future<ResponseModel> deleteProjectAPIProvider(String projectId) async {
+    try {
+      await firestore.collection('projects').doc(projectId).delete();
+      return ResponseModel(success: true, message: 'Project is deleted');
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: 'Fail, Project is not deleted');
+    }
+  }
+
   Future<Projects> getProjectsAPIProvider(
       {ProjectTabType? projectTabType}) async {
     final QuerySnapshot signedUpQuerySnapshot = await firestore

@@ -21,12 +21,12 @@ import 'project_task/create_edit_task.dart';
 import 'project_task/task_widget.dart';
 import 'project_task/tasks_screen.dart';
 
-class CreateProject extends StatefulWidget {
+class CreateOrEditProject extends StatefulWidget {
   @override
-  _CreateProjectState createState() => _CreateProjectState();
+  _CreateOrEditProjectState createState() => _CreateOrEditProjectState();
 }
 
-class _CreateProjectState extends State<CreateProject> {
+class _CreateOrEditProjectState extends State<CreateOrEditProject> {
   final _formKey = GlobalKey<FormState>();
   ProjectsBloc _projectsBloc = ProjectsBloc();
   ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
@@ -173,7 +173,7 @@ class _CreateProjectState extends State<CreateProject> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
-                      child: SmallInfoLabel(
+                      child: TextfieldLabelSmall(
                           label: PROJECT_INVITE_COLLABORATOR_LABEL),
                     ),
                     Padding(
@@ -184,7 +184,7 @@ class _CreateProjectState extends State<CreateProject> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
-                      child: SmallInfoLabel(label: TIMELINE_LABEL),
+                      child: TextfieldLabelSmall(label: TIMELINE_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -291,7 +291,8 @@ class _CreateProjectState extends State<CreateProject> {
                 padding: EdgeInsets.symmetric(
                     vertical: 4.0, horizontal: width * 0.05),
                 child: Card(
-                  elevation: 2,
+                  elevation: 0,
+                  color: GRAY,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                   child: ListTile(
@@ -299,18 +300,15 @@ class _CreateProjectState extends State<CreateProject> {
                         vertical: 4.0, horizontal: width * 0.05),
                     title: Text(
                       LOCATION,
-                      style: _themeData.textTheme.bodySmall!.copyWith(
+                      style: _themeData.textTheme.bodyText2!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: Text(
-                        location!,
-                        style: _themeData.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: DARK_GRAY,
-                        ),
+                    subtitle: Text(
+                      location!,
+                      style: _themeData.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: DARK_GRAY,
                       ),
                     ),
                     trailing: Icon(
@@ -331,7 +329,7 @@ class _CreateProjectState extends State<CreateProject> {
         Padding(
           padding: EdgeInsets.symmetric(
               vertical: width * 0.03, horizontal: width * 0.05),
-          child: SmallInfoLabel(label: TASKS_LABEL),
+          child: TextfieldLabelSmall(label: TASKS_LABEL),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -391,7 +389,7 @@ class _CreateProjectState extends State<CreateProject> {
     return Column(
       children: [
         SizedBox(height: width * 0.05),
-        SmallInfoLabel(label: PROJECT_CATEGORY_LABEL),
+        TextfieldLabelSmall(label: PROJECT_CATEGORY_LABEL),
         DropdownButtonFormField<CategoryModel>(
           decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
           icon: Icon(Icons.expand_more_outlined),

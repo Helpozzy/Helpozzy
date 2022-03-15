@@ -4,12 +4,17 @@ class Projects {
   Projects.fromJson(
       {List<QueryDocumentSnapshot<Object?>>? signedUpList,
       required List<QueryDocumentSnapshot<Object?>> list}) {
-    for (int i = 0; i < list.length; i++) {
-      final project = list[i].data() as Map<String, dynamic>;
+    // list.forEach((element) {
+    //   final project = element.data() as Map<String, dynamic>;
+    //   projectList.add(ProjectModel.fromjson(json: project));
+    // });
+
+    list.forEach((dbProject) {
+      final project = dbProject.data() as Map<String, dynamic>;
       if (signedUpList != null && signedUpList.isNotEmpty) {
-        for (int j = 0; j < signedUpList.length; j++) {
+        signedUpList.forEach((dbSignedUpProject) {
           final signedUpProject =
-              signedUpList[j].data() as Map<String, dynamic>;
+              dbSignedUpProject.data() as Map<String, dynamic>;
           if (project['project_id'] == signedUpProject['project_id']) {
             projectList.add(
               ProjectModel(
@@ -73,7 +78,7 @@ class Projects {
               ),
             );
           }
-        }
+        });
       } else {
         projectList.add(
           ProjectModel(
@@ -106,7 +111,7 @@ class Projects {
           ),
         );
       }
-    }
+    });
   }
 
   late List<ProjectModel> projectList = [];

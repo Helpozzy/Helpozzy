@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
@@ -6,8 +7,10 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/screens/dashboard/projects/create_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectTile extends StatefulWidget {
@@ -43,12 +46,46 @@ class _ProjectTileState extends State<ProjectTile> {
   late ThemeData _theme;
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
+
+  Future<void> showDeletePrompt() async {
+    await PlatformAlertDialog().showWithAction(
+      context,
+      title: CONFIRM,
+      content: DELETE_PROJECT_TEXT,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () {
+              _projectsBloc.deleteProject(project.projectId!);
+            },
+            text: DELETE_BUTTON,
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
-    return slidableInfoTile();
+    return projectTabType == ProjectTabType.OWN_TAB ||
+            projectTabType == ProjectTabType.MY_ENROLLED_TAB
+        ? slidableInfoTile()
+        : simpleInfoTile();
   }
 
   Widget slidableInfoTile() {
@@ -56,23 +93,39 @@ class _ProjectTileState extends State<ProjectTile> {
       key: const ValueKey(0),
       closeOnScroll: true,
       endActionPane: ActionPane(
-        extentRatio: 0.2,
+        extentRatio: 0.35,
         motion: ScrollMotion(),
         children: [
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateOrEditProject(),
+                ),
+              );
+            },
+            backgroundColor: DARK_GRAY,
+            foregroundColor: Colors.white,
+            icon: CupertinoIcons.pencil_ellipsis_rectangle,
+            autoClose: true,
+          ),
+          SlidableAction(
+            flex: 1,
+            onPressed: (BuildContext context) => showDeletePrompt(),
             backgroundColor: RED_COLOR,
             foregroundColor: Colors.white,
-            label: DELETE_BUTTON,
+            icon: CupertinoIcons.trash,
+            autoClose: true,
           ),
         ],
       ),
-      child: shortInfoTile(),
+      child: simpleInfoTile(),
     );
   }
 
-  Widget shortInfoTile() {
+  Widget simpleInfoTile() {
     return Column(
       children: [
         Padding(

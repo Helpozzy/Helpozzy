@@ -141,7 +141,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
-                      child: SmallInfoLabel(label: TIMELINE_LABEL),
+                      child: TextfieldLabelSmall(label: TIMELINE_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -151,7 +151,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
-                      child: SmallInfoLabel(label: HOURS_LABEL),
+                      child: TextfieldLabelSmall(label: HOURS_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -161,7 +161,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: width * 0.03, left: width * 0.05),
-                      child: SmallInfoLabel(label: MEMBERS_LABEL),
+                      child: TextfieldLabelSmall(label: MEMBERS_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -174,15 +174,15 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                         left: width * 0.05,
                         bottom: width * 0.03,
                       ),
-                      child: SmallInfoLabel(label: STATUS_LABEL),
+                      child: TextfieldLabelSmall(label: STATUS_LABEL),
                     ),
                     statusSegmentation(),
                     Divider(),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: width * 0.04, horizontal: width * 0.05),
-                      child:
-                          SmallInfoLabel(label: TASK_MEMBERS_REQUIREMENT_LABEL),
+                      child: TextfieldLabelSmall(
+                          label: TASK_MEMBERS_REQUIREMENT_LABEL),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),

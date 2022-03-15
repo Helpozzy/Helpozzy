@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -22,24 +23,9 @@ class _FullScreenSignOutDialogState extends State<FullScreenSignOutDialog> {
   void showAlert(BuildContext context) {
     PlatformAlertDialog().showWithAction(
       context,
-      title: 'Sign Out',
-      content: 'You want to sign out from app!',
+      title: SIGN_OUT_TITLE,
+      content: SIGN_OUT_FROM_APP,
       actions: [
-        TextButton(
-          onPressed: () {
-            Provider.of<AuthBloc>(context, listen: false).add(AppLogout());
-            prefsObject.clear();
-            prefsObject.reload();
-            Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
-          },
-          child: Text(
-            SIGN_OUT_BUTTON,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: MARUN,
-            ),
-          ),
-        ),
         TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
@@ -52,6 +38,20 @@ class _FullScreenSignOutDialogState extends State<FullScreenSignOutDialog> {
               fontWeight: FontWeight.w600,
               color: PRIMARY_COLOR,
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () {
+              Provider.of<AuthBloc>(context, listen: false).add(AppLogout());
+              prefsObject.clear();
+              prefsObject.reload();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, INTRO, (route) => false);
+            },
+            text: SIGN_OUT_BUTTON,
           ),
         ),
       ],

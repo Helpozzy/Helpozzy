@@ -89,13 +89,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
+    countryCode = CountryCode(code: '+1', name: 'US');
     listenUser();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
-    countryCode = _personalPhoneController.text.isNotEmpty
-        ? countryCode!.dialCode != null
-            ? CountryCode(code: countryCode!.dialCode!)
-            : CountryCode(code: '+1', name: 'US')
-        : CountryCode(code: '+1', name: 'US');
     // _cityBloc.getStates();
     // listenState();
     super.initState();
@@ -142,7 +138,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _firstNameController.text = user.name!.split(' ')[0];
     _lastNameController.text = user.name!.split(' ')[1];
     _aboutController.text = user.about!;
-    _addressController.text = user.address!;
     _emailController.text = user.email!;
     _dateOfBirthController.text = DateFormatFromTimeStamp().dateFormatToYMD(
         dateTime:
@@ -157,7 +152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         user.parentEmail != null ? user.parentEmail! : '';
     _relationController.text =
         user.relationshipWithParent != null ? user.relationshipWithParent! : '';
-    _schoolController.text = user.schoolName != null ? user.schoolName! : '';
+
     _gradeLevelController.text =
         user.gradeLevel != null ? user.gradeLevel! : '';
     if (user.isOrganization!) {
@@ -398,36 +393,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       children: [
         labelWithTopPadding(PERSONAL_DETAILS_LABEL),
+        SizedBox(height: 15),
         Row(
           children: [
             Expanded(
-              child: CommonSimpleTextfield(
-                controller: _firstNameController,
-                hintText: ENTER_FIRST_NAME_HINT,
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Enter your first name';
-                  }
-                  return null;
-                },
+              child: Column(
+                children: [
+                  TextfieldLabelSmall(label: FIRST_NAME),
+                  CommonSimpleTextfield(
+                    controller: _firstNameController,
+                    hintText: ENTER_FIRST_NAME_HINT,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'Enter your first name';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 15),
             Expanded(
-              child: CommonSimpleTextfield(
-                controller: _lastNameController,
-                hintText: ENTER_LAST_NAME_HINT,
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Enter your last name';
-                  }
-                  return null;
-                },
+              child: Column(
+                children: [
+                  TextfieldLabelSmall(label: LAST_NAME),
+                  CommonSimpleTextfield(
+                    controller: _lastNameController,
+                    hintText: ENTER_LAST_NAME_HINT,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'Enter your last name';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
             )
           ],
         ),
-        labelWithTopPadding(ABOUT_TEXT),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: ABOUT_TEXT),
         CommonSimpleTextfield(
           maxLines: 2,
           controller: _aboutController,
@@ -439,7 +446,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return null;
           },
         ),
-        labelWithTopPadding(EMAIL_LABEL),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: EMAIL_LABEL),
         CommonSimpleTextfield(
           readOnly: true,
           suffixIcon: Padding(
@@ -454,14 +462,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           hintText: ENTER_EMAIL_HINT,
           validator: (val) => null,
         ),
-        labelWithTopPadding(DATE_OF_BIRTH_LABEL),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: DATE_OF_BIRTH_LABEL),
         CommonSimpleTextfield(
           readOnly: true,
           controller: _dateOfBirthController,
           hintText: SELECT_DATE_OF_BIRTH_HINT,
           validator: (val) => null,
         ),
-        labelWithTopPadding(GENDER_LABEL),
+        SizedBox(height: 15),
+        TextfieldLabelSmall(label: GENDER_LABEL),
         genderDropDown(),
       ],
     );
@@ -558,6 +568,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Text(
                         addressPredictions[index].description!,
                         maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     )
                   ],
@@ -584,23 +595,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(
-            vertical: 5.0,
+            vertical: 6.0,
             horizontal: width * 0.05,
           ),
           title: Text(
             LOCATION,
-            style: _theme.textTheme.bodySmall!.copyWith(
+            style: _theme.textTheme.bodyText2!.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: Text(
-              address,
-              style: _theme.textTheme.bodyText2!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: DARK_GRAY,
-              ),
+          subtitle: Text(
+            address,
+            style: _theme.textTheme.bodySmall!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: DARK_GRAY,
             ),
           ),
           trailing: Icon(
@@ -745,7 +753,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return CountryCodePicker(
       onChanged: (CountryCode code) => countryCode = code,
       boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      initialSelection: 'US',
+      initialSelection: countryCode!.code,
       backgroundColor: WHITE,
       showCountryOnly: false,
       dialogSize: Size(width, height - 30),
@@ -837,11 +845,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
-        title: Text('Select Option'),
+        title: Text(SELECT_OPTION),
         actions: <Widget>[
           CupertinoActionSheetAction(
             child: Text(
-              'Camera',
+              CAMERA_OPTION,
               style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
             ),
             isDefaultAction: true,
@@ -854,7 +862,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           CupertinoActionSheetAction(
             child: Text(
-              'Gallery',
+              GALLERY_OPTION,
               style: _theme.textTheme.bodyText2!.copyWith(color: PRIMARY_COLOR),
             ),
             isDestructiveAction: true,
@@ -887,7 +895,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         icon: Icon(Icons.expand_more_outlined),
         validator: (val) {
-          if (_genderController.text.isEmpty) {
+          if (val != null && _genderController.text.isNotEmpty) {
             return 'Select gender want to continue';
           }
           return null;
@@ -952,9 +960,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           controller: _schoolController,
           hintText: SEARCH_SCHOOL_HINT,
-          validator: (val) {
-            return null;
-          },
+          validator: (val) => null,
           onChanged: (val) {
             if (val.isNotEmpty) {
               autoCompleteSchoolSearch(val);
@@ -986,6 +992,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Text(
                         schoolPredictions[index].description!,
                         maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     )
                   ],
@@ -994,43 +1001,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           },
         ),
-        schoolLocation != null && schoolLocation!.isNotEmpty
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 4.0,
-                  horizontal: width * 0.02,
-                ),
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 2.0, horizontal: width * 0.05),
-                    title: Text(
-                      LOCATION,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: Text(
-                        schoolLocation!,
-                        style: _theme.textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: DARK_GRAY,
-                        ),
-                      ),
-                    ),
-                    trailing: Icon(
-                      CupertinoIcons.map_pin_ellipse,
-                      color: PRIMARY_COLOR,
-                    ),
-                  ),
-                ),
-              )
-            : SizedBox(),
+        user.schoolName != null && user.schoolName!.isNotEmpty
+            ? locationCard(user.schoolName!)
+            : schoolLocation != null && schoolLocation!.isNotEmpty
+                ? locationCard(schoolLocation!)
+                : SizedBox(),
       ],
     );
   }
@@ -1124,16 +1099,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       icon: Icon(Icons.expand_more_outlined),
       isExpanded: true,
       decoration: inputSimpleDecoration(
-          getHint: _relationController.text.isNotEmpty
-              ? _relationController.text
-              : SELECT_RELATION_HINT),
+        getHint: _relationController.text.isNotEmpty
+            ? _relationController.text
+            : SELECT_RELATION_HINT,
+      ),
       onChanged: (String? newValue) {
         setState(() {
           _relationController.text = newValue!;
         });
       },
       validator: (val) {
-        if (_relationController.text.isEmpty) {
+        if (val != null && _relationController.text.isEmpty) {
           return 'Select relationship status';
         }
         return null;

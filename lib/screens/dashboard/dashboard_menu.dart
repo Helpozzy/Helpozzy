@@ -53,42 +53,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
     width = MediaQuery.of(context).size.width;
     _theme = Theme.of(context);
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            topContainerWithProgress(),
-            CommonDivider(),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: width * 0.08, right: width * 0.06, top: 10.0),
-              child: StreamBuilder<SignUpAndUserModel>(
-                stream: _userInfoBloc.userStream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text(
-                      LOADING,
-                      style: _theme.textTheme.headline6!.copyWith(
-                        color: DARK_GRAY,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  }
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          topContainerWithProgress(),
+          CommonDivider(),
+          Padding(
+            padding: EdgeInsets.only(
+                left: width * 0.08, right: width * 0.06, top: 10.0),
+            child: StreamBuilder<SignUpAndUserModel>(
+              stream: _userInfoBloc.userStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
                   return Text(
-                    'Hi, ${snapshot.data!.name}',
+                    LOADING,
                     style: _theme.textTheme.headline6!.copyWith(
-                      color: PRIMARY_COLOR,
+                      color: DARK_GRAY,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   );
-                },
-              ),
+                }
+                return Text(
+                  'Hi, ${snapshot.data!.name}',
+                  style: _theme.textTheme.headline6!.copyWith(
+                    color: PRIMARY_COLOR,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
-            menuGrid(),
-          ],
-        ),
+          ),
+          menuGrid(),
+        ],
       ),
     );
   }
@@ -335,12 +333,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisCount: 2,
           shrinkWrap: true,
           childAspectRatio: 1.05,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0),
           children: snapshot.data!.menus.map((MenuModel menu) {
             return GestureDetector(
               onTap: () async => await onMenuTap(menu),
               child: Card(
-                margin: EdgeInsets.all(12.0),
+                margin: EdgeInsets.all(10.0),
                 elevation: 0,
                 color: GRAY,
                 shape: RoundedRectangleBorder(

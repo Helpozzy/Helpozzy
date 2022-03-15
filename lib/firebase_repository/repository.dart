@@ -47,6 +47,12 @@ class Repository {
   Future<ResponseModel> postProjectRepo(ProjectModel project) =>
       apiProvider.postProjectAPIProvider(project);
 
+  Future<ResponseModel> updateProjectRepo(ProjectModel project) =>
+      apiProvider.updateProjectAPIProvider(project);
+
+  Future<ResponseModel> deleteProjectRepo(String projectId) =>
+      apiProvider.deleteProjectAPIProvider(projectId);
+
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
       apiProvider.getProjectsAPIProvider(projectTabType: projectTabType);
 

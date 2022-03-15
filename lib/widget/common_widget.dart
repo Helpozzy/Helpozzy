@@ -323,12 +323,11 @@ class SimpleFieldWithLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: width * 0.05),
-        SmallInfoLabel(label: label),
+        SizedBox(height: 10),
+        TextfieldLabelSmall(label: label),
         CommonSimpleTextfield(
           controller: controller,
           hintText: hintText,

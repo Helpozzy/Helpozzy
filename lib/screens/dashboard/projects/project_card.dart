@@ -41,7 +41,7 @@ class _ProjectCardState extends State<ProjectCard> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
         child: Card(
-          elevation: 2,
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

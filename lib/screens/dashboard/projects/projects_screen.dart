@@ -77,7 +77,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateProject(),
+                          builder: (context) => CreateOrEditProject(),
                         ),
                       );
                       await _projectsBloc.getProjects(

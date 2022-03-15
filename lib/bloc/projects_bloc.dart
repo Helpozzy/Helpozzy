@@ -40,6 +40,16 @@ class ProjectsBloc {
     return response;
   }
 
+  Future<ResponseModel> updateProject(ProjectModel project) async {
+    final ResponseModel response = await repo.updateProjectRepo(project);
+    return response;
+  }
+
+  Future<ResponseModel> deleteProject(String projectId) async {
+    final ResponseModel response = await repo.deleteProjectRepo(projectId);
+    return response;
+  }
+
   Future getProjects({ProjectTabType? projectTabType}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);

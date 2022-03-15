@@ -144,6 +144,11 @@ const MSG_NEW_USER = 'New User? ';
 const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
 const MSG_RESET_IT = 'Reset it';
 
+//Option Text
+const SELECT_OPTION = 'Select Option';
+const CAMERA_OPTION = 'Camera';
+const GALLERY_OPTION = 'Gallery';
+
 //Hint Msg
 const SEARCH_PROJECT_HINT = 'Search for projects';
 const SEARCH_SCHOOL_HINT = 'Search for school';
@@ -299,6 +304,10 @@ const SCHOOL_BOTTOMSHEET = 'School Bottomsheet';
 //Alert Text
 const ALERT = 'Alert';
 const SUCCESSFULL = 'Successful';
+const SIGN_OUT_TITLE = 'Sign Out';
+const SIGN_OUT_FROM_APP = 'You want to sign out from app!';
+const CONFIRM = 'Confirm';
+const DELETE_PROJECT_TEXT = 'Are you sure! Want to delete this project!';
 
 //Button Text
 const SIGN_UP = 'Sign-Up';
