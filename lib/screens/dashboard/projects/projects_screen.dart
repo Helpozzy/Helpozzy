@@ -4,7 +4,7 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-import 'create_project.dart';
+import 'create_edit_project.dart';
 import 'my_project_tab.dart';
 import 'project_list.dart';
 
@@ -77,7 +77,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateOrEditProject(),
+                          builder: (context) =>
+                              CreateOrEditProject(fromEdit: false),
                         ),
                       );
                       await _projectsBloc.getProjects(

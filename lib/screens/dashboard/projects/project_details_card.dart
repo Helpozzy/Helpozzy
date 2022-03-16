@@ -7,7 +7,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/create_project.dart';
+import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
@@ -102,7 +102,10 @@ class _ProjectTileState extends State<ProjectTile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateOrEditProject(),
+                  builder: (context) => CreateOrEditProject(
+                    fromEdit: true,
+                    project: project,
+                  ),
                 ),
               );
             },

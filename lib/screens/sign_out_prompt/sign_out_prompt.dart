@@ -5,13 +5,13 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
-class FullScreenSignOutDialog extends StatefulWidget {
+class FullScreenSignOutPrompt extends StatefulWidget {
   @override
-  State<FullScreenSignOutDialog> createState() =>
-      _FullScreenSignOutDialogState();
+  State<FullScreenSignOutPrompt> createState() =>
+      _FullScreenSignOutPromptState();
 }
 
-class _FullScreenSignOutDialogState extends State<FullScreenSignOutDialog> {
+class _FullScreenSignOutPromptState extends State<FullScreenSignOutPrompt> {
   late ThemeData _theme;
   @override
   Widget build(BuildContext context) {

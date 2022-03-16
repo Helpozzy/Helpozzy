@@ -5,7 +5,7 @@ import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
 import 'package:helpozzy/screens/notification/notification_inbox.dart';
 import 'package:helpozzy/screens/profile/profile_screen.dart';
-import 'package:helpozzy/screens/sign_out_dialog/sign_out_dialog.dart';
+import 'package:helpozzy/screens/sign_out_prompt/sign_out_prompt.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'bloc/home_bloc.dart';
 
@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
     // ChatListScreen(),
     NotificationInbox(),
     ProfileScreen(),
-    FullScreenSignOutDialog(),
+    FullScreenSignOutPrompt(),
   ];
 
   @override

@@ -286,6 +286,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
             child: CommonRoundedTextfield(
               controller: _organizationTaxIdNumberContntroller,
               hintText: TAX_ID_NUM_HINT,
+              keyboardType: TextInputType.number,
               inputFormatters: [maskFormatter],
               validator: (val) {
                 if (val!.isEmpty) {

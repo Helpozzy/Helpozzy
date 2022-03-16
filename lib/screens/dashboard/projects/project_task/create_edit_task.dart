@@ -73,8 +73,14 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     noOfMemberTrackerVal = double.parse(task!.memberRequirement.toString());
     minimumAgeTrackerVal = double.parse(task!.ageRestriction.toString());
     _taskQualificationController.text = task!.qualification!;
-    _taskStartDateController.text = task!.startDate!;
-    _taskEndDateController.text = task!.endDate!;
+    _selectedStartDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(task!.startDate!));
+    _selectedEndDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(task!.endDate!));
+    _taskStartDateController.text =
+        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
+    _taskEndDateController.text =
+        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
     _taskMembersController.text = task!.members!;
     _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
         ? 0
@@ -128,6 +134,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                       child: SimpleFieldWithLabel(
                         label: TASK_DESCRIPTION_LABEL,
                         controller: _taskDesController,
+                        maxLines: 3,
                         hintText: TASK_DESCRIPTION_HINT,
                         validator: (val) {
                           if (val!.isEmpty) {
@@ -199,7 +206,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               padding:
                   EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 6),
               child: CommonButton(
-                text: fromEdit ? UPDATE_TASK_BUTTON : ADD_TASK_BUTTON,
+                text: fromEdit ? UPDATE_BUTTON : ADD_TASK_BUTTON,
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     FocusScope.of(context).unfocus();
@@ -303,9 +310,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           validator: (val) {
             return null;
           },
-          onChanged: (val) {
-            _projectsBloc.searchUsers(val);
-          },
+          onChanged: (val) => _projectsBloc.searchUsers(val),
           prefixIcon: Icon(
             CupertinoIcons.search,
             color: BLACK,
@@ -376,9 +381,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {
+                      onTap: () async {
                         _searchEmailController.text = users[index].email!;
-                        _projectsBloc.searchUsers('');
+                        await _projectsBloc.searchUsers('');
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

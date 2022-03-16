@@ -49,10 +49,10 @@ class _VolunteerProjectTaskSignUpState
   final TaskBloc _taskBloc = TaskBloc();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
+  // final TextEditingController _cityController = TextEditingController();
+  // final TextEditingController _stateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _zipCodeController = TextEditingController();
+  // final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _phnController = TextEditingController();
 
   Future getUserData() async {
@@ -63,10 +63,10 @@ class _VolunteerProjectTaskSignUpState
     _nameController.text = userModel.name!;
     _emailController.text = userModel.email!;
     _addressController.text = userModel.address!;
-    _cityController.text = userModel.city!;
-    _stateController.text = userModel.state!;
-    _zipCodeController.text = userModel.zipCode!;
-    _phnController.text = userModel.personalPhnNo!;
+    // _cityController.text = userModel.city!;
+    // _stateController.text = userModel.state!;
+    // _zipCodeController.text = userModel.zipCode!;
+    _phnController.text = userModel.countryCode! + userModel.personalPhnNo!;
   }
 
   Future projectSignUp() async {
@@ -297,57 +297,57 @@ class _VolunteerProjectTaskSignUpState
                           return null;
                         },
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                labelWithTopPadding(CITY_LABEL),
-                                CommonSimpleTextfield(
-                                  controller: _cityController,
-                                  hintText: ENTER_CITY_HINT,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Enter your city';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                labelWithTopPadding(STATE_LABEL),
-                                CommonSimpleTextfield(
-                                  controller: _stateController,
-                                  hintText: ENTER_STATE_HINT,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Enter your state';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      labelWithTopPadding(ZIPCODE_LABEL),
-                      CommonSimpleTextfield(
-                        controller: _zipCodeController,
-                        maxLength: 5,
-                        hintText: ENTER_ZIP_CODE_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty && val.length < 5) {
-                            return 'Enter your zip code';
-                          }
-                          return null;
-                        },
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: Column(
+                      //         children: [
+                      //           labelWithTopPadding(CITY_LABEL),
+                      //           CommonSimpleTextfield(
+                      //             controller: _cityController,
+                      //             hintText: ENTER_CITY_HINT,
+                      //             validator: (val) {
+                      //               if (val!.isEmpty) {
+                      //                 return 'Enter your city';
+                      //               }
+                      //               return null;
+                      //             },
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: Column(
+                      //         children: [
+                      //           labelWithTopPadding(STATE_LABEL),
+                      //           CommonSimpleTextfield(
+                      //             controller: _stateController,
+                      //             hintText: ENTER_STATE_HINT,
+                      //             validator: (val) {
+                      //               if (val!.isEmpty) {
+                      //                 return 'Enter your state';
+                      //               }
+                      //               return null;
+                      //             },
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // labelWithTopPadding(ZIPCODE_LABEL),
+                      // CommonSimpleTextfield(
+                      //   controller: _zipCodeController,
+                      //   maxLength: 5,
+                      //   hintText: ENTER_ZIP_CODE_HINT,
+                      //   validator: (val) {
+                      //     if (val!.isEmpty && val.length < 5) {
+                      //       return 'Enter your zip code';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
@@ -461,7 +461,26 @@ class _VolunteerProjectTaskSignUpState
           left: 16,
           bottom: fromTask ? 15 : 28,
           child: Text(
-            fromTask ? project!.projectName! : project!.organization!,
+            fromTask
+                ? project!.projectName!
+                : project!.organization != null &&
+                        project!.organization!.isNotEmpty
+                    ? project!.organization!
+                    : project!.categoryId == 0
+                        ? VOLUNTEER_0
+                        : project!.categoryId == 1
+                            ? FOOD_BANK_1
+                            : project!.categoryId == 2
+                                ? TEACHING_2
+                                : project!.categoryId == 3
+                                    ? HOMELESS_SHELTER_3
+                                    : project!.categoryId == 4
+                                        ? ANIMAL_CARE_4
+                                        : project!.categoryId == 5
+                                            ? SENIOR_CENTER_5
+                                            : project!.categoryId == 6
+                                                ? CHILDREN_AND_YOUTH_6
+                                                : OTHER_7,
             maxLines: 2,
             style: _theme.textTheme.headline5!.copyWith(
               color: GRAY,

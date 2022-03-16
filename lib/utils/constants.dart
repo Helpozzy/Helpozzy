@@ -388,6 +388,7 @@ const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
 const ADD_NOW = 'Add now!';
 const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
+const ORGANIZATION_TAX_ID_NUMBER = '• Tax ID No. : ';
 const PROFIT_ORGANIZATION = '• Profile Organization';
 const NON_PROFIT_ORGANIZATION = '• Non Profit organization';
 
@@ -524,6 +525,7 @@ const RATING_TEXT = 'RATINGS';
 
 //Appbar title
 const CREATE_PROJECT_APPBAR = 'Create Project';
+const EDIT_PROJECT_APPBAR = 'Edit Project';
 const TASKS_APPBAR = 'Tasks';
 const CREATE_TASK_APPBAR = 'Create Task';
 const EDIT_TASK_APPBAR = 'Edit Task';
@@ -532,7 +534,8 @@ const PROJECTS_APPBAR = 'Projects';
 
 //Button
 const PUBLISH_PROJECT_BUTTON = 'Publish Project';
-const UPDATE_TASK_BUTTON = 'Update';
+const UPDATE_BUTTON = 'Update';
+const SAVE_BUTTON = 'Save';
 const ADD_PROJECT_BUTTON = 'New Project';
 const ADD_TASK_BUTTON = 'New Task';
 const ADD_NEW_TASK_BUTTON = 'Create New Task';

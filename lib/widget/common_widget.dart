@@ -168,7 +168,7 @@ class TextfieldLabelSmall extends StatelessWidget {
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
     return Align(
-      alignment: Alignment.topLeft,
+      alignment: Alignment.centerLeft,
       child: Text(
         label,
         textAlign: TextAlign.center,
@@ -307,6 +307,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
     this.suffixIcon,
     this.onChanged,
     this.onTap,
+    this.maxLines = 1,
     this.maxLength,
     this.keyboardType = TextInputType.text,
   });
@@ -318,6 +319,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
   final GestureTapCallback? onTap;
   final TextInputType keyboardType;
   final int? maxLength;
+  final int maxLines;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
@@ -335,6 +337,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           maxLength: maxLength,
+          maxLines: maxLines,
           keyboardType: keyboardType,
           onTap: onTap,
           onChanged: onChanged,

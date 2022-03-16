@@ -106,7 +106,7 @@ class ProjectsBloc {
   Future searchUsers(String searchText) async {
     searchedUserList = [];
     if (searchText.isEmpty) {
-      otherUserInfoController.sink.add(usersFromAPI);
+      otherUserInfoController.sink.add([]);
     } else {
       usersFromAPI.forEach((user) {
         if (user.email!.toLowerCase().contains(searchText.toLowerCase()) ||

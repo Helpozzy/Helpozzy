@@ -264,6 +264,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: DARK_GRAY,
             ),
           ),
+          Text(
+            ORGANIZATION_TAX_ID_NUMBER + organizationDetails.taxIdNumber!,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: DARK_GRAY,
+            ),
+          ),
         ],
       ),
     );

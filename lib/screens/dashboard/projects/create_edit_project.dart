@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
@@ -16,17 +15,23 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-
 import 'project_task/create_edit_task.dart';
 import 'project_task/task_widget.dart';
 import 'project_task/tasks_screen.dart';
 
 class CreateOrEditProject extends StatefulWidget {
+  CreateOrEditProject({required this.fromEdit, this.project});
+  final bool fromEdit;
+  final ProjectModel? project;
   @override
-  _CreateOrEditProjectState createState() => _CreateOrEditProjectState();
+  _CreateOrEditProjectState createState() =>
+      _CreateOrEditProjectState(fromEdit: fromEdit, project: project);
 }
 
 class _CreateOrEditProjectState extends State<CreateOrEditProject> {
+  _CreateOrEditProjectState({required this.fromEdit, this.project});
+  final bool fromEdit;
+  final ProjectModel? project;
   final _formKey = GlobalKey<FormState>();
   ProjectsBloc _projectsBloc = ProjectsBloc();
   ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
@@ -43,8 +48,6 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
   final TextEditingController _searchEmailController = TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now();
-  TimeOfDay selectedStartTime = TimeOfDay(hour: 00, minute: 00);
-  TimeOfDay selectedEndTime = TimeOfDay(hour: 00, minute: 00);
   late ThemeData _themeData;
   late double width;
   late double height;
@@ -60,6 +63,9 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
   @override
   void initState() {
     _projectsBloc.getOtherUsersInfo();
+    if (fromEdit) {
+      listenProjectDetails();
+    }
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     super.initState();
   }
@@ -69,6 +75,36 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
     if (result != null && result.predictions != null && mounted) {
       setState(() => predictions = result.predictions!);
     }
+  }
+
+  Future listenProjectDetails() async {
+    _projNameController.text = project!.projectName!;
+    _projDesController.text = project!.description!;
+    selectedCategoryId = project!.categoryId!;
+    _projCategoryController.text = selectedCategoryId == 0
+        ? VOLUNTEER_0
+        : selectedCategoryId == 1
+            ? FOOD_BANK_1
+            : selectedCategoryId == 2
+                ? TEACHING_2
+                : selectedCategoryId == 3
+                    ? HOMELESS_SHELTER_3
+                    : selectedCategoryId == 4
+                        ? ANIMAL_CARE_4
+                        : selectedCategoryId == 5
+                            ? SENIOR_CENTER_5
+                            : selectedCategoryId == 6
+                                ? CHILDREN_AND_YOUTH_6
+                                : OTHER_7;
+    _selectedStartDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(project!.startDate!));
+    _selectedEndDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(project!.endDate!));
+    _projStartDateController.text =
+        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
+    _projEndDateController.text =
+        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
+    setState(() {});
   }
 
   String img() {
@@ -115,7 +151,8 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: WHITE,
-      appBar: CommonAppBar(context).show(title: CREATE_PROJECT_APPBAR),
+      appBar: CommonAppBar(context)
+          .show(title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR),
       body: body(),
     );
   }
@@ -151,6 +188,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                       child: SimpleFieldWithLabel(
                         label: PROJECT_DESCRIPTION_LABEL,
                         controller: _projDesController,
+                        maxLines: 3,
                         hintText: PROJECT_DESCRIPTION_HINT,
                         validator: (val) {
                           if (val!.isEmpty) {
@@ -169,17 +207,22 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                     projectLocationView(),
                     Divider(),
                     taskWidget(),
-                    Divider(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: width * 0.03, left: width * 0.05),
-                      child: TextfieldLabelSmall(
-                          label: PROJECT_INVITE_COLLABORATOR_LABEL),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: inviteCollaborators(),
-                    ),
+                    fromEdit ? SizedBox() : Divider(),
+                    fromEdit
+                        ? SizedBox()
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                top: width * 0.03, left: width * 0.05),
+                            child: TextfieldLabelSmall(
+                                label: PROJECT_INVITE_COLLABORATOR_LABEL),
+                          ),
+                    fromEdit
+                        ? SizedBox()
+                        : Padding(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * 0.05),
+                            child: inviteCollaborators(),
+                          ),
                     Divider(),
                     Padding(
                       padding: EdgeInsets.only(
@@ -286,40 +329,46 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
             );
           },
         ),
-        location != null && location!.isNotEmpty
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: 4.0, horizontal: width * 0.05),
-                child: Card(
-                  elevation: 0,
-                  color: GRAY,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: width * 0.05),
-                    title: Text(
-                      LOCATION,
-                      style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      location!,
-                      style: _themeData.textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: DARK_GRAY,
-                      ),
-                    ),
-                    trailing: Icon(
-                      CupertinoIcons.map_pin_ellipse,
-                      color: PRIMARY_COLOR,
-                    ),
-                  ),
-                ),
-              )
-            : SizedBox(),
+        project != null && project!.location!.isNotEmpty
+            ? locationCard(project!.location!)
+            : location != null && location!.isNotEmpty
+                ? locationCard(location!)
+                : SizedBox(),
       ],
+    );
+  }
+
+  Widget locationCard(String address) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: width * 0.05),
+      child: Card(
+        elevation: 0,
+        color: GRAY,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 6.0,
+            horizontal: width * 0.05,
+          ),
+          title: Text(
+            LOCATION,
+            style: _themeData.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            address,
+            style: _themeData.textTheme.bodySmall!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: DARK_GRAY,
+            ),
+          ),
+          trailing: Icon(
+            CupertinoIcons.map_pin_ellipse,
+            color: PRIMARY_COLOR,
+          ),
+        ),
+      ),
     );
   }
 
@@ -394,7 +443,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
           decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
           icon: Icon(Icons.expand_more_outlined),
           validator: (val) {
-            if (_projCategoryController.text.isEmpty) {
+            if (val != null && _projCategoryController.text.isEmpty) {
               return 'Select any category';
             }
             return null;

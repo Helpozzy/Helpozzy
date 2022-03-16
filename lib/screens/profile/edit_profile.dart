@@ -382,6 +382,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         )
                       : SizedBox(),
               user.isOrganization! ? organizationDetails() : SizedBox(),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.04, vertical: width * 0.05),
+                width: double.infinity,
+                child: CommonButton(
+                  text: SAVE_BUTTON,
+                  onPressed: () {},
+                ),
+              ),
             ],
           ),
         ),
@@ -1204,24 +1213,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       initialData: organizationExpanded,
       stream: _editProfileBloc.getOrganizationDetailsExpandedStream,
       builder: (context, snapshot) {
-        return InkWell(
-          onTap: () {
-            setState(() => organizationExpanded = !organizationExpanded);
-            _editProfileBloc
-                .organizationDetailsIsExpanded(organizationExpanded);
-          },
-          child: Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.06),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() => organizationExpanded = !organizationExpanded);
+                _editProfileBloc
+                    .organizationDetailsIsExpanded(organizationExpanded);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: width * 0.06),
+                child: Row(
                   children: [
                     Expanded(
-                      child: SmallInfoLabel(
-                        label: 'Organization Details',
-                      ),
+                      child: SmallInfoLabel(label: ORGANIZATION_DETAILS_TEXT),
                     ),
                     Icon(
                       snapshot.data!
@@ -1230,34 +1237,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ],
                 ),
-                snapshot.data! ? expandedOrganizationDetails() : SizedBox(),
-              ],
+              ),
             ),
-          ),
+            snapshot.data! ? expandedOrganizationDetails() : SizedBox(),
+          ],
         );
       },
     );
   }
 
   Widget expandedOrganizationDetails() {
-    return Column(
-      children: [
-        SizedBox(height: 15),
-        TextfieldLabelSmall(label: LEGAL_ORGANIZATION_NAME_LABEL),
-        organizationName(),
-        SizedBox(height: 15),
-        TextfieldLabelSmall(label: ORAGANIZATION_DISCRIPTION_LABEL),
-        organizationDiscription(),
-        SizedBox(height: 15),
-        TextfieldLabelSmall(label: ORAGANIZATION_TYPE_LABEL),
-        organizationTypes(),
-        SizedBox(height: 15),
-        TextfieldLabelSmall(label: OTHER_LABEL),
-        organizationOtherType(),
-        SizedBox(height: 15),
-        TextfieldLabelSmall(label: TAX_ID_NUMBER_LABEL),
-        taxIdNumber(),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.06),
+      child: Column(
+        children: [
+          SizedBox(height: 15),
+          TextfieldLabelSmall(label: LEGAL_ORGANIZATION_NAME_LABEL),
+          organizationName(),
+          SizedBox(height: 15),
+          TextfieldLabelSmall(label: ORAGANIZATION_DISCRIPTION_LABEL),
+          organizationDiscription(),
+          SizedBox(height: 15),
+          TextfieldLabelSmall(label: ORAGANIZATION_TYPE_LABEL),
+          organizationTypes(),
+          SizedBox(height: 15),
+          TextfieldLabelSmall(label: OTHER_LABEL),
+          organizationOtherType(),
+          SizedBox(height: 15),
+          TextfieldLabelSmall(label: TAX_ID_NUMBER_LABEL),
+          taxIdNumber(),
+        ],
+      ),
     );
   }
 
