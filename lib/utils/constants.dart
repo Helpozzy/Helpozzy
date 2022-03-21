@@ -193,8 +193,11 @@ const FAILED_POPUP_MSG = 'Failed!';
 const OTP_SENT_TO_POPUP_MSG = 'OTP sent to';
 const ENTER_HRS_POPUP_MSG = 'Enter your hrs in field';
 const PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG = 'Project created successfully!';
+const PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG = 'Project updated successfully!';
 const PROJECT_NOT_CREATED_ERROR_POPUP_MSG =
     'Project not created due some error, Try again!';
+const PROJECT_NOT_UPDATED_ERROR_POPUP_MSG =
+    'Project not updated due some error, Try again!';
 const TASK_COMPLETED_POPUP_MSG = 'Task completed';
 const TASK_STARTED_POPUP_MSG = 'Task started';
 const TASK_NOT_UPDATED_POPUP_MSG = 'Technical issue! Task not updated';

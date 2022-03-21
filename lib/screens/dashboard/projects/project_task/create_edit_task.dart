@@ -89,6 +89,89 @@ class _CreateEditTaskState extends State<CreateEditTask> {
             : 2;
   }
 
+  Future addUpdateData() async {
+    if (_formKey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
+      CircularLoader().show(context);
+
+      if (fromEdit) {
+        final TaskModel taskDetails = TaskModel(
+          taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
+          projectId: task!.projectId,
+          enrollTaskId: task!.enrollTaskId,
+          taskName: _taskNameController.text,
+          description: _taskDesController.text,
+          memberRequirement: noOfMemberTrackerVal.round(),
+          ageRestriction: minimumAgeTrackerVal.round(),
+          qualification: _taskQualificationController.text,
+          startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+          endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+          estimatedHrs: hrsTrackerVal.round(),
+          totalVolunteerHrs: 0,
+          members: _taskMembersController.text,
+          status: _selectedIndexValue == 0
+              ? TOGGLE_NOT_STARTED
+              : _selectedIndexValue == 1
+                  ? TOGGLE_INPROGRESS
+                  : TOGGLE_COMPLETE,
+        );
+        final ResponseModel response =
+            await _projectTaskBloc.updateTask(taskDetails);
+        if (response.success!) {
+          await clearFields();
+          CircularLoader().hide(context);
+          Navigator.of(context).pop();
+          ScaffoldSnakBar().show(
+            context,
+            msg: TASK_UPDATED_SUCCESSFULLY_POPUP_MSG,
+          );
+        } else {
+          await clearFields();
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(
+            context,
+            msg: TASK_NOT_UPDATED_ERROR_POPUP_MSG,
+          );
+        }
+      } else {
+        final TaskModel taskDetails = TaskModel(
+          taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
+          taskName: _taskNameController.text,
+          description: _taskDesController.text,
+          memberRequirement: noOfMemberTrackerVal.round(),
+          ageRestriction: minimumAgeTrackerVal.round(),
+          qualification: _taskQualificationController.text,
+          startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+          endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+          estimatedHrs: hrsTrackerVal.round(),
+          totalVolunteerHrs: 0,
+          members: _taskMembersController.text,
+          status: _selectedIndexValue == 0
+              ? TOGGLE_NOT_STARTED
+              : _selectedIndexValue == 1
+                  ? TOGGLE_INPROGRESS
+                  : TOGGLE_COMPLETE,
+        );
+        final ResponseModel response =
+            await _projectTaskBloc.postTask(taskDetails);
+        if (response.success!) {
+          CircularLoader().hide(context);
+          Navigator.of(context).pop();
+          ScaffoldSnakBar().show(
+            context,
+            msg: TASK_CREATED_SUCCESSFULLY_POPUP_MSG,
+          );
+        } else {
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(
+            context,
+            msg: TASK_NOT_CREATED_ERROR_POPUP_MSG,
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _themeData = Theme.of(context);
@@ -98,6 +181,15 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
         title: fromEdit ? EDIT_TASK_APPBAR : CREATE_TASK_APPBAR,
+        actions: [
+          IconButton(
+            onPressed: () async => await addUpdateData(),
+            icon: Icon(
+              Icons.check_rounded,
+              color: DARK_PINK_COLOR,
+            ),
+          ),
+        ],
       ),
       body: body(),
     );
@@ -207,12 +299,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 6),
               child: CommonButton(
                 text: fromEdit ? UPDATE_BUTTON : ADD_TASK_BUTTON,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    FocusScope.of(context).unfocus();
-                    await addOrUpdateData();
-                  }
-                },
+                onPressed: () async => await addUpdateData(),
               ),
             ),
           ],
@@ -633,86 +720,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       style: _themeData.textTheme.bodyText2!
           .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
     );
-  }
-
-  Future addOrUpdateData() async {
-    CircularLoader().show(context);
-
-    if (fromEdit) {
-      final TaskModel taskDetails = TaskModel(
-        taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
-        projectId: task!.projectId,
-        enrollTaskId: task!.enrollTaskId,
-        taskName: _taskNameController.text,
-        description: _taskDesController.text,
-        memberRequirement: noOfMemberTrackerVal.round(),
-        ageRestriction: minimumAgeTrackerVal.round(),
-        qualification: _taskQualificationController.text,
-        startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-        endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-        estimatedHrs: hrsTrackerVal.round(),
-        totalVolunteerHrs: 0,
-        members: _taskMembersController.text,
-        status: _selectedIndexValue == 0
-            ? TOGGLE_NOT_STARTED
-            : _selectedIndexValue == 1
-                ? TOGGLE_INPROGRESS
-                : TOGGLE_COMPLETE,
-      );
-      final ResponseModel response =
-          await _projectTaskBloc.updateTask(taskDetails);
-      if (response.success!) {
-        await clearFields();
-        CircularLoader().hide(context);
-        Navigator.of(context).pop();
-        ScaffoldSnakBar().show(
-          context,
-          msg: TASK_UPDATED_SUCCESSFULLY_POPUP_MSG,
-        );
-      } else {
-        await clearFields();
-        CircularLoader().hide(context);
-        ScaffoldSnakBar().show(
-          context,
-          msg: TASK_NOT_UPDATED_ERROR_POPUP_MSG,
-        );
-      }
-    } else {
-      final TaskModel taskDetails = TaskModel(
-        taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
-        taskName: _taskNameController.text,
-        description: _taskDesController.text,
-        memberRequirement: noOfMemberTrackerVal.round(),
-        ageRestriction: minimumAgeTrackerVal.round(),
-        qualification: _taskQualificationController.text,
-        startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-        endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-        estimatedHrs: hrsTrackerVal.round(),
-        totalVolunteerHrs: 0,
-        members: _taskMembersController.text,
-        status: _selectedIndexValue == 0
-            ? TOGGLE_NOT_STARTED
-            : _selectedIndexValue == 1
-                ? TOGGLE_INPROGRESS
-                : TOGGLE_COMPLETE,
-      );
-      final ResponseModel response =
-          await _projectTaskBloc.postTask(taskDetails);
-      if (response.success!) {
-        CircularLoader().hide(context);
-        Navigator.of(context).pop();
-        ScaffoldSnakBar().show(
-          context,
-          msg: TASK_CREATED_SUCCESSFULLY_POPUP_MSG,
-        );
-      } else {
-        CircularLoader().hide(context);
-        ScaffoldSnakBar().show(
-          context,
-          msg: TASK_NOT_CREATED_ERROR_POPUP_MSG,
-        );
-      }
-    }
   }
 
   Future clearFields() async {

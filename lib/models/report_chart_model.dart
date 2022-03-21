@@ -18,5 +18,5 @@ class ChartDataModel {
   });
 
   final String? x;
-  final num? y;
+  final int? y;
 }

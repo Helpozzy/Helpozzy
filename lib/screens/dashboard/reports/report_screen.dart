@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/report_chart_model.dart';
 import 'package:helpozzy/screens/dashboard/reports/pvsa_chart.dart';
+import 'package:helpozzy/screens/dashboard/reports/report_chart.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportsScreen extends StatefulWidget {
   @override
@@ -70,36 +70,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: height / 2,
-              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                    child: reportView(),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      CHART_HOURS_VERTICAL_LABEL,
-                      textAlign: TextAlign.center,
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      yAxisLabel,
-                      textAlign: TextAlign.center,
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            reportView(),
             SizedBox(height: width * 0.05),
             ListDividerLabel(label: 'Service Accomplishments'),
             ListTile(
@@ -124,43 +95,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget reportView() {
-    return SfCartesianChart(
-      backgroundColor: WHITE,
-      title: ChartTitle(text: REPORT_VOLUNTEERING_SUMMARY),
-      primaryXAxis:
-          CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
-      primaryYAxis: NumericAxis(
-          maximum: 60,
-          minimum: 0,
-          interval: 10,
-          axisLine: const AxisLine(width: 0),
-          majorTickLines: const MajorTickLines(size: 0)),
-      series: _getDefaultColumn(),
-      legend: Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(
-        enable: true,
-        elevation: 0,
-        opacity: 0.7,
-        activationMode: ActivationMode.singleTap,
-        canShowMarker: true,
-        color: BLACK,
-      ),
-    );
-  }
-
-  ///Get the column series
-  List<ColumnSeries<ChartDataModel, String>> _getDefaultColumn() {
-    return <ColumnSeries<ChartDataModel, String>>[
-      ColumnSeries<ChartDataModel, String>(
-        dataSource: data,
-        width: 0.7,
-        spacing: 0.4,
-        color: PRIMARY_COLOR,
-        xValueMapper: (ChartDataModel sales, _) => sales.x as String,
-        yValueMapper: (ChartDataModel sales, _) => sales.y,
-        name: CHART_HOURS_LABEL,
-      ),
-    ];
+    return ReportBarChart();
   }
 
   Widget monthlyReportList() {

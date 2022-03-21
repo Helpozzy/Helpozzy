@@ -53,6 +53,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
   late double height;
   late String? location = '';
   late int selectedCategoryId = 7;
+  late int _selectedIndexValue = 0;
   late GooglePlace googlePlace;
   late List<AutocompletePrediction> predictions = [];
   late DetailsResult? detailsResult;
@@ -104,7 +105,79 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
     _projEndDateController.text =
         DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
+    _selectedIndexValue = project!.status == TOGGLE_NOT_STARTED
+        ? 0
+        : project!.status == TOGGLE_INPROGRESS
+            ? 1
+            : 2;
     setState(() {});
+  }
+
+  Future onAddProject() async {
+    if (_formKey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
+      final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
+      final Map<String, dynamic> json =
+          jsonDecode(userData) as Map<String, dynamic>;
+      final currentUser = SignUpAndUserModel.fromJson(json: json);
+
+      CircularLoader().show(context);
+      final ProjectModel project = ProjectModel(
+        categoryId: selectedCategoryId,
+        aboutOrganizer: SAMPLE_LONG_TEXT,
+        contactName: currentUser.name,
+        contactNumber: currentUser.personalPhnNo,
+        imageUrl: img(),
+        location: location,
+        projectLocationLati: latitude,
+        projectLocationLongi: longitude,
+        organization: '',
+        rating: 0.0,
+        reviewCount: 0,
+        enrollmentCount: 0,
+        projectName: _projNameController.text,
+        description: _projDesController.text,
+        startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+        endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+        ownerId: prefsObject.getString(CURRENT_USER_ID)!,
+        collaboratorsCoadmin: _projCollaboraorController.text,
+        status: _selectedIndexValue == 0
+            ? TOGGLE_NOT_STARTED
+            : _selectedIndexValue == 1
+                ? TOGGLE_INPROGRESS
+                : TOGGLE_COMPLETE,
+      );
+
+      final ResponseModel response = fromEdit
+          ? await _projectsBloc.updateProject(project)
+          : await _projectsBloc.postProject(project);
+      if (response.success!) {
+        if (selectedItems.isNotEmpty) {
+          for (int i = 0; i < selectedItems.length; i++) {
+            selectedItems[i].projectId = response.returnValue;
+            await _projectTaskBloc.updateTask(selectedItems[i]);
+          }
+        }
+        await clearFields();
+        CircularLoader().hide(context);
+        Navigator.of(context).pop();
+        ScaffoldSnakBar().show(
+          context,
+          msg: fromEdit
+              ? PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG
+              : PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG,
+        );
+      } else {
+        await clearFields();
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(
+          context,
+          msg: fromEdit
+              ? PROJECT_NOT_UPDATED_ERROR_POPUP_MSG
+              : PROJECT_NOT_CREATED_ERROR_POPUP_MSG,
+        );
+      }
+    }
   }
 
   String img() {
@@ -151,8 +224,20 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: WHITE,
-      appBar: CommonAppBar(context)
-          .show(title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR),
+      appBar: CommonAppBar(context).show(
+        title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR,
+        actions: [
+          IconButton(
+            onPressed: () {
+              onAddProject();
+            },
+            icon: Icon(
+              Icons.check_rounded,
+              color: DARK_PINK_COLOR,
+            ),
+          )
+        ],
+      ),
       body: body(),
     );
   }
@@ -162,100 +247,127 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
       onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: SimpleFieldWithLabel(
-                        label: PROJECT_NAME_LABEL,
-                        controller: _projNameController,
-                        hintText: PROJECT_NAME_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter project name';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: SimpleFieldWithLabel(
-                        label: PROJECT_DESCRIPTION_LABEL,
-                        controller: _projDesController,
-                        maxLines: 3,
-                        hintText: PROJECT_DESCRIPTION_HINT,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return 'Enter project description';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: projectCategoryDropdown(),
-                    ),
-                    Divider(),
-                    projectLocationView(),
-                    Divider(),
-                    taskWidget(),
-                    fromEdit ? SizedBox() : Divider(),
-                    fromEdit
-                        ? SizedBox()
-                        : Padding(
-                            padding: EdgeInsets.only(
-                                top: width * 0.03, left: width * 0.05),
-                            child: TextfieldLabelSmall(
-                                label: PROJECT_INVITE_COLLABORATOR_LABEL),
-                          ),
-                    fromEdit
-                        ? SizedBox()
-                        : Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: width * 0.05),
-                            child: inviteCollaborators(),
-                          ),
-                    Divider(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: width * 0.03, left: width * 0.05),
-                      child: TextfieldLabelSmall(label: TIMELINE_LABEL),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: startDateAndEndDateSection(),
-                    ),
-                    Divider(),
-                    SizedBox(height: 10)
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                child: SimpleFieldWithLabel(
+                  label: PROJECT_NAME_LABEL,
+                  controller: _projNameController,
+                  hintText: PROJECT_NAME_HINT,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Enter project name';
+                    }
+                    return null;
+                  },
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.2, vertical: width * 0.03),
-              child: CommonButton(
-                text: PUBLISH_PROJECT_BUTTON,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    FocusScope.of(context).unfocus();
-                    await onAddProject();
-                  }
-                },
+              Divider(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                child: SimpleFieldWithLabel(
+                  label: PROJECT_DESCRIPTION_LABEL,
+                  controller: _projDesController,
+                  maxLines: 3,
+                  hintText: PROJECT_DESCRIPTION_HINT,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Enter project description';
+                    }
+                    return null;
+                  },
+                ),
               ),
-            ),
-          ],
+              Divider(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                child: projectCategoryDropdown(),
+              ),
+              Divider(),
+              projectLocationView(),
+              Divider(),
+              taskWidget(),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: width * 0.03,
+                  horizontal: width * 0.05,
+                ),
+                child: TextfieldLabelSmall(label: STATUS_LABEL),
+              ),
+              statusSegmentation(),
+              fromEdit ? SizedBox() : Divider(),
+              fromEdit
+                  ? SizedBox()
+                  : Padding(
+                      padding: EdgeInsets.only(
+                          top: width * 0.03, left: width * 0.05),
+                      child: TextfieldLabelSmall(
+                          label: PROJECT_INVITE_COLLABORATOR_LABEL),
+                    ),
+              fromEdit
+                  ? SizedBox()
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: inviteCollaborators(),
+                    ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.only(top: width * 0.03, left: width * 0.05),
+                child: TextfieldLabelSmall(label: TIMELINE_LABEL),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                child: startDateAndEndDateSection(),
+              ),
+              Divider(),
+              SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.2, vertical: width * 0.03),
+                child: CommonButton(
+                  text: fromEdit ? SAVE_BUTTON : PUBLISH_PROJECT_BUTTON,
+                  onPressed: () async {
+                    await onAddProject();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget statusSegmentation() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: CupertinoSlidingSegmentedControl(
+          groupValue: _selectedIndexValue,
+          backgroundColor: GRAY,
+          thumbColor: DARK_GRAY.withAlpha(100),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
+          children: {
+            0: segmentItem(TOGGLE_NOT_STARTED),
+            1: segmentItem(TOGGLE_INPROGRESS),
+            2: segmentItem(TOGGLE_COMPLETE),
+          },
+          onValueChanged: (value) {
+            setState(() {
+              _selectedIndexValue = value.hashCode;
+            });
+          }),
+    );
+  }
+
+  Widget segmentItem(String title) {
+    return Text(
+      title,
+      style: _themeData.textTheme.bodyText2!
+          .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
     );
   }
 
@@ -718,55 +830,6 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         Icon(Icons.calendar_today_rounded)
       ],
     );
-  }
-
-  Future onAddProject() async {
-    final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
-    final Map<String, dynamic> json =
-        jsonDecode(userData) as Map<String, dynamic>;
-    final currentUser = SignUpAndUserModel.fromJson(json: json);
-
-    CircularLoader().show(context);
-    final ProjectModel project = ProjectModel(
-      categoryId: selectedCategoryId,
-      aboutOrganizer: SAMPLE_LONG_TEXT,
-      contactName: currentUser.name,
-      contactNumber: currentUser.personalPhnNo,
-      imageUrl: img(),
-      location: location,
-      projectLocationLati: latitude,
-      projectLocationLongi: longitude,
-      organization: '',
-      rating: 0.0,
-      reviewCount: 0,
-      enrollmentCount: 0,
-      projectName: _projNameController.text,
-      description: _projDesController.text,
-      startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-      endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-      ownerId: prefsObject.getString(CURRENT_USER_ID)!,
-      collaboratorsCoadmin: _projCollaboraorController.text,
-      status: TOGGLE_NOT_STARTED,
-    );
-
-    final ResponseModel response = await _projectsBloc.postProject(project);
-    if (response.success!) {
-      if (selectedItems.isNotEmpty) {
-        for (int i = 0; i < selectedItems.length; i++) {
-          selectedItems[i].projectId = response.returnValue;
-          await _projectTaskBloc.updateTask(selectedItems[i]);
-        }
-      }
-      await clearFields();
-      CircularLoader().hide(context);
-      Navigator.of(context).pop();
-      ScaffoldSnakBar()
-          .show(context, msg: PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG);
-    } else {
-      await clearFields();
-      CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: PROJECT_NOT_CREATED_ERROR_POPUP_MSG);
-    }
   }
 
   Future clearFields() async {
