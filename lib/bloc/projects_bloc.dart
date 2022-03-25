@@ -50,11 +50,13 @@ class ProjectsBloc {
     return response;
   }
 
-  Future getProjects({ProjectTabType? projectTabType}) async {
+  Future<List<ProjectModel>> getProjects(
+      {ProjectTabType? projectTabType}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
     projectsFromAPI = response.projectList;
     projectsController.sink.add(response.projectList);
+    return response.projectList;
   }
 
   List<ProjectModel> projectsFromAPI = [];

@@ -50,6 +50,11 @@ const PURPLE_COLOR = Color(0xFF445393);
 const DARK_BLUE_COLOR = Color(0xFF4C63C6);
 const MATE_WHITE = Color(0xFFFDEFFF);
 
+//Graph bar color
+const DARK_BAR_COLOR = Color(0xff3b8c75);
+const NORMAL_BAR_COLOR = Color(0xff64caad);
+const LIGHT_BAR_COLOR = Color(0xff73e8c9);
+
 const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 const APP_ICON_URL =
     'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/helpozzy_icon%2Fhelpozzy_icon.png?alt=media&token=4e4a5fa0-ea75-4fbe-8f36-7db01347da3f';
@@ -426,6 +431,8 @@ const SLECT_DECLINE_TO_ANSWER = 'Decline to answer';
 //Report screen
 const REPORT_VOLUNTEERING_SUMMARY = 'Volunteering Summary';
 const CHART_HOURS_VERTICAL_LABEL = 'H\no\nu\nr\ns';
+const SERVICE_ACCOMPLISHMENTS_LABEL = 'Service Accomplishments';
+const SERVICE_DETAILS_LABEL = 'Service Detail';
 const CHART_HOURS_LABEL = 'Hours';
 const CHART_MONTHS_LABEL = 'Months';
 const CHART_YEARS_LABEL = 'Years';

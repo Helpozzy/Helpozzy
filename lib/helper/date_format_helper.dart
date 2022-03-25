@@ -17,6 +17,14 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 
+  String dateYearYYYY({required String timestamp}) => DateFormat('yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)),
+      );
+
+  String dateMonthMMM({required String timestamp}) => DateFormat('MMM').format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)),
+      );
+
   List<String> getMonths(int year) {
     final List<String> months = [];
     final DateFormat formatter = DateFormat('MMM');

@@ -31,10 +31,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   @override
   void initState() {
     projectsBloc.getProjects(projectTabType: projectTabType);
-    if (projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB) {
-      projectsBloc.getOnGoingProjects(
-          projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB);
-    }
     if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
       projectsBloc.getProjectsActivityStatus();
     }
