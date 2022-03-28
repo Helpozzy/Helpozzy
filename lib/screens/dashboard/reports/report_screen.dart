@@ -23,6 +23,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late String yAxisLabel = CHART_YEARS_LABEL;
   late List<ReportsDataModel> data = [];
   final ProjectsBloc _projectsBloc = ProjectsBloc();
+  late bool yearIsLoaded = false;
   late bool monthIsLoaded = false;
   late bool projectIsLoaded = false;
 
@@ -33,6 +34,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadYear() async {
+    yearIsLoaded = true;
     monthIsLoaded = false;
     projectIsLoaded = false;
     yAxisLabel = CHART_YEARS_LABEL;
@@ -45,6 +47,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadMonth(String year) async {
+    yearIsLoaded = true;
     monthIsLoaded = true;
     projectIsLoaded = false;
     yAxisLabel = CHART_MONTHS_LABEL;
@@ -59,6 +62,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadProject(String year, String month) async {
+    yearIsLoaded = false;
     monthIsLoaded = true;
     projectIsLoaded = true;
     yAxisLabel = CHART_MONTHS_LABEL;
@@ -114,7 +118,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, bottom: 15.0),
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                bottom: 15.0,
+                right: 8.0,
+              ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: BarChart(
@@ -123,12 +131,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     barTouchData: BarTouchData(
                       enabled: true,
                       touchCallback: (touchEvent, response) async {
-                        if (!monthIsLoaded && !projectIsLoaded) {
+                        if (yearIsLoaded &&
+                            !monthIsLoaded &&
+                            !projectIsLoaded) {
                           await loadMonth('2022');
-                        } else if (monthIsLoaded && projectIsLoaded) {
-                          await loadProject('2021', 'Nov');
-                        } else {
-                          await loadYear();
+                        } else if (yearIsLoaded &&
+                            monthIsLoaded &&
+                            projectIsLoaded) {
+                          await loadProject('2022', 'Feb');
                         }
                       },
                     ),
@@ -137,32 +147,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       bottomTitles: SideTitles(
                         showTitles: true,
                         getTextStyles: (context, value) => const TextStyle(
-                          color: Color(0xff939393),
+                          color: NORMAL_BAR_COLOR,
                           fontSize: 10,
                         ),
                         margin: 10,
-                        getTitles: (double value) {
-                          switch (value.toInt()) {
-                            case 45:
-                              return 'Apr';
-                            case 25:
-                              return 'May';
-                            case 2:
-                              return 'Jun';
-                            case 35:
-                              return 'Jul';
-                            case 30:
-                              return 'Aug';
-                            default:
-                              return '';
-                          }
-                        },
                       ),
                       leftTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 40,
                         getTextStyles: (context, value) => const TextStyle(
-                          color: Color(0xff939393),
+                          color: NORMAL_BAR_COLOR,
                           fontSize: 10,
                         ),
                         margin: 0,
@@ -174,7 +168,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       show: true,
                       checkToShowHorizontalLine: (value) => value % 10 == 0,
                       getDrawingHorizontalLine: (value) => FlLine(
-                        color: GRAY,
+                        color: NORMAL_BAR_COLOR,
                         strokeWidth: 0.5,
                       ),
                       getDrawingVerticalLine: (value) => FlLine(
@@ -182,7 +176,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         strokeWidth: 0.5,
                       ),
                     ),
-                    borderData: FlBorderData(show: false),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border(
+                        bottom: BorderSide(width: 0.5),
+                        left: BorderSide(width: 0.2),
+                      ),
+                    ),
                     groupsSpace: data.length == 12 ? 13 : 30,
                     barGroups: getData(),
                   ),
@@ -223,11 +223,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
             toY: yVal,
             width: data.length == 12 ? 12 : 20,
             rodStackItems: [
-              BarChartRodStackItem(0, yVal / 4, DARK_BAR_COLOR),
-              BarChartRodStackItem(yVal / 4, yVal / 2, NORMAL_BAR_COLOR),
-              BarChartRodStackItem(yVal / 2, yVal / 1, LIGHT_BAR_COLOR),
+              BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
+              BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
+              // BarChartRodStackItem(yVal / 2, yVal / 1, LIGHT_BAR_COLOR),
             ],
-            borderRadius: const BorderRadius.all(Radius.zero),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(3),
+              topRight: Radius.circular(3),
+            ),
           ),
         ],
       );
