@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class _VolunteerProjectTaskSignUpState
   late ThemeData _theme;
   late double height;
   late double width;
+  late CountryCode? countryCode;
   final _formKey = GlobalKey<FormState>();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
   final NotificationBloc _notificationBloc = NotificationBloc();
@@ -66,7 +68,8 @@ class _VolunteerProjectTaskSignUpState
     // _cityController.text = userModel.city!;
     // _stateController.text = userModel.state!;
     // _zipCodeController.text = userModel.zipCode!;
-    _phnController.text = userModel.countryCode! + userModel.personalPhnNo!;
+    countryCode = CountryCode(code: userModel.countryCode!);
+    _phnController.text = userModel.personalPhnNo!;
   }
 
   Future projectSignUp() async {
@@ -187,6 +190,7 @@ class _VolunteerProjectTaskSignUpState
 
   @override
   void initState() {
+    countryCode = CountryCode(code: '+1', name: 'US');
     getUserData();
     super.initState();
   }
@@ -276,6 +280,7 @@ class _VolunteerProjectTaskSignUpState
                       CommonSimpleTextfield(
                         controller: _phnController,
                         maxLength: 10,
+                        prefixIcon: countryCodePicker(),
                         hintText: ENTER_PHONE_NUMBER_HINT,
                         validator: (val) {
                           if (val!.isEmpty) {
@@ -297,57 +302,6 @@ class _VolunteerProjectTaskSignUpState
                           return null;
                         },
                       ),
-                      // Row(
-                      //   children: [
-                      //     Expanded(
-                      //       child: Column(
-                      //         children: [
-                      //           labelWithTopPadding(CITY_LABEL),
-                      //           CommonSimpleTextfield(
-                      //             controller: _cityController,
-                      //             hintText: ENTER_CITY_HINT,
-                      //             validator: (val) {
-                      //               if (val!.isEmpty) {
-                      //                 return 'Enter your city';
-                      //               }
-                      //               return null;
-                      //             },
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     SizedBox(width: 10),
-                      //     Expanded(
-                      //       child: Column(
-                      //         children: [
-                      //           labelWithTopPadding(STATE_LABEL),
-                      //           CommonSimpleTextfield(
-                      //             controller: _stateController,
-                      //             hintText: ENTER_STATE_HINT,
-                      //             validator: (val) {
-                      //               if (val!.isEmpty) {
-                      //                 return 'Enter your state';
-                      //               }
-                      //               return null;
-                      //             },
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      // labelWithTopPadding(ZIPCODE_LABEL),
-                      // CommonSimpleTextfield(
-                      //   controller: _zipCodeController,
-                      //   maxLength: 5,
-                      //   hintText: ENTER_ZIP_CODE_HINT,
-                      //   validator: (val) {
-                      //     if (val!.isEmpty && val.length < 5) {
-                      //       return 'Enter your zip code';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                     ],
                   ),
                 ),
@@ -389,6 +343,27 @@ class _VolunteerProjectTaskSignUpState
           ],
         ),
       ),
+    );
+  }
+
+  Widget countryCodePicker() {
+    return CountryCodePicker(
+      onChanged: (CountryCode code) => countryCode = code,
+      boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      initialSelection: countryCode!.code,
+      backgroundColor: WHITE,
+      showCountryOnly: false,
+      dialogSize: Size(width, height - 30),
+      showFlagMain: true,
+      dialogTextStyle: Theme.of(context).textTheme.bodyText2,
+      flagWidth: 25.0,
+      showOnlyCountryWhenClosed: false,
+      showFlag: false,
+      showFlagDialog: true,
+      favorite: ['+1', 'US'],
+      textStyle: Theme.of(context).textTheme.bodyText2,
+      closeIcon: Icon(Icons.close_rounded),
+      searchDecoration: inputRoundedDecoration(getHint: SEARCH_COUNTRY_HINT),
     );
   }
 

@@ -25,7 +25,14 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)),
       );
 
-  List<String> getMonths(int year) {
+  String durationToHHMM({required Duration duration}) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitHours = twoDigits(duration.inHours.remainder(60));
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    return '$twoDigitHours:$twoDigitMinutes';
+  }
+
+  List<String> getMonthsFromYear(int year) {
     final List<String> months = [];
     final DateFormat formatter = DateFormat('MMM');
     final DateTime date = DateTime(year);
@@ -38,16 +45,16 @@ class DateFormatFromTimeStamp {
     return months;
   }
 
-  List<String> getYear() {
-    final List<String> months = [];
+  List<String> getYears() {
+    final List<String> years = [];
     final DateFormat formatter = DateFormat('yyyy');
     final DateTime date = DateTime.now();
 
     for (int i = 0; i < 6; i++) {
       DateTime year = DateTime(date.year - i);
       String yearYYYY = formatter.format(year);
-      months.add(yearYYYY);
+      years.add(yearYYYY);
     }
-    return months;
+    return years;
   }
 }

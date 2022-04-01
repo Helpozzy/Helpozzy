@@ -308,7 +308,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
 
   Widget selectGradeDropDown() {
     return DropdownButtonFormField<String>(
-      icon: Icon(Icons.expand_more_outlined),
+      icon: Icon(Icons.expand_more_rounded),
       decoration: inputRoundedDecoration(
         getHint: SELECT_GRADE_HINT,
         isDropDown: true,

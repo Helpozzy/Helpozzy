@@ -65,11 +65,11 @@ late SharedPreferences prefsObject;
 
 //Enum
 enum ProjectTabType {
+  PROJECT_OPEN_TAB,
+  PROJECT_UPCOMING_TAB,
   MY_PROJECTS_TAB,
   OWN_TAB,
   MY_ENROLLED_TAB,
-  PROJECT_UPCOMING_TAB,
-  PROJECT_INPROGRESS_TAB,
   PROJECT_COMPLETED_TAB,
   PROJECT_CONTRIBUTION_TRACKER_TAB,
 }
@@ -135,6 +135,8 @@ const SELECT_CATEGORY_HINT = 'Select Category';
 const FILTERS_HINT = 'Filters';
 const SORT_BY_HINT = 'Sort by';
 const FAVORITE_HINT = 'Favorite';
+const SELECT_YEAR_HINT = 'Select Year';
+const SELECT_MONTH_HINT = 'Select Month';
 
 //Helpozzy Text
 const HELPOZZY_REMAINING_TEXT = 'elpozzy';
@@ -184,6 +186,7 @@ const ENTER_TARGET_HOURS_HINT = 'Enter target hours';
 const ENTER_PASSWORD_HINT = 'Enter password';
 const ENTER_CONFIRM_PASSWORD_HINT = 'Enter confirm password';
 const SEARCH_COUNTRY_HINT = 'Search Here';
+const ENTER_COMMENT_HINT = 'Comment';
 
 //Prefs Keys
 const CURRENT_USER_ID = 'uID';
@@ -435,14 +438,13 @@ const SERVICE_ACCOMPLISHMENTS_LABEL = 'Service Accomplishments';
 const SERVICE_DETAILS_LABEL = 'Service Detail';
 const CHART_HOURS_LABEL = 'Hours';
 const CHART_MONTHS_LABEL = 'Months';
-const CHART_YEARS_LABEL = 'Years';
 
 // Project Tab
 const MY_PROJECTS_TAB = 'My Projects';
 const OWN_TAB = 'Own';
 const ENROLLED_TAB = 'Enrolled';
 const PROJECT_UPCOMING_TAB = 'Upcoming';
-const PROJECT_INPROGRESS_TAB = 'In-Progress';
+const PROJECT_OPEN_TAB = 'Open';
 const PROJECT_COMPLETED_TAB = 'Completed';
 const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
@@ -464,13 +466,13 @@ const OTHER_7 = 'Other';
 
 //Reorts
 const MONTHLY_REPORTS_LABEL = 'Volunteer Activity Reports';
+const ANALYSIS_LABEL = 'Analysis';
 const UNFOLD_REPORT = 'Unfold Report ';
 const MONTHY_HOURS = 'Monthly Hours';
 const PROJECT_HOURS_LABEL = 'Project Hours';
 const PROJECTS_LABEL = 'Projects : ';
 const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
 const SERVICE_RECORDS = 'Service records';
-const PVSA_CHART = 'PVSA Chart';
 
 //Project sign up
 const VOLUNTEER_EMAIL_LABEL = 'Volunteer Email';
@@ -486,12 +488,13 @@ const PROJECT_SIGNUP_APPBAR = 'Project Sign-up';
 const TASK_SIGNUP_APPBAR = 'Task Sign-up';
 const EDIT_PROFILE_APPBAR = 'Edit Profile';
 const TASK_DETAILS_APPBAR = 'Task Detail';
+const PVSA_CHART_APPBAR = "President's Volunteer Service Award Chart";
 
 //Details Tab
 const COLUMN_ONE = 'Age\nGroup\n(Yrs old)';
 const COLUMN_TWO = 'Kids\n(5-10)';
 const COLUMN_THREE = 'Teens\n(11-15)';
-const COLUMN_FOUR = 'Young\nAdult\n(16–25)';
+const COLUMN_FOUR = 'Youngs\nAdult\n(16–25)';
 const COLUMN_FIVE = 'Adults\n(26+)';
 const TOP_REWARD_DETAILS =
     'Star Points required to Earn Reward Badges in each Age Group';
@@ -640,6 +643,21 @@ List<String> gradeLevels = [
   'College',
 ];
 
+List<String> months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 List<MenuModel> dashBoardMenuList = [
   MenuModel(
     id: 0,
@@ -707,28 +725,65 @@ List<CategoryModel> categoriesList = [
 ];
 
 Map<String, dynamic> rewardsList = {
+  'Age\nGroup\n(Yrs old)': {
+    'asset': '',
+    'points': [
+      {
+        'title': 'Kids',
+        'rating': 0,
+        'points': 0,
+        'to': 5,
+        'from': 10,
+      },
+      {
+        'title': 'Teens',
+        'rating': 0,
+        'points': 0,
+        'to': 11,
+        'from': 15,
+      },
+      {
+        'title': 'Youngs',
+        'rating': 0,
+        'points': 0,
+        'to': 16,
+        'from': 25,
+      },
+      {
+        'title': 'Adults',
+        'rating': 0,
+        'points': 0,
+        'to': 26,
+        'from': 26,
+      },
+    ],
+  },
   'Beginner': {
     'asset': 'assets/images/medal_beginer.png',
     'points': [
       {
         'rating': 10,
         'points': 10,
-        'hrs': '1-25\nhrs',
+        'to': 1,
+        'from': 25,
       },
       {
         'rating': 10,
         'points': 10,
-        'hrs': '1-49\nhrs',
+        'to': 1,
+        'from': 49,
       },
       {
         'rating': 10,
         'points': 10,
-        'hrs': '1-99\nhrs',
+        'to': 1,
+        'from': 99,
       },
       {
         'rating': 10,
         'points': 10,
-        'hrs': '1-99\nhrs',
+        'to': 1,
+        'from': 99,
       },
     ],
   },
@@ -738,22 +793,26 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 50,
         'points': 50,
-        'hrs': '26-49\nhrs',
+        'to': 26,
+        'from': 49,
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '50-74\nhrs',
+        'to': 50,
+        'from': 74,
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '100-174\nhrs',
+        'to': 100,
+        'from': 174,
       },
       {
         'rating': 50,
         'points': 50,
-        'hrs': '100-249\nhrs',
+        'to': 100,
+        'from': 249,
       },
     ],
   },
@@ -763,22 +822,26 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 100,
         'points': 100,
-        'hrs': '50-74\nhrs',
+        'to': 50,
+        'from': 74,
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '75-99\nhrs',
+        'to': 75,
+        'from': 99,
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '175-249\nhrs',
+        'to': 175,
+        'from': 249,
       },
       {
         'rating': 100,
         'points': 100,
-        'hrs': '250-499\nhrs',
+        'to': 250,
+        'from': 499,
       },
     ],
   },
@@ -788,22 +851,26 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 150,
         'points': 150,
-        'hrs': '75+\nhrs',
+        'to': 75,
+        'from': 75,
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '100+\nhrs',
+        'to': 100,
+        'from': 100,
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '250+\nhrs',
+        'to': 250,
+        'from': 250,
       },
       {
         'rating': 150,
         'points': 150,
-        'hrs': '500+\nhrs',
+        'to': 500,
+        'from': 500,
       },
     ],
   },
@@ -813,22 +880,26 @@ Map<String, dynamic> rewardsList = {
       {
         'rating': 200,
         'points': 200,
-        'hrs': '4,000+\nhrs',
+        'to': 4000,
+        'from': 4000,
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '4,000+\nhrs',
+        'to': 4000,
+        'from': 4000,
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '4,000+\nhrs',
+        'to': 4000,
+        'from': 4000,
       },
       {
         'rating': 200,
         'points': 200,
-        'hrs': '4,000+\nhrs',
+        'to': 4000,
+        'from': 4000,
       },
     ],
   },

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -27,7 +28,11 @@ class _TaskTabState extends State<TaskTab> {
   late bool myTaskExpanded = false;
   late bool allTasksExpanded = false;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final TextEditingController _commentController = TextEditingController();
+  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
+      DateFormatFromTimeStamp();
   final TaskBloc _taskBloc = TaskBloc();
+  late Duration initialTime = Duration.zero;
 
   @override
   Widget build(BuildContext context) {
@@ -187,11 +192,42 @@ class _TaskTabState extends State<TaskTab> {
                                           isMyTask: isMyTask,
                                           task: task)
                                       : task.status == TOGGLE_COMPLETE
-                                          ? SmallCommonButton(
-                                              text: LOG_HOURS_BUTTON,
-                                              buttonColor: BUTTON_GRAY_COLOR,
-                                              fontSize: 12,
-                                              onPressed: () {},
+                                          ? Column(
+                                              children: [
+                                                CommonRoundedTextfield(
+                                                  controller:
+                                                      _commentController,
+                                                  hintText: ENTER_COMMENT_HINT,
+                                                  fillColor: GRAY,
+                                                  prefixIcon: TextButton(
+                                                    onPressed: () =>
+                                                        showPickerModalBottomSheet(),
+                                                    child: Text(
+                                                      _dateFormatFromTimeStamp
+                                                          .durationToHHMM(
+                                                              duration:
+                                                                  initialTime),
+                                                      style: _theme
+                                                          .textTheme.bodyText2!
+                                                          .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: PRIMARY_COLOR,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  validator: (val) => null,
+                                                ),
+                                                SizedBox(height: 6),
+                                                SmallCommonButton(
+                                                  text: LOG_HOURS_BUTTON,
+                                                  buttonColor:
+                                                      BUTTON_GRAY_COLOR,
+                                                  fontSize: 12,
+                                                  onPressed: () {},
+                                                ),
+                                              ],
                                             )
                                           : SizedBox()
                               : task.taskOwnerId !=
@@ -249,6 +285,36 @@ class _TaskTabState extends State<TaskTab> {
     );
   }
 
+  Future showPickerModalBottomSheet() async {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(20.0),
+          topRight: const Radius.circular(20.0),
+        ),
+      ),
+      isScrollControlled: true,
+      builder: (builder) {
+        return cupertinoTimePicker();
+      },
+    );
+  }
+
+  Widget cupertinoTimePicker() {
+    return Container(
+      height: height / 3,
+      child: CupertinoTimerPicker(
+        mode: CupertinoTimerPickerMode.hm,
+        minuteInterval: 1,
+        initialTimerDuration: initialTime,
+        onTimerDurationChanged: (Duration changedtimer) {
+          setState(() => initialTime = changedtimer);
+        },
+      ),
+    );
+  }
+
   Widget processButton({
     required bool taskIsInProgress,
     required bool isMyTask,
@@ -275,6 +341,7 @@ class _TaskTabState extends State<TaskTab> {
                 endDate: task.endDate,
                 estimatedHrs: task.estimatedHrs,
                 totalVolunteerHrs: task.totalVolunteerHrs,
+                isApprovedFromAdmin: task.isApprovedFromAdmin,
                 status: TOGGLE_COMPLETE,
               );
               final ResponseModel response =
@@ -316,6 +383,7 @@ class _TaskTabState extends State<TaskTab> {
                     endDate: task.endDate,
                     estimatedHrs: task.estimatedHrs,
                     totalVolunteerHrs: task.totalVolunteerHrs,
+                    isApprovedFromAdmin: task.isApprovedFromAdmin,
                     status: TOGGLE_INPROGRESS,
                   );
                   final ResponseModel response =

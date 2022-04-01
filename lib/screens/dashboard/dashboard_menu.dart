@@ -127,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           Text(
-            '50',
+            user.totalSpentHrs.toString(),
             style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: width * 0.08,
                 color: BLACK,
@@ -172,7 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
         final SignUpAndUserModel user = snapshot.data!;
         if (user.currentYearTargetHours != null) {
-          _processIndex = 50;
+          _processIndex = user.totalSpentHrs!;
           List<int> items =
               List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
                   .take((user.currentYearTargetHours! / 23).round())
@@ -246,9 +246,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     connectorBuilder: (ctx, index, type) {
                       if (items[index] > 0) {
                         if (items[index] == _processIndex) {
-                          final color = getColor(items[index]);
                           return DecoratedLineConnector(
-                            decoration: BoxDecoration(color: color),
+                            decoration: BoxDecoration(
+                              color: getColor(items[index]),
+                            ),
                           );
                         } else {
                           return SolidLineConnector(

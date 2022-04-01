@@ -30,12 +30,15 @@ class RewardsDetailsModel {
 
 class PointsModel {
   PointsModel.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
     rating = json['rating'];
     points = json['points'];
-    hrs = json['hrs'];
+    to = json['to'];
+    from = json['from'];
   }
-
+  late String? title;
   late int rating;
   late int points;
-  late String hrs;
+  late int to;
+  late int from;
 }

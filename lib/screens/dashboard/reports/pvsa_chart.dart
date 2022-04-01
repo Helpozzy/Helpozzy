@@ -15,7 +15,8 @@ class _PVSAChartState extends State<PVSAChart> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: WHITE,
-      appBar: CommonAppBar(context).show(title: PVSA_CHART),
+      appBar:
+          CommonAppBar(context).show(title: PVSA_CHART_APPBAR, fontSize: 14),
       body: DetailsTabScreen(),
     );
   }

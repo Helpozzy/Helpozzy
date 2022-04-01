@@ -31,9 +31,7 @@ class _TasksScreenState extends State<TasksScreen> {
       backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
         title: TASKS_APPBAR,
-        onBack: () {
-          Navigator.pop(context);
-        },
+        onBack: () => Navigator.pop(context),
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context, selectedItems),

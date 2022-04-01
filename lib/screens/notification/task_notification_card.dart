@@ -14,7 +14,7 @@ class NotificationTile extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
-        vertical: width * 0.02,
+        vertical: width * 0.01,
         horizontal: width * 0.04,
       ),
       title: Row(

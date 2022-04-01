@@ -14,16 +14,18 @@ import 'project_tabs/tasks_tab.dart';
 import 'volunteer_sign_up.dart';
 
 class ProjectDetailsInfo extends StatefulWidget {
-  ProjectDetailsInfo({required this.project});
+  ProjectDetailsInfo({required this.project, this.projectTabType});
   final ProjectModel project;
+  final ProjectTabType? projectTabType;
   @override
-  _ProjectDetailsInfoState createState() =>
-      _ProjectDetailsInfoState(project: project);
+  _ProjectDetailsInfoState createState() => _ProjectDetailsInfoState(
+      project: project, projectTabType: projectTabType);
 }
 
 class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     with TickerProviderStateMixin {
-  _ProjectDetailsInfoState({required this.project});
+  _ProjectDetailsInfoState({required this.project, this.projectTabType});
+  final ProjectTabType? projectTabType;
   final ProjectModel project;
   late double height;
   late double width;
@@ -250,17 +252,21 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                   ? SizedBox()
                   : project.status == PROJECT_COMPLETED
                       ? SizedBox()
-                      : SmallCommonButton(
-                          fontSize: 10,
-                          text: SIGN_UP,
-                          onPressed: () => Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) =>
-                                  VolunteerProjectTaskSignUp(project: project),
+                      : projectTabType == ProjectTabType.OWN_TAB ||
+                              projectTabType == ProjectTabType.MY_ENROLLED_TAB
+                          ? SizedBox()
+                          : SmallCommonButton(
+                              fontSize: 10,
+                              text: SIGN_UP,
+                              onPressed: () => Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      VolunteerProjectTaskSignUp(
+                                          project: project),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
         ],
       ),
     );

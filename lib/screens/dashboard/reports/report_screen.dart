@@ -20,59 +20,36 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late ThemeData _theme;
   late double height;
   late double width;
-  late String yAxisLabel = CHART_YEARS_LABEL;
   late List<ReportsDataModel> data = [];
   final ProjectsBloc _projectsBloc = ProjectsBloc();
-  late bool yearIsLoaded = false;
-  late bool monthIsLoaded = false;
-  late bool projectIsLoaded = false;
+  final DateFormatFromTimeStamp _dateFromTimeStamp = DateFormatFromTimeStamp();
+  final TextEditingController _yearController = TextEditingController();
+  final TextEditingController _monthController = TextEditingController();
 
   @override
   void initState() {
-    loadYear();
+    loadMonth(DateTime.now().year.toString());
     super.initState();
   }
 
-  Future loadYear() async {
-    yearIsLoaded = true;
-    monthIsLoaded = false;
-    projectIsLoaded = false;
-    yAxisLabel = CHART_YEARS_LABEL;
-    final List<ProjectModel> projects = await _projectsBloc.getProjects();
-    final ProjectReportHelper projectReportHelper =
-        ProjectReportHelper.fromProjects(projects);
-    data = projectReportHelper.chartDetailsList;
-
-    setState(() {});
-  }
-
   Future loadMonth(String year) async {
-    yearIsLoaded = true;
-    monthIsLoaded = true;
-    projectIsLoaded = false;
-    yAxisLabel = CHART_MONTHS_LABEL;
     final List<ProjectModel> projects = await _projectsBloc.getProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList
         .where((element) => element.year == year)
         .toList();
-
     setState(() {});
   }
 
   Future loadProject(String year, String month) async {
-    yearIsLoaded = false;
-    monthIsLoaded = true;
-    projectIsLoaded = true;
-    yAxisLabel = CHART_MONTHS_LABEL;
     final List<ProjectModel> projects = await _projectsBloc.getProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList
-        .where((element) => element.year == year && element.month == month)
+        .where((element) =>
+            element.year == year && element.month == month.substring(0, 3))
         .toList();
-
     setState(() {});
   }
 
@@ -86,8 +63,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            reportView(),
-            SizedBox(height: width * 0.05),
             ListDividerLabel(label: SERVICE_ACCOMPLISHMENTS_LABEL),
             ListTile(
               title: Text(SERVICE_DETAILS_LABEL),
@@ -102,11 +77,92 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ),
             ),
+            ListDividerLabel(label: ANALYSIS_LABEL),
+            filterDropDown(),
+            reportView(),
+            SizedBox(height: width * 0.05),
             ListDividerLabel(label: MONTHLY_REPORTS_LABEL),
-            monthlyReportList(),
+            reportList(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget filterDropDown() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(width * 0.05, width * 0.03, width * 0.05, 0),
+      child: Row(
+        children: [
+          Expanded(child: selectYearDropDown()),
+          SizedBox(width: 15),
+          Expanded(child: selectMonthDropDown())
+        ],
+      ),
+    );
+  }
+
+  Widget selectYearDropDown() {
+    return DropdownButtonFormField<String>(
+      icon: Icon(Icons.expand_more_rounded),
+      decoration: InputDecoration(
+        hintText: SELECT_YEAR_HINT,
+        hintStyle: TextStyle(color: DARK_GRAY),
+        filled: true,
+        focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+      ),
+      isExpanded: true,
+      onChanged: (String? newValue) async {
+        setState(() => _yearController.text = newValue!);
+        await loadMonth(newValue!);
+      },
+      validator: (val) => null,
+      items: _dateFromTimeStamp
+          .getYears()
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            textAlign: TextAlign.center,
+            style: _theme.textTheme.bodyText2,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget selectMonthDropDown() {
+    return DropdownButtonFormField<String>(
+      icon: Icon(Icons.expand_more_rounded),
+      decoration: InputDecoration(
+        hintText: SELECT_MONTH_HINT,
+        hintStyle: TextStyle(color: DARK_GRAY),
+        filled: true,
+        focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+      ),
+      isExpanded: true,
+      onChanged: (String? newValue) async {
+        setState(() => _monthController.text = newValue!);
+        await loadProject(_yearController.text, newValue!);
+      },
+      validator: (val) => null,
+      items: months.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            textAlign: TextAlign.center,
+            style: _theme.textTheme.bodyText2,
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -124,29 +180,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 right: 8.0,
               ),
               child: Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: EdgeInsets.only(top: 16.0),
                 child: BarChart(
                   BarChartData(
                     alignment: BarChartAlignment.center,
-                    barTouchData: BarTouchData(
-                      enabled: true,
-                      touchCallback: (touchEvent, response) async {
-                        if (yearIsLoaded &&
-                            !monthIsLoaded &&
-                            !projectIsLoaded) {
-                          await loadMonth('2022');
-                        } else if (yearIsLoaded &&
-                            monthIsLoaded &&
-                            projectIsLoaded) {
-                          await loadProject('2022', 'Feb');
-                        }
-                      },
-                    ),
+                    barTouchData: BarTouchData(enabled: true),
                     titlesData: FlTitlesData(
                       show: true,
                       bottomTitles: SideTitles(
                         showTitles: true,
-                        getTextStyles: (context, value) => const TextStyle(
+                        getTextStyles: (context, value) => TextStyle(
                           color: NORMAL_BAR_COLOR,
                           fontSize: 10,
                         ),
@@ -155,7 +198,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       leftTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 40,
-                        getTextStyles: (context, value) => const TextStyle(
+                        getTextStyles: (context, value) => TextStyle(
                           color: NORMAL_BAR_COLOR,
                           fontSize: 10,
                         ),
@@ -201,7 +244,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                yAxisLabel,
+                CHART_MONTHS_LABEL,
                 textAlign: TextAlign.center,
                 style: _theme.textTheme.bodyText2!
                     .copyWith(fontWeight: FontWeight.w600),
@@ -215,9 +258,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   List<BarChartGroupData> getData() {
     return data.map((e) {
-      final yVal = double.parse(e.projectsCounter!.toString());
+      final yVal = double.parse(e.hrs!.toString());
       return BarChartGroupData(
-        x: e.projectsCounter!,
+        x: e.hrs!,
         barRods: [
           BarChartRodData(
             toY: yVal,
@@ -225,7 +268,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             rodStackItems: [
               BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
               BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
-              // BarChartRodStackItem(yVal / 2, yVal / 1, LIGHT_BAR_COLOR),
             ],
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(3),
@@ -237,109 +279,113 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }).toList();
   }
 
-  Widget monthlyReportList() {
+  Widget reportList() {
     Reports reports = Reports.fromList(list: data);
-    return ListView.separated(
-      shrinkWrap: true,
-      separatorBuilder: (context, index) => CommonDivider(),
-      physics: ScrollPhysics(),
-      itemCount: reports.reports.length,
-      itemBuilder: (context, index) {
-        ReportsDataModel report = reports.reports[index];
-        if (monthIsLoaded && projectIsLoaded) {
-          final ProjectModel project = report.projectsList![index];
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProjectDetailsInfo(project: project),
+    return reports.reportList.isNotEmpty
+        ? ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => CommonDivider(),
+            physics: ScrollPhysics(),
+            itemCount: reports.reportList.length,
+            itemBuilder: (context, index) {
+              ReportsDataModel report = reports.reportList[index];
+              final ProjectModel project = report.project!;
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProjectDetailsInfo(project: project),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: width * 0.05,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            project.projectName!,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              color: BLUE_GRAY,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            project.organization != null &&
+                                    project.organization!.isNotEmpty
+                                ? project.organization!
+                                : project.categoryId == 0
+                                    ? VOLUNTEER_0
+                                    : project.categoryId == 1
+                                        ? FOOD_BANK_1
+                                        : project.categoryId == 2
+                                            ? TEACHING_2
+                                            : project.categoryId == 3
+                                                ? HOMELESS_SHELTER_3
+                                                : project.categoryId == 4
+                                                    ? ANIMAL_CARE_4
+                                                    : project.categoryId == 5
+                                                        ? SENIOR_CENTER_5
+                                                        : project.categoryId ==
+                                                                6
+                                                            ? CHILDREN_AND_YOUTH_6
+                                                            : OTHER_7,
+                            style: _theme.textTheme.bodyText2!
+                                .copyWith(color: DARK_GRAY),
+                          ),
+                          Text(
+                            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                                timeStamp: project.startDate!),
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              color: DARK_BLUE,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          CommonDivider(),
+                        ],
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 16,
+                      )
+                    ],
+                  ),
                 ),
               );
             },
+          )
+        : Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: width * 0.05,
-              ),
-              child: Row(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        project.projectName!,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          color: BLUE_GRAY,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        project.organization != null &&
-                                project.organization!.isNotEmpty
-                            ? project.organization!
-                            : project.categoryId == 0
-                                ? VOLUNTEER_0
-                                : project.categoryId == 1
-                                    ? FOOD_BANK_1
-                                    : project.categoryId == 2
-                                        ? TEACHING_2
-                                        : project.categoryId == 3
-                                            ? HOMELESS_SHELTER_3
-                                            : project.categoryId == 4
-                                                ? ANIMAL_CARE_4
-                                                : project.categoryId == 5
-                                                    ? SENIOR_CENTER_5
-                                                    : project.categoryId == 6
-                                                        ? CHILDREN_AND_YOUTH_6
-                                                        : OTHER_7,
-                        style: _theme.textTheme.bodyText2!
-                            .copyWith(color: DARK_GRAY),
-                      ),
-                      Text(
-                        DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                            timeStamp: project.startDate!),
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          color: DARK_BLUE,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      CommonDivider(),
-                    ],
+                  Text(
+                    NO_ACTIVITIES_FOUNDS,
+                    style: _theme.textTheme.headline5!.copyWith(
+                        color: DARK_GRAY, fontWeight: FontWeight.bold),
                   ),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                  )
+                  SizedBox(height: 8),
+                  Text(
+                    PLEASE_VISIT_OTHER,
+                    textAlign: TextAlign.center,
+                    style:
+                        _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
+                  ),
                 ],
               ),
             ),
           );
-        }
-        return Padding(
-          padding:
-              EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                monthIsLoaded ? report.month! : report.year!,
-                style: _theme.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.w600),
-              ),
-              Text(
-                PROJECTS_LABEL + report.projectsCounter.toString(),
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: DARK_GRAY,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

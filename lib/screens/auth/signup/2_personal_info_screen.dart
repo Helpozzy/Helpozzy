@@ -106,11 +106,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   child: CommonRoundedTextfield(
                     controller: _firstNameController,
                     hintText: ENTER_FIRST_NAME_HINT,
-                    validator: (fname) {
-                      if (fname!.isEmpty) {
+                    validator: (firstName) {
+                      if (firstName!.isEmpty) {
                         return 'Please enter first name';
-                      } else if (fname.isNotEmpty && fname.length <= 3) {
-                        return 'Please enter more than 3 charcters';
                       }
                       return null;
                     },
@@ -127,11 +125,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   child: CommonRoundedTextfield(
                     controller: _lastNameController,
                     hintText: ENTER_LAST_NAME_HINT,
-                    validator: (lname) {
-                      if (lname!.isEmpty) {
+                    validator: (lastName) {
+                      if (lastName!.isEmpty) {
                         return 'Please enter last name';
-                      } else if (lname.isNotEmpty && lname.length <= 3) {
-                        return 'Please enter more than 3 charcters';
                       }
                       return null;
                     },
@@ -344,7 +340,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       child: DropdownButtonFormField<String>(
           decoration: inputRoundedDecoration(
               getHint: SELCT_GENDER_HINT, isDropDown: true),
-          icon: Icon(Icons.expand_more_outlined),
+          icon: Icon(Icons.expand_more_rounded),
           validator: (val) {
             if (_genderController.text.isEmpty) {
               return 'Select gender want to continue';

@@ -42,11 +42,24 @@ class TaskCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      DateFormatFromTimeStamp()
-                          .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
+                              timeStamp: task.startDate),
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                        ),
+                        Text(
+                          ESTIMATED_HRS + task.estimatedHrs.toString(),
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontSize: 8,
+                            color: PRIMARY_COLOR,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                     Text(
                       task.taskName,
@@ -56,40 +69,21 @@ class TaskCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    task.status == TOGGLE_COMPLETE
-                        ? SizedBox()
-                        : SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    SizedBox(height: 5),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              task.status == TOGGLE_COMPLETE
-                                  ? SizedBox()
-                                  : Text(
-                                      TASK_ARE_YOU_RUNNING_LATE,
-                                      style:
-                                          _theme.textTheme.bodyText2!.copyWith(
-                                        fontSize: 10,
-                                        color: BLUE_COLOR,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                              SizedBox(height: 2),
-                              Text(
-                                ESTIMATED_HRS + task.estimatedHrs.toString(),
+                        task.status == TOGGLE_COMPLETE
+                            ? SizedBox()
+                            : Text(
+                                TASK_ARE_YOU_RUNNING_LATE,
                                 style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 8,
-                                  color: PRIMARY_COLOR,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                  color: BLUE_COLOR,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        eventButton,
+                        Center(child: eventButton),
                         SizedBox(height: 8),
                       ],
                     ),

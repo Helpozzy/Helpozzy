@@ -333,7 +333,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   //     padding: EdgeInsets.symmetric(horizontal: width * 0.1),
   //     child: DropdownButtonFormField<StateModel>(
   //         hint: Text(states.isEmpty ? 'Loading..' : SELECT_STATE_HINT),
-  //         icon: Icon(Icons.expand_more_outlined),
+  //         icon: Icon(Icons.expand_more_rounded),
   //         decoration: inputRoundedDecoration(
   //             getHint: SELECT_STATE_HINT, isDropDown: true),
   //         isExpanded: true,

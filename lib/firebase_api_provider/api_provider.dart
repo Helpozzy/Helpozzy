@@ -177,7 +177,7 @@ class ApiProvider {
                     .where('owner_id',
                         isNotEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
                     .get()
-                : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+                : projectTabType == ProjectTabType.PROJECT_OPEN_TAB
                     ? await firestore
                         .collection('projects')
                         .where('status', isEqualTo: TOGGLE_INPROGRESS)
@@ -196,10 +196,12 @@ class ApiProvider {
                         : projectTabType ==
                                 ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                             ? await firestore
-                                .collection('projects')
-                                .where('owner_id',
+                                .collection('signed_up_projects')
+                                .where('signup_uid',
                                     isNotEqualTo:
                                         prefsObject.getString(CURRENT_USER_ID)!)
+                                .where('is_approved_from_admin',
+                                    isEqualTo: true)
                                 .get()
                             : await firestore.collection('projects').get();
 

@@ -553,7 +553,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         TextfieldLabelSmall(label: PROJECT_CATEGORY_LABEL),
         DropdownButtonFormField<CategoryModel>(
           decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
-          icon: Icon(Icons.expand_more_outlined),
+          icon: Icon(Icons.expand_more_rounded),
           validator: (val) {
             if (val != null && _projCategoryController.text.isEmpty) {
               return 'Select any category';

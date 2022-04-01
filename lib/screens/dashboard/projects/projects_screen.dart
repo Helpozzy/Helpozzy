@@ -87,7 +87,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                             : _tabController.index == 1
                                 ? ProjectTabType.PROJECT_UPCOMING_TAB
                                 : _tabController.index == 2
-                                    ? ProjectTabType.PROJECT_INPROGRESS_TAB
+                                    ? ProjectTabType.PROJECT_OPEN_TAB
                                     : _tabController.index == 3
                                         ? ProjectTabType.PROJECT_COMPLETED_TAB
                                         : null,
@@ -109,9 +109,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         indicatorWeight: 2.5,
         isScrollable: true,
         tabs: [
-          _tab(MY_PROJECTS_TAB),
+          _tab(PROJECT_OPEN_TAB),
           _tab(PROJECT_UPCOMING_TAB),
-          _tab(PROJECT_INPROGRESS_TAB),
+          _tab(MY_PROJECTS_TAB),
           _tab(PROJECT_COMPLETED_TAB),
         ],
       );
@@ -133,15 +133,15 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            MyProjectTab(projectsBloc: _projectsBloc),
+            ProjectListScreen(
+              projectTabType: ProjectTabType.PROJECT_OPEN_TAB,
+              projectsBloc: _projectsBloc,
+            ),
             ProjectListScreen(
               projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
               projectsBloc: _projectsBloc,
             ),
-            ProjectListScreen(
-              projectTabType: ProjectTabType.PROJECT_INPROGRESS_TAB,
-              projectsBloc: _projectsBloc,
-            ),
+            MyProjectTab(projectsBloc: _projectsBloc),
             ProjectListScreen(
               projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
               projectsBloc: _projectsBloc,

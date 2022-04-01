@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
@@ -17,6 +19,10 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   late double height;
   late double width;
   final TaskBloc _taskBloc = TaskBloc();
+  late Duration initialTime = Duration.zero;
+  final TextEditingController _commentController = TextEditingController();
+  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
+      DateFormatFromTimeStamp();
 
   @override
   void initState() {
@@ -68,16 +74,42 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                 ? processButton(false, task)
                                 : task.status == TOGGLE_INPROGRESS
                                     ? processButton(true, task)
-                                    : SmallCommonButton(
-                                        text: LOG_HOURS_BUTTON,
-                                        buttonColor: BUTTON_GRAY_COLOR,
-                                        fontSize: 12,
-                                        onPressed: () async {
-                                          // final TaskModel taskmodel =
-                                          //     TaskModel();
-                                          // await _taskBloc
-                                          //     .updateEnrollTask(taskmodel);
-                                        },
+                                    : Column(
+                                        children: [
+                                          CommonRoundedTextfield(
+                                            controller: _commentController,
+                                            hintText: ENTER_COMMENT_HINT,
+                                            fillColor: GRAY,
+                                            prefixIcon: TextButton(
+                                              onPressed: () =>
+                                                  showPickerModalBottomSheet(),
+                                              child: Text(
+                                                _dateFormatFromTimeStamp
+                                                    .durationToHHMM(
+                                                        duration: initialTime),
+                                                style: _theme
+                                                    .textTheme.bodyText2!
+                                                    .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            validator: (val) => null,
+                                          ),
+                                          SizedBox(height: 6),
+                                          SmallCommonButton(
+                                            text: LOG_HOURS_BUTTON,
+                                            buttonColor: BUTTON_GRAY_COLOR,
+                                            fontSize: 12,
+                                            onPressed: () async {
+                                              // final TaskModel taskmodel =
+                                              //     TaskModel();
+                                              // await _taskBloc
+                                              //     .updateEnrollTask(taskmodel);
+                                            },
+                                          ),
+                                        ],
                                       ),
                             onTapItem: () async {
                               await Navigator.push(
@@ -123,6 +155,36 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
     );
   }
 
+  Future showPickerModalBottomSheet() async {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(20.0),
+          topRight: const Radius.circular(20.0),
+        ),
+      ),
+      isScrollControlled: true,
+      builder: (builder) {
+        return cupertinoTimePicker();
+      },
+    );
+  }
+
+  Widget cupertinoTimePicker() {
+    return Container(
+      height: height / 3,
+      child: CupertinoTimerPicker(
+        mode: CupertinoTimerPickerMode.hm,
+        minuteInterval: 1,
+        initialTimerDuration: initialTime,
+        onTimerDurationChanged: (Duration changedtimer) {
+          setState(() => initialTime = changedtimer);
+        },
+      ),
+    );
+  }
+
   Widget processButton(bool taskIsInProgress, TaskModel task) {
     return taskIsInProgress
         ? SmallCommonButton(
@@ -146,6 +208,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                 estimatedHrs: task.estimatedHrs,
                 status: task.status,
                 totalVolunteerHrs: task.totalVolunteerHrs,
+                isApprovedFromAdmin: task.isApprovedFromAdmin,
               );
               final ResponseModel response =
                   await _taskBloc.updateEnrollTask(enrolledTaskModel);
@@ -183,6 +246,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                     estimatedHrs: task.estimatedHrs,
                     status: task.status,
                     totalVolunteerHrs: task.totalVolunteerHrs,
+                    isApprovedFromAdmin: task.isApprovedFromAdmin,
                   );
                   final ResponseModel response =
                       await _taskBloc.updateEnrollTask(enrolledTaskModel);

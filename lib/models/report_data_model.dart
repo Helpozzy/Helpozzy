@@ -3,27 +3,27 @@ import 'package:helpozzy/models/project_model.dart';
 class Reports {
   Reports.fromList({required List<ReportsDataModel> list}) {
     list.forEach((element) {
-      reports.add(ReportsDataModel(
+      reportList.add(ReportsDataModel(
         month: element.month,
         year: element.year,
-        projectsCounter: element.projectsCounter,
-        projectsList: element.projectsList,
+        hrs: element.hrs,
+        project: element.project,
       ));
     });
   }
-  late List<ReportsDataModel> reports = [];
+  late List<ReportsDataModel> reportList = [];
 }
 
 class ReportsDataModel {
   ReportsDataModel({
-    this.projectsList,
+    this.project,
     this.year,
     this.month,
-    this.projectsCounter,
+    this.hrs,
   });
 
   late String? year;
   late String? month;
-  late int? projectsCounter = 0;
-  late List<ProjectModel>? projectsList = [];
+  late int? hrs = 0;
+  late ProjectModel? project;
 }

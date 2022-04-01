@@ -44,11 +44,11 @@ class AuthRepository {
           return AuthResponseModel(user: auth.user, success: true);
         } else {
           return AuthResponseModel(
-              success: false, error: "User not exist. Please retry.");
+              success: false, error: 'User not exist. Please retry.');
         }
       } else {
         return AuthResponseModel(
-            success: false, error: "Auth failed. Please retry.");
+            success: false, error: 'Auth failed. Please retry.');
       }
     } on FirebaseAuthException catch (e) {
       return AuthResponseModel(success: false, error: e.toString());
@@ -92,11 +92,11 @@ class AuthRepository {
         );
       } else {
         return AuthResponseModel(
-            success: false, error: "User not exist. Please retry.");
+            success: false, error: 'User not exist. Please retry.');
       }
     } else {
       return AuthResponseModel(
-          success: false, error: "Auth failed. Please retry.");
+          success: false, error: 'Auth failed. Please retry.');
     }
   }
 

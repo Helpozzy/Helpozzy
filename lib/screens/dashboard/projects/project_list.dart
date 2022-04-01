@@ -53,7 +53,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
             : ListDividerLabel(
                 label: projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
                     ? NEW_PROJECT_LABEL
-                    : projectTabType == ProjectTabType.PROJECT_INPROGRESS_TAB
+                    : projectTabType == ProjectTabType.PROJECT_OPEN_TAB
                         ? ONGOING_PROJECT_LABEL
                         : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                             ? RECENTLY_COMPLETED_LABEL
@@ -92,8 +92,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ProjectDetailsInfo(project: project))),
+                                builder: (context) => ProjectDetailsInfo(
+                                      project: project,
+                                      projectTabType: projectTabType,
+                                    ))),
                         child: ProjectTile(
                           projectTabType: projectTabType,
                           project: project,

@@ -902,7 +902,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ? _genderController.text
               : SELCT_GENDER_HINT,
         ),
-        icon: Icon(Icons.expand_more_outlined),
+        icon: Icon(Icons.expand_more_rounded),
         validator: (val) {
           if (val != null && _genderController.text.isNotEmpty) {
             return 'Select gender want to continue';
@@ -1030,7 +1030,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   //                   ? 'Loading..'
   //                   : SEARCH_STATE_NAME_HINT,
   //         ),
-  //         icon: Icon(Icons.expand_more_outlined),
+  //         icon: Icon(Icons.expand_more_rounded),
   //         decoration: inputSimpleDecoration(getHint: SEARCH_STATE_NAME_HINT),
   //         isExpanded: true,
   //         onChanged: (StateModel? newValue) async {
@@ -1072,7 +1072,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   //                     : cities.isEmpty
   //                         ? 'Loading..'
   //                         : SEARCH_CITY_NAME_HINT),
-  //                 icon: Icon(Icons.expand_more_outlined),
+  //                 icon: Icon(Icons.expand_more_rounded),
   //                 decoration:
   //                     inputSimpleDecoration(getHint: SEARCH_CITY_NAME_HINT),
   //                 isExpanded: true,
@@ -1105,7 +1105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget selectRelationshipDropdown() {
     return DropdownButtonFormField<String>(
-      icon: Icon(Icons.expand_more_outlined),
+      icon: Icon(Icons.expand_more_rounded),
       isExpanded: true,
       decoration: inputSimpleDecoration(
         getHint: _relationController.text.isNotEmpty
@@ -1179,7 +1179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             hint: Text(_gradeLevelController.text.isNotEmpty
                 ? _gradeLevelController.text
                 : GRADE_HINT),
-            icon: Icon(Icons.expand_more_outlined),
+            icon: Icon(Icons.expand_more_rounded),
             decoration: inputSimpleDecoration(getHint: GRADE_HINT),
             isExpanded: true,
             onChanged: (String? newValue) {

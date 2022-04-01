@@ -32,10 +32,11 @@ class SignUpAndUserModel {
     this.gradeLevel,
     this.areaOfInterests,
     this.currentYearTargetHours,
-    this.favorite,
-    this.pointGifted,
-    this.rating,
-    this.reviewsByPersons,
+    this.favorite = false,
+    this.pointGifted = 0,
+    this.totalSpentHrs = 0,
+    this.rating = 0.0,
+    this.reviewsByPersons = 0,
     this.joiningDate,
     this.isOrganization = false,
     this.organizationDetails,
@@ -75,6 +76,7 @@ class SignUpAndUserModel {
           );
     reviewsByPersons = json['review_by_persons'];
     pointGifted = json['point_gifted'];
+    totalSpentHrs = json['total_spent_hrs'];
     joiningDate = json['date_of_joining'];
     isOrganization = json['is_organization'];
     organizationDetails = json['organization_details'] != null
@@ -106,6 +108,7 @@ class SignUpAndUserModel {
       'date_of_joining': joiningDate,
       'rating': rating,
       'review_by_persons': reviewsByPersons,
+      'total_spent_hrs': totalSpentHrs,
       'point_gifted': pointGifted,
       'is_organization': isOrganization,
       'organization_details': organizationDetails != null
@@ -133,7 +136,8 @@ class SignUpAndUserModel {
   late String? gradeLevel;
   late List<int>? areaOfInterests = [];
   late int? currentYearTargetHours;
-  late bool? favorite = false;
+  late bool? favorite;
+  late int? totalSpentHrs;
   late int? pointGifted;
   late double? rating;
   late int? reviewsByPersons;

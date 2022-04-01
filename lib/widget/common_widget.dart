@@ -933,6 +933,7 @@ class CommonAppBar {
     required String title,
     Function()? onBack,
     List<Widget>? actions,
+    double? fontSize,
     double elevation = 0.0,
     PreferredSizeWidget? bottom,
     bool backButton = true,
@@ -945,7 +946,7 @@ class CommonAppBar {
         title,
         style: Theme.of(context).textTheme.bodyText2!.copyWith(
               color: DARK_PINK_COLOR,
-              fontSize: 16,
+              fontSize: fontSize ?? 16,
               fontWeight: FontWeight.w600,
             ),
       ),
