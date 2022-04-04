@@ -49,7 +49,9 @@ class TaskCard extends StatelessWidget {
                           DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
                               timeStamp: task.startDate),
                           style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 10, color: UNSELECTED_TAB_COLOR),
+                            fontSize: 10,
+                            color: UNSELECTED_TAB_COLOR,
+                          ),
                         ),
                         Text(
                           ESTIMATED_HRS + task.estimatedHrs.toString(),
@@ -70,34 +72,43 @@ class TaskCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 5),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        task.status == TOGGLE_COMPLETE
-                            ? SizedBox()
-                            : Text(
-                                TASK_ARE_YOU_RUNNING_LATE,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 10,
-                                  color: BLUE_COLOR,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                        Center(child: eventButton),
-                        SizedBox(height: 8),
-                      ],
-                    ),
+                    task.status == LOG_HRS
+                        ? Text(
+                            COMPLETED_BUTTON.toUpperCase(),
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: BLUE_COLOR,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : SizedBox(),
+                    task.status == TOGGLE_COMPLETE || task.status == LOG_HRS
+                        ? SizedBox()
+                        : Text(
+                            TASK_ARE_YOU_RUNNING_LATE,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: BLUE_COLOR,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                    Center(child: eventButton),
+                    task.status == TOGGLE_COMPLETE
+                        ? SizedBox()
+                        : SizedBox(height: 8),
                   ],
                 ),
               ),
               optionEnable
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: DARK_GRAY,
-                      ),
-                      onPressed: onTapDelete,
-                    )
+                  ? task.taskOwnerId == prefsObject.getString(CURRENT_USER_ID)
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: DARK_GRAY,
+                          ),
+                          onPressed: onTapDelete,
+                        )
+                      : SizedBox()
                   : SizedBox(),
             ],
           ),

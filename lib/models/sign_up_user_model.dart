@@ -32,13 +32,13 @@ class SignUpAndUserModel {
     this.gradeLevel,
     this.areaOfInterests,
     this.currentYearTargetHours,
-    this.favorite = false,
-    this.pointGifted = 0,
-    this.totalSpentHrs = 0,
-    this.rating = 0.0,
-    this.reviewsByPersons = 0,
+    this.favorite,
+    this.pointGifted,
+    this.totalSpentHrs,
+    this.rating,
+    this.reviewsByPersons,
     this.joiningDate,
-    this.isOrganization = false,
+    this.isOrganization,
     this.organizationDetails,
   });
 
@@ -136,12 +136,12 @@ class SignUpAndUserModel {
   late String? gradeLevel;
   late List<int>? areaOfInterests = [];
   late int? currentYearTargetHours;
-  late bool? favorite;
-  late int? totalSpentHrs;
-  late int? pointGifted;
-  late double? rating;
-  late int? reviewsByPersons;
+  late bool? favorite = false;
+  late int? totalSpentHrs = 0;
+  late int? pointGifted = 0;
+  late double? rating = 0.0;
+  late int? reviewsByPersons = 0;
   late String? joiningDate;
   late OrganizationSignUpModel? organizationDetails;
-  late bool? isOrganization;
+  late bool? isOrganization = false;
 }

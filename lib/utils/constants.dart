@@ -80,6 +80,12 @@ enum SearchBottomSheetType {
   SCHOOL_BOTTOMSHEET,
 }
 
+enum TaskProgressType {
+  START,
+  COMPLETED,
+  LOG_HRS,
+}
+
 enum OrganizationTypes { LLC, PARTNERSHIP, CORP, SOLE_PROP }
 
 //Font family
@@ -388,6 +394,11 @@ const ENTER_MESSAGE_HINT = 'Enter Message';
 //Notification
 const NOTIFICATION_LABEL = 'Notifications';
 const NO_NOTIFICATIONS_FOUND = 'No new notifications';
+const FEEDBACK_LABEL = 'Feedback : ';
+const REQUESTED_HRS = 'Reuested Hrs : ';
+const HRS_LABEL = 'hrs';
+const MINS_LABEL = 'mins';
+const DASH_LABEL = ' - ';
 
 //Profile
 const CONTACT_TEXT = 'Contact';
@@ -608,6 +619,7 @@ const TASK_END_HINT = 'End Date';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 const SELECTED_HOURS_LABEL = 'Selected Hours';
 const ENTER_ESTIMATED_HOURS_HINT = 'Enter estimated hours';
+const LOG_HRS = 'Log Hrs';
 
 const NOT_STARTED_TASKS = 'Not Started Tasks';
 const COMPLETED_TASKS = 'Completed Tasks';

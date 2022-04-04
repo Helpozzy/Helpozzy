@@ -58,7 +58,9 @@ class _TasksScreenState extends State<TasksScreen> {
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.symmetric(
-              vertical: width * 0.04, horizontal: width * 0.05),
+            vertical: width * 0.04,
+            horizontal: width * 0.05,
+          ),
           itemCount: snapshot.data!.tasks.length,
           itemBuilder: (context, index) {
             final TaskModel task = snapshot.data!.tasks[index];
@@ -68,12 +70,8 @@ class _TasksScreenState extends State<TasksScreen> {
               optionEnable: true,
               eventButton: SizedBox(),
               onTapItem: () {
-                setState(() {
-                  task.isSelected = !task.isSelected!;
-                });
-                if (task.isSelected!) {
-                  selectedItems.add(task);
-                }
+                setState(() => task.isSelected = !task.isSelected!);
+                if (task.isSelected!) selectedItems.add(task);
               },
               onTapDelete: () async => await onDelete(task),
             );

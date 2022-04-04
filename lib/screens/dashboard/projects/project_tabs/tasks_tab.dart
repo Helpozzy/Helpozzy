@@ -194,30 +194,36 @@ class _TaskTabState extends State<TaskTab> {
                                       : task.status == TOGGLE_COMPLETE
                                           ? Column(
                                               children: [
-                                                CommonRoundedTextfield(
-                                                  controller:
-                                                      _commentController,
-                                                  hintText: ENTER_COMMENT_HINT,
-                                                  fillColor: GRAY,
-                                                  prefixIcon: TextButton(
-                                                    onPressed: () =>
-                                                        showPickerModalBottomSheet(),
-                                                    child: Text(
-                                                      _dateFormatFromTimeStamp
-                                                          .durationToHHMM(
-                                                              duration:
-                                                                  initialTime),
-                                                      style: _theme
-                                                          .textTheme.bodyText2!
-                                                          .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: PRIMARY_COLOR,
-                                                        fontSize: 16,
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 8.0,
+                                                    right: 8.0,
+                                                    bottom: 5.0,
+                                                  ),
+                                                  child: CommonSimpleTextfield(
+                                                    controller:
+                                                        _commentController,
+                                                    hintText:
+                                                        ENTER_COMMENT_HINT,
+                                                    prefixIcon: TextButton(
+                                                      onPressed: () =>
+                                                          showPickerModalBottomSheet(),
+                                                      child: Text(
+                                                        _dateFormatFromTimeStamp
+                                                            .durationToHHMM(
+                                                                duration:
+                                                                    initialTime),
+                                                        style: _theme.textTheme
+                                                            .bodyText2!
+                                                            .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                        ),
                                                       ),
                                                     ),
+                                                    validator: (val) => null,
                                                   ),
-                                                  validator: (val) => null,
                                                 ),
                                                 SizedBox(height: 6),
                                                 SmallCommonButton(

@@ -76,17 +76,17 @@ class _MembersScreenState extends State<MembersScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          selectShowOption(
-            buttonText: FILTERS_HINT,
-            icon: Icons.tune_rounded,
-            buttonColor: GRAY,
-            borderColor: PRIMARY_COLOR,
-            iconColor: PRIMARY_COLOR,
-            fontColor: PRIMARY_COLOR,
-            onPressed: () {},
-          ),
+          // selectShowOption(
+          //   buttonText: FILTERS_HINT,
+          //   icon: Icons.tune_rounded,
+          //   buttonColor: GRAY,
+          //   borderColor: PRIMARY_COLOR,
+          //   iconColor: PRIMARY_COLOR,
+          //   fontColor: PRIMARY_COLOR,
+          //   onPressed: () {},
+          // ),
           popupButton(),
           StreamBuilder<bool>(
               initialData: favVolunteers,
@@ -209,7 +209,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
   Widget memberItem({required SignUpAndUserModel volunteer}) {
     return Card(
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -275,9 +275,7 @@ class _MembersScreenState extends State<MembersScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    setState(() {
-                      volunteer.favorite = !volunteer.favorite!;
-                    });
+                    setState(() => volunteer.favorite = !volunteer.favorite!);
                   },
                   child: Icon(
                     volunteer.favorite!

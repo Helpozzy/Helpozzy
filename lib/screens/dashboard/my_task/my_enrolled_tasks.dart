@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/models/task_log_hrs_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
@@ -19,15 +24,91 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   late double height;
   late double width;
   final TaskBloc _taskBloc = TaskBloc();
+  final NotificationBloc _notificationBloc = NotificationBloc();
   late Duration initialTime = Duration.zero;
   final TextEditingController _commentController = TextEditingController();
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
+  late SignUpAndUserModel userModel;
 
   @override
   void initState() {
+    getUserData();
     _taskBloc.getEnrolledTasks();
     super.initState();
+  }
+
+  Future getUserData() async {
+    final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
+    final Map<String, dynamic> json =
+        jsonDecode(userData) as Map<String, dynamic>;
+    userModel = SignUpAndUserModel.fromJson(json: json);
+  }
+
+  Future updateTask(TaskModel task, TaskProgressType taskProgressType) async {
+    CircularLoader().show(context);
+    TaskModel enrolledTaskModel = TaskModel(
+      enrollTaskId: task.enrollTaskId,
+      taskOwnerId: task.taskOwnerId,
+      taskId: task.taskId,
+      signUpUserId: task.signUpUserId,
+      projectId: task.projectId,
+      taskName: task.taskName,
+      description: task.description,
+      memberRequirement: task.memberRequirement,
+      ageRestriction: task.ageRestriction,
+      qualification: task.qualification,
+      startDate: task.startDate,
+      endDate: task.endDate,
+      estimatedHrs: task.estimatedHrs,
+      status: taskProgressType == TaskProgressType.START
+          ? TOGGLE_INPROGRESS
+          : taskProgressType == TaskProgressType.COMPLETED
+              ? TOGGLE_COMPLETE
+              : taskProgressType == TaskProgressType.LOG_HRS
+                  ? LOG_HRS
+                  : task.status,
+      totalVolunteerHrs: task.totalVolunteerHrs,
+      isApprovedFromAdmin: task.isApprovedFromAdmin,
+    );
+    final ResponseModel response =
+        await _taskBloc.updateEnrollTask(enrolledTaskModel);
+    if (response.success!) {
+      CircularLoader().hide(context);
+      _taskBloc.getEnrolledTasks();
+      ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
+
+      if (taskProgressType == TaskProgressType.LOG_HRS) {
+        final TaskLogHrsModel logHrsModel = TaskLogHrsModel(
+          timeStamp: DateTime.now().millisecondsSinceEpoch,
+          hrs: initialTime.inMilliseconds,
+          comment: _commentController.text,
+          data: enrolledTaskModel.toJson(),
+        );
+        await ScaffoldSnakBar().show(context, msg: response.message!);
+        final NotificationModel notification = NotificationModel(
+          type: 2,
+          userFrom: prefsObject.getString(CURRENT_USER_ID),
+          userTo: task.taskOwnerId,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Log Task Hours Request',
+          payload: logHrsModel.toJson(),
+          subTitle:
+              "${userModel.name} want's to log hours of the ${task.taskName}",
+        );
+
+        final ResponseModel notificationResponse =
+            await _notificationBloc.postNotification(notification);
+        if (notificationResponse.success!) {
+          _taskBloc.getEnrolledTasks();
+        } else {
+          await ScaffoldSnakBar().show(context, msg: response.error!);
+          _taskBloc.getEnrolledTasks();
+        }
+      }
+    } else {
+      ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+    }
   }
 
   @override
@@ -70,47 +151,57 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                         Expanded(
                           child: TaskCard(
                             task: task,
-                            eventButton: task.status == TOGGLE_NOT_STARTED
-                                ? processButton(false, task)
-                                : task.status == TOGGLE_INPROGRESS
-                                    ? processButton(true, task)
-                                    : Column(
-                                        children: [
-                                          CommonRoundedTextfield(
-                                            controller: _commentController,
-                                            hintText: ENTER_COMMENT_HINT,
-                                            fillColor: GRAY,
-                                            prefixIcon: TextButton(
-                                              onPressed: () =>
-                                                  showPickerModalBottomSheet(),
-                                              child: Text(
-                                                _dateFormatFromTimeStamp
-                                                    .durationToHHMM(
-                                                        duration: initialTime),
-                                                style: _theme
-                                                    .textTheme.bodyText2!
-                                                    .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
+                            eventButton: task.status == LOG_HRS
+                                ? SizedBox()
+                                : task.status == TOGGLE_NOT_STARTED
+                                    ? processButton(false, task)
+                                    : task.status == TOGGLE_INPROGRESS
+                                        ? processButton(true, task)
+                                        : Column(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 8.0,
+                                                  right: 8.0,
+                                                  bottom: 5.0,
+                                                ),
+                                                child: CommonSimpleTextfield(
+                                                  controller:
+                                                      _commentController,
+                                                  hintText: ENTER_COMMENT_HINT,
+                                                  prefixIcon: TextButton(
+                                                    onPressed: () =>
+                                                        showPickerModalBottomSheet(),
+                                                    child: Text(
+                                                      _dateFormatFromTimeStamp
+                                                          .durationToHHMM(
+                                                              duration:
+                                                                  initialTime),
+                                                      style: _theme
+                                                          .textTheme.bodyText2!
+                                                          .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  validator: (val) => null,
                                                 ),
                                               ),
-                                            ),
-                                            validator: (val) => null,
+                                              SizedBox(height: 6),
+                                              SmallCommonButton(
+                                                text: LOG_HOURS_BUTTON,
+                                                buttonColor: BUTTON_GRAY_COLOR,
+                                                fontSize: 12,
+                                                onPressed: () async =>
+                                                    updateTask(
+                                                        task,
+                                                        TaskProgressType
+                                                            .LOG_HRS),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 6),
-                                          SmallCommonButton(
-                                            text: LOG_HOURS_BUTTON,
-                                            buttonColor: BUTTON_GRAY_COLOR,
-                                            fontSize: 12,
-                                            onPressed: () async {
-                                              // final TaskModel taskmodel =
-                                              //     TaskModel();
-                                              // await _taskBloc
-                                              //     .updateEnrollTask(taskmodel);
-                                            },
-                                          ),
-                                        ],
-                                      ),
                             onTapItem: () async {
                               await Navigator.push(
                                 context,
@@ -191,88 +282,31 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
             fontSize: 12,
             text: COMPLETED_BUTTON,
             buttonColor: DARK_PINK_COLOR,
-            onPressed: () async {
-              TaskModel enrolledTaskModel = TaskModel(
-                enrollTaskId: task.enrollTaskId,
-                taskOwnerId: task.taskOwnerId,
-                taskId: task.taskId,
-                signUpUserId: task.signUpUserId,
-                projectId: task.projectId,
-                taskName: task.taskName,
-                description: task.description,
-                memberRequirement: task.memberRequirement,
-                ageRestriction: task.ageRestriction,
-                qualification: task.qualification,
-                startDate: task.startDate,
-                endDate: task.endDate,
-                estimatedHrs: task.estimatedHrs,
-                status: task.status,
-                totalVolunteerHrs: task.totalVolunteerHrs,
-                isApprovedFromAdmin: task.isApprovedFromAdmin,
-              );
-              final ResponseModel response =
-                  await _taskBloc.updateEnrollTask(enrolledTaskModel);
-              if (response.success!) {
-                _taskBloc.getEnrolledTasks();
-                ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
-              } else {
-                ScaffoldSnakBar()
-                    .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-              }
-            },
+            onPressed: () async => updateTask(task, TaskProgressType.COMPLETED),
           )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SmallCommonButton(
-                fontSize: 12,
-                text: START_BUTTON,
-                buttonColor: GRAY,
-                fontColor: DARK_GRAY,
-                onPressed: () async {
-                  TaskModel enrolledTaskModel = TaskModel(
-                    enrollTaskId: task.enrollTaskId,
-                    taskId: task.taskId,
-                    taskOwnerId: task.taskOwnerId,
-                    signUpUserId: task.signUpUserId,
-                    projectId: task.projectId,
-                    taskName: task.taskName,
-                    description: task.description,
-                    memberRequirement: task.memberRequirement,
-                    ageRestriction: task.ageRestriction,
-                    qualification: task.qualification,
-                    startDate: task.startDate,
-                    endDate: task.endDate,
-                    estimatedHrs: task.estimatedHrs,
-                    status: task.status,
-                    totalVolunteerHrs: task.totalVolunteerHrs,
-                    isApprovedFromAdmin: task.isApprovedFromAdmin,
-                  );
-                  final ResponseModel response =
-                      await _taskBloc.updateEnrollTask(enrolledTaskModel);
-                  if (response.success!) {
-                    _taskBloc.getEnrolledTasks();
-                    ScaffoldSnakBar().show(
-                      context,
-                      msg: TASK_STARTED_POPUP_MSG,
-                    );
-                  } else {
-                    ScaffoldSnakBar().show(
-                      context,
-                      msg: TASK_NOT_UPDATED_POPUP_MSG,
-                    );
-                  }
-                },
-              ),
-              SizedBox(width: 7),
-              SmallCommonButton(
-                fontSize: 12,
-                fontColor: BLACK,
-                buttonColor: SILVER_GRAY,
-                text: DECLINE_BUTTON,
-                onPressed: () {},
-              ),
-            ],
+        : Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SmallCommonButton(
+                  fontSize: 12,
+                  text: START_BUTTON,
+                  buttonColor: GRAY,
+                  fontColor: DARK_GRAY,
+                  onPressed: () async =>
+                      await updateTask(task, TaskProgressType.START),
+                ),
+                SizedBox(width: 7),
+                SmallCommonButton(
+                  fontSize: 12,
+                  fontColor: BLACK,
+                  buttonColor: SILVER_GRAY,
+                  text: DECLINE_BUTTON,
+                  onPressed: () {},
+                ),
+              ],
+            ),
           );
   }
 }

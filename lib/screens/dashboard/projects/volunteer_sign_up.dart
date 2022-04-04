@@ -65,9 +65,6 @@ class _VolunteerProjectTaskSignUpState
     _nameController.text = userModel.name!;
     _emailController.text = userModel.email!;
     _addressController.text = userModel.address!;
-    // _cityController.text = userModel.city!;
-    // _stateController.text = userModel.state!;
-    // _zipCodeController.text = userModel.zipCode!;
     countryCode = CountryCode(code: userModel.countryCode!);
     _phnController.text = userModel.personalPhnNo!;
   }
@@ -100,6 +97,7 @@ class _VolunteerProjectTaskSignUpState
         contactName: project!.contactName,
         contactNumber: project!.contactNumber,
       );
+
       final ResponseModel response =
           await _projectSignUpBloc.postVolunteerProjectSignUp(projectSignUpVal);
 

@@ -519,7 +519,9 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                       builder: (context) => TasksScreen(),
                     ),
                   );
-                  selectedTaskBloc.getSelectedTasks(tasks: selectedItems);
+                  if (selectedItems.isNotEmpty) {
+                    selectedTaskBloc.getSelectedTasks(tasks: selectedItems);
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
