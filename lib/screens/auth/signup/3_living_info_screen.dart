@@ -24,11 +24,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   final SignUpAndUserModel signupAndUserModel;
   final _formKey = GlobalKey<FormState>();
   final CityBloc _cityInfoBloc = CityBloc();
-  // final TextEditingController _stateController = TextEditingController();
-  // final TextEditingController _cityController = TextEditingController();
-  // final TextEditingController _zipCodeController = TextEditingController();
-  // final TextEditingController _houseNoController = TextEditingController();
-  // final TextEditingController _streetController = TextEditingController();
   final TextEditingController _addressLocationController =
       TextEditingController();
   late ThemeData _theme;
@@ -48,7 +43,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   void initState() {
     _cityInfoBloc.getStates();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
-    // listenState();
     super.initState();
   }
 
@@ -72,23 +66,9 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     }
   }
 
-  // Future listenState() async {
-  //   final States statesList = await _cityInfoBloc.getStates();
-  //   setState(() => states = statesList.states);
-  // }
-
-  // Future listenCities(String stateName) async {
-  //   final Cities citiesList = await _cityInfoBloc.getCities(stateName);
-  //   setState(() => cities = citiesList.cities);
-  // }
-
   Future onContinue() async {
     FocusScope.of(context).unfocus();
-    // signupAndUserModel.state = _stateController.text;
-    // signupAndUserModel.city = _cityController.text;
-    // signupAndUserModel.zipCode = _zipCodeController.text;
     signupAndUserModel.address = location;
-    // _houseNoController.text + ', ' + _streetController.text;
     if (_formKey.currentState!.validate()) {
       if (location != null || location!.isNotEmpty) {
         if (signupAndUserModel.isOrganization!) {
@@ -149,55 +129,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
                   onPressedForward: () => onContinue(),
                 ),
                 TopInfoLabel(label: RESIDENTAL_ADDRESS),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                //   child: CommonRoundedTextfield(
-                //     controller: _houseNoController,
-                //     hintText: HOUSE_NO_HINT,
-                //     validator: (address) {
-                //       if (address!.isEmpty) {
-                //         return 'Please enter your house/apt number';
-                //       } else {
-                //         return null;
-                //       }
-                //     },
-                //   ),
-                // ),
-                // SizedBox(height: 25),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                //   child: CommonRoundedTextfield(
-                //     controller: _streetController,
-                //     hintText: STREET_NAME_HINT,
-                //     validator: (address) {
-                //       if (address!.isEmpty) {
-                //         return 'Please enter your street name';
-                //       } else {
-                //         return null;
-                //       }
-                //     },
-                //   ),
-                // ),
-                // TopInfoLabel(label: WHICH_STATE),
-                // selectStateDropDown(states!),
-                // cities!.isNotEmpty ? TopInfoLabel(label: WHICH_CITY) : SizedBox(),
-                // selectCitiesDropDown(cities!),
-                // TextFieldWithLabel(
-                //   controller: _zipCodeController,
-                //   keyboardType: TextInputType.number,
-                //   label: ENTER_ZIP_CODE,
-                //   maxLength: 5,
-                //   hintText: ENTER_ZIP_CODE_HINT,
-                //   validator: (code) {
-                //     if (code!.isEmpty) {
-                //       return 'Please enter ZIP code';
-                //     } else if (code.isNotEmpty && code.length != 5) {
-                //       return 'Please enter 5 digit code';
-                //     } else {
-                //       return null;
-                //     }
-                //   },
-                // ),
                 addressLocationSelection(),
                 Container(
                   width: double.infinity,
@@ -327,64 +258,4 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
       ],
     );
   }
-
-  // Widget selectStateDropDown(List<StateModel> states) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-  //     child: DropdownButtonFormField<StateModel>(
-  //         hint: Text(states.isEmpty ? 'Loading..' : SELECT_STATE_HINT),
-  //         icon: Icon(Icons.expand_more_rounded),
-  //         decoration: inputRoundedDecoration(
-  //             getHint: SELECT_STATE_HINT, isDropDown: true),
-  //         isExpanded: true,
-  //         onTap: () => FocusScope.of(context).unfocus(),
-  //         onChanged: (StateModel? newValue) async {
-  //           setState(() => _stateController.text = newValue!.stateName!);
-  //           cities!.clear();
-  //           listenCities(newValue!.stateName!);
-  //         },
-  //         validator: (val) {
-  //           if (val == null) {
-  //             return 'Please select state';
-  //           }
-  //           return null;
-  //         },
-  //         items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
-  //           return DropdownMenuItem<StateModel>(
-  //             value: value,
-  //             child: Text(
-  //               value!.stateName!,
-  //               textAlign: TextAlign.center,
-  //               style: _theme.textTheme.bodyText2,
-  //             ),
-  //           );
-  //         }).toList()),
-  //   );
-  // }
-
-  // Widget selectCitiesDropDown(List<CityModel> cities) {
-  //   return cities.isNotEmpty
-  //       ? Padding(
-  //           padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-  //           child: CommonRoundedTextfield(
-  //             textAlignCenter: false,
-  //             controller: _cityController,
-  //             readOnly: true,
-  //             suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-  //             hintText: SELECT_STATE_HINT,
-  //             validator: (val) {
-  //               if (val == null) {
-  //                 return 'Please select city';
-  //               }
-  //               return null;
-  //             },
-  //             onTap: () async {
-  //               final String city = await SearchCityBottomSheet()
-  //                   .showBottomSheet(context, cities: cities);
-  //               setState(() => _cityController.text = city);
-  //             },
-  //           ),
-  //         )
-  //       : SizedBox();
-  // }
 }

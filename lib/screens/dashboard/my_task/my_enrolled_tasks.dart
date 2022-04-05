@@ -83,6 +83,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
           timeStamp: DateTime.now().millisecondsSinceEpoch,
           hrs: initialTime.inMilliseconds,
           comment: _commentController.text,
+          isApprovedFromAdmin: false,
           data: enrolledTaskModel.toJson(),
         );
         await ScaffoldSnakBar().show(context, msg: response.message!);

@@ -172,7 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
         final SignUpAndUserModel user = snapshot.data!;
         if (user.currentYearTargetHours != null) {
-          _processIndex = user.totalSpentHrs!;
+          _processIndex = user.totalSpentHrs != null ? user.totalSpentHrs! : 0;
           List<int> items =
               List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
                   .take((user.currentYearTargetHours! / 23).round())

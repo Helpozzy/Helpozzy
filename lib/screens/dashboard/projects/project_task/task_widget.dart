@@ -92,10 +92,10 @@ class TaskCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                    Center(child: eventButton),
-                    task.status == TOGGLE_COMPLETE
-                        ? SizedBox()
-                        : SizedBox(height: 8),
+                    Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        child: eventButton),
                   ],
                 ),
               ),

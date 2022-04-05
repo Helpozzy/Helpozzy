@@ -396,6 +396,7 @@ const NOTIFICATION_LABEL = 'Notifications';
 const NO_NOTIFICATIONS_FOUND = 'No new notifications';
 const FEEDBACK_LABEL = 'Feedback : ';
 const REQUESTED_HRS = 'Reuested Hrs : ';
+const APPROVED_HRS = 'Approved Hrs : ';
 const HRS_LABEL = 'hrs';
 const MINS_LABEL = 'mins';
 const DASH_LABEL = ' - ';

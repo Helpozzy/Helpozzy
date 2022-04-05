@@ -203,7 +203,12 @@ class ApiProvider {
                                 .where('is_approved_from_admin',
                                     isEqualTo: true)
                                 .get()
-                            : await firestore.collection('projects').get();
+                            : await firestore
+                                .collection('projects')
+                                .where('owner_id',
+                                    isNotEqualTo:
+                                        prefsObject.getString(CURRENT_USER_ID)!)
+                                .get();
 
     return Projects.fromJson(
       list: querySnapshot.docs,

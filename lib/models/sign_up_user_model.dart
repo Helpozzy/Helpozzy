@@ -137,10 +137,10 @@ class SignUpAndUserModel {
   late List<int>? areaOfInterests = [];
   late int? currentYearTargetHours;
   late bool? favorite = false;
-  late int? totalSpentHrs = 0;
-  late int? pointGifted = 0;
-  late double? rating = 0.0;
-  late int? reviewsByPersons = 0;
+  late int? totalSpentHrs;
+  late int? pointGifted;
+  late double? rating;
+  late int? reviewsByPersons;
   late String? joiningDate;
   late OrganizationSignUpModel? organizationDetails;
   late bool? isOrganization = false;

@@ -19,9 +19,7 @@ class SchoolAndGradeScreen extends StatefulWidget {
 
 class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
   _SchoolAndGradeScreenState({required this.signupAndUserModel});
-  final SignUpAndUserModel
-      signupAndUserModel; // final TextEditingController _stateController = TextEditingController();
-  // final TextEditingController _cityController = TextEditingController();
+  final SignUpAndUserModel signupAndUserModel;
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -107,12 +105,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 CommonWidget(context).showBackForwardButton(
                   onPressedForward: () => onContinue(),
                 ),
-                // TopInfoLabel(label: SCHOOL_STATE),
-                // selectStateDropdown(),
-                // TopInfoLabel(label: SCHOOL_CITY),
-                // selectCityDropdown(),
                 TopInfoLabel(label: SCHOOL_NAME),
-                // schoolField(),
                 addressLocationSelection(),
                 TopInfoLabel(label: GRADE_LEVEL),
                 Padding(
@@ -135,57 +128,6 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
       ),
     );
   }
-
-  // Widget selectStateDropdown() {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-  //     child: CommonRoundedTextfield(
-  //       controller: _stateController,
-  //       hintText: SEARCH_STATE_NAME_HINT,
-  //       validator: (val) {
-  //         if (val!.isEmpty) {
-  //           return 'Please enter state';
-  //         }
-  //         return null;
-  //       },
-  //       onChanged: (value) {},
-  //     ),
-  //   );
-  // }
-
-  // Widget selectCityDropdown() {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-  //     child: CommonRoundedTextfield(
-  //       controller: _cityController,
-  //       hintText: SEARCH_CITY_NAME_HINT,
-  //       validator: (val) {
-  //         if (val!.isEmpty) {
-  //           return 'Please enter city';
-  //         }
-  //         return null;
-  //       },
-  //       onChanged: (value) {},
-  //     ),
-  //   );
-  // }
-
-  // Widget schoolField() {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-  //     child: CommonRoundedTextfield(
-  //       controller: _schoolController,
-  //       hintText: SEARCH_SCHOOL_HINT,
-  //       onChanged: (value) {},
-  //       validator: (val) {
-  //         if (val!.isEmpty) {
-  //           return 'Please select school';
-  //         }
-  //         return null;
-  //       },
-  //     ),
-  //   );
-  // }
 
   Widget addressLocationSelection() {
     return Column(

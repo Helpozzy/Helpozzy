@@ -25,6 +25,12 @@ class NotificationTile extends StatelessWidget {
     return hrs.split(':');
   }
 
+  bool getLogHrsIsApproved() {
+    final TaskLogHrsModel taskLogHrsModel =
+        TaskLogHrsModel.fromjson(json: notification.payload!);
+    return taskLogHrsModel.isApprovedFromAdmin!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
@@ -35,20 +41,27 @@ class NotificationTile extends StatelessWidget {
         horizontal: width * 0.04,
       ),
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            notification.title!,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: DARK_PINK_COLOR,
+          Expanded(
+            child: Text(
+              notification.title!,
+              maxLines: 2,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: DARK_PINK_COLOR,
+              ),
             ),
           ),
-          Text(
-            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYYatTime(
-                timeStamp: notification.timeStamp!),
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontSize: 10, color: SILVER_GRAY),
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0),
+            child: Text(
+              DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYYatTime(
+                  timeStamp: notification.timeStamp!),
+              style: _theme.textTheme.bodyText2!
+                  .copyWith(fontSize: 10, color: SILVER_GRAY),
+            ),
           )
         ],
       ),
@@ -74,19 +87,33 @@ class NotificationTile extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-                    Text(
-                      REQUESTED_HRS +
-                          getRequestHrs()[0] +
-                          HRS_LABEL +
-                          DASH_LABEL +
-                          getRequestHrs()[1] +
-                          MINS_LABEL,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        color: PRIMARY_COLOR,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
+                    getLogHrsIsApproved()
+                        ? Text(
+                            APPROVED_HRS +
+                                getRequestHrs()[0] +
+                                HRS_LABEL +
+                                DASH_LABEL +
+                                getRequestHrs()[1] +
+                                MINS_LABEL,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              color: PRIMARY_COLOR,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          )
+                        : Text(
+                            REQUESTED_HRS +
+                                getRequestHrs()[0] +
+                                HRS_LABEL +
+                                DASH_LABEL +
+                                getRequestHrs()[1] +
+                                MINS_LABEL,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              color: PRIMARY_COLOR,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                   ],
                 )
               : SizedBox(),

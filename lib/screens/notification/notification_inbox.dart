@@ -33,7 +33,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
-  Future onApproveTaskLogHrs(NotificationModel notification) async {
+  Future onApproveTaskLogHrs(
+      NotificationModel notification, bool isApproved) async {
     CircularLoader().show(context);
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
@@ -45,11 +46,15 @@ class _NotificationInboxState extends State<NotificationInbox> {
     if (updateTaskResponse.success!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: 'Log Hours Request Approved');
+      taskLogHrs.comment = _commentController.text;
+      taskLogHrs.hrs = taskLogHrs.hrs;
+      taskLogHrs.isApprovedFromAdmin = true;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Task Log Hours Request Approved';
       notification.subTitle = 'Your log hours for ${task.taskName} is approved';
       notification.isUpdated = true;
+      notification.payload = taskLogHrs.toJson();
       await _notificationBloc.updateNotifications(notification);
     } else {
       CircularLoader().hide(context);
@@ -150,19 +155,21 @@ class _NotificationInboxState extends State<NotificationInbox> {
                   final NotificationModel notification = notifications[index];
                   return NotificationTile(
                     notification: notification,
-                    commentBox: notification.type == 2
-                        ? Container(
-                            height: 35,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10.0),
-                            child: CommonRoundedTextfield(
-                              fillColor: GRAY,
-                              controller: _commentController,
-                              hintText: ENTER_COMMENT_HINT,
-                              validator: (val) => null,
-                            ),
-                          )
-                        : SizedBox(),
+                    commentBox: notification.isUpdated!
+                        ? SizedBox()
+                        : notification.type == 2
+                            ? Container(
+                                height: 35,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10.0),
+                                child: CommonRoundedTextfield(
+                                  fillColor: GRAY,
+                                  controller: _commentController,
+                                  hintText: ENTER_COMMENT_HINT,
+                                  validator: (val) => null,
+                                ),
+                              )
+                            : SizedBox(),
                     childrens: notification.isUpdated!
                         ? []
                         : notification.type == 2
@@ -172,6 +179,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   buttonColor: GREEN,
                                   text: APPROVE_BUTTON,
                                   onPressed: () async {
+                                    await onApproveTaskLogHrs(
+                                        notification, true);
                                     await _notificationBloc.getNotifications();
                                   },
                                 ),
@@ -180,7 +189,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   fontSize: 12,
                                   buttonColor: SILVER_GRAY,
                                   text: DECLINE_BUTTON,
-                                  onPressed: () async {},
+                                  onPressed: () async => await _notificationBloc
+                                      .removeNotification(notification.id!),
                                 ),
                               ]
                             : [

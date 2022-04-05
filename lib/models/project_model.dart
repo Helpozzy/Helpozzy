@@ -4,114 +4,114 @@ class Projects {
   Projects.fromJson(
       {List<QueryDocumentSnapshot<Object?>>? signedUpList,
       required List<QueryDocumentSnapshot<Object?>> list}) {
-    // list.forEach((element) {
-    //   final project = element.data() as Map<String, dynamic>;
-    //   projectList.add(ProjectModel.fromjson(json: project));
-    // });
-
-    list.forEach((dbProject) {
-      final project = dbProject.data() as Map<String, dynamic>;
-      if (signedUpList != null && signedUpList.isNotEmpty) {
-        signedUpList.forEach((dbSignedUpProject) {
-          final signedUpProject =
-              dbSignedUpProject.data() as Map<String, dynamic>;
-          if (project['project_id'] == signedUpProject['project_id']) {
-            projectList.add(
-              ProjectModel(
-                enrolledId: project['enrolled_id'],
-                projectId: project['project_id'],
-                signUpUserId: project['signup_uid'],
-                ownerId: project['owner_id'],
-                categoryId: project['category_id'],
-                projectName: project['project_name'],
-                description: project['description'],
-                startDate: project['start_date'],
-                endDate: project['end_date'],
-                collaboratorsCoadmin: project['collaborators_or_co_admin'],
-                imageUrl: project['image_url'],
-                organization: project['oraganization'],
-                location: project['location'],
-                projectLocationLati: project['location_latitude'],
-                projectLocationLongi: project['location_longitude'],
-                contactName: project['contact_person_name'],
-                contactNumber: project['contact_number'],
-                reviewCount: project['review_count'],
-                enrollmentCount: project['enrollment_count'],
-                rating: project['rating'] is double
-                    ? project['rating']
-                    : double.parse(project['rating'].toString()),
-                aboutOrganizer: project['about_organizer'],
-                status: project['status'],
-                isApprovedFromAdmin: project['is_approved_from_admin'],
-                isSignedUp: true,
-              ),
-            );
-          } else {
-            projectList.add(
-              ProjectModel(
-                enrolledId: project['enrolled_id'],
-                projectId: project['project_id'],
-                signUpUserId: project['signup_uid'],
-                ownerId: project['owner_id'],
-                categoryId: project['category_id'],
-                projectName: project['project_name'],
-                description: project['description'],
-                startDate: project['start_date'],
-                endDate: project['end_date'],
-                collaboratorsCoadmin: project['collaborators_or_co_admin'],
-                imageUrl: project['image_url'],
-                organization: project['oraganization'],
-                location: project['location'],
-                projectLocationLati: project['location_latitude'],
-                projectLocationLongi: project['location_longitude'],
-                contactName: project['contact_person_name'],
-                contactNumber: project['contact_number'],
-                reviewCount: project['review_count'],
-                enrollmentCount: project['enrollment_count'],
-                rating: project['rating'] is double
-                    ? project['rating']
-                    : double.parse(project['rating'].toString()),
-                aboutOrganizer: project['about_organizer'],
-                status: project['status'],
-                isApprovedFromAdmin: project['is_approved_from_admin'],
-                isSignedUp: false,
-              ),
-            );
-          }
-        });
-      } else {
-        projectList.add(
-          ProjectModel(
-            enrolledId: project['enrolled_id'],
-            projectId: project['project_id'],
-            signUpUserId: project['signup_uid'],
-            ownerId: project['owner_id'],
-            categoryId: project['category_id'],
-            projectName: project['project_name'],
-            description: project['description'],
-            startDate: project['start_date'],
-            endDate: project['end_date'],
-            collaboratorsCoadmin: project['collaborators_or_co_admin'],
-            imageUrl: project['image_url'],
-            organization: project['oraganization'],
-            location: project['location'],
-            projectLocationLati: project['location_latitude'],
-            projectLocationLongi: project['location_longitude'],
-            contactName: project['contact_person_name'],
-            contactNumber: project['contact_number'],
-            reviewCount: project['review_count'],
-            enrollmentCount: project['enrollment_count'],
-            rating: project['rating'] is double
-                ? project['rating']
-                : double.parse(project['rating'].toString()),
-            aboutOrganizer: project['about_organizer'],
-            status: project['status'],
-            isApprovedFromAdmin: project['is_approved_from_admin'],
-            isSignedUp: false,
-          ),
-        );
-      }
+    list.forEach((element) {
+      final project = element.data() as Map<String, dynamic>;
+      projectList.add(ProjectModel.fromjson(json: project));
     });
+
+    // list.forEach((dbProject) {
+    //   final project = dbProject.data() as Map<String, dynamic>;
+    //   if (signedUpList != null && signedUpList.isNotEmpty) {
+    //     signedUpList.forEach((dbSignedUpProject) {
+    //       final signedUpProject =
+    //           dbSignedUpProject.data() as Map<String, dynamic>;
+    //       if (project['project_id'] == signedUpProject['project_id']) {
+    //         projectList.add(
+    //           ProjectModel(
+    //             enrolledId: project['enrolled_id'],
+    //             projectId: project['project_id'],
+    //             signUpUserId: project['signup_uid'],
+    //             ownerId: project['owner_id'],
+    //             categoryId: project['category_id'],
+    //             projectName: project['project_name'],
+    //             description: project['description'],
+    //             startDate: project['start_date'],
+    //             endDate: project['end_date'],
+    //             collaboratorsCoadmin: project['collaborators_or_co_admin'],
+    //             imageUrl: project['image_url'],
+    //             organization: project['oraganization'],
+    //             location: project['location'],
+    //             projectLocationLati: project['location_latitude'],
+    //             projectLocationLongi: project['location_longitude'],
+    //             contactName: project['contact_person_name'],
+    //             contactNumber: project['contact_number'],
+    //             reviewCount: project['review_count'],
+    //             enrollmentCount: project['enrollment_count'],
+    //             rating: project['rating'] is double
+    //                 ? project['rating']
+    //                 : double.parse(project['rating'].toString()),
+    //             aboutOrganizer: project['about_organizer'],
+    //             status: project['status'],
+    //             isApprovedFromAdmin: project['is_approved_from_admin'],
+    //             isSignedUp: true,
+    //           ),
+    //         );
+    //       } else {
+    //         projectList.add(
+    //           ProjectModel(
+    //             enrolledId: project['enrolled_id'],
+    //             projectId: project['project_id'],
+    //             signUpUserId: project['signup_uid'],
+    //             ownerId: project['owner_id'],
+    //             categoryId: project['category_id'],
+    //             projectName: project['project_name'],
+    //             description: project['description'],
+    //             startDate: project['start_date'],
+    //             endDate: project['end_date'],
+    //             collaboratorsCoadmin: project['collaborators_or_co_admin'],
+    //             imageUrl: project['image_url'],
+    //             organization: project['oraganization'],
+    //             location: project['location'],
+    //             projectLocationLati: project['location_latitude'],
+    //             projectLocationLongi: project['location_longitude'],
+    //             contactName: project['contact_person_name'],
+    //             contactNumber: project['contact_number'],
+    //             reviewCount: project['review_count'],
+    //             enrollmentCount: project['enrollment_count'],
+    //             rating: project['rating'] is double
+    //                 ? project['rating']
+    //                 : double.parse(project['rating'].toString()),
+    //             aboutOrganizer: project['about_organizer'],
+    //             status: project['status'],
+    //             isApprovedFromAdmin: project['is_approved_from_admin'],
+    //             isSignedUp: false,
+    //           ),
+    //         );
+    //       }
+    //     });
+    //   } else {
+    //     projectList.add(
+    //       ProjectModel(
+    //         enrolledId: project['enrolled_id'],
+    //         projectId: project['project_id'],
+    //         signUpUserId: project['signup_uid'],
+    //         ownerId: project['owner_id'],
+    //         categoryId: project['category_id'],
+    //         projectName: project['project_name'],
+    //         description: project['description'],
+    //         startDate: project['start_date'],
+    //         endDate: project['end_date'],
+    //         collaboratorsCoadmin: project['collaborators_or_co_admin'],
+    //         imageUrl: project['image_url'],
+    //         organization: project['oraganization'],
+    //         location: project['location'],
+    //         projectLocationLati: project['location_latitude'],
+    //         projectLocationLongi: project['location_longitude'],
+    //         contactName: project['contact_person_name'],
+    //         contactNumber: project['contact_number'],
+    //         reviewCount: project['review_count'],
+    //         enrollmentCount: project['enrollment_count'],
+    //         rating: project['rating'] is double
+    //             ? project['rating']
+    //             : double.parse(project['rating'].toString()),
+    //         aboutOrganizer: project['about_organizer'],
+    //         status: project['status'],
+    //         isApprovedFromAdmin: project['is_approved_from_admin'],
+    //         isSignedUp: false,
+    //       ),
+    //     );
+    //   }
+    // });
   }
 
   late List<ProjectModel> projectList = [];
