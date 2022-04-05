@@ -84,6 +84,7 @@ enum TaskProgressType {
   START,
   COMPLETED,
   LOG_HRS,
+  DECLINE,
 }
 
 enum OrganizationTypes { LLC, PARTNERSHIP, CORP, SOLE_PROP }
@@ -214,6 +215,7 @@ const PROJECT_NOT_UPDATED_ERROR_POPUP_MSG =
     'Project not updated due some error, Try again!';
 const TASK_COMPLETED_POPUP_MSG = 'Task completed';
 const TASK_STARTED_POPUP_MSG = 'Task started';
+const TASK_DECLINE_POPUP_MSG = 'Task Declined';
 const TASK_NOT_UPDATED_POPUP_MSG = 'Technical issue! Task not updated';
 const TASK_DELETED_POPUP_MSG = 'Task deleted!';
 const SOMETHING_WENT_WRONG_POPUP_MSG = 'Something went wrong!';

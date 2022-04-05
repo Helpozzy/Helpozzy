@@ -216,6 +216,14 @@ class ApiProvider {
     );
   }
 
+  Future<ProjectModel> getProjectByProjectIdAPIProvider(
+      String projectId) async {
+    final DocumentSnapshot documentSnapshot =
+        await firestore.collection('projects').doc(projectId).get();
+    return ProjectModel.fromjson(
+        json: documentSnapshot.data() as Map<String, dynamic>);
+  }
+
   Future<Users> otherUserInfoAPIProvider() async {
     final QuerySnapshot querySnapshot =
         await firestore.collection('users').get();

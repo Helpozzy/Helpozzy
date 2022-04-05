@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -23,6 +24,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   late double width;
   late ThemeData _theme;
   final NotificationBloc _notificationBloc = NotificationBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
   final TextEditingController _commentController = TextEditingController();
   final TaskBloc _taskBloc = TaskBloc();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
@@ -55,7 +57,23 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.subTitle = 'Your log hours for ${task.taskName} is approved';
       notification.isUpdated = true;
       notification.payload = taskLogHrs.toJson();
-      await _notificationBloc.updateNotifications(notification);
+      final ProjectModel? project =
+          await _projectsBloc.getProjectByProjectId(task.projectId!);
+      if (project != null) {
+        project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
+        final ResponseModel response =
+            await _projectsBloc.updateProject(project);
+        if (response.success!) {
+          ScaffoldSnakBar().show(context, msg: response.message!);
+        } else {
+          ScaffoldSnakBar().show(context, msg: response.error!);
+        }
+        await _notificationBloc.updateNotifications(notification);
+        await _notificationBloc.getNotifications();
+      } else {
+        await _notificationBloc.updateNotifications(notification);
+        await _notificationBloc.getNotifications();
+      }
     } else {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
@@ -79,6 +97,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           'Your ${task.taskName} sign-up request is approved';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
+      await _notificationBloc.getNotifications();
     } else {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: updateTaskResponse.error!);
@@ -103,9 +122,24 @@ class _NotificationInboxState extends State<NotificationInbox> {
           'Your ${signUpProject.projectName} sign-up request is approved';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
+      await _notificationBloc.getNotifications();
     } else {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: updateProjectResponse.error!);
+    }
+  }
+
+  Future onDecline(NotificationModel notification) async {
+    CircularLoader().show(context);
+    final ResponseModel response =
+        await _notificationBloc.removeNotification(notification.id!);
+    if (response.success!) {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: 'Request Declined');
+      await _notificationBloc.getNotifications();
+    } else {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: response.error!);
     }
   }
 
@@ -181,7 +215,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   onPressed: () async {
                                     await onApproveTaskLogHrs(
                                         notification, true);
-                                    await _notificationBloc.getNotifications();
                                   },
                                 ),
                                 SizedBox(width: 6),
@@ -189,8 +222,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   fontSize: 12,
                                   buttonColor: SILVER_GRAY,
                                   text: DECLINE_BUTTON,
-                                  onPressed: () async => await _notificationBloc
-                                      .removeNotification(notification.id!),
+                                  onPressed: () async =>
+                                      onDecline(notification),
                                 ),
                               ]
                             : [
@@ -204,7 +237,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                             notification)
                                         : await onApproveTaskNotification(
                                             notification);
-                                    await _notificationBloc.getNotifications();
                                   },
                                 ),
                                 SizedBox(width: 6),
@@ -212,8 +244,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   fontSize: 12,
                                   buttonColor: SILVER_GRAY,
                                   text: DECLINE_BUTTON,
-                                  onPressed: () async => await _notificationBloc
-                                      .removeNotification(notification.id!),
+                                  onPressed: () async =>
+                                      await onDecline(notification),
                                 ),
                               ],
                   );

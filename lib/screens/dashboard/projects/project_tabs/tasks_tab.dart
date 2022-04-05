@@ -331,39 +331,8 @@ class _TaskTabState extends State<TaskTab> {
             fontSize: 12,
             text: COMPLETED_BUTTON,
             buttonColor: DARK_PINK_COLOR,
-            onPressed: () async {
-              final TaskModel taskModel = TaskModel(
-                enrollTaskId: task.enrollTaskId,
-                taskId: task.taskId,
-                projectId: task.projectId,
-                taskOwnerId: task.taskOwnerId,
-                signUpUserId: task.signUpUserId,
-                taskName: task.taskName,
-                description: task.description,
-                memberRequirement: task.memberRequirement,
-                ageRestriction: task.ageRestriction,
-                qualification: task.qualification,
-                startDate: task.startDate,
-                endDate: task.endDate,
-                estimatedHrs: task.estimatedHrs,
-                totalVolunteerHrs: task.totalVolunteerHrs,
-                isApprovedFromAdmin: task.isApprovedFromAdmin,
-                status: TOGGLE_COMPLETE,
-              );
-              final ResponseModel response =
-                  await _taskBloc.updateEnrollTask(taskModel);
-              if (response.success!) {
-                if (isMyTask) {
-                  _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
-                } else {
-                  _projectTaskBloc.getProjectAllTasks(project.projectId!);
-                }
-                ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
-              } else {
-                ScaffoldSnakBar()
-                    .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-              }
-            },
+            onPressed: () async =>
+                await onTapFunction(task, isMyTask, TaskProgressType.COMPLETED),
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
@@ -373,45 +342,8 @@ class _TaskTabState extends State<TaskTab> {
                 text: START_BUTTON,
                 buttonColor: GRAY,
                 fontColor: DARK_GRAY,
-                onPressed: () async {
-                  final TaskModel taskModel = TaskModel(
-                    enrollTaskId: task.enrollTaskId,
-                    taskId: task.taskId,
-                    projectId: task.projectId,
-                    taskOwnerId: task.taskOwnerId,
-                    signUpUserId: task.signUpUserId,
-                    taskName: task.taskName,
-                    description: task.description,
-                    memberRequirement: task.memberRequirement,
-                    ageRestriction: task.ageRestriction,
-                    qualification: task.qualification,
-                    startDate: task.startDate,
-                    endDate: task.endDate,
-                    estimatedHrs: task.estimatedHrs,
-                    totalVolunteerHrs: task.totalVolunteerHrs,
-                    isApprovedFromAdmin: task.isApprovedFromAdmin,
-                    status: TOGGLE_INPROGRESS,
-                  );
-                  final ResponseModel response =
-                      await _taskBloc.updateEnrollTask(taskModel);
-                  if (response.success!) {
-                    if (isMyTask) {
-                      _projectTaskBloc
-                          .getProjectEnrolledTasks(project.projectId!);
-                    } else {
-                      _projectTaskBloc.getProjectAllTasks(project.projectId!);
-                    }
-                    ScaffoldSnakBar().show(
-                      context,
-                      msg: TASK_STARTED_POPUP_MSG,
-                    );
-                  } else {
-                    ScaffoldSnakBar().show(
-                      context,
-                      msg: TASK_NOT_UPDATED_POPUP_MSG,
-                    );
-                  }
-                },
+                onPressed: () async =>
+                    await onTapFunction(task, isMyTask, TaskProgressType.START),
               ),
               SizedBox(width: 7),
               SmallCommonButton(
@@ -419,9 +351,61 @@ class _TaskTabState extends State<TaskTab> {
                 fontColor: BLACK,
                 buttonColor: SILVER_GRAY,
                 text: DECLINE_BUTTON,
-                onPressed: () {},
+                onPressed: () async => await onTapFunction(
+                    task, isMyTask, TaskProgressType.DECLINE),
               ),
             ],
           );
+  }
+
+  Future onTapFunction(
+      TaskModel task, bool isMyTask, TaskProgressType taskProgressType) async {
+    final TaskModel taskModel = TaskModel(
+      enrollTaskId: task.enrollTaskId,
+      taskId: task.taskId,
+      projectId: task.projectId,
+      taskOwnerId: task.taskOwnerId,
+      signUpUserId: task.signUpUserId,
+      taskName: task.taskName,
+      description: task.description,
+      memberRequirement: task.memberRequirement,
+      ageRestriction: task.ageRestriction,
+      qualification: task.qualification,
+      startDate: task.startDate,
+      endDate: task.endDate,
+      estimatedHrs: task.estimatedHrs,
+      totalVolunteerHrs: task.totalVolunteerHrs,
+      isApprovedFromAdmin: taskProgressType == TaskProgressType.DECLINE
+          ? false
+          : task.isApprovedFromAdmin,
+      status: taskProgressType == TaskProgressType.COMPLETED
+          ? TOGGLE_COMPLETE
+          : taskProgressType == TaskProgressType.START
+              ? TOGGLE_INPROGRESS
+              : taskProgressType == TaskProgressType.DECLINE
+                  ? TOGGLE_NOT_STARTED
+                  : null,
+    );
+    final ResponseModel response = await _taskBloc.updateEnrollTask(taskModel);
+    if (response.success!) {
+      if (isMyTask) {
+        _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
+      } else {
+        _projectTaskBloc.getProjectAllTasks(project.projectId!);
+      }
+      ScaffoldSnakBar().show(
+        context,
+        msg: taskProgressType == TaskProgressType.COMPLETED
+            ? TASK_COMPLETED_POPUP_MSG
+            : taskProgressType == TaskProgressType.START
+                ? TASK_STARTED_POPUP_MSG
+                : TASK_DECLINE_POPUP_MSG,
+      );
+    } else {
+      ScaffoldSnakBar().show(
+        context,
+        msg: TASK_NOT_UPDATED_POPUP_MSG,
+      );
+    }
   }
 }

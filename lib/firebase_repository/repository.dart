@@ -56,6 +56,9 @@ class Repository {
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
       apiProvider.getProjectsAPIProvider(projectTabType: projectTabType);
 
+  Future<ProjectModel> getprojectByProjectIdRepo(String projectId) =>
+      apiProvider.getProjectByProjectIdAPIProvider(projectId);
+
   Future<Users> getOtherUserInfoRepo() =>
       apiProvider.otherUserInfoAPIProvider();
 

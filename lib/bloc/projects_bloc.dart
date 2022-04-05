@@ -130,6 +130,12 @@ class ProjectsBloc {
     categorisedProjectsController.sink.add(response);
   }
 
+  Future<ProjectModel> getProjectByProjectId(String projectId) async {
+    final ProjectModel response =
+        await repo.getprojectByProjectIdRepo(projectId);
+    return response;
+  }
+
   void dispose() {
     projectDetailsExpandController.close();
     projectsActivityStatusController.close();

@@ -146,6 +146,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
             : _selectedIndexValue == 1
                 ? TOGGLE_INPROGRESS
                 : TOGGLE_COMPLETE,
+             totalTaskshrs:0,
       );
 
       final ResponseModel response = fromEdit

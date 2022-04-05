@@ -143,6 +143,7 @@ class ProjectModel {
     this.status,
     this.isApprovedFromAdmin = false,
     this.isSignedUp = false,
+    this.totalTaskshrs,
   });
 
   ProjectModel.fromjson({required Map<String, dynamic> json}) {
@@ -171,6 +172,7 @@ class ProjectModel {
     aboutOrganizer = json['about_organizer'];
     status = json['status'];
     isApprovedFromAdmin = json['is_approved_from_admin'];
+    totalTaskshrs = json['total_tasks_hrs'];
   }
 
   Map<String, Object?> toJson() {
@@ -198,6 +200,7 @@ class ProjectModel {
       'about_organizer': aboutOrganizer,
       'status': status,
       'is_approved_from_admin': isApprovedFromAdmin,
+      'total_tasks_hrs': totalTaskshrs,
     };
   }
 
@@ -224,6 +227,7 @@ class ProjectModel {
   late String? status;
   late int? enrollmentCount;
   late bool? isApprovedFromAdmin;
+  late int? totalTaskshrs;
   late bool? isLiked = false;
   late bool? isProjectDetailsExpanded = false;
   late bool? isSignedUp = false;
