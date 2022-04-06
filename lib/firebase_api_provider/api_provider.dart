@@ -317,12 +317,26 @@ class ApiProvider {
   Future<ResponseModel> postEnrolledTasksAPIProvider(
       TaskModel enrolledTaskModel) async {
     try {
-      final DocumentReference documentReference =
-          firestore.collection('signed_up_tasks').doc();
-      enrolledTaskModel.enrollTaskId = documentReference.id;
-      await documentReference.set(enrolledTaskModel.toJson());
-      return ResponseModel(
-          success: true, message: 'Task signed up wait for admin approval');
+      final DocumentSnapshot documentSnapshot = await firestore
+          .collection('signed_up_tasks')
+          .doc(enrolledTaskModel.enrollTaskId)
+          .get();
+      if (documentSnapshot.exists) {
+        return ResponseModel(
+          success: false,
+          error: 'You have already signed up for this task',
+        );
+      } else {
+        final DocumentReference documentReference =
+            firestore.collection('signed_up_tasks').doc();
+
+        enrolledTaskModel.enrollTaskId = documentReference.id;
+        await documentReference.set(enrolledTaskModel.toJson());
+        return ResponseModel(
+          success: true,
+          message: 'Task signed up wait for admin approval',
+        );
+      }
     } catch (e) {
       return ResponseModel(success: false, error: 'Fail! Task not enrolled');
     }
@@ -345,6 +359,7 @@ class ApiProvider {
         .where('owner_id', isEqualTo: projectSignUpVal.signUpUserId)
         .where('project_id', isEqualTo: projectSignUpVal.projectId)
         .get();
+
     late ResponseModel responseModel;
     if (querySnapshot.docs.isEmpty) {
       responseModel = await projectSignUpAPIProvider(projectSignUpVal);
@@ -367,28 +382,42 @@ class ApiProvider {
       DocumentSnapshot documentSnapshot =
           await firestore.collection('signed_up_projects').doc().get();
 
-      projectSignUpVal.enrolledId = documentSnapshot.id;
+      final DocumentSnapshot alreadyDocumentSnapshot = await firestore
+          .collection('signed_up_projects')
+          .doc(projectSignUpVal.enrolledId)
+          .get();
 
-      documentSnapshot.reference
-          .set(projectSignUpVal.toJson())
-          .whenComplete(() async {
-        final DocumentSnapshot documentSnapshot = await firestore
-            .collection('projects')
-            .doc(projectSignUpVal.projectId)
-            .get();
+      if (alreadyDocumentSnapshot.exists) {
+        return ResponseModel(
+          success: false,
+          error: 'You have already signed up for this project',
+        );
+      } else {
+        projectSignUpVal.enrolledId = documentSnapshot.id;
 
-        final ProjectModel projectModel = ProjectModel.fromjson(
-            json: documentSnapshot.data() as Map<String, dynamic>);
+        documentSnapshot.reference
+            .set(projectSignUpVal.toJson())
+            .whenComplete(() async {
+          final DocumentSnapshot documentSnapshot = await firestore
+              .collection('projects')
+              .doc(projectSignUpVal.projectId)
+              .get();
 
-        await firestore
-            .collection('projects')
-            .doc(projectSignUpVal.projectId)
-            .update(<String, dynamic>{
-          'enrollment_count': projectModel.enrollmentCount! + 1
+          final ProjectModel projectModel = ProjectModel.fromjson(
+              json: documentSnapshot.data() as Map<String, dynamic>);
+
+          await firestore
+              .collection('projects')
+              .doc(projectSignUpVal.projectId)
+              .update(<String, dynamic>{
+            'enrollment_count': projectModel.enrollmentCount! + 1
+          });
         });
-      });
-      return ResponseModel(
-          message: 'Project signed up wait for admin approval', success: true);
+        return ResponseModel(
+          message: 'Project signed up wait for admin approval',
+          success: true,
+        );
+      }
     } catch (e) {
       return ResponseModel(error: 'Project enrollment failed', success: false);
     }

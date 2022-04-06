@@ -53,13 +53,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
       taskLogHrs.isApprovedFromAdmin = true;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-      notification.title = 'Task Log Hours Request Approved';
+      notification.title = 'Log Hours Request Approved';
       notification.subTitle = 'Your log hours for ${task.taskName} is approved';
       notification.isUpdated = true;
       notification.payload = taskLogHrs.toJson();
       final ProjectModel? project =
           await _projectsBloc.getProjectByProjectId(task.projectId!);
-      if (project != null) {
+      if (project!.totalTaskshrs != null) {
         project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
         final ResponseModel response =
             await _projectsBloc.updateProject(project);

@@ -51,10 +51,7 @@ class _VolunteerProjectTaskSignUpState
   final TaskBloc _taskBloc = TaskBloc();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _cityController = TextEditingController();
-  // final TextEditingController _stateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  // final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _phnController = TextEditingController();
 
   Future getUserData() async {
@@ -188,6 +185,7 @@ class _VolunteerProjectTaskSignUpState
 
   @override
   void initState() {
+    print(task!.toJson());
     countryCode = CountryCode(code: '+1', name: 'US');
     getUserData();
     super.initState();

@@ -67,16 +67,25 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
               ? TOGGLE_COMPLETE
               : taskProgressType == TaskProgressType.LOG_HRS
                   ? LOG_HRS
-                  : task.status,
+                  : taskProgressType == TaskProgressType.DECLINE
+                      ? TOGGLE_NOT_STARTED
+                      : task.status,
       totalVolunteerHrs: task.totalVolunteerHrs,
-      isApprovedFromAdmin: task.isApprovedFromAdmin,
+      isApprovedFromAdmin: taskProgressType == TaskProgressType.DECLINE
+          ? false
+          : task.isApprovedFromAdmin,
     );
     final ResponseModel response =
         await _taskBloc.updateEnrollTask(enrolledTaskModel);
     if (response.success!) {
       CircularLoader().hide(context);
       _taskBloc.getEnrolledTasks();
-      ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
+      ScaffoldSnakBar().show(
+        context,
+        msg: taskProgressType == TaskProgressType.DECLINE
+            ? TASK_DECLINE_POPUP_MSG
+            : TASK_COMPLETED_POPUP_MSG,
+      );
 
       if (taskProgressType == TaskProgressType.LOG_HRS) {
         final TaskLogHrsModel logHrsModel = TaskLogHrsModel(
@@ -108,6 +117,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
         }
       }
     } else {
+      CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
     }
   }
@@ -304,7 +314,8 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                   fontColor: BLACK,
                   buttonColor: SILVER_GRAY,
                   text: DECLINE_BUTTON,
-                  onPressed: () {},
+                  onPressed: () async =>
+                      await updateTask(task, TaskProgressType.DECLINE),
                 ),
               ],
             ),

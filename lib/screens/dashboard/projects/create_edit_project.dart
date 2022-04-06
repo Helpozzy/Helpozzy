@@ -97,6 +97,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                             : selectedCategoryId == 6
                                 ? CHILDREN_AND_YOUTH_6
                                 : OTHER_7;
+    location = project!.location!;
     _selectedStartDate =
         DateTime.fromMillisecondsSinceEpoch(int.parse(project!.startDate!));
     _selectedEndDate =
@@ -120,10 +121,10 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
       final Map<String, dynamic> json =
           jsonDecode(userData) as Map<String, dynamic>;
       final currentUser = SignUpAndUserModel.fromJson(json: json);
-
       CircularLoader().show(context);
-      final ProjectModel project = ProjectModel(
+      final ProjectModel modifiedProject = ProjectModel(
         categoryId: selectedCategoryId,
+        projectId: project != null ? project!.projectId : '',
         aboutOrganizer: SAMPLE_LONG_TEXT,
         contactName: currentUser.name,
         contactNumber: currentUser.personalPhnNo,
@@ -146,12 +147,12 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
             : _selectedIndexValue == 1
                 ? TOGGLE_INPROGRESS
                 : TOGGLE_COMPLETE,
-             totalTaskshrs:0,
+        totalTaskshrs: 0,
       );
 
       final ResponseModel response = fromEdit
-          ? await _projectsBloc.updateProject(project)
-          : await _projectsBloc.postProject(project);
+          ? await _projectsBloc.updateProject(modifiedProject)
+          : await _projectsBloc.postProject(modifiedProject);
       if (response.success!) {
         if (selectedItems.isNotEmpty) {
           for (int i = 0; i < selectedItems.length; i++) {
@@ -229,9 +230,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR,
         actions: [
           IconButton(
-            onPressed: () {
-              onAddProject();
-            },
+            onPressed: () => onAddProject(),
             icon: Icon(
               Icons.check_rounded,
               color: DARK_PINK_COLOR,
@@ -727,8 +726,10 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
     );
   }
 
-  IconButton appImageButton(
-      {required void Function()? onPressed, required String asset}) {
+  IconButton appImageButton({
+    required void Function()? onPressed,
+    required String asset,
+  }) {
     return IconButton(
         onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
   }
@@ -779,8 +780,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
             },
             onTap: () {
               CommonDatepicker()
-                  .showDatePickerDialog(context,
-                      initialDate: _selectedStartDate)
+                  .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedStartDate)
                   setState(() {
@@ -816,7 +816,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
             },
             onTap: () {
               CommonDatepicker()
-                  .showDatePickerDialog(context, initialDate: _selectedEndDate)
+                  .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedEndDate)
                   setState(() {

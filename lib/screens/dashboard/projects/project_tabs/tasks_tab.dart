@@ -334,32 +334,36 @@ class _TaskTabState extends State<TaskTab> {
             onPressed: () async =>
                 await onTapFunction(task, isMyTask, TaskProgressType.COMPLETED),
           )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SmallCommonButton(
-                fontSize: 12,
-                text: START_BUTTON,
-                buttonColor: GRAY,
-                fontColor: DARK_GRAY,
-                onPressed: () async =>
-                    await onTapFunction(task, isMyTask, TaskProgressType.START),
-              ),
-              SizedBox(width: 7),
-              SmallCommonButton(
-                fontSize: 12,
-                fontColor: BLACK,
-                buttonColor: SILVER_GRAY,
-                text: DECLINE_BUTTON,
-                onPressed: () async => await onTapFunction(
-                    task, isMyTask, TaskProgressType.DECLINE),
-              ),
-            ],
+        : Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SmallCommonButton(
+                  fontSize: 12,
+                  text: START_BUTTON,
+                  buttonColor: GRAY,
+                  fontColor: DARK_GRAY,
+                  onPressed: () async => await onTapFunction(
+                      task, isMyTask, TaskProgressType.START),
+                ),
+                SizedBox(width: 7),
+                SmallCommonButton(
+                  fontSize: 12,
+                  fontColor: BLACK,
+                  buttonColor: SILVER_GRAY,
+                  text: DECLINE_BUTTON,
+                  onPressed: () async => await onTapFunction(
+                      task, isMyTask, TaskProgressType.DECLINE),
+                ),
+              ],
+            ),
           );
   }
 
   Future onTapFunction(
       TaskModel task, bool isMyTask, TaskProgressType taskProgressType) async {
+    CircularLoader().show(context);
     final TaskModel taskModel = TaskModel(
       enrollTaskId: task.enrollTaskId,
       taskId: task.taskId,
@@ -384,10 +388,11 @@ class _TaskTabState extends State<TaskTab> {
               ? TOGGLE_INPROGRESS
               : taskProgressType == TaskProgressType.DECLINE
                   ? TOGGLE_NOT_STARTED
-                  : null,
+                  : task.status,
     );
     final ResponseModel response = await _taskBloc.updateEnrollTask(taskModel);
     if (response.success!) {
+      CircularLoader().hide(context);
       if (isMyTask) {
         _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
       } else {
@@ -399,9 +404,12 @@ class _TaskTabState extends State<TaskTab> {
             ? TASK_COMPLETED_POPUP_MSG
             : taskProgressType == TaskProgressType.START
                 ? TASK_STARTED_POPUP_MSG
-                : TASK_DECLINE_POPUP_MSG,
+                : taskProgressType == TaskProgressType.DECLINE
+                    ? TASK_DECLINE_POPUP_MSG
+                    : task.status!,
       );
     } else {
+      CircularLoader().hide(context);
       ScaffoldSnakBar().show(
         context,
         msg: TASK_NOT_UPDATED_POPUP_MSG,

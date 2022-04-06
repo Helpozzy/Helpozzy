@@ -521,8 +521,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
             },
             onTap: () {
               CommonDatepicker()
-                  .showDatePickerDialog(context,
-                      initialDate: _selectedStartDate)
+                  .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedStartDate)
                   setState(() {
@@ -558,7 +557,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
             },
             onTap: () {
               CommonDatepicker()
-                  .showDatePickerDialog(context, initialDate: _selectedEndDate)
+                  .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedEndDate)
                   setState(() {
