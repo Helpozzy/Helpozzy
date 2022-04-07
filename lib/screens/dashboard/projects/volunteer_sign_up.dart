@@ -185,7 +185,6 @@ class _VolunteerProjectTaskSignUpState
 
   @override
   void initState() {
-    print(task!.toJson());
     countryCode = CountryCode(code: '+1', name: 'US');
     getUserData();
     super.initState();

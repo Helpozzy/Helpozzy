@@ -78,6 +78,26 @@ class ApiProvider {
     return true;
   }
 
+  Future<bool> updateTotalSpentHrsAPIProvider(int hrs) async {
+    await firestore
+        .collection('users')
+        .doc(prefsObject.getString(CURRENT_USER_ID))
+        .get()
+        .then((value) async {
+      SignUpAndUserModel user = SignUpAndUserModel.fromJson(
+          json: value.data() as Map<String, dynamic>);
+
+      await firestore
+          .collection('users')
+          .doc(prefsObject.getString(CURRENT_USER_ID))
+          .update({'total_spent_hrs': user.totalSpentHrs! + hrs}).catchError(
+              (onError) {
+        print(onError.toString());
+      });
+    });
+    return true;
+  }
+
   Future<Projects> getUserCompltedProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('projects')
@@ -203,12 +223,7 @@ class ApiProvider {
                                 .where('is_approved_from_admin',
                                     isEqualTo: true)
                                 .get()
-                            : await firestore
-                                .collection('projects')
-                                .where('owner_id',
-                                    isNotEqualTo:
-                                        prefsObject.getString(CURRENT_USER_ID)!)
-                                .get();
+                            : await firestore.collection('projects').get();
 
     return Projects.fromJson(
       list: querySnapshot.docs,
@@ -317,11 +332,13 @@ class ApiProvider {
   Future<ResponseModel> postEnrolledTasksAPIProvider(
       TaskModel enrolledTaskModel) async {
     try {
-      final DocumentSnapshot documentSnapshot = await firestore
+      final QuerySnapshot querySnapshot = await firestore
           .collection('signed_up_tasks')
-          .doc(enrolledTaskModel.enrollTaskId)
+          .where('task_id', isEqualTo: enrolledTaskModel.taskId)
+          .where('sign_up_uid',
+              isEqualTo: prefsObject.getString(CURRENT_USER_ID))
           .get();
-      if (documentSnapshot.exists) {
+      if (querySnapshot.docs.isNotEmpty) {
         return ResponseModel(
           success: false,
           error: 'You have already signed up for this task',
@@ -382,12 +399,14 @@ class ApiProvider {
       DocumentSnapshot documentSnapshot =
           await firestore.collection('signed_up_projects').doc().get();
 
-      final DocumentSnapshot alreadyDocumentSnapshot = await firestore
+      final QuerySnapshot querySnapshot = await firestore
           .collection('signed_up_projects')
-          .doc(projectSignUpVal.enrolledId)
+          .where('project_id', isEqualTo: projectSignUpVal.projectId)
+          .where('signup_uid',
+              isEqualTo: prefsObject.getString(CURRENT_USER_ID))
           .get();
 
-      if (alreadyDocumentSnapshot.exists) {
+      if (querySnapshot.docs.isNotEmpty) {
         return ResponseModel(
           success: false,
           error: 'You have already signed up for this project',

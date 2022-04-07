@@ -30,6 +30,9 @@ class Repository {
   Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
       apiProvider.editProfileAPIProvider(json);
 
+  Future<bool> updateTotalSpentHrsRepo(int hrs) =>
+      apiProvider.updateTotalSpentHrsAPIProvider(hrs);
+
   Future<Projects> getuserCompletedProjectsRepo() =>
       apiProvider.getUserCompltedProjectsAPIProvider();
 

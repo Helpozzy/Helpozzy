@@ -43,9 +43,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _stateController = TextEditingController();
-  // final TextEditingController _cityController = TextEditingController();
-  // final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _personalPhoneController =
       TextEditingController();
@@ -92,8 +89,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     countryCode = CountryCode(code: '+1', name: 'US');
     listenUser();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
-    // _cityBloc.getStates();
-    // listenState();
     super.initState();
   }
 
@@ -143,9 +138,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         dateTime:
             DateTime.fromMillisecondsSinceEpoch(int.parse(user.dateOfBirth!)));
     _genderController.text = user.gender!;
-    // _stateController.text = user.state!;
-    // _cityController.text = user.city!;
-    // _zipCodeController.text = user.zipCode!;
     countryCode = CountryCode(code: user.countryCode!);
     _personalPhoneController.text = user.personalPhnNo!;
     _parentEmailController.text =
@@ -177,16 +169,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {});
   }
 
-  // Future listenState() async {
-  //   final States statesList = await _cityBloc.getStates();
-  //   setState(() => states = statesList.states);
-  // }
-
-  // Future listenCities(String stateName) async {
-  //   final Cities citiesList = await _cityBloc.getCities(stateName);
-  //   setState(() => cities = citiesList.cities);
-  // }
-
   Future postModifiedData() async {
     CircularLoader().show(context);
     late String profileUrl = '';
@@ -200,9 +182,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       email: _emailController.text,
       gender: _genderController.text,
       address: addressLocation,
-      // state: _stateController.text,
-      // city: _cityController.text,
-      // zipCode: _zipCodeController.text,
       countryCode: countryCode!.code!,
       personalPhnNo: _personalPhoneController.text,
       parentEmail: _parentEmailController.text,
@@ -493,29 +472,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         SizedBox(height: 10),
         TextfieldLabelSmall(label: ADDRESS_LABEL),
         addressLocationView(),
-        // CommonSimpleTextfield(
-        //   controller: _addressController,
-        //   hintText: ADDRESS_HINT,
-        //   validator: (val) => null,
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 15.0),
-        //   child: Row(
-        //     children: [
-        //       Expanded(child: selectStateDropDown(states!)),
-        //       cities!.isNotEmpty ? SizedBox(width: 10) : SizedBox(),
-        //       cities!.isNotEmpty
-        //           ? Expanded(child: selectCitiesDropDown(cities!))
-        //           : SizedBox(),
-        //     ],
-        //   ),
-        // ),
-        // TextfieldLabelSmall(label: ZIPCODE_LABEL),
-        // CommonSimpleTextfield(
-        //   controller: _zipCodeController,
-        //   hintText: ENTER_ZIP_CODE,
-        //   validator: (val) => null,
-        // ),
       ],
     );
   }
@@ -1018,90 +974,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ],
     );
   }
-  // Widget selectStateDropDown(List<StateModel> states) {
-  //   return Column(
-  //     children: [
-  //       TextfieldLabelSmall(label: STATE_LABEL),
-  //       DropdownButtonFormField<StateModel>(
-  //         hint: Text(
-  //           _stateController.text.isNotEmpty
-  //               ? _stateController.text
-  //               : states.isEmpty
-  //                   ? 'Loading..'
-  //                   : SEARCH_STATE_NAME_HINT,
-  //         ),
-  //         icon: Icon(Icons.expand_more_rounded),
-  //         decoration: inputSimpleDecoration(getHint: SEARCH_STATE_NAME_HINT),
-  //         isExpanded: true,
-  //         onChanged: (StateModel? newValue) async {
-  //           setState(() => _stateController.text = newValue!.stateName!);
-  //           cities!.clear();
-  //           listenCities(newValue!.stateName!);
-  //         },
-  //         validator: (val) {
-  //           if (val == null) {
-  //             return 'Please search state';
-  //           }
-  //           return null;
-  //         },
-  //         items: states.map<DropdownMenuItem<StateModel>>((StateModel? value) {
-  //           return DropdownMenuItem<StateModel>(
-  //             value: value,
-  //             child: Text(
-  //               value!.stateName!,
-  //               textAlign: TextAlign.center,
-  //               style: _theme.textTheme.bodyText2,
-  //             ),
-  //           );
-  //         }).toList(),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget selectCitiesDropDown(List<CityModel> cities) {
-  //   return cities.isNotEmpty
-  //       ? Column(
-  //           children: [
-  //             TextfieldLabelSmall(label: CITY_LABEL),
-  //             DropdownButtonFormField<CityModel>(
-  //                 hint: Text(_stateController.text.isEmpty
-  //                     ? _cityController.text.isNotEmpty
-  //                         ? _cityController.text
-  //                         : SEARCH_CITY_NAME_HINT
-  //                     : cities.isEmpty
-  //                         ? 'Loading..'
-  //                         : SEARCH_CITY_NAME_HINT),
-  //                 icon: Icon(Icons.expand_more_rounded),
-  //                 decoration:
-  //                     inputSimpleDecoration(getHint: SEARCH_CITY_NAME_HINT),
-  //                 isExpanded: true,
-  //                 onChanged: (CityModel? newValue) {
-  //                   setState(() {
-  //                     _cityController.text = newValue!.cityName!;
-  //                   });
-  //                 },
-  //                 validator: (val) {
-  //                   if (val == null) {
-  //                     return 'Please search city';
-  //                   }
-  //                   return null;
-  //                 },
-  //                 items: cities
-  //                     .map<DropdownMenuItem<CityModel>>((CityModel? value) {
-  //                   return DropdownMenuItem<CityModel>(
-  //                     value: value,
-  //                     child: Text(
-  //                       value!.cityName!,
-  //                       textAlign: TextAlign.center,
-  //                       style: _theme.textTheme.bodyText2,
-  //                     ),
-  //                   );
-  //                 }).toList()),
-  //           ],
-  //         )
-  //       : SizedBox();
-  // }
 
   Widget selectRelationshipDropdown() {
     return DropdownButtonFormField<String>(
@@ -1136,39 +1008,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }).toList(),
     );
   }
-
-  // Widget schoolField() {
-  //   return Column(
-  //     children: [
-  //       SizedBox(height: 10),
-  //       TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
-  //       CommonSimpleTextfield(
-  //         controller: _schoolController,
-  //         readOnly: true,
-  //         suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-  //         hintText: SEARCH_SCHOOL_HINT,
-  //         validator: (val) {
-  //           if (val!.isNotEmpty && val == SEARCH_SCHOOL_HINT) {
-  //             return 'Please search school';
-  //           }
-  //           return null;
-  //         },
-  //         onTap: () async {
-  //           final SchoolDetailsModel school =
-  //               await SearchBottomSheet().modalBottomSheetMenu(
-  //             context: context,
-  //             searchBottomSheetType: SearchBottomSheetType.SCHOOL_BOTTOMSHEET,
-  //             state: _stateController.text,
-  //             city: _cityController.text,
-  //           );
-  //           setState(() {
-  //             _schoolController.text = school.schoolName;
-  //           });
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget selectGradeDropDown() {
     return Column(

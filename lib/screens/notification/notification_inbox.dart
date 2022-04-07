@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
@@ -28,6 +29,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   final TextEditingController _commentController = TextEditingController();
   final TaskBloc _taskBloc = TaskBloc();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
+  final EditProfileBloc _editProfileBloc = EditProfileBloc();
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
-    task.status = TOGGLE_NOT_STARTED;
+    task.status = LOG_HRS_APPROVED;
     task.isApprovedFromAdmin = true;
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
@@ -50,6 +52,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       ScaffoldSnakBar().show(context, msg: 'Log Hours Request Approved');
       taskLogHrs.comment = _commentController.text;
       taskLogHrs.hrs = taskLogHrs.hrs;
+      taskLogHrs.mins = taskLogHrs.mins;
       taskLogHrs.isApprovedFromAdmin = true;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -61,6 +64,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           await _projectsBloc.getProjectByProjectId(task.projectId!);
       if (project!.totalTaskshrs != null) {
         project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
+        await _editProfileBloc.updateTotalSpentHrs(taskLogHrs.hrs!);
         final ResponseModel response =
             await _projectsBloc.updateProject(project);
         if (response.success!) {

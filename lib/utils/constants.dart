@@ -327,6 +327,7 @@ const SIGN_OUT_TITLE = 'Sign Out';
 const SIGN_OUT_FROM_APP = 'You want to sign out from app!';
 const CONFIRM = 'Confirm';
 const DELETE_PROJECT_TEXT = 'Are you sure! Want to delete this project!';
+const DELETE_TASK_TEXT = 'Are you sure! Want to delete this task!';
 
 //Button Text
 const SIGN_UP = 'Sign-Up';
@@ -622,7 +623,9 @@ const TASK_END_HINT = 'End Date';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 const SELECTED_HOURS_LABEL = 'Selected Hours';
 const ENTER_ESTIMATED_HOURS_HINT = 'Enter estimated hours';
+const WAITING_FOR_APPROVAL = 'Waiting for approval';
 const LOG_HRS = 'Log Hrs';
+const LOG_HRS_APPROVED = 'Log Hrs Approved';
 
 const NOT_STARTED_TASKS = 'Not Started Tasks';
 const COMPLETED_TASKS = 'Completed Tasks';

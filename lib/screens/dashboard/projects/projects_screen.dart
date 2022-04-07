@@ -83,11 +83,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       );
                       await _projectsBloc.getProjects(
                         projectTabType: _tabController.index == 0
-                            ? ProjectTabType.MY_PROJECTS_TAB
+                            ? ProjectTabType.PROJECT_OPEN_TAB
                             : _tabController.index == 1
                                 ? ProjectTabType.PROJECT_UPCOMING_TAB
                                 : _tabController.index == 2
-                                    ? ProjectTabType.PROJECT_OPEN_TAB
+                                    ? ProjectTabType.MY_PROJECTS_TAB
                                     : _tabController.index == 3
                                         ? ProjectTabType.PROJECT_COMPLETED_TAB
                                         : null,

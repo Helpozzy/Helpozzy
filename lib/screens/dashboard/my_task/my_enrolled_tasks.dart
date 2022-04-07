@@ -90,7 +90,12 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
       if (taskProgressType == TaskProgressType.LOG_HRS) {
         final TaskLogHrsModel logHrsModel = TaskLogHrsModel(
           timeStamp: DateTime.now().millisecondsSinceEpoch,
-          hrs: initialTime.inMilliseconds,
+          hrs: int.parse(DateFormatFromTimeStamp()
+              .durationToHHMM(duration: initialTime)
+              .split(':')[0]),
+          mins: int.parse(DateFormatFromTimeStamp()
+              .durationToHHMM(duration: initialTime)
+              .split(':')[1]),
           comment: _commentController.text,
           isApprovedFromAdmin: false,
           data: enrolledTaskModel.toJson(),

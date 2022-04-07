@@ -16,7 +16,7 @@ class ProjectReportHelper {
       chartDetailsList.add(ReportsDataModel(
         month: projectStartMonth,
         year: projectStartYear,
-        hrs: project.reviewCount,
+        hrs: project.totalTaskshrs,
         project: project,
       ));
     });

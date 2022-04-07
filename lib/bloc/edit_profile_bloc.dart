@@ -29,6 +29,11 @@ class EditProfileBloc {
     return response;
   }
 
+  Future<bool> updateTotalSpentHrs(int hrs) async {
+    final bool response = await repo.updateTotalSpentHrsRepo(hrs);
+    return response;
+  }
+
   Future sentOtpOfParentEmail(String email) async {
     final bool result = await _emailVerificationProvider.sendOtp(email);
     parentsOtpSentController.sink.add(result);

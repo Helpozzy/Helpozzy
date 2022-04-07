@@ -39,6 +39,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     data = projectReportHelper.chartDetailsList
         .where((element) => element.year == year)
         .toList();
+    print(data);
     setState(() {});
   }
 

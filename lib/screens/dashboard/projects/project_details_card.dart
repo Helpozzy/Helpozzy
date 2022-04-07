@@ -98,7 +98,7 @@ class _ProjectTileState extends State<ProjectTile> {
         children: [
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) {
+            onPressed: (BuildContext context) async {
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -1,6 +1,7 @@
 class TaskLogHrsModel {
   TaskLogHrsModel({
     this.hrs,
+    this.mins,
     this.comment,
     this.timeStamp,
     this.isApprovedFromAdmin,
@@ -9,6 +10,7 @@ class TaskLogHrsModel {
 
   TaskLogHrsModel.fromjson({required Map<String, dynamic> json}) {
     hrs = json['hrs'];
+    mins = json['mins'];
     timeStamp = json['time_stamp'];
     comment = json['comment'];
     isApprovedFromAdmin = json['is_approve_from_admin'];
@@ -18,6 +20,7 @@ class TaskLogHrsModel {
   Map<String, dynamic> toJson() {
     return {
       'hrs': hrs,
+      'mins': mins,
       'time_stamp': timeStamp,
       'comment': comment,
       'is_approve_from_admin': isApprovedFromAdmin,
@@ -26,6 +29,7 @@ class TaskLogHrsModel {
   }
 
   late int? hrs;
+  late int? mins;
   late String? comment;
   late int? timeStamp;
   late bool? isApprovedFromAdmin;
