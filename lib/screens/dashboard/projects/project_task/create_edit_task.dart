@@ -418,25 +418,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ),
         ),
         expandSearchUserList(),
-        // TextButton(
-        //   onPressed: () {},
-        //   child: Row(
-        //     children: [
-        //       Icon(
-        //         Icons.link,
-        //         color: BLACK,
-        //       ),
-        //       SizedBox(width: 5),
-        //       Text(
-        //         COPY_LINK,
-        //         style: _themeData.textTheme.bodyText2!.copyWith(
-        //           fontWeight: FontWeight.w600,
-        //           color: PRIMARY_COLOR,
-        //         ),
-        //       )
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }

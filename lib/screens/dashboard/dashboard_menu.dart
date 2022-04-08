@@ -52,41 +52,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     _theme = Theme.of(context);
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          topContainerWithProgress(),
-          CommonDivider(),
-          Padding(
-            padding: EdgeInsets.only(
-                left: width * 0.08, right: width * 0.06, top: 10.0),
-            child: StreamBuilder<SignUpAndUserModel>(
-              stream: _userInfoBloc.userStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+    return GestureDetector(
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            topContainerWithProgress(),
+            CommonDivider(),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: width * 0.08, right: width * 0.06, top: 10.0),
+              child: StreamBuilder<SignUpAndUserModel>(
+                stream: _userInfoBloc.userStream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text(
+                      LOADING,
+                      style: _theme.textTheme.headline6!.copyWith(
+                        color: DARK_GRAY,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }
                   return Text(
-                    LOADING,
+                    'Hi, ${snapshot.data!.name}',
                     style: _theme.textTheme.headline6!.copyWith(
-                      color: DARK_GRAY,
+                      color: PRIMARY_COLOR,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   );
-                }
-                return Text(
-                  'Hi, ${snapshot.data!.name}',
-                  style: _theme.textTheme.headline6!.copyWith(
-                    color: PRIMARY_COLOR,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
+                },
+              ),
             ),
-          ),
-          menuGrid(),
-        ],
+            menuGrid(),
+          ],
+        ),
       ),
     );
   }
@@ -293,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return organizationDetails != null &&
                 organizationDetails.legalOrganizationName != null
             ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: Column(
                   children: [
                     Text(
@@ -301,19 +304,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: width * 0.06,
+                        fontSize: width * 0.05,
                         color: BLACK,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      organizationDetails.discription!,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                          color: BLUE_GRAY, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        organizationDetails.discription!,
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                            color: BLUE_GRAY, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    SizedBox(height: 10)
                   ],
                 ),
               )

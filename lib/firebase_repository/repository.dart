@@ -30,8 +30,8 @@ class Repository {
   Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
       apiProvider.editProfileAPIProvider(json);
 
-  Future<bool> updateTotalSpentHrsRepo(int hrs) =>
-      apiProvider.updateTotalSpentHrsAPIProvider(hrs);
+  Future<bool> updateTotalSpentHrsRepo(String signUpUserId, int hrs) =>
+      apiProvider.updateTotalSpentHrsAPIProvider(signUpUserId, hrs);
 
   Future<Projects> getuserCompletedProjectsRepo() =>
       apiProvider.getUserCompltedProjectsAPIProvider();
@@ -53,14 +53,20 @@ class Repository {
   Future<ResponseModel> updateProjectRepo(ProjectModel project) =>
       apiProvider.updateProjectAPIProvider(project);
 
+  Future<ResponseModel> updateEnrolledProjectHrsRepo(
+          String signupUserId, String projectId, int hrs) =>
+      apiProvider.updateEnrolledProjectHrsAPIProvider(
+          signupUserId, projectId, hrs);
+
   Future<ResponseModel> deleteProjectRepo(String projectId) =>
       apiProvider.deleteProjectAPIProvider(projectId);
 
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
       apiProvider.getProjectsAPIProvider(projectTabType: projectTabType);
 
-  Future<ProjectModel> getprojectByProjectIdRepo(String projectId) =>
-      apiProvider.getProjectByProjectIdAPIProvider(projectId);
+  Future<ProjectModel> getprojectByProjectIdRepo(
+          String projectId, String signUpUserId) =>
+      apiProvider.getProjectByProjectIdAPIProvider(projectId, signUpUserId);
 
   Future<Users> getOtherUserInfoRepo() =>
       apiProvider.otherUserInfoAPIProvider();

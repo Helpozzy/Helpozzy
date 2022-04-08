@@ -46,21 +46,24 @@ class _TaskTabState extends State<TaskTab> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          StreamBuilder<bool>(
-            initialData: myTaskExpanded,
-            stream: _projectTaskBloc.getMyTaskExpandedStream,
-            builder: (context, snapshot) {
-              return tasksCategoriesCard(
-                prefixWidget: CommonUserProfileOrPlaceholder(
-                  imgUrl: prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
-                  size: width / 12,
-                ),
-                label: MY_TASKS_LABEL,
-                isMyTask: true,
-                isExpanded: snapshot.data!,
-              );
-            },
-          ),
+          project.ownerId != prefsObject.getString(CURRENT_USER_ID)
+              ? StreamBuilder<bool>(
+                  initialData: myTaskExpanded,
+                  stream: _projectTaskBloc.getMyTaskExpandedStream,
+                  builder: (context, snapshot) {
+                    return tasksCategoriesCard(
+                      prefixWidget: CommonUserProfileOrPlaceholder(
+                        imgUrl:
+                            prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
+                        size: width / 12,
+                      ),
+                      label: MY_TASKS_LABEL,
+                      isMyTask: true,
+                      isExpanded: snapshot.data!,
+                    );
+                  },
+                )
+              : SizedBox(),
           StreamBuilder<bool>(
             initialData: allTasksExpanded,
             stream: _projectTaskBloc.geAllTaskExpandedStream,
@@ -231,7 +234,12 @@ class _TaskTabState extends State<TaskTab> {
                                                   buttonColor:
                                                       BUTTON_GRAY_COLOR,
                                                   fontSize: 12,
-                                                  onPressed: () {},
+                                                  onPressed: () async =>
+                                                      await onTapFunction(
+                                                    task,
+                                                    isMyTask,
+                                                    TaskProgressType.LOG_HRS,
+                                                  ),
                                                 ),
                                               ],
                                             )
@@ -261,8 +269,7 @@ class _TaskTabState extends State<TaskTab> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    TaskDetails(taskId: task.taskId!),
+                                builder: (context) => TaskDetails(task: task),
                               ),
                             );
                             if (isMyTask) {
@@ -406,7 +413,9 @@ class _TaskTabState extends State<TaskTab> {
                 ? TASK_STARTED_POPUP_MSG
                 : taskProgressType == TaskProgressType.DECLINE
                     ? TASK_DECLINE_POPUP_MSG
-                    : task.status!,
+                    : taskProgressType == TaskProgressType.LOG_HRS
+                        ? TASK_LOG_HRS_POPUP_MSG
+                        : task.status!,
       );
     } else {
       CircularLoader().hide(context);

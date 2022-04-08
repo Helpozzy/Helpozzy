@@ -1,22 +1,24 @@
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
+// import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class TaskDetails extends StatefulWidget {
-  TaskDetails({required this.taskId});
-  final String taskId;
+  TaskDetails({required this.task});
+  final TaskModel task;
   @override
-  _TaskDetailsState createState() => _TaskDetailsState(taskId: taskId);
+  _TaskDetailsState createState() => _TaskDetailsState(task: task);
 }
 
 class _TaskDetailsState extends State<TaskDetails> {
-  _TaskDetailsState({required this.taskId});
-  final String taskId;
+  _TaskDetailsState({required this.task});
+  final TaskModel task;
   late ThemeData _theme;
   late double width;
 
@@ -24,29 +26,12 @@ class _TaskDetailsState extends State<TaskDetails> {
   final TaskBloc _taskBloc = TaskBloc();
 
   @override
-  void initState() {
-    _taskBloc.getTask(taskId);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CommonAppBar(context).show(title: TASK_DETAILS_APPBAR),
-      body: SafeArea(
-        child: StreamBuilder<TaskModel>(
-          stream: _taskBloc.getTaskInfoStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: LinearLoader());
-            }
-            final TaskModel task = snapshot.data!;
-            return body(task);
-          },
-        ),
-      ),
+      body: SafeArea(child: body(task)),
     );
   }
 
@@ -77,21 +62,39 @@ class _TaskDetailsState extends State<TaskDetails> {
               ),
             ),
           ),
-          task.status!.isNotEmpty
-              ? task.status == TOGGLE_NOT_STARTED
-                  ? startDeclineButton(task)
-                  : task.status == TOGGLE_INPROGRESS
-                      ? completedButton(task)
-                      : Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.symmetric(vertical: 10.0),
-                          child: CommonButton(
-                            text: LOG_HOURS_BUTTON,
-                            color: BUTTON_GRAY_COLOR,
-                            onPressed: () {},
-                          ),
-                        )
-              : SizedBox(),
+          // task.isApprovedFromAdmin != null && task.isApprovedFromAdmin!
+          //     ? task.status == TOGGLE_NOT_STARTED
+          //         ? startDeclineButton(task)
+          //         : task.status == TOGGLE_INPROGRESS
+          //             ? completedButton(task)
+          //             : Container(
+          //                 alignment: Alignment.center,
+          //                 margin: EdgeInsets.symmetric(vertical: 10.0),
+          //                 child: CommonButton(
+          //                   text: LOG_HOURS_BUTTON,
+          //                   color: BUTTON_GRAY_COLOR,
+          //                   onPressed: () {},
+          //                 ),
+          //               )
+          //     : Container(
+          //         alignment: Alignment.center,
+          //         margin: EdgeInsets.symmetric(vertical: 10.0),
+          //         child: CommonButton(
+          //           text: SIGN_UP,
+          //           color: DARK_GRAY,
+          //           onPressed: () {
+          //             Navigator.push(
+          //               context,
+          //               CupertinoPageRoute(
+          //                 builder: (context) => VolunteerProjectTaskSignUp(
+          //                   fromTask: true,
+          //                   task: task,
+          //                 ),
+          //               ),
+          //             );
+          //           },
+          //         ),
+          //       ),
         ],
       ),
     );

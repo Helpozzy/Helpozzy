@@ -114,7 +114,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
     setState(() {});
   }
 
-  Future onAddProject() async {
+  Future onAddEditProject() async {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
@@ -230,7 +230,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR,
         actions: [
           IconButton(
-            onPressed: () => onAddProject(),
+            onPressed: () => onAddEditProject(),
             icon: Icon(
               Icons.check_rounded,
               color: DARK_PINK_COLOR,
@@ -330,9 +330,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                     horizontal: width * 0.2, vertical: width * 0.03),
                 child: CommonButton(
                   text: fromEdit ? SAVE_BUTTON : PUBLISH_PROJECT_BUTTON,
-                  onPressed: () async {
-                    await onAddProject();
-                  },
+                  onPressed: () async => await onAddEditProject(),
                 ),
               ),
             ],

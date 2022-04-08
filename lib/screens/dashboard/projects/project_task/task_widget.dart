@@ -7,7 +7,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
-class TaskCard extends StatefulWidget {
+class TaskCard extends StatelessWidget {
   final dynamic task;
   final bool optionEnable;
   final bool selected;
@@ -24,21 +24,12 @@ class TaskCard extends StatefulWidget {
   });
 
   @override
-  State<TaskCard> createState() => _TaskCardState();
-}
-
-class _TaskCardState extends State<TaskCard> {
-  late ThemeData _theme;
-  late double width;
-
-  @override
   Widget build(BuildContext context) {
-    _theme = Theme.of(context);
-    width = MediaQuery.of(context).size.width;
-    return widget.optionEnable ? slidableInfoTile() : simpleInfoTile();
+    ThemeData _theme = Theme.of(context);
+    return optionEnable ? slidableInfoTile(_theme) : simpleInfoTile(_theme);
   }
 
-  Future<void> showDeletePrompt() async {
+  Future<void> showDeletePrompt(BuildContext context, ThemeData _theme) async {
     await PlatformAlertDialog().showWithAction(
       context,
       title: CONFIRM,
@@ -58,7 +49,7 @@ class _TaskCardState extends State<TaskCard> {
           padding: const EdgeInsets.only(right: 10.0),
           child: SmallCommonButton(
             fontSize: 12,
-            onPressed: widget.onTapDelete,
+            onPressed: onTapDelete,
             text: DELETE_BUTTON,
           ),
         ),
@@ -66,7 +57,7 @@ class _TaskCardState extends State<TaskCard> {
     );
   }
 
-  Widget slidableInfoTile() {
+  Widget slidableInfoTile(ThemeData _theme) {
     return Slidable(
       key: const ValueKey(0),
       closeOnScroll: true,
@@ -82,7 +73,7 @@ class _TaskCardState extends State<TaskCard> {
                 MaterialPageRoute(
                   builder: (context) => CreateEditTask(
                     fromEdit: true,
-                    task: widget.task,
+                    task: task,
                   ),
                 ),
               );
@@ -93,25 +84,26 @@ class _TaskCardState extends State<TaskCard> {
           ),
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) => showDeletePrompt(),
+            onPressed: (BuildContext context) =>
+                showDeletePrompt(context, _theme),
             foregroundColor: RED_COLOR,
             icon: CupertinoIcons.trash,
             autoClose: true,
           ),
         ],
       ),
-      child: simpleInfoTile(),
+      child: simpleInfoTile(_theme),
     );
   }
 
-  Widget simpleInfoTile() {
+  Widget simpleInfoTile(ThemeData _theme) {
     return GestureDetector(
-      onTap: widget.onTapItem,
+      onTap: onTapItem,
       child: Card(
         elevation: 2,
-        color: !widget.optionEnable
+        color: !optionEnable
             ? WHITE
-            : widget.selected
+            : selected
                 ? GRAY
                 : WHITE,
         margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
@@ -127,15 +119,15 @@ class _TaskCardState extends State<TaskCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                        timeStamp: widget.task.startDate),
+                    DateFormatFromTimeStamp()
+                        .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
                     style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 10,
                       color: UNSELECTED_TAB_COLOR,
                     ),
                   ),
                   Text(
-                    ESTIMATED_HRS + widget.task.estimatedHrs.toString(),
+                    ESTIMATED_HRS + task.estimatedHrs.toString(),
                     style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 8,
                       color: PRIMARY_COLOR,
@@ -145,7 +137,7 @@ class _TaskCardState extends State<TaskCard> {
                 ],
               ),
               Text(
-                widget.task.taskName,
+                task.taskName,
                 style: _theme.textTheme.headline6!.copyWith(
                   fontSize: 14,
                   color: UNSELECTED_TAB_COLOR,
@@ -153,7 +145,7 @@ class _TaskCardState extends State<TaskCard> {
                 ),
               ),
               SizedBox(height: 5),
-              widget.task.status == LOG_HRS
+              task.status == LOG_HRS
                   ? Text(
                       WAITING_FOR_APPROVAL.toUpperCase(),
                       style: _theme.textTheme.bodyText2!.copyWith(
@@ -162,7 +154,7 @@ class _TaskCardState extends State<TaskCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     )
-                  : widget.task.status == LOG_HRS_APPROVED
+                  : task.status == LOG_HRS_APPROVED
                       ? Text(
                           COMPLETED_BUTTON.toUpperCase(),
                           style: _theme.textTheme.bodyText2!.copyWith(
@@ -172,9 +164,9 @@ class _TaskCardState extends State<TaskCard> {
                           ),
                         )
                       : SizedBox(),
-              widget.task.status == TOGGLE_COMPLETE ||
-                      widget.task.status == LOG_HRS ||
-                      widget.task.status == LOG_HRS_APPROVED
+              task.status == TOGGLE_COMPLETE ||
+                      task.status == LOG_HRS ||
+                      task.status == LOG_HRS_APPROVED
                   ? SizedBox()
                   : Text(
                       TASK_ARE_YOU_RUNNING_LATE,
@@ -184,12 +176,12 @@ class _TaskCardState extends State<TaskCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              widget.task.status == LOG_HRS_APPROVED
+              task.status == LOG_HRS_APPROVED
                   ? SizedBox()
                   : Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(bottom: 5.0),
-                      child: widget.eventButton),
+                      child: eventButton),
             ],
           ),
         ),

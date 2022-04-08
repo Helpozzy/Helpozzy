@@ -531,7 +531,15 @@ EdgeInsets bottomContinueBtnEdgeInsets(double width, double height) {
 class ScaffoldSnakBar {
   Future show(BuildContext context, {required String msg}) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
+      SnackBar(
+        content: Text(
+          msg,
+          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                color: WHITE.withOpacity(0.8),
+              ),
+        ),
+        backgroundColor: PRIMARY_COLOR.withOpacity(0.9),
+      ),
     );
   }
 }

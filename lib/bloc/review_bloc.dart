@@ -20,7 +20,7 @@ class ProjectReviewsBloc {
     projectReviewsController.sink.add(response);
   }
 
-  void dispose() {
+  Future dispose() async {
     projectReviewsController.close();
   }
 }

@@ -29,8 +29,8 @@ class EditProfileBloc {
     return response;
   }
 
-  Future<bool> updateTotalSpentHrs(int hrs) async {
-    final bool response = await repo.updateTotalSpentHrsRepo(hrs);
+  Future<bool> updateTotalSpentHrs(String signUpUserId, int hrs) async {
+    final bool response = await repo.updateTotalSpentHrsRepo(signUpUserId, hrs);
     return response;
   }
 

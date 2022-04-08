@@ -82,9 +82,15 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
       _taskBloc.getEnrolledTasks();
       ScaffoldSnakBar().show(
         context,
-        msg: taskProgressType == TaskProgressType.DECLINE
-            ? TASK_DECLINE_POPUP_MSG
-            : TASK_COMPLETED_POPUP_MSG,
+        msg: taskProgressType == TaskProgressType.COMPLETED
+            ? TASK_COMPLETED_POPUP_MSG
+            : taskProgressType == TaskProgressType.START
+                ? TASK_STARTED_POPUP_MSG
+                : taskProgressType == TaskProgressType.DECLINE
+                    ? TASK_DECLINE_POPUP_MSG
+                    : taskProgressType == TaskProgressType.LOG_HRS
+                        ? TASK_LOG_HRS_POPUP_MSG
+                        : task.status!,
       );
 
       if (taskProgressType == TaskProgressType.LOG_HRS) {
@@ -115,6 +121,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
         final ResponseModel notificationResponse =
             await _notificationBloc.postNotification(notification);
         if (notificationResponse.success!) {
+          await ScaffoldSnakBar().show(context, msg: response.message!);
           _taskBloc.getEnrolledTasks();
         } else {
           await ScaffoldSnakBar().show(context, msg: response.error!);
@@ -212,9 +219,9 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                                 fontSize: 12,
                                                 onPressed: () async =>
                                                     updateTask(
-                                                        task,
-                                                        TaskProgressType
-                                                            .LOG_HRS),
+                                                  task,
+                                                  TaskProgressType.LOG_HRS,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -222,8 +229,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TaskDetails(taskId: task.taskId!),
+                                  builder: (context) => TaskDetails(task: task),
                                 ),
                               );
                               await _taskBloc.getEnrolledTasks();

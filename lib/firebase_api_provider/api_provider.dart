@@ -78,20 +78,18 @@ class ApiProvider {
     return true;
   }
 
-  Future<bool> updateTotalSpentHrsAPIProvider(int hrs) async {
+  Future<bool> updateTotalSpentHrsAPIProvider(
+      String signUpUserId, int hrs) async {
     await firestore
         .collection('users')
-        .doc(prefsObject.getString(CURRENT_USER_ID))
+        .doc(signUpUserId)
         .get()
         .then((value) async {
       SignUpAndUserModel user = SignUpAndUserModel.fromJson(
           json: value.data() as Map<String, dynamic>);
 
-      await firestore
-          .collection('users')
-          .doc(prefsObject.getString(CURRENT_USER_ID))
-          .update({'total_spent_hrs': user.totalSpentHrs! + hrs}).catchError(
-              (onError) {
+      await firestore.collection('users').doc(signUpUserId).update(
+          {'total_spent_hrs': user.totalSpentHrs! + hrs}).catchError((onError) {
         print(onError.toString());
       });
     });
@@ -153,6 +151,33 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('projects').doc(project.projectId);
       await documentReference.update(project.toJson());
+      return ResponseModel(
+        success: true,
+        message: 'Project is updated',
+        returnValue: documentReference.id,
+      );
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: 'Fail! Project is not updated');
+    }
+  }
+
+  Future<ResponseModel> updateEnrolledProjectHrsAPIProvider(
+      String signupUserId, String projectId, int hrs) async {
+    try {
+      final QuerySnapshot querySnapshot = await firestore
+          .collection('signed_up_projects')
+          .where('project_id', isEqualTo: projectId)
+          .where('signup_uid', isEqualTo: signupUserId)
+          .get();
+
+      final DocumentSnapshot documentSnapshot = await firestore
+          .collection('signed_up_projects')
+          .doc(querySnapshot.docs.first.id)
+          .get();
+
+      documentSnapshot.reference.update({'total_tasks_hrs': hrs});
+
       return ResponseModel(success: true, message: 'Project is updated');
     } catch (e) {
       return ResponseModel(
@@ -232,11 +257,15 @@ class ApiProvider {
   }
 
   Future<ProjectModel> getProjectByProjectIdAPIProvider(
-      String projectId) async {
-    final DocumentSnapshot documentSnapshot =
-        await firestore.collection('projects').doc(projectId).get();
+      String projectId, String signUpUserId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('signed_up_projects')
+        .where('signup_uid', isEqualTo: signUpUserId)
+        .where('project_id', isEqualTo: projectId)
+        .get();
+
     return ProjectModel.fromjson(
-        json: documentSnapshot.data() as Map<String, dynamic>);
+        json: querySnapshot.docs.first.data() as Map<String, dynamic>);
   }
 
   Future<Users> otherUserInfoAPIProvider() async {
@@ -249,7 +278,7 @@ class ApiProvider {
     try {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc();
-      task.enrollTaskId = documentReference.id;
+      task.taskId = documentReference.id;
       await documentReference.set(task.toJson());
       return ResponseModel(success: true, message: 'Task created');
     } catch (e) {

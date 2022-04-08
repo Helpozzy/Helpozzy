@@ -45,6 +45,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
     task.status = LOG_HRS_APPROVED;
     task.isApprovedFromAdmin = true;
+    taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
     if (updateTaskResponse.success!) {
@@ -60,13 +61,15 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.subTitle = 'Your log hours for ${task.taskName} is approved';
       notification.isUpdated = true;
       notification.payload = taskLogHrs.toJson();
-      final ProjectModel? project =
-          await _projectsBloc.getProjectByProjectId(task.projectId!);
+      final ProjectModel? project = await _projectsBloc.getProjectByProjectId(
+          task.projectId!, task.signUpUserId!);
       if (project!.totalTaskshrs != null) {
         project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
-        await _editProfileBloc.updateTotalSpentHrs(taskLogHrs.hrs!);
+        await _editProfileBloc.updateTotalSpentHrs(
+            task.signUpUserId!, taskLogHrs.hrs!);
         final ResponseModel response =
-            await _projectsBloc.updateProject(project);
+            await _projectsBloc.updateEnrolledProjectHrs(
+                task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
         if (response.success!) {
           ScaffoldSnakBar().show(context, msg: response.message!);
         } else {

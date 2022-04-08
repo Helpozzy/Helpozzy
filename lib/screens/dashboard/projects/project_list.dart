@@ -88,14 +88,17 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     initialData: false,
                     stream: projectsBloc.getProjectExpandStream,
                     builder: (context, snapshot) {
+                      // projectsBloc.getProjects(projectTabType: projectTabType);
                       return InkWell(
                         onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProjectDetailsInfo(
-                                      project: project,
-                                      projectTabType: projectTabType,
-                                    ))),
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProjectDetailsInfo(
+                              project: project,
+                              projectTabType: projectTabType,
+                            ),
+                          ),
+                        ),
                         child: ProjectTile(
                           projectTabType: projectTabType,
                           project: project,

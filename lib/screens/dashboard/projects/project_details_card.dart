@@ -7,6 +7,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -68,8 +69,22 @@ class _ProjectTileState extends State<ProjectTile> {
           padding: const EdgeInsets.only(right: 10.0),
           child: SmallCommonButton(
             fontSize: 12,
-            onPressed: () {
-              _projectsBloc.deleteProject(project.projectId!);
+            onPressed: () async {
+              Navigator.of(context).pop();
+              CircularLoader().show(context);
+              final ResponseModel response =
+                  await _projectsBloc.deleteProject(project.projectId!);
+              if (response.success!) {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG);
+                await _projectsBloc.getProjects(projectTabType: projectTabType);
+              } else {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: PROJECT_NOT_DELETED_ERROR_POPUP_MSG);
+                await _projectsBloc.getProjects(projectTabType: projectTabType);
+              }
             },
             text: DELETE_BUTTON,
           ),

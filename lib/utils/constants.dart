@@ -209,13 +209,17 @@ const OTP_SENT_TO_POPUP_MSG = 'OTP sent to';
 const ENTER_HRS_POPUP_MSG = 'Enter your hrs in field';
 const PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG = 'Project created successfully!';
 const PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG = 'Project updated successfully!';
+const PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG = 'Project deleted successfully!';
 const PROJECT_NOT_CREATED_ERROR_POPUP_MSG =
     'Project not created due some error, Try again!';
 const PROJECT_NOT_UPDATED_ERROR_POPUP_MSG =
     'Project not updated due some error, Try again!';
+const PROJECT_NOT_DELETED_ERROR_POPUP_MSG =
+    'Project not deleted due some error, Try again!';
 const TASK_COMPLETED_POPUP_MSG = 'Task completed';
 const TASK_STARTED_POPUP_MSG = 'Task started';
 const TASK_DECLINE_POPUP_MSG = 'Task Declined';
+const TASK_LOG_HRS_POPUP_MSG = 'Task Hrs submited to admin, Wait for approve';
 const TASK_NOT_UPDATED_POPUP_MSG = 'Technical issue! Task not updated';
 const TASK_DELETED_POPUP_MSG = 'Task deleted!';
 const SOMETHING_WENT_WRONG_POPUP_MSG = 'Something went wrong!';
@@ -924,36 +928,51 @@ Map<String, dynamic> rewardsList = {
 };
 
 List<String> volunteerProjectImage = [
-  "assets/images/volunteer_1.jpg",
-  "assets/images/volunteer_2.jpg",
+  'assets/images/volunteer_1.jpg',
+  'assets/images/volunteer_2.jpg',
+  'assets/images/volunteer_3.jpg',
 ];
+
 List<String> childrenYouthProjectImage = [
-  "assets/images/children_youth_1.jpg",
-  "assets/images/children_youth_2.jpg",
+  'assets/images/children_youth_1.jpg',
+  'assets/images/children_youth_2.jpg',
+  'assets/images/children_youth_3.jpg',
 ];
+
 List<String> fooBankProjectImage = [
-  "assets/images/food_bank_1.jpg",
-  "assets/images/food_bank_2.jpg",
+  'assets/images/food_bank_1.jpg',
+  'assets/images/food_bank_2.jpg',
+  'assets/images/food_bank_3.png',
 ];
+
 List<String> seniorCenterProjectImage = [
-  "assets/images/senior_center_1.jpg",
-  "assets/images/senior_center_2.jpg",
+  'assets/images/senior_center_1.jpg',
+  'assets/images/senior_center_2.jpg',
+  'assets/images/senior_center_3.jpg',
 ];
+
 List<String> teachingProjectImage = [
-  "assets/images/teaching_1.jpg",
-  "assets/images/teaching_2.jpg",
+  'assets/images/teaching_1.jpg',
+  'assets/images/teaching_2.jpg',
+  'assets/images/teaching_3.jpg',
 ];
+
 List<String> animalCareProjectImage = [
-  "assets/images/animal_care_1.jpg",
-  "assets/images/animal_care_2.jpg",
+  'assets/images/animal_care_1.jpg',
+  'assets/images/animal_care_2.jpg',
+  'assets/images/animal_care_3.jpg',
 ];
+
 List<String> homelessSeleterProjectImage = [
-  "assets/images/homeless_seleter_1.jpg",
-  "assets/images/homeless_seleter_2.jpg",
+  'assets/images/homeless_seleter_1.jpg',
+  'assets/images/homeless_seleter_2.jpg',
+  'assets/images/homeless_seleter_3.jpg',
 ];
+
 List<String> otherProjectImage = [
-  "assets/images/other_1.jpg",
-  "assets/images/other_2.jpg",
+  'assets/images/other_1.jpg',
+  'assets/images/other_2.jpg',
+  'assets/images/other_3.jpg',
 ];
 
 int generateIds() {

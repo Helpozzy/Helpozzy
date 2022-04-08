@@ -68,15 +68,8 @@ class ProjectsBloc {
       projectsController.sink.add(projectsFromAPI);
     } else {
       projectsFromAPI.forEach((project) {
-        if (project.projectName!
-                .toLowerCase()
-                .contains(searchText.toLowerCase()) ||
-            project.location!
-                .toLowerCase()
-                .contains(searchText.toLowerCase()) ||
-            project.organization!
-                .toLowerCase()
-                .contains(searchText.toLowerCase())) {
+        if (project.projectName!.contains(searchText) ||
+            project.organization!.contains(searchText)) {
           searchedProjectList.add(project);
         }
       });
@@ -130,9 +123,17 @@ class ProjectsBloc {
     categorisedProjectsController.sink.add(response);
   }
 
-  Future<ProjectModel> getProjectByProjectId(String projectId) async {
+  Future<ProjectModel> getProjectByProjectId(
+      String projectId, String signUpUserId) async {
     final ProjectModel response =
-        await repo.getprojectByProjectIdRepo(projectId);
+        await repo.getprojectByProjectIdRepo(projectId, signUpUserId);
+    return response;
+  }
+
+  Future<ResponseModel> updateEnrolledProjectHrs(
+      String signupUserId, String projectId, int hrs) async {
+    final ResponseModel response =
+        await repo.updateEnrolledProjectHrsRepo(signupUserId, projectId, hrs);
     return response;
   }
 

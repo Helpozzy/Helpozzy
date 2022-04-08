@@ -95,6 +95,7 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   Future onDelete(TaskModel task) async {
+    Navigator.of(context).pop();
     CircularLoader().show(context);
     final ResponseModel response =
         await _projectTaskBloc.deleteTask(task.taskId!);

@@ -37,7 +37,7 @@ class MembersBloc {
     } else {
       users.peoples.forEach((project) {
         if (project.name!.toLowerCase().contains(searchText.toLowerCase()) ||
-            project.address!.toLowerCase().contains(searchText.toLowerCase())) {
+            project.email!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedMembersList.add(project);
         }
       });
