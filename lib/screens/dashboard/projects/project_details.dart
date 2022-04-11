@@ -228,7 +228,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
 
   Widget scheduleTiming() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.04),
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.035),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

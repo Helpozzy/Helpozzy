@@ -18,8 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => HomeBloc(homeBloc: context.read<HomeBloc>()),
-        child: Home());
+      create: (_) => HomeBloc(homeBloc: context.read<HomeBloc>()),
+      child: Home(),
+    );
   }
 }
 

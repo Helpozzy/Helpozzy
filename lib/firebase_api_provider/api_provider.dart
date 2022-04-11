@@ -98,8 +98,8 @@ class ApiProvider {
 
   Future<Projects> getUserCompltedProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
-        .collection('projects')
-        .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .collection('signed_up_projects')
+        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
     return Projects.fromJson(list: querySnapshot.docs);
@@ -289,7 +289,7 @@ class ApiProvider {
   Future<ResponseModel> updateTaskAPIProvider(TaskModel task) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('tasks').doc(task.enrollTaskId);
+          firestore.collection('tasks').doc(task.taskId);
       await documentReference.update(task.toJson());
       return ResponseModel(success: true, message: 'Task is updated');
     } catch (e) {
@@ -333,6 +333,7 @@ class ApiProvider {
             : await firestore
                 .collection('tasks')
                 .where('task_id', isEqualTo: null)
+                .where('project_id', isEqualTo: null)
                 .where('owner_id',
                     isEqualTo: prefsObject.getString(CURRENT_USER_ID))
                 .get();

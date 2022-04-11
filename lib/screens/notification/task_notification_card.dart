@@ -17,12 +17,16 @@ class NotificationTile extends StatelessWidget {
     return taskLogHrsModel.comment!;
   }
 
-  List<String> getRequestHrs() {
+  int getRequestHrs() {
     final TaskLogHrsModel taskLogHrsModel =
         TaskLogHrsModel.fromjson(json: notification.payload!);
-    final String hrs = DateFormatFromTimeStamp()
-        .durationToHHMM(duration: Duration(milliseconds: taskLogHrsModel.hrs!));
-    return hrs.split(':');
+    return taskLogHrsModel.hrs!;
+  }
+
+  int getRequestMins() {
+    final TaskLogHrsModel taskLogHrsModel =
+        TaskLogHrsModel.fromjson(json: notification.payload!);
+    return taskLogHrsModel.mins!;
   }
 
   bool getLogHrsIsApproved() {
@@ -90,10 +94,10 @@ class NotificationTile extends StatelessWidget {
                     getLogHrsIsApproved()
                         ? Text(
                             APPROVED_HRS +
-                                getRequestHrs()[0] +
+                                getRequestHrs().toString() +
                                 HRS_LABEL +
                                 DASH_LABEL +
-                                getRequestHrs()[1] +
+                                getRequestMins().toString() +
                                 MINS_LABEL,
                             style: _theme.textTheme.bodyText2!.copyWith(
                               color: PRIMARY_COLOR,
@@ -103,10 +107,10 @@ class NotificationTile extends StatelessWidget {
                           )
                         : Text(
                             REQUESTED_HRS +
-                                getRequestHrs()[0] +
+                                getRequestHrs().toString() +
                                 HRS_LABEL +
                                 DASH_LABEL +
-                                getRequestHrs()[1] +
+                                getRequestMins().toString() +
                                 MINS_LABEL,
                             style: _theme.textTheme.bodyText2!.copyWith(
                               color: PRIMARY_COLOR,

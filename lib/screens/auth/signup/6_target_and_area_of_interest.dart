@@ -4,6 +4,7 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/auth/signup/7_password_set_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class TargetAndAreaOfInterest extends StatefulWidget {
   TargetAndAreaOfInterest({required this.signupAndUserModel});
@@ -34,17 +35,25 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
           selectedAreaOfInterests.add(category.id!);
         }
       });
-      signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
-          ? trackerVal.round()
-          : int.parse(_targetHoursController.text);
-      signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              SetPasswordScreen(signupAndUserModel: signupAndUserModel),
-        ),
-      );
+      if (trackerVal.round() != 0) {
+        signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
+            ? trackerVal.round()
+            : int.parse(_targetHoursController.text);
+        signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SetPasswordScreen(signupAndUserModel: signupAndUserModel),
+          ),
+        );
+      } else {
+        PlatformAlertDialog().show(
+          context,
+          title: ALERT,
+          content: 'Please add current year target hours',
+        );
+      }
     }
   }
 

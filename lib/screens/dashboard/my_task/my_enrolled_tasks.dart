@@ -140,6 +140,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(title: MY_TAKS_APPBAR),
       body: tasks(),
     );

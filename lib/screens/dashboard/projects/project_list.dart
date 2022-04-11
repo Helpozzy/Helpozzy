@@ -57,7 +57,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         ? ONGOING_PROJECT_LABEL
                         : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                             ? RECENTLY_COMPLETED_LABEL
-                            : LATEST_CONTRIBUTION_HOURS_LABEL),
+                            : LATEST_CONTRIBUTION_HOURS_LABEL,
+              ),
         Expanded(child: projectList(projectsBloc.getProjectsStream)),
         projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
             ? ListDividerLabel(label: DateTime.now().year.toString())
@@ -88,7 +89,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     initialData: false,
                     stream: projectsBloc.getProjectExpandStream,
                     builder: (context, snapshot) {
-                      // projectsBloc.getProjects(projectTabType: projectTabType);
                       return InkWell(
                         onTap: () => Navigator.push(
                           context,
