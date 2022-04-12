@@ -310,7 +310,6 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
   }
 
   Widget reviewCard() {
-    final ReviewModel reviewModel = ReviewModel();
     return StreamBuilder<SignUpAndUserModel>(
       stream: _userInfoBloc.userStream,
       builder: (context, snapshot) {
@@ -320,8 +319,9 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
           );
         }
         return Card(
-          elevation: 2,
-          margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: width * 0.04),
+          elevation: 3,
+          margin:
+              EdgeInsets.symmetric(vertical: 10.0, horizontal: width * 0.04),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
@@ -393,33 +393,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                         ? SmallCommonButton(
                             text: SUBMIT_BUTTON,
                             fontSize: 12,
-                            onPressed: () async {
-                              reviewModel.projectId = project.projectId;
-                              reviewModel.reviewerId =
-                                  prefsObject.getString(CURRENT_USER_ID);
-                              reviewModel.address = snapshot.data!.address;
-                              reviewModel.imageUrl = snapshot.data!.profileUrl;
-                              reviewModel.name = snapshot.data!.name;
-                              reviewModel.rating = selectedRating;
-                              reviewModel.timeStamp = DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString();
-                              reviewModel.reviewText = _reviewController.text;
-                              final bool response = await _projectReviewsBloc
-                                  .postReview(reviewModel);
-
-                              if (response) {
-                                ScaffoldSnakBar().show(context,
-                                    msg: REVIEW_POSTED_POPUP_MSG);
-                                selectedRating = 0.0;
-                                _reviewController.clear();
-                                _projectReviewsBloc
-                                    .getProjectReviews(project.projectId!);
-                              } else {
-                                ScaffoldSnakBar().show(context,
-                                    msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
-                              }
-                            },
+                            onPressed: () async => onPostReview(snapshot.data!),
                           )
                         : SizedBox(),
                   ],
@@ -430,6 +404,28 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
         );
       },
     );
+  }
+
+  Future onPostReview(SignUpAndUserModel data) async {
+    final ReviewModel reviewModel = ReviewModel();
+    reviewModel.projectId = project.projectId;
+    reviewModel.reviewerId = prefsObject.getString(CURRENT_USER_ID);
+    reviewModel.address = data.address;
+    reviewModel.imageUrl = data.profileUrl;
+    reviewModel.name = data.name;
+    reviewModel.rating = selectedRating;
+    reviewModel.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+    reviewModel.reviewText = _reviewController.text;
+    final bool response = await _projectReviewsBloc.postReview(reviewModel);
+
+    if (response) {
+      ScaffoldSnakBar().show(context, msg: REVIEW_POSTED_POPUP_MSG);
+      selectedRating = 0.0;
+      _reviewController.clear();
+      _projectReviewsBloc.getProjectReviews(project.projectId!);
+    } else {
+      ScaffoldSnakBar().show(context, msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
+    }
   }
 
   InputDecoration reviewFieldDecoration() {

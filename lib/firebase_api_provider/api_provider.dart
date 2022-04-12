@@ -233,7 +233,7 @@ class ApiProvider {
                     : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                         ? await firestore
                             .collection('projects')
-                            .where('status', isEqualTo: PROJECT_COMPLETED)
+                            .where('status', isEqualTo: TOGGLE_COMPLETE)
                             .where('owner_id',
                                 isNotEqualTo:
                                     prefsObject.getString(CURRENT_USER_ID)!)

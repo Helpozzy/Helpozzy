@@ -51,9 +51,7 @@ class _TasksScreenState extends State<TasksScreen> {
       stream: _projectTaskBloc.getProjectTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: LinearLoader(),
-          );
+          return Center(child: LinearLoader());
         }
         return ListView.builder(
           shrinkWrap: true,

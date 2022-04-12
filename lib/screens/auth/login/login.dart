@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpozzy/bloc/login_bloc.dart';
 import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_bloc.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_event.dart';
@@ -80,6 +82,9 @@ class _LoginInputState extends State<LoginInput> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
+  final LoginRxDartBloc _loginRxDartBloc = LoginRxDartBloc();
+  late bool showPass = false;
+
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
@@ -115,18 +120,41 @@ class _LoginInputState extends State<LoginInput> {
                       },
                     ),
                     SizedBox(height: 15),
-                    CommonRoundedTextfield(
-                      controller: _passController,
-                      obscureText: true,
-                      hintText: ENTER_PASSWORD_HINT,
-                      validator: (password) {
-                        if (password!.isEmpty) {
-                          return 'Please enter password';
-                        } else if (password.isNotEmpty && password.length < 8) {
-                          return 'Password must be at least 8 characters';
-                        } else {
-                          return null;
-                        }
+                    StreamBuilder<bool>(
+                      initialData: showPass,
+                      stream: _loginRxDartBloc.showPassStream,
+                      builder: (context, snapshot) {
+                        return CommonRoundedTextfield(
+                          controller: _passController,
+                          obscureText: !snapshot.data!,
+                          hintText: ENTER_PASSWORD_HINT,
+                          suffixIcon: IconButton(
+                            icon: Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                snapshot.data!
+                                    ? CupertinoIcons.eye_slash
+                                    : CupertinoIcons.eye,
+                                color: DARK_GRAY,
+                                size: 16,
+                              ),
+                            ),
+                            onPressed: () {
+                              showPass = !showPass;
+                              _loginRxDartBloc.changeShowPass(showPass);
+                            },
+                          ),
+                          validator: (password) {
+                            if (password!.isEmpty) {
+                              return 'Please enter password';
+                            } else if (password.isNotEmpty &&
+                                password.length < 8) {
+                              return 'Password must be at least 8 characters';
+                            } else {
+                              return null;
+                            }
+                          },
+                        );
                       },
                     ),
                   ],

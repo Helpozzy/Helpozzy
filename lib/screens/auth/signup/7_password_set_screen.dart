@@ -193,7 +193,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                         ),
                         onPressed: () {
                           showConfirmPass = !showConfirmPass;
-                          _signUpBloc.changeShowPass(showConfirmPass);
+                          _signUpBloc.changeShowConfirmPass(showConfirmPass);
                         },
                       ),
                       validator: (confirmPass) {

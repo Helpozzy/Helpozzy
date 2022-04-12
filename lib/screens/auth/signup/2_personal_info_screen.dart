@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -106,6 +107,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   child: CommonRoundedTextfield(
                     controller: _firstNameController,
                     hintText: ENTER_FIRST_NAME_HINT,
+                    textCapitalization: TextCapitalization.words,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                    ],
                     validator: (firstName) {
                       if (firstName!.isEmpty) {
                         return 'Please enter first name';
@@ -125,6 +130,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   child: CommonRoundedTextfield(
                     controller: _lastNameController,
                     hintText: ENTER_LAST_NAME_HINT,
+                    textCapitalization: TextCapitalization.words,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                    ],
                     validator: (lastName) {
                       if (lastName!.isEmpty) {
                         return 'Please enter last name';

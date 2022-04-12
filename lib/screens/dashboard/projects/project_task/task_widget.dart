@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_task/create_edit_task.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class TaskCard extends StatelessWidget {
-  final dynamic task;
+  final TaskModel task;
   final bool optionEnable;
   final bool selected;
   final Widget eventButton;
@@ -100,7 +101,7 @@ class TaskCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTapItem,
       child: Card(
-        elevation: 2,
+        elevation: 3,
         color: !optionEnable
             ? WHITE
             : selected
@@ -111,7 +112,7 @@ class TaskCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -119,11 +120,53 @@ class TaskCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DateFormatFromTimeStamp()
-                        .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate),
+                    task.taskName!,
                     style: _theme.textTheme.bodyText2!.copyWith(
-                      fontSize: 10,
                       color: UNSELECTED_TAB_COLOR,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    DateFormatFromTimeStamp()
+                        .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate!),
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontSize: 9,
+                      color: UNSELECTED_TAB_COLOR,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  task.description!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: _theme.textTheme.bodyText2!.copyWith(
+                    color: UNSELECTED_TAB_COLOR,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+              CommonDivider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5.0),
+                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3),
+                        border: Border.all(width: 1.0, color: GRAY)),
+                    child: Text(
+                      task.status!.toUpperCase(),
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.headline6!.copyWith(
+                        fontSize: 8,
+                        color: BLUE_COLOR,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(
@@ -136,52 +179,48 @@ class TaskCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                task.taskName,
-                style: _theme.textTheme.headline6!.copyWith(
-                  fontSize: 14,
-                  color: UNSELECTED_TAB_COLOR,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 5),
               task.status == LOG_HRS
-                  ? Text(
-                      WAITING_FOR_APPROVAL.toUpperCase(),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 10,
-                        color: BLUE_COLOR,
-                        fontWeight: FontWeight.bold,
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3.0),
+                      child: Text(
+                        WAITING_FOR_APPROVAL.toUpperCase(),
+                        style: _theme.textTheme.bodyText2!.copyWith(
+                          fontSize: 10,
+                          color: BLUE_COLOR,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     )
                   : task.status == LOG_HRS_APPROVED
-                      ? Text(
-                          COMPLETED_BUTTON.toUpperCase(),
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 3.0),
+                          child: Text(
+                            COMPLETED_BUTTON,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: DARK_PINK_COLOR,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+              task.enrollTaskId != null
+                  ? task.status == TOGGLE_COMPLETE ||
+                          task.status == LOG_HRS ||
+                          task.status == LOG_HRS_APPROVED
+                      ? SizedBox()
+                      : Text(
+                          TASK_ARE_YOU_RUNNING_LATE,
                           style: _theme.textTheme.bodyText2!.copyWith(
                             fontSize: 10,
                             color: BLUE_COLOR,
                             fontWeight: FontWeight.bold,
                           ),
                         )
-                      : SizedBox(),
-              task.status == TOGGLE_COMPLETE ||
-                      task.status == LOG_HRS ||
-                      task.status == LOG_HRS_APPROVED
-                  ? SizedBox()
-                  : Text(
-                      TASK_ARE_YOU_RUNNING_LATE,
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 10,
-                        color: BLUE_COLOR,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  : SizedBox(),
               task.status == LOG_HRS_APPROVED
                   ? SizedBox()
-                  : Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(bottom: 5.0),
-                      child: eventButton),
+                  : Align(alignment: Alignment.center, child: eventButton),
             ],
           ),
         ),
