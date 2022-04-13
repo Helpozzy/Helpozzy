@@ -122,6 +122,28 @@ class ApiProvider {
     return SignUpAndUserModel.fromJson(json: json);
   }
 
+  Future<ResponseModel> updateUserPresenceAPIProvider(
+      String timeStamp, bool presence) async {
+    try {
+      final DocumentReference documentReference = firestore
+          .collection('users')
+          .doc(prefsObject.getString(CURRENT_USER_ID));
+      await documentReference.update({
+        'presence': presence,
+        'time_stamp': timeStamp,
+      });
+      return ResponseModel(
+        success: true,
+        message: 'Activity is updated',
+      );
+    } catch (e) {
+      return ResponseModel(
+        success: false,
+        error: 'Failed! Activity is not updated',
+      );
+    }
+  }
+
   Future<Users> usersAPIProvider(String uId) async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('users')
@@ -181,7 +203,7 @@ class ApiProvider {
       return ResponseModel(success: true, message: 'Project is updated');
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Fail! Project is not updated');
+          success: false, error: 'Failed! Project is not updated');
     }
   }
 
@@ -191,7 +213,7 @@ class ApiProvider {
       return ResponseModel(success: true, message: 'Project is deleted');
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Fail, Project is not deleted');
+          success: false, error: 'Failed, Project is not deleted');
     }
   }
 
@@ -293,7 +315,8 @@ class ApiProvider {
       await documentReference.update(task.toJson());
       return ResponseModel(success: true, message: 'Task is updated');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Fail! Task is not updated');
+      return ResponseModel(
+          success: false, error: 'Failed! Task is not updated');
     }
   }
 
@@ -302,7 +325,8 @@ class ApiProvider {
       await firestore.collection('tasks').doc(taskId).delete();
       return ResponseModel(success: true, message: 'Task is deleted');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Fail, Task is not deleted');
+      return ResponseModel(
+          success: false, error: 'Failed! Task is not deleted');
     }
   }
 
@@ -385,7 +409,7 @@ class ApiProvider {
         );
       }
     } catch (e) {
-      return ResponseModel(success: false, error: 'Fail! Task not enrolled');
+      return ResponseModel(success: false, error: 'Failed! Task not enrolled');
     }
   }
 
@@ -568,7 +592,7 @@ class ApiProvider {
       await firestore.collection('notifications').doc(id).delete();
       return ResponseModel(success: true);
     } catch (e) {
-      return ResponseModel(success: false, error: 'Fail to update');
+      return ResponseModel(success: false, error: 'Failed');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,6 +19,13 @@ class UserInfoBloc {
     final String userData = jsonEncode(response.toJson());
     prefsObject.setString(CURRENT_USER_DATA, userData);
     userController.sink.add(response);
+  }
+
+  Future<ResponseModel> udateUserPresence(
+      String timeStamp, bool presence) async {
+    final ResponseModel response =
+        await repo.updateUserPresenceRepo(timeStamp, presence);
+    return response;
   }
 
   void dispose() {

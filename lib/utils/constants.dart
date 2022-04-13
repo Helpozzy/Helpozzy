@@ -104,6 +104,7 @@ const HTTP_CODE = 'code';
 
 //Loading
 const LOADING = 'Loading..';
+const DOT = '• ';
 
 // Routes
 const INTRO = 'intro';
@@ -517,7 +518,7 @@ const COLUMN_FOUR = 'Youngs\nAdult\n(16–25)';
 const COLUMN_FIVE = 'Adults\n(26+)';
 const TOP_REWARD_DETAILS =
     'Star Points required to Earn Reward Badges in each Age Group';
-const SECOND_REWARD_DETAILS_TEXT = '60 minutes contribution = 1 points';
+const SECOND_REWARD_DETAILS_TEXT = '60 minutes contribution = 1 point';
 
 //Points Tab
 const BEGINNER_MEMBER = 'BEGINNER MEMBER';

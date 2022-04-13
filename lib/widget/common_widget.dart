@@ -774,7 +774,7 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
           color: buttonColor,
           borderRadius: BorderRadius.circular(100),
         ),
-        padding: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 12.0, left: 8.0),
+        padding: EdgeInsets.only(top: 3.0, bottom: 3.0, right: 10.0, left: 6.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1048,6 +1048,31 @@ class ListDividerLabel extends StatelessWidget {
           ),
           hasIcon ? suffixIcon! : SizedBox(),
         ],
+      ),
+    );
+  }
+}
+
+//Status Indicator
+class StatusWidget extends StatelessWidget {
+  const StatusWidget({this.label});
+  final String? label;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border:
+              Border.all(width: 0.7, color: PRIMARY_COLOR.withOpacity(0.2))),
+      child: Text(
+        label!.toUpperCase(),
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.headline6!.copyWith(
+              fontSize: 8,
+              color: BLUE_COLOR,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }

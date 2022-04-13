@@ -6,9 +6,9 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_task/task_details.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_task/task_widget.dart';
 import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_details.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/task_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_task/create_edit_task.dart';
+import 'package:helpozzy/screens/dashboard/tasks/create_edit_task.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
@@ -123,7 +123,7 @@ class TaskCard extends StatelessWidget {
                     task.taskName!,
                     style: _theme.textTheme.bodyText2!.copyWith(
                       color: UNSELECTED_TAB_COLOR,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
@@ -146,6 +146,7 @@ class TaskCard extends StatelessWidget {
                   style: _theme.textTheme.bodyText2!.copyWith(
                     color: UNSELECTED_TAB_COLOR,
                     fontSize: 10,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -153,21 +154,9 @@ class TaskCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5.0),
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        border: Border.all(width: 1.0, color: GRAY)),
-                    child: Text(
-                      task.status!.toUpperCase(),
-                      overflow: TextOverflow.ellipsis,
-                      style: _theme.textTheme.headline6!.copyWith(
-                        fontSize: 8,
-                        color: BLUE_COLOR,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: StatusWidget(label: task.status!),
                   ),
                   Text(
                     ESTIMATED_HRS + task.estimatedHrs.toString(),

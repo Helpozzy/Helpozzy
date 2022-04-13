@@ -11,6 +11,7 @@ class ProjectsBloc {
 
   final projectDetailsExpandController = PublishSubject<bool>();
   final projectsController = PublishSubject<List<ProjectModel>>();
+  final signedUpProjectsController = PublishSubject<List<ProjectModel>>();
   final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
@@ -20,6 +21,8 @@ class ProjectsBloc {
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
   Stream<List<ProjectModel>> get getProjectsStream => projectsController.stream;
+  Stream<List<ProjectModel>> get getSignedUpProjectsStream =>
+      signedUpProjectsController.stream;
   Stream<Projects> get getOnGoingProjectsStream =>
       onGoingProjectsController.stream;
   Stream<List<SignUpAndUserModel>> get getOtherUsersStream =>
@@ -56,6 +59,12 @@ class ProjectsBloc {
         await repo.getprojectsRepo(projectTabType: projectTabType);
     projectsFromAPI = response.projectList;
     projectsController.sink.add(response.projectList);
+    return response.projectList;
+  }
+
+  Future<List<ProjectModel>> getSignedUpProjects() async {
+    final Projects response = await repo.getEnrolledProjectRepo();
+    signedUpProjectsController.sink.add(response.projectList);
     return response.projectList;
   }
 
@@ -142,6 +151,7 @@ class ProjectsBloc {
   void dispose() {
     projectDetailsExpandController.close();
     projectsActivityStatusController.close();
+    signedUpProjectsController.close();
     projectsController.close();
     otherUserInfoController.close();
     onGoingProjectsController.close();

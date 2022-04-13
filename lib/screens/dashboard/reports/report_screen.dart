@@ -33,18 +33,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadMonth(String year) async {
-    final List<ProjectModel> projects = await _projectsBloc.getProjects();
+    final List<ProjectModel> projects =
+        await _projectsBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList
         .where((element) => element.year == year)
         .toList();
-    print(data);
     setState(() {});
   }
 
   Future loadProject(String year, String month) async {
-    final List<ProjectModel> projects = await _projectsBloc.getProjects();
+    final List<ProjectModel> projects =
+        await _projectsBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList

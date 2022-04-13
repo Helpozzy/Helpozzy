@@ -40,6 +40,8 @@ class SignUpAndUserModel {
     this.joiningDate,
     this.isOrganization,
     this.organizationDetails,
+    this.lastSeen,
+    this.presence,
   });
 
   SignUpAndUserModel.fromJson({required Map<String, dynamic> json}) {
@@ -82,6 +84,8 @@ class SignUpAndUserModel {
     organizationDetails = json['organization_details'] != null
         ? OrganizationSignUpModel.fromJson(json: json['organization_details'])
         : json['organization_details'];
+    presence = json['presence'];
+    lastSeen = json['last_seen'];
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +118,8 @@ class SignUpAndUserModel {
       'organization_details': organizationDetails != null
           ? organizationDetails!.toJson()
           : organizationDetails,
+      'last_seen': lastSeen,
+      'presence': presence,
     };
   }
 
@@ -144,4 +150,6 @@ class SignUpAndUserModel {
   late String? joiningDate;
   late OrganizationSignUpModel? organizationDetails;
   late bool? isOrganization = false;
+  late String? lastSeen;
+  late bool? presence = false;
 }

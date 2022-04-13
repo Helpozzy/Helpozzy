@@ -11,13 +11,13 @@ import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/dashboard/tasks/create_edit_task.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-import 'project_task/create_edit_task.dart';
-import 'project_task/task_widget.dart';
-import 'project_task/tasks_screen.dart';
 
 class CreateOrEditProject extends StatefulWidget {
   CreateOrEditProject({required this.fromEdit, this.project});

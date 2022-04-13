@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
-import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
@@ -159,7 +158,6 @@ class _ProjectTileState extends State<ProjectTile> {
                       Text(
                         project.projectName!,
                         style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 13,
                           color: DARK_PINK_COLOR,
                           fontWeight: FontWeight.bold,
                         ),
@@ -170,63 +168,51 @@ class _ProjectTileState extends State<ProjectTile> {
                           : SizedBox(),
                     ],
                   ),
-                  project.status == PROJECT_COMPLETED &&
-                          projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                      ? Text(
-                          PROJECT_COMPLETED,
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            color: ACCENT_GREEN,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      : SizedBox()
+                  StatusWidget(label: project.status!),
                 ],
               ),
-              SizedBox(height: 3),
+              Text(
+                project.organization != null && project.organization!.isNotEmpty
+                    ? project.organization!
+                    : project.categoryId == 0
+                        ? DOT + VOLUNTEER_0
+                        : project.categoryId == 1
+                            ? DOT + FOOD_BANK_1
+                            : project.categoryId == 2
+                                ? DOT + TEACHING_2
+                                : project.categoryId == 3
+                                    ? DOT + HOMELESS_SHELTER_3
+                                    : project.categoryId == 4
+                                        ? DOT + ANIMAL_CARE_4
+                                        : project.categoryId == 5
+                                            ? DOT + SENIOR_CENTER_5
+                                            : project.categoryId == 6
+                                                ? DOT + CHILDREN_AND_YOUTH_6
+                                                : DOT + OTHER_7,
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 10,
+                  color: PRIMARY_COLOR,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        project.organization != null &&
-                                project.organization!.isNotEmpty
-                            ? project.organization!
-                            : project.categoryId == 0
-                                ? VOLUNTEER_0
-                                : project.categoryId == 1
-                                    ? FOOD_BANK_1
-                                    : project.categoryId == 2
-                                        ? TEACHING_2
-                                        : project.categoryId == 3
-                                            ? HOMELESS_SHELTER_3
-                                            : project.categoryId == 4
-                                                ? ANIMAL_CARE_4
-                                                : project.categoryId == 5
-                                                    ? SENIOR_CENTER_5
-                                                    : project.categoryId == 6
-                                                        ? CHILDREN_AND_YOUTH_6
-                                                        : OTHER_7,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 12,
-                          color: DARK_PINK_COLOR,
-                        ),
+                  Expanded(
+                    child: Text(
+                      project.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 10,
+                        color: UNSELECTED_TAB_COLOR,
+                        fontWeight: FontWeight.w600,
                       ),
-                      SizedBox(height: 2),
-                      Text(
-                        DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                            timeStamp: project.startDate!),
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          fontSize: 12,
-                          color: BLUE_COLOR,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
+                  SizedBox(width: 10),
                   SmallCommonButtonWithIcon(
                     onPressed: () {
                       project.isProjectDetailsExpanded =
@@ -241,8 +227,8 @@ class _ProjectTileState extends State<ProjectTile> {
                     icon: project.isProjectDetailsExpanded!
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    fontSize: 10,
-                    iconSize: 15,
+                    fontSize: 8,
+                    iconSize: 12,
                     text: project.isProjectDetailsExpanded!
                         ? HIDE_DETAILS_BUTTON
                         : SHOW_DETAILS_BUTTON,

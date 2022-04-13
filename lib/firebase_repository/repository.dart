@@ -42,6 +42,10 @@ class Repository {
   Future<SignUpAndUserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
 
+  Future<ResponseModel> updateUserPresenceRepo(
+          String timeStamp, bool presence) =>
+      apiProvider.updateUserPresenceAPIProvider(timeStamp, presence);
+
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
 
   Future<ResponseModel> postProjectSignupRepo(ProjectModel projectSignUpVal) =>

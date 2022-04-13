@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/app.dart';
 import 'package:helpozzy/firebase_repository/auth_repository.dart';
+import 'package:helpozzy/manager/life_cycle_manager.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,17 +16,25 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefsObject = prefs;
   runApp(
-    MultiBlocProvider(providers: [
-      BlocProvider(
-        create: (_) => LoginBloc(
-          authRepository: AuthRepository(),
-        ),
+    LifeCycleManager(
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => LoginBloc(
+              authRepository: AuthRepository(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authRepository: AuthRepository(),
+            ),
+          ),
+          BlocProvider(
+            create: (_) => HomeBloc(),
+          ),
+        ],
+        child: HelpozzyApp(),
       ),
-      BlocProvider(
-          create: (context) => AuthBloc(authRepository: AuthRepository())),
-      BlocProvider(
-        create: (_) => HomeBloc(),
-      ),
-    ], child: HelpozzyApp()),
+    ),
   );
 }

@@ -5,9 +5,9 @@ import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/dashboard/my_task/my_enrolled_tasks.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_list.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
+import 'package:helpozzy/screens/dashboard/tasks/my_enrolled_tasks.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:timelines/timelines.dart';
@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       color: ACCENT_GRAY_COLOR,
       child: Column(
         children: [
-          TopAppLogo(size: width * 0.23),
+          TopAppLogo(size: width * 0.15),
           Text(
             MSG_DASHBOARD,
             textAlign: TextAlign.center,

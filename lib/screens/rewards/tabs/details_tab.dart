@@ -167,10 +167,10 @@ class _DetailsTabScreenState extends State<DetailsTabScreen>
                 ? _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 10,
                     color: DARK_PINK_COLOR,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.bold,
                   )
                 : _theme.textTheme.bodyText2!.copyWith(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     fontSize: 11,
                   ),
           )
@@ -211,7 +211,7 @@ class _DetailsTabScreenState extends State<DetailsTabScreen>
       height: width * 0.25,
       width: width / 5,
       decoration: BoxDecoration(
-          color: currentGoal ? DARK_PINK_COLOR.withOpacity(0.4) : null,
+          color: currentGoal ? GREEN : null,
           border: BorderDirectional(
             top: BorderSide(
               color: GRAY,
@@ -244,7 +244,7 @@ class _DetailsTabScreenState extends State<DetailsTabScreen>
             maxLines: 2,
             textAlign: TextAlign.center,
             style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w600, fontSize: 12),
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ],
       ),
