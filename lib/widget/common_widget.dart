@@ -394,7 +394,6 @@ class CommonBadge extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      margin: EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(100),

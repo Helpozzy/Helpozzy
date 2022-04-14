@@ -48,8 +48,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   Future onContinue(AsyncSnapshot<bool> snapshot) async {
     FocusScope.of(context).unfocus();
-    signupAndUserModel.name =
-        _firstNameController.text + ' ' + _lastNameController.text;
+    signupAndUserModel.firstName = _firstNameController.text;
+    signupAndUserModel.lastName = _lastNameController.text;
     signupAndUserModel.email = _emailController.text;
     signupAndUserModel.dateOfBirth =
         _selectedBirthDate.millisecondsSinceEpoch.toString();

@@ -126,7 +126,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
         categoryId: selectedCategoryId,
         projectId: project != null ? project!.projectId : '',
         aboutOrganizer: SAMPLE_LONG_TEXT,
-        contactName: currentUser.name,
+        contactName: currentUser.firstName,
         contactNumber: currentUser.personalPhnNo,
         imageUrl: img(),
         location: location,
@@ -700,7 +700,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  users[index].name!,
+                                  users[index].firstName!,
                                   style: _themeData.textTheme.bodyText2!
                                       .copyWith(fontWeight: FontWeight.w600),
                                 ),

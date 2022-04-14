@@ -15,7 +15,8 @@ class SignUpAndUserModel {
   SignUpAndUserModel({
     this.volunteerType,
     this.profileUrl,
-    this.name,
+    this.firstName,
+    this.lastName,
     this.email,
     this.about,
     this.dateOfBirth,
@@ -25,9 +26,6 @@ class SignUpAndUserModel {
     this.parentEmail,
     this.relationshipWithParent,
     this.address,
-    this.city,
-    this.state,
-    this.zipCode,
     this.schoolName,
     this.gradeLevel,
     this.areaOfInterests,
@@ -47,7 +45,8 @@ class SignUpAndUserModel {
   SignUpAndUserModel.fromJson({required Map<String, dynamic> json}) {
     volunteerType = json['volunteer_type'];
     profileUrl = json['profile_url'];
-    name = json['name'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
     email = json['email'];
     about = json['about'];
     dateOfBirth = json['date_of_birth'];
@@ -57,9 +56,6 @@ class SignUpAndUserModel {
     parentEmail = json['parents_email'];
     relationshipWithParent = json['relationship_with_parent'];
     address = json['address'];
-    city = json['city'];
-    state = json['state'];
-    zipCode = json['zip_code'];
     schoolName = json['school_name'];
     gradeLevel = json['grade_level'];
     if (json['area_of_interests'] != null &&
@@ -92,7 +88,8 @@ class SignUpAndUserModel {
     return {
       'volunteer_type': volunteerType,
       'profile_url': profileUrl,
-      'name': name,
+      'first_name': firstName,
+      'last_name': lastName,
       'email': email,
       'about': about,
       'date_of_birth': dateOfBirth,
@@ -102,9 +99,6 @@ class SignUpAndUserModel {
       'parents_email': parentEmail,
       'relationship_with_parent': relationshipWithParent,
       'address': address,
-      'city': city,
-      'state': state,
-      'zip_code': zipCode,
       'school_name': schoolName,
       'grade_level': gradeLevel,
       'area_of_interests': areaOfInterests,
@@ -125,7 +119,8 @@ class SignUpAndUserModel {
 
   late int? volunteerType;
   late String? profileUrl;
-  late String? name;
+  late String? firstName;
+  late String? lastName;
   late String? email;
   late String? about;
   late String? dateOfBirth;
@@ -135,9 +130,6 @@ class SignUpAndUserModel {
   late String? parentEmail;
   late String? relationshipWithParent;
   late String? address;
-  late String? city;
-  late String? state;
-  late String? zipCode;
   late String? schoolName;
   late String? gradeLevel;
   late List<int>? areaOfInterests = [];

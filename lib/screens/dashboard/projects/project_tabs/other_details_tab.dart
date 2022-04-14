@@ -341,7 +341,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          snapshot.data!.name!,
+                          snapshot.data!.firstName!,
                           style: _theme.textTheme.bodyText2!
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -412,7 +412,7 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
     reviewModel.reviewerId = prefsObject.getString(CURRENT_USER_ID);
     reviewModel.address = data.address;
     reviewModel.imageUrl = data.profileUrl;
-    reviewModel.name = data.name;
+    reviewModel.name = data.firstName;
     reviewModel.rating = selectedRating;
     reviewModel.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
     reviewModel.reviewText = _reviewController.text;

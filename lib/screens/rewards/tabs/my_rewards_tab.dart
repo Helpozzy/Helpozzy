@@ -166,7 +166,7 @@ class _MyRewardsTabScreenState extends State<MyRewardsTabScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    people.name!,
+                    people.firstName!,
                     style: _theme.textTheme.bodyText2!.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,

@@ -47,6 +47,9 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       signupAndUserModel.pointGifted = 0;
       signupAndUserModel.joiningDate =
           DateTime.now().millisecondsSinceEpoch.toString();
+      signupAndUserModel.lastSeen =
+          DateTime.now().millisecondsSinceEpoch.toString();
+      signupAndUserModel.presence = false;
       _signUpBloc
           .registerUser(signupAndUserModel, _confirmPassController.text)
           .then((response) {

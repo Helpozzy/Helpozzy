@@ -180,6 +180,7 @@ class _TaskTabState extends State<TaskTab> {
                               size: 15,
                             )
                           : SizedBox(),
+                      SizedBox(width: 10),
                       Expanded(
                         child: TaskCard(
                           task: task,

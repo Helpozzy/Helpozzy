@@ -462,7 +462,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  users[index].name!,
+                                  users[index].firstName!,
                                   style: _themeData.textTheme.bodyText2!
                                       .copyWith(fontWeight: FontWeight.w600),
                                 ),

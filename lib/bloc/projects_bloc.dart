@@ -116,7 +116,7 @@ class ProjectsBloc {
     } else {
       usersFromAPI.forEach((user) {
         if (user.email!.toLowerCase().contains(searchText.toLowerCase()) ||
-            user.name!.toLowerCase().contains(searchText.toLowerCase())) {
+            user.firstName!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedUserList.add(user);
         }
       });

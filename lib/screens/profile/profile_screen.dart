@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user.name!,
+                      user.firstName! + ' ' + user.lastName!,
                       style: _theme.textTheme.headline6!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
@@ -182,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 Text(
-                  'Total volunteering hrs : 10 Hours',
+                  'Total volunteering hrs : ${user.totalSpentHrs} Hours',
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

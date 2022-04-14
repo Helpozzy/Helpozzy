@@ -59,7 +59,7 @@ class _VolunteerProjectTaskSignUpState
     final Map<String, dynamic> json =
         jsonDecode(userData) as Map<String, dynamic>;
     userModel = SignUpAndUserModel.fromJson(json: json);
-    _nameController.text = userModel.name!;
+    _nameController.text = userModel.firstName! + ' ' + userModel.lastName!;
     _emailController.text = userModel.email!;
     _addressController.text = userModel.address!;
     countryCode = CountryCode(code: userModel.countryCode!);
@@ -109,7 +109,7 @@ class _VolunteerProjectTaskSignUpState
           title: 'New project sign-up request',
           payload: projectSignUpVal.toJson(),
           subTitle:
-              "${userModel.name} want's to signed up in ${project!.projectName} for volunteering.",
+              "${userModel.firstName} want's to signed up in ${project!.projectName} for volunteering.",
         );
 
         final ResponseModel notificationResponse =
@@ -164,7 +164,7 @@ class _VolunteerProjectTaskSignUpState
           title: 'New task sign-up request',
           payload: taskSignUpVal.toJson(),
           subTitle:
-              "${userModel.name} want's to volunteer in the ${task!.taskName}"
+              "${userModel.firstName} want's to volunteer in the ${task!.taskName}"
               " of project ${project!.projectName}",
         );
 

@@ -130,8 +130,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future listenUser() async {
-    _firstNameController.text = user.name!.split(' ')[0];
-    _lastNameController.text = user.name!.split(' ')[1];
+    _firstNameController.text = user.firstName!;
+    _lastNameController.text = user.lastName!;
     _aboutController.text = user.about!;
     _emailController.text = user.email!;
     _dateOfBirthController.text = DateFormatFromTimeStamp().dateFormatToYMD(
@@ -176,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       profileUrl = await convertAndUpload(_imageFile!);
     }
     final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
-      name: _firstNameController.text + ' ' + _lastNameController.text,
+      firstName: _firstNameController.text + ' ' + _lastNameController.text,
       isOrganization: user.isOrganization,
       about: _aboutController.text,
       email: _emailController.text,
@@ -240,7 +240,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     late String downloadUrl;
     try {
       final String imageName =
-          user.name! + DateTime.now().millisecondsSinceEpoch.toString();
+          user.firstName! + DateTime.now().millisecondsSinceEpoch.toString();
 
       final storageUploadTask = await FirebaseStorage.instance
           .ref()

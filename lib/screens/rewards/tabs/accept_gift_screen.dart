@@ -45,7 +45,7 @@ class _AcceptGiftScreenState extends State<AcceptGiftScreen> {
               ),
               SizedBox(height: 14.0),
               Text(
-                'Gift From ${widget.people.name}',
+                'Gift From ${widget.people.firstName}',
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontSize: width / 20,
                   color: PINK_COLOR,

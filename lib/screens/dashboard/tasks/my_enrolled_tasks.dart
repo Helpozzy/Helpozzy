@@ -115,7 +115,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
           title: 'Log Task Hours Request',
           payload: logHrsModel.toJson(),
           subTitle:
-              "${userModel.name} want's to log hours of the ${task.taskName}",
+              "${userModel.firstName} want's to log hours of the ${task.taskName}",
         );
 
         final ResponseModel notificationResponse =
@@ -172,6 +172,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                   : ACCENT_GREEN,
                           size: 15,
                         ),
+                        SizedBox(width: 10),
                         Expanded(
                           child: TaskCard(
                             task: task,

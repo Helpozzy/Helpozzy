@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectMembersTab extends StatefulWidget {
   @override
@@ -14,6 +16,8 @@ class ProjectMembersTab extends StatefulWidget {
 class _ProjectMembersTabState extends State<ProjectMembersTab> {
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
+  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
+      DateFormatFromTimeStamp();
   late double width;
   late double height;
   late ThemeData _theme;
@@ -22,6 +26,13 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   void initState() {
     _membersBloc.searchMembers(searchText: '');
     super.initState();
+  }
+
+  String getLastSeen(String timeStamp) {
+    final String lastseen =
+        _dateFormatFromTimeStamp.getPastTimeFromCurrent(timeStamp);
+
+    return lastseen;
   }
 
   @override
@@ -107,11 +118,25 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    CommonBadge(
+                      color: volunteer.presence! ? GREEN : RED_COLOR,
+                      size: width * 0.02,
+                    ),
+                    SizedBox(width: 2),
+                    Text(
+                      volunteer.firstName! + ' ' + volunteer.lastName!,
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
                 Text(
-                  volunteer.name!,
+                  getLastSeen(volunteer.lastSeen!),
                   style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    color: UNSELECTED_TAB_COLOR,
                   ),
                 ),
                 Text(
@@ -124,7 +149,10 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 3.0, bottom: 3.0, right: 5.0),
+                        top: 3.0,
+                        bottom: 3.0,
+                        right: 5.0,
+                      ),
                       child: RatingBar.builder(
                         initialRating: volunteer.rating!,
                         ignoreGestures: true,
@@ -139,9 +167,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                           Icons.star,
                           color: AMBER_COLOR,
                         ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
+                        onRatingUpdate: (rating) => print(rating),
                       ),
                     ),
                     Text(
@@ -158,7 +184,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
             child: Row(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () async =>
+                      CommonUrlLauncher().launchCall(volunteer.personalPhnNo!),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(

@@ -36,7 +36,9 @@ class MembersBloc {
       _searchMembersList.sink.add(users.peoples);
     } else {
       users.peoples.forEach((project) {
-        if (project.name!.toLowerCase().contains(searchText.toLowerCase()) ||
+        if (project.firstName!
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
             project.email!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedMembersList.add(project);
         }
@@ -47,8 +49,8 @@ class MembersBloc {
 
   Future sortMembersByName() async {
     final Users users = await repo.usersRepo(uId);
-    users.peoples
-        .sort((a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
+    users.peoples.sort((a, b) =>
+        a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
     _searchMembersList.sink.add(users.peoples);
   }
 

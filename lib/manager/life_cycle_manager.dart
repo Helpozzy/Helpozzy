@@ -24,25 +24,21 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      print('AppLifecycleState state: Paused');
       _userInfoBloc.udateUserPresence(
         DateTime.now().millisecondsSinceEpoch.toString(),
         false,
       );
     } else if (state == AppLifecycleState.resumed) {
-      print('AppLifecycleState state: Resumed');
       _userInfoBloc.udateUserPresence(
         DateTime.now().millisecondsSinceEpoch.toString(),
         true,
       );
     } else if (state == AppLifecycleState.detached) {
-      print('AppLifecycleState state: Detached');
       _userInfoBloc.udateUserPresence(
         DateTime.now().millisecondsSinceEpoch.toString(),
         false,
       );
     } else if (state == AppLifecycleState.inactive) {
-      print('AppLifecycleState state: Inactive');
       _userInfoBloc.udateUserPresence(
         DateTime.now().millisecondsSinceEpoch.toString(),
         false,

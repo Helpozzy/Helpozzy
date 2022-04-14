@@ -77,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     );
                   }
                   return Text(
-                    'Hi, ${snapshot.data!.name}',
+                    'Hi, ${snapshot.data!.firstName}',
                     style: _theme.textTheme.headline6!.copyWith(
                       color: PRIMARY_COLOR,
                       fontSize: 16,
