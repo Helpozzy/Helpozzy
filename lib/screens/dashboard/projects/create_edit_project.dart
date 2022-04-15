@@ -19,17 +19,17 @@ import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
-class CreateOrEditProject extends StatefulWidget {
-  CreateOrEditProject({required this.fromEdit, this.project});
+class CreateEditProject extends StatefulWidget {
+  CreateEditProject({required this.fromEdit, this.project});
   final bool fromEdit;
   final ProjectModel? project;
   @override
-  _CreateOrEditProjectState createState() =>
-      _CreateOrEditProjectState(fromEdit: fromEdit, project: project);
+  _CreateEditProjectState createState() =>
+      _CreateEditProjectState(fromEdit: fromEdit, project: project);
 }
 
-class _CreateOrEditProjectState extends State<CreateOrEditProject> {
-  _CreateOrEditProjectState({required this.fromEdit, this.project});
+class _CreateEditProjectState extends State<CreateEditProject> {
+  _CreateEditProjectState({required this.fromEdit, this.project});
   final bool fromEdit;
   final ProjectModel? project;
   final _formKey = GlobalKey<FormState>();
@@ -734,7 +734,7 @@ class _CreateOrEditProjectState extends State<CreateOrEditProject> {
 
   Widget taskList() {
     return StreamBuilder<List<TaskModel>>(
-      stream: selectedTaskBloc.getSelectedTaskStream,
+      stream: selectedTaskBloc.getSelectedTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: SizedBox());

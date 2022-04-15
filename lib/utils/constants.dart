@@ -574,10 +574,8 @@ const ADD_TASK_BUTTON = 'New Task';
 const ADD_NEW_TASK_BUTTON = 'Create New Task';
 const TASK_LIST_BUTTON = 'Task List';
 const MEMBERS_LIST_BUTTON = 'Members List';
-const HIDE_DETAILS_BUTTON = 'Hide Details ';
-const SHOW_DETAILS_BUTTON = 'Show Details';
-const HIDE_TASK_DETAILS_BUTTON = 'Hide Task Details ';
-const SHOW_TASK_DETAILS_BUTTON = 'Show Task Details';
+const DETAILS_BUTTON = 'Details';
+const TASK_DETAILS_BUTTON = 'Task Details';
 const SEARCH_MEMBERS_HINT = 'Search Members';
 
 //Create project

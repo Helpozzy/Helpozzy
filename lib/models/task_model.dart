@@ -48,7 +48,7 @@ class TaskModel {
     endDate = json['end_date'];
     estimatedHrs = json['estimated_hrs'];
     totalVolunteerHrs = json['total_volunteer_hours'];
-    members = json['members'];
+    members = json['members'] != null ? json['members'] : [];
     status = json['status'];
     isApprovedFromAdmin = json['is_approved_from_admin'];
   }
@@ -89,7 +89,7 @@ class TaskModel {
   late String? endDate;
   late int? estimatedHrs;
   late int? totalVolunteerHrs;
-  late String? members;
+  late List<dynamic>? members = [];
   late String? status;
   late bool? isSelected = false;
   late bool? isApprovedFromAdmin = false;

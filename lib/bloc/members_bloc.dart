@@ -35,12 +35,12 @@ class MembersBloc {
     if (searchText.isEmpty) {
       _searchMembersList.sink.add(users.peoples);
     } else {
-      users.peoples.forEach((project) {
-        if (project.firstName!
+      users.peoples.forEach((volunteer) {
+        if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
-            project.email!.toLowerCase().contains(searchText.toLowerCase())) {
-          searchedMembersList.add(project);
+            volunteer.email!.toLowerCase().contains(searchText.toLowerCase())) {
+          searchedMembersList.add(volunteer);
         }
       });
       _searchMembersList.sink.add(searchedMembersList);

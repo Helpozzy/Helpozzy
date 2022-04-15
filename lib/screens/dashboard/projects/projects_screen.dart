@@ -78,7 +78,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              CreateOrEditProject(fromEdit: false),
+                              CreateEditProject(fromEdit: false),
                         ),
                       );
                       await _projectsBloc.getProjects(

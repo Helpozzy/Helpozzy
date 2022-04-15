@@ -13,6 +13,7 @@ class Users {
 
 class SignUpAndUserModel {
   SignUpAndUserModel({
+    this.userId,
     this.volunteerType,
     this.profileUrl,
     this.firstName,
@@ -40,9 +41,11 @@ class SignUpAndUserModel {
     this.organizationDetails,
     this.lastSeen,
     this.presence,
+    this.isSelected,
   });
 
   SignUpAndUserModel.fromJson({required Map<String, dynamic> json}) {
+    userId = json['user_id'];
     volunteerType = json['volunteer_type'];
     profileUrl = json['profile_url'];
     firstName = json['first_name'];
@@ -86,6 +89,7 @@ class SignUpAndUserModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'user_id': userId,
       'volunteer_type': volunteerType,
       'profile_url': profileUrl,
       'first_name': firstName,
@@ -117,6 +121,7 @@ class SignUpAndUserModel {
     };
   }
 
+  late String? userId;
   late int? volunteerType;
   late String? profileUrl;
   late String? firstName;
@@ -144,4 +149,5 @@ class SignUpAndUserModel {
   late bool? isOrganization = false;
   late String? lastSeen;
   late bool? presence = false;
+  late bool? isSelected = false;
 }

@@ -31,7 +31,6 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   String getLastSeen(String timeStamp) {
     final String lastseen =
         _dateFormatFromTimeStamp.getPastTimeFromCurrent(timeStamp);
-
     return lastseen;
   }
 

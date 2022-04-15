@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       color: ACCENT_GRAY_COLOR,
       child: Column(
         children: [
-          TopAppLogo(size: width * 0.15),
+          TopAppLogo(size: width * 0.20),
           Text(
             MSG_DASHBOARD,
             textAlign: TextAlign.center,
@@ -109,7 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 7),
+          SizedBox(height: 5),
           timelineProgress(),
           organizationDetails(),
         ],
@@ -121,6 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             YOUR_HOURS_1,

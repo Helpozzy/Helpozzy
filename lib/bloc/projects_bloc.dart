@@ -17,6 +17,7 @@ class ProjectsBloc {
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
   final completedOwnProjectsController = PublishSubject<Projects>();
   final categorisedProjectsController = PublishSubject<Projects>();
+  final selectedMembersController = PublishSubject<List<SignUpAndUserModel>>();
 
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
@@ -33,6 +34,8 @@ class ProjectsBloc {
       completedOwnProjectsController.stream;
   Stream<Projects> get getCategorisedProjectsStream =>
       categorisedProjectsController.stream;
+  Stream<List<SignUpAndUserModel>> get getSelectedMembersStream =>
+      selectedMembersController.stream;
 
   Future isExpanded(bool isExpanded) async {
     projectDetailsExpandController.sink.add(isExpanded);
@@ -68,6 +71,12 @@ class ProjectsBloc {
     return response.projectList;
   }
 
+  Future<ResponseModel> removeSignedUpProject(String enrolledProjectId) async {
+    final ResponseModel response =
+        await repo.removeEnrolledProjectRepo(enrolledProjectId);
+    return response;
+  }
+
   List<ProjectModel> projectsFromAPI = [];
   List<ProjectModel> searchedProjectList = [];
 
@@ -88,8 +97,10 @@ class ProjectsBloc {
     }
   }
 
-  Future getProjectsActivityStatus() async {
-    final Projects response = await repo.getprojectsRepo();
+  Future getProjectsActivityStatus(
+      {required ProjectTabType projectTabType}) async {
+    final Projects response =
+        await repo.getprojectsRepo(projectTabType: projectTabType);
     final ProjectHelper projectHelper = ProjectHelper.fromProjects(response);
     projectsActivityStatusController.sink.add(projectHelper);
   }
@@ -148,6 +159,10 @@ class ProjectsBloc {
     return response;
   }
 
+  Future getSelectedMembers({required List<SignUpAndUserModel> members}) async {
+    selectedMembersController.sink.add(members);
+  }
+
   void dispose() {
     projectDetailsExpandController.close();
     projectsActivityStatusController.close();
@@ -157,5 +172,6 @@ class ProjectsBloc {
     onGoingProjectsController.close();
     completedOwnProjectsController.close();
     categorisedProjectsController.close();
+    selectedMembersController.close();
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/dashboard/members/memebers_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -18,6 +19,7 @@ class _MembersScreenState extends State<MembersScreen> {
   late double height;
   late ThemeData _theme;
   late bool favVolunteers = false;
+  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -36,6 +38,15 @@ class _MembersScreenState extends State<MembersScreen> {
       appBar: CommonAppBar(context).show(
         title: MEMBERS_APPBAR,
         onBack: () => Navigator.of(context).pop(),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pop(context, selectedItems),
+            icon: Icon(
+              Icons.check,
+              color: DARK_PINK_COLOR,
+            ),
+          ),
+        ],
       ),
       body: body(),
     );
@@ -43,9 +54,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
   Widget body() {
     return GestureDetector(
-      onPanDown: (_) {
-        FocusScope.of(context).unfocus();
-      },
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Column(
         children: [
           Container(
@@ -196,9 +205,31 @@ class _MembersScreenState extends State<MembersScreen> {
               builder: (context, snapshot) {
                 return snapshot.data!
                     ? volunteer.favorite!
-                        ? memberItem(volunteer: volunteer)
+                        ? MemberCard(
+                            volunteer: volunteer,
+                            selected: volunteer.isSelected!,
+                            onTapLike: () => setState(() =>
+                                volunteer.favorite = !volunteer.favorite!),
+                            onTapItem: () {
+                              setState(() => volunteer.isSelected =
+                                  !volunteer.isSelected!);
+                              if (volunteer.isSelected!)
+                                selectedItems.add(volunteer);
+                            },
+                          )
                         : SizedBox()
-                    : memberItem(volunteer: volunteer);
+                    : MemberCard(
+                        volunteer: volunteer,
+                        selected: volunteer.isSelected!,
+                        onTapLike: () => setState(
+                            () => volunteer.favorite = !volunteer.favorite!),
+                        onTapItem: () {
+                          setState(() =>
+                              volunteer.isSelected = !volunteer.isSelected!);
+                          if (volunteer.isSelected!)
+                            selectedItems.add(volunteer);
+                        },
+                      );
               },
             );
           },

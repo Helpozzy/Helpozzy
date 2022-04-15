@@ -59,10 +59,10 @@ class ApiProvider {
   }
 
   Future<bool> postSignUpAPIProvider(
-      String uId, Map<String, dynamic> json) async {
+      SignUpAndUserModel signupAndUserModel) async {
     final DocumentReference documentRef =
-        firestore.collection('users').doc(uId);
-    await documentRef.set(json).catchError((onError) {
+        firestore.collection('users').doc(signupAndUserModel.userId);
+    await documentRef.set(signupAndUserModel.toJson()).catchError((onError) {
       print(onError.toString());
     });
     return true;
@@ -219,11 +219,6 @@ class ApiProvider {
 
   Future<Projects> getProjectsAPIProvider(
       {ProjectTabType? projectTabType}) async {
-    final QuerySnapshot signedUpQuerySnapshot = await firestore
-        .collection('signed_up_projects')
-        .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
-        .get();
-
     final QuerySnapshot querySnapshot = projectTabType == ProjectTabType.OWN_TAB
         ? await firestore
             .collection('projects')
@@ -264,18 +259,18 @@ class ApiProvider {
                                 ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                             ? await firestore
                                 .collection('signed_up_projects')
-                                .where('signup_uid',
+                                .where('owner_id',
                                     isNotEqualTo:
+                                        prefsObject.getString(CURRENT_USER_ID)!)
+                                .where('signup_uid',
+                                    isEqualTo:
                                         prefsObject.getString(CURRENT_USER_ID)!)
                                 .where('is_approved_from_admin',
                                     isEqualTo: true)
                                 .get()
                             : await firestore.collection('projects').get();
 
-    return Projects.fromJson(
-      list: querySnapshot.docs,
-      signedUpList: signedUpQuerySnapshot.docs,
-    );
+    return Projects.fromJson(list: querySnapshot.docs);
   }
 
   Future<ProjectModel> getProjectByProjectIdAPIProvider(
@@ -515,6 +510,31 @@ class ApiProvider {
       return ResponseModel(success: true, message: 'Task Updated');
     } catch (e) {
       return ResponseModel(success: false, error: 'Task not updated');
+    }
+  }
+
+  Future<ResponseModel> removeEnrolledProjectAPIProvider(
+      String enrollesProjectId) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('signed_up_projects').doc(enrollesProjectId);
+      await documentReference.delete();
+      return ResponseModel(success: true, message: 'Project request Declined');
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: 'Project request not declined');
+    }
+  }
+
+  Future<ResponseModel> removeEnrolledTaskAPIProvider(
+      String enrollesTaskId) async {
+    try {
+      final DocumentReference documentReference =
+          firestore.collection('signed_up_tasks').doc(enrollesTaskId);
+      await documentReference.delete();
+      return ResponseModel(success: true, message: 'Task request Declined');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Task request not declined');
     }
   }
 

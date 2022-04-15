@@ -63,7 +63,6 @@ class DateFormatFromTimeStamp {
   String getPastTimeFromCurrent(String timeStamp) {
     final DateTime lastSeen =
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp));
-    print(dateFormatToEEEDDMMMYYYY(timeStamp: timeStamp));
     final DateTime currentDateTime = DateTime.now();
 
     Duration diff = currentDateTime.difference(lastSeen);
@@ -73,7 +72,7 @@ class DateFormatFromTimeStamp {
       lastseen = 'Active now';
     } else if (diff.inDays == 0 && diff.inHours == 0 && diff.inMinutes <= 60) {
       lastseen = '${diff.inMinutes} mins ago';
-    } else if (diff.inDays == 0 && diff.inHours <= 13) {
+    } else if (diff.inDays == 0 && diff.inHours <= 12) {
       lastseen = '${diff.inHours} hrs ago';
     } else if (diff.inDays == 0) {
       lastseen = 'Active today';

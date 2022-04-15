@@ -176,6 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       profileUrl = await convertAndUpload(_imageFile!);
     }
     final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
+      userId: user.userId,
       firstName: _firstNameController.text + ' ' + _lastNameController.text,
       isOrganization: user.isOrganization,
       about: _aboutController.text,

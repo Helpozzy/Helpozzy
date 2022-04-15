@@ -32,10 +32,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void initState() {
     projectsBloc.getProjects(projectTabType: projectTabType);
     if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
-      projectsBloc.getProjectsActivityStatus();
-    }
-    if (projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
-      projectsBloc.getProjectsActivityStatus();
+      projectsBloc.getProjectsActivityStatus(projectTabType: projectTabType);
+    } else if (projectTabType ==
+        ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
+      projectsBloc.getProjectsActivityStatus(projectTabType: projectTabType);
     }
     super.initState();
   }

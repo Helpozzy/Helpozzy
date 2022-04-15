@@ -21,7 +21,7 @@ class ProjectTaskBloc {
   Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
   Stream<TaskHelper> get getProjectTaskDetailsStream =>
       projectTasksDetailsController.stream;
-  Stream<List<TaskModel>> get getSelectedTaskStream =>
+  Stream<List<TaskModel>> get getSelectedTasksStream =>
       selectedTasksController.stream;
 
   Future myTaskIsExpanded(bool expand) async {
@@ -63,6 +63,12 @@ class ProjectTaskBloc {
     return response;
   }
 
+  Future<ResponseModel> removeEnrolledTask(String enrolledTaskId) async {
+    final ResponseModel response =
+        await repo.removeEnrolledTaskRepo(enrolledTaskId);
+    return response;
+  }
+
   Future<ResponseModel> deleteTask(String taskId) async {
     final ResponseModel response = await repo.deleteTaskRepo(taskId);
     return response;
@@ -72,6 +78,7 @@ class ProjectTaskBloc {
     myTaskExpandController.close();
     allTaskExpandController.close();
     selectedTasksController.close();
+
     projectEnrolledTasksController.close();
     projectTasksController.close();
     projectTasksDetailsController.close();

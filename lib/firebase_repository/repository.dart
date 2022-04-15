@@ -24,8 +24,8 @@ class Repository {
   Future<VolunteerTypes> volunteerListRepo() =>
       apiProvider.volunteerListAPIProvider();
 
-  Future<bool> postSignUpDetailsRepo(String uId, Map<String, dynamic> json) =>
-      apiProvider.postSignUpAPIProvider(uId, json);
+  Future<bool> postSignUpDetailsRepo(SignUpAndUserModel signupAndUserModel) =>
+      apiProvider.postSignUpAPIProvider(signupAndUserModel);
 
   Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
       apiProvider.editProfileAPIProvider(json);
@@ -89,6 +89,12 @@ class Repository {
 
   Future<ResponseModel> updateEnrolledProjectRepo(ProjectModel project) =>
       apiProvider.updateEnrolledProjectAPIProvider(project);
+
+  Future<ResponseModel> removeEnrolledProjectRepo(String enrolledProjectId) =>
+      apiProvider.removeEnrolledProjectAPIProvider(enrolledProjectId);
+
+  Future<ResponseModel> removeEnrolledTaskRepo(String enrolledTaskId) =>
+      apiProvider.removeEnrolledTaskAPIProvider(enrolledTaskId);
 
   Future<Projects> getEnrolledProjectRepo() =>
       apiProvider.getEnrolledProjectsAPIProvider();

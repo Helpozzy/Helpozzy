@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/models/notification_model.dart';
@@ -29,6 +30,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   final TextEditingController _commentController = TextEditingController();
   final TaskBloc _taskBloc = TaskBloc();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   final EditProfileBloc _editProfileBloc = EditProfileBloc();
 
   @override
@@ -37,8 +39,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
-  Future onApproveTaskLogHrs(
-      NotificationModel notification, bool isApproved) async {
+  Future onApproveTaskLogHrs(NotificationModel notification) async {
     CircularLoader().show(context);
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
@@ -138,15 +139,32 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
   Future onDecline(NotificationModel notification) async {
     CircularLoader().show(context);
-    final ResponseModel response =
+    final ResponseModel notificationResponse =
         await _notificationBloc.removeNotification(notification.id!);
-    if (response.success!) {
-      CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: 'Request Declined');
+
+    if (notificationResponse.success!) {
+      late ResponseModel response;
+      if (notification.type == 0) {
+        final ProjectModel project =
+            ProjectModel.fromjson(json: notification.payload!);
+        response =
+            await _projectsBloc.removeSignedUpProject(project.enrolledId!);
+      } else if (notification.type == 1) {
+        final TaskModel task = TaskModel.fromjson(json: notification.payload!);
+        response =
+            await _projectTaskBloc.removeEnrolledTask(task.enrollTaskId!);
+      }
+      if (response.success!) {
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: response.message!);
+      } else {
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: response.error!);
+      }
       await _notificationBloc.getNotifications();
     } else {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: response.error!);
+      ScaffoldSnakBar().show(context, msg: notificationResponse.error!);
     }
   }
 
@@ -213,48 +231,31 @@ class _NotificationInboxState extends State<NotificationInbox> {
                             : SizedBox(),
                     childrens: notification.isUpdated!
                         ? []
-                        : notification.type == 2
-                            ? [
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: GREEN,
-                                  text: APPROVE_BUTTON,
-                                  onPressed: () async {
-                                    await onApproveTaskLogHrs(
-                                        notification, true);
-                                  },
-                                ),
-                                SizedBox(width: 6),
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: SILVER_GRAY,
-                                  text: DECLINE_BUTTON,
-                                  onPressed: () async =>
-                                      onDecline(notification),
-                                ),
-                              ]
-                            : [
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: GREEN,
-                                  text: APPROVE_BUTTON,
-                                  onPressed: () async {
-                                    notification.type == 0
-                                        ? await onApproveProjectNotification(
+                        : [
+                            SmallCommonButton(
+                              fontSize: 12,
+                              buttonColor: GREEN,
+                              text: APPROVE_BUTTON,
+                              onPressed: () async {
+                                notification.type == 0
+                                    ? await onApproveProjectNotification(
+                                        notification)
+                                    : notification.type == 1
+                                        ? await onApproveTaskLogHrs(
                                             notification)
                                         : await onApproveTaskNotification(
                                             notification);
-                                  },
-                                ),
-                                SizedBox(width: 6),
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: SILVER_GRAY,
-                                  text: DECLINE_BUTTON,
-                                  onPressed: () async =>
-                                      await onDecline(notification),
-                                ),
-                              ],
+                              },
+                            ),
+                            SizedBox(width: 6),
+                            SmallCommonButton(
+                              fontSize: 12,
+                              buttonColor: SILVER_GRAY,
+                              text: DECLINE_BUTTON,
+                              onPressed: () async =>
+                                  await onDecline(notification),
+                            ),
+                          ],
                   );
                 },
               )

@@ -116,7 +116,7 @@ class _ProjectTileState extends State<ProjectTile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateOrEditProject(
+                  builder: (context) => CreateEditProject(
                     fromEdit: true,
                     project: project,
                   ),
@@ -124,7 +124,7 @@ class _ProjectTileState extends State<ProjectTile> {
               );
             },
             backgroundColor: DARK_GRAY,
-            foregroundColor: Colors.white,
+            foregroundColor: WHITE,
             icon: CupertinoIcons.pencil_ellipsis_rectangle,
             autoClose: true,
           ),
@@ -132,7 +132,7 @@ class _ProjectTileState extends State<ProjectTile> {
             flex: 1,
             onPressed: (BuildContext context) => showDeletePrompt(),
             backgroundColor: RED_COLOR,
-            foregroundColor: Colors.white,
+            foregroundColor: WHITE,
             icon: CupertinoIcons.trash,
             autoClose: true,
           ),
@@ -227,20 +227,24 @@ class _ProjectTileState extends State<ProjectTile> {
                     icon: project.isProjectDetailsExpanded!
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    fontSize: 8,
-                    iconSize: 12,
-                    text: project.isProjectDetailsExpanded!
-                        ? HIDE_DETAILS_BUTTON
-                        : SHOW_DETAILS_BUTTON,
-                    buttonColor: GRAY,
-                    iconColor: PRIMARY_COLOR,
-                    fontColor: PRIMARY_COLOR,
+                    fontSize: 10,
+                    iconSize: 10,
+                    text: DETAILS_BUTTON,
+                    buttonColor: project.isProjectDetailsExpanded!
+                        ? PRIMARY_COLOR
+                        : GRAY,
+                    iconColor: project.isProjectDetailsExpanded!
+                        ? WHITE
+                        : PRIMARY_COLOR,
+                    fontColor: project.isProjectDetailsExpanded!
+                        ? WHITE
+                        : PRIMARY_COLOR,
                   ),
                 ],
               ),
               project.isProjectDetailsExpanded!
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 21.0, top: 6),
+                      padding: const EdgeInsets.only(top: 6),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
@@ -250,7 +254,7 @@ class _ProjectTileState extends State<ProjectTile> {
               project.isTaskDetailsExpanded! &&
                       project.isProjectDetailsExpanded!
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 21.0, top: 10),
+                      padding: const EdgeInsets.only(top: 8),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
@@ -314,13 +318,11 @@ class _ProjectTileState extends State<ProjectTile> {
                 ? Icons.keyboard_arrow_up_rounded
                 : Icons.keyboard_arrow_down_rounded,
             fontSize: 10,
-            iconSize: 15,
-            text: project.isTaskDetailsExpanded!
-                ? HIDE_TASK_DETAILS_BUTTON
-                : SHOW_TASK_DETAILS_BUTTON,
-            buttonColor: GRAY,
-            iconColor: PRIMARY_COLOR,
-            fontColor: PRIMARY_COLOR,
+            iconSize: 10,
+            text: TASK_DETAILS_BUTTON,
+            buttonColor: project.isTaskDetailsExpanded! ? PRIMARY_COLOR : GRAY,
+            iconColor: project.isTaskDetailsExpanded! ? WHITE : PRIMARY_COLOR,
+            fontColor: project.isTaskDetailsExpanded! ? WHITE : PRIMARY_COLOR,
           ),
         ],
       ),
@@ -334,35 +336,47 @@ class _ProjectTileState extends State<ProjectTile> {
       IconData? icon,
       Function()? iconOnPressed}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      padding: const EdgeInsets.symmetric(vertical: 1.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 1,
             child: Text(
               title,
-              style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.w500, color: PRIMARY_COLOR),
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: PRIMARY_COLOR,
+                fontSize: 12,
+              ),
             ),
           ),
           Text(
             ': ',
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w500, color: PRIMARY_COLOR),
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: PRIMARY_COLOR,
+              fontSize: 12,
+            ),
           ),
           Expanded(
+            flex: 3,
             child: Text(
               detail,
-              style: _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
+              style: _theme.textTheme.bodyText2!.copyWith(
+                color: DARK_GRAY,
+                fontSize: 12,
+              ),
             ),
           ),
           hasIcon
               ? IconButton(
                   icon: Icon(icon, color: DARK_GRAY_FONT_COLOR),
                   onPressed: iconOnPressed,
+                  iconSize: 20,
                 )
               : SizedBox(width: width * 0.12),
-          SizedBox(width: 10)
+          SizedBox(width: 5)
         ],
       ),
     );
@@ -381,7 +395,7 @@ class _ProjectTileState extends State<ProjectTile> {
           );
         }
         return Padding(
-          padding: EdgeInsets.only(top: 8.0, right: width * 0.05),
+          padding: EdgeInsets.only(top: 8.0, right: width * 0.04),
           child: Column(
             children: [
               tasksStatusTile(
@@ -416,23 +430,33 @@ class _ProjectTileState extends State<ProjectTile> {
     int? count,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, color: color),
+          Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
           SizedBox(width: 10),
           Expanded(
             child: Text(
               title,
-              style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.bold, color: color),
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+                fontSize: 12,
+              ),
             ),
           ),
           Text(
             count.toString(),
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.bold, color: color),
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontSize: 12,
+            ),
           ),
         ],
       ),

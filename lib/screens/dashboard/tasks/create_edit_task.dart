@@ -8,6 +8,7 @@ import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/members/members.dart';
+import 'package:helpozzy/screens/dashboard/members/memebers_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -47,13 +48,13 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late ThemeData _themeData;
   late double width;
   late double height;
-  ProjectsBloc _projectsBloc = ProjectsBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   late double hrsTrackerVal = 0.0;
   late double noOfMemberTrackerVal = 0.0;
   late double minimumAgeTrackerVal = 7.0;
   int _selectedIndexValue = 0;
-  bool postOnLocalCheck = false;
+  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -81,7 +82,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
     _taskEndDateController.text =
         DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
-    _taskMembersController.text = task!.members!;
     _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
         ? 0
         : task!.status == TOGGLE_INPROGRESS
@@ -93,6 +93,12 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
+      final List<dynamic> selectedMembers = [];
+      if (selectedItems.isNotEmpty) {
+        selectedItems.forEach((element) {
+          selectedMembers.add(element.userId!);
+        });
+      }
 
       if (fromEdit) {
         final TaskModel taskDetails = TaskModel(
@@ -108,7 +114,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
           estimatedHrs: hrsTrackerVal.round(),
           totalVolunteerHrs: 0,
-          members: _taskMembersController.text,
+          members: selectedMembers,
           status: _selectedIndexValue == 0
               ? TOGGLE_NOT_STARTED
               : _selectedIndexValue == 1
@@ -145,7 +151,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
           estimatedHrs: hrsTrackerVal.round(),
           totalVolunteerHrs: 0,
-          members: _taskMembersController.text,
+          members: selectedMembers,
           status: _selectedIndexValue == 0
               ? TOGGLE_NOT_STARTED
               : _selectedIndexValue == 1
@@ -266,6 +272,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                       child: inviteMembersSection(),
                     ),
+                    selectedMembersList(),
                     Divider(),
                     Padding(
                       padding: EdgeInsets.only(
@@ -407,18 +414,45 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               Icons.group_outlined,
               color: PRIMARY_COLOR,
             ),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              selectedItems = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MembersScreen(),
                 ),
               );
+              if (selectedItems.isNotEmpty) {
+                _projectsBloc.getSelectedMembers(members: selectedItems);
+              }
             },
           ),
         ),
         expandSearchUserList(),
       ],
+    );
+  }
+
+  Widget selectedMembersList() {
+    return StreamBuilder<List<SignUpAndUserModel>>(
+      stream: _projectsBloc.getSelectedMembersStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: SizedBox());
+        }
+        return snapshot.data!.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: width * 0.04),
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final SignUpAndUserModel volunteer = snapshot.data![index];
+                  return MemberCard(volunteer: volunteer);
+                },
+              )
+            : SizedBox();
+      },
     );
   }
 

@@ -37,9 +37,10 @@ class SignUpBloc {
     final AuthResponseModel? result =
         await auth.signUp(signupAndUserModel.email!, password);
     try {
-      final bool response = await repo.postSignUpDetailsRepo(
-          result!.user!.uid, signupAndUserModel.toJson());
-      prefsObject.setString(CURRENT_USER_ID, result.user!.uid);
+      signupAndUserModel.userId = result!.user!.uid;
+      prefsObject.setString(CURRENT_USER_ID, signupAndUserModel.userId!);
+      final bool response =
+          await repo.postSignUpDetailsRepo(signupAndUserModel);
       return ResponseModel(
         success: response,
         message: result.message,
