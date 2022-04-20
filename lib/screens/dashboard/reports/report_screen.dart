@@ -1,13 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/bloc/report_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/helper/report_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/report_data_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/reports/pvsa_chart.dart';
+import 'package:helpozzy/screens/dashboard/reports/report_project_tile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -21,10 +21,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late double height;
   late double width;
   late List<ReportsDataModel> data = [];
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
   final DateFormatFromTimeStamp _dateFromTimeStamp = DateFormatFromTimeStamp();
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
+  final ReportBloc _reportBloc = ReportBloc();
 
   @override
   void initState() {
@@ -33,8 +33,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadMonth(String year) async {
-    final List<ProjectModel> projects =
-        await _projectsBloc.getSignedUpProjects();
+    final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList
@@ -44,8 +43,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadProject(String year, String month) async {
-    final List<ProjectModel> projects =
-        await _projectsBloc.getSignedUpProjects();
+    final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
     data = projectReportHelper.chartDetailsList
@@ -260,9 +258,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   List<BarChartGroupData> getData() {
     return data.map((e) {
-      final yVal = double.parse(e.hrs!.toString());
+      final yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
       return BarChartGroupData(
-        x: e.hrs!,
+        x: e.hrs != null ? e.hrs! : 0,
         barRods: [
           BarChartRodData(
             toY: yVal,
@@ -292,76 +290,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
             itemBuilder: (context, index) {
               ReportsDataModel report = reports.reportList[index];
               final ProjectModel project = report.project!;
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProjectDetailsInfo(project: project),
-                    ),
+              return StreamBuilder<bool>(
+                initialData: false,
+                stream: _reportBloc.getProjectExpandStream,
+                builder: (context, snapshot) {
+                  return ReportProjectTile(
+                    project: project,
+                    isExpanded: snapshot.data!,
+                    reportBloc: _reportBloc,
                   );
                 },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: width * 0.05,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            project.projectName!,
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              color: BLUE_GRAY,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            project.organization != null &&
-                                    project.organization!.isNotEmpty
-                                ? project.organization!
-                                : project.categoryId == 0
-                                    ? VOLUNTEER_0
-                                    : project.categoryId == 1
-                                        ? FOOD_BANK_1
-                                        : project.categoryId == 2
-                                            ? TEACHING_2
-                                            : project.categoryId == 3
-                                                ? HOMELESS_SHELTER_3
-                                                : project.categoryId == 4
-                                                    ? ANIMAL_CARE_4
-                                                    : project.categoryId == 5
-                                                        ? SENIOR_CENTER_5
-                                                        : project.categoryId ==
-                                                                6
-                                                            ? CHILDREN_AND_YOUTH_6
-                                                            : OTHER_7,
-                            style: _theme.textTheme.bodyText2!
-                                .copyWith(color: DARK_GRAY),
-                          ),
-                          Text(
-                            DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYY(
-                                timeStamp: project.startDate!),
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              color: DARK_BLUE,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          CommonDivider(),
-                        ],
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 16,
-                      )
-                    ],
-                  ),
-                ),
               );
             },
           )

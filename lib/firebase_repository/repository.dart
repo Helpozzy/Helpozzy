@@ -87,6 +87,9 @@ class Repository {
   Future<Tasks> getProjectTasksRepo(String projectId, bool isOwn) =>
       apiProvider.getProjectTasksAPIProvider(projectId, isOwn);
 
+  Future<Tasks> getSignedUpProjectCompletedTasksRepo(String projectId) =>
+      apiProvider.getSignedUpProjectCompletedTasksAPIProvider(projectId);
+
   Future<ResponseModel> updateEnrolledProjectRepo(ProjectModel project) =>
       apiProvider.updateEnrolledProjectAPIProvider(project);
 

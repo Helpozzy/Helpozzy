@@ -241,9 +241,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                     ? await onApproveProjectNotification(
                                         notification)
                                     : notification.type == 1
-                                        ? await onApproveTaskLogHrs(
+                                        ? await onApproveTaskNotification(
                                             notification)
-                                        : await onApproveTaskNotification(
+                                        : await onApproveTaskLogHrs(
                                             notification);
                               },
                             ),

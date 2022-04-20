@@ -34,19 +34,22 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
                 colors: [
+                  PRIMARY_COLOR,
+                  PRIMARY_COLOR,
                   MATE_WHITE,
-                  DARK_BLUE_COLOR,
-                  PURPLE_COLOR,
                 ],
               ),
             ),
           ),
           Positioned(
             top: height / 3.5,
-            child: TopAppLogo(size: height / 5),
+            child: TopAppLogo(
+              size: height / 5,
+              color: WHITE,
+            ),
           ),
           Positioned(
             top: height / 2,
@@ -59,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .headline6!
-                    .copyWith(color: DARK_BLACK),
+                    .copyWith(color: WHITE),
               ),
             ),
           ),

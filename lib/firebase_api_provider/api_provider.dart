@@ -360,6 +360,19 @@ class ApiProvider {
     return Tasks.fromJson(list: querySnapshot.docs);
   }
 
+  Future<Tasks> getSignedUpProjectCompletedTasksAPIProvider(
+      String projectId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('signed_up_tasks')
+        .where('project_id', isEqualTo: projectId)
+        .where('status', isEqualTo: LOG_HRS_APPROVED)
+        .where('sign_up_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('is_approved_from_admin', isEqualTo: true)
+        .get();
+
+    return Tasks.fromJson(list: querySnapshot.docs);
+  }
+
   Future<Tasks> getProjectEnrolledTasksAPIProvider(
       String projectId, bool isOwn) async {
     final QuerySnapshot querySnapshot = isOwn
@@ -494,10 +507,9 @@ class ApiProvider {
   Future<Projects> getEnrolledProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('signed_up_projects')
-        .where('sign_up_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .where('is_approved_from_admin', isEqualTo: true)
+        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
-
     return Projects.fromJson(list: querySnapshot.docs);
   }
 

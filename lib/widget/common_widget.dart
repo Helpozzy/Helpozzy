@@ -449,7 +449,10 @@ InputDecoration inputRoundedDecoration(
     fillColor: fillColor == null ? Colors.white : fillColor,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    contentPadding: EdgeInsets.only(left: 30, right: isDropDown ? 15 : 30),
+    contentPadding: EdgeInsets.only(
+      left: suffixIcon != null ? 80 : 30,
+      right: isDropDown ? 15 : 30,
+    ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
       borderSide: BorderSide(color: WHITE, width: 1),
@@ -616,8 +619,9 @@ class RadioTile extends StatelessWidget {
 
 //Top Icon on Intro
 class TopAppLogo extends StatelessWidget {
-  TopAppLogo({required this.size});
+  TopAppLogo({required this.size, this.color});
   final double size;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -627,13 +631,16 @@ class TopAppLogo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/helpozzy_logo.png'),
+          Image.asset(
+            'assets/images/helpozzy_logo.png',
+            color: color != null ? color : DARK_BLACK,
+          ),
           SizedBox(width: 5),
           Text(
             HELPOZZY_REMAINING_TEXT,
             style: Theme.of(context).textTheme.headline5!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: DARK_BLACK,
+                  color: color != null ? color : DARK_BLACK,
                   fontSize: size / 3,
                 ),
           )

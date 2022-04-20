@@ -384,6 +384,7 @@ const TASK_CREATED_ON = 'Task created on : ';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
 const NO_TASKS_FOUND = 'No tasks found';
+const NO_COMPLETED_TASKS_FOUND = 'No completed tasks found';
 const GO_FOR_NEW_SIGNUP =
     'Please visit projects section and sign-up for new volunteering tasks';
 

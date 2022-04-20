@@ -5,12 +5,12 @@ import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/dashboard/process_timeline.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_list.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/screens/dashboard/tasks/my_enrolled_tasks.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:timelines/timelines.dart';
 import 'projects/projects_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -31,16 +31,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     super.initState();
-  }
-
-  Color getColor(int index) {
-    if (index == _processIndex) {
-      return BLACK;
-    } else if (index < _processIndex) {
-      return BLACK;
-    } else {
-      return LIGHT_GRAY;
-    }
   }
 
   Future<DashboardMenus> getMenuList() async {
@@ -117,6 +107,138 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Widget timelineProgress() {
+    return StreamBuilder<SignUpAndUserModel>(
+      stream: _userInfoBloc.userStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                LOADING,
+                style: _theme.textTheme.headline6!.copyWith(
+                  color: DARK_GRAY,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        }
+        final SignUpAndUserModel user = snapshot.data!;
+        if (user.currentYearTargetHours != null) {
+          _processIndex = user.totalSpentHrs != null ? user.totalSpentHrs! : 0;
+          List<int> items =
+              List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
+                  .take((user.currentYearTargetHours! / 23).round())
+                  .toList();
+
+          return user.currentYearTargetHours != null &&
+                  user.currentYearTargetHours != 0
+              ? Stack(
+                  children: [
+                    Container(
+                      height: height / 6.5,
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      alignment: Alignment.center,
+                      child: ProcessTimelinePage(
+                        items: items,
+                        processIndex: _processIndex,
+                      ),
+
+                      // Timeline.tileBuilder(
+                      //   padding: EdgeInsets.symmetric(vertical: 2.0),
+                      //   shrinkWrap: true,
+                      //   theme: TimelineThemeData(
+                      //     direction: Axis.horizontal,
+                      //     connectorTheme: ConnectorThemeData(thickness: 3.0),
+                      //   ),
+                      //   builder: TimelineTileBuilder.connected(
+                      //     connectionDirection: ConnectionDirection.before,
+                      //     itemExtentBuilder: (ctx, index) => width / 9.5,
+                      //     contentsBuilder: (ctx, index) {
+                      //       return Padding(
+                      //         padding: const EdgeInsets.only(top: 5.0),
+                      //         child: Text(
+                      //           index == items.length - 1
+                      //               ? '${items[index]}\nMy Goal'
+                      //               : '${items[index]}',
+                      //           textAlign: TextAlign.center,
+                      //           maxLines: 3,
+                      //           style: _theme.textTheme.bodyText2!.copyWith(
+                      //             fontWeight: index == items.length - 1
+                      //                 ? FontWeight.bold
+                      //                 : FontWeight.w600,
+                      //             fontSize: 12,
+                      //             color: DARK_GRAY,
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //     indicatorBuilder: (ctx, index) {
+                      //       Color color;
+                      //       if (items[index] == _processIndex) {
+                      //         color = BLACK;
+                      //       } else if (items[index] < _processIndex) {
+                      //         color = BLACK;
+                      //       } else {
+                      //         color = LIGHT_GRAY;
+                      //       }
+
+                      //       if (items[index] <= _processIndex) {
+                      //         return Container(
+                      //           height: width * 0.025,
+                      //           width: width * 0.025,
+                      //           decoration: BoxDecoration(
+                      //             borderRadius: BorderRadius.circular(100),
+                      //             color: color,
+                      //           ),
+                      //         );
+                      //       } else {
+                      //         return Container(
+                      //           height: width * 0.025,
+                      //           width: width * 0.025,
+                      //           decoration: BoxDecoration(
+                      //             borderRadius: BorderRadius.circular(100),
+                      //             color: color,
+                      //           ),
+                      //         );
+                      //       }
+                      //     },
+                      //     connectorBuilder: (ctx, index, type) {
+                      //       if (items[index] > 0) {
+                      //         if (items[index] == _processIndex) {
+                      //           return DecoratedLineConnector(
+                      //             decoration: BoxDecoration(
+                      //               color: getColor(items[index]),
+                      //             ),
+                      //           );
+                      //         } else {
+                      //           return SolidLineConnector(
+                      //             color: getColor(items[index]),
+                      //           );
+                      //         }
+                      //       } else {
+                      //         return null;
+                      //       }
+                      //     },
+                      //     itemCount: items.length,
+                      //   ),
+                      // ),
+                    ),
+                    achievedScoreDetails(user),
+                  ],
+                )
+              : SizedBox();
+        } else {
+          return SizedBox();
+        }
+      },
+    );
+  }
+
   Widget achievedScoreDetails(SignUpAndUserModel user) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -152,132 +274,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget timelineProgress() {
-    return StreamBuilder<SignUpAndUserModel>(
-      stream: _userInfoBloc.userStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                LOADING,
-                style: _theme.textTheme.headline6!.copyWith(
-                  color: DARK_GRAY,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
-        }
-        final SignUpAndUserModel user = snapshot.data!;
-        if (user.currentYearTargetHours != null) {
-          _processIndex = user.totalSpentHrs != null ? user.totalSpentHrs! : 0;
-          List<int> items =
-              List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
-                  .take((user.currentYearTargetHours! / 23).round())
-                  .toList();
-
-          return user.currentYearTargetHours != null &&
-                  user.currentYearTargetHours != 0
-              ? Stack(
-                  children: [
-                    Container(
-                      height: height / 6.5,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Timeline.tileBuilder(
-                        padding: EdgeInsets.symmetric(vertical: 2.0),
-                        shrinkWrap: true,
-                        theme: TimelineThemeData(
-                          direction: Axis.horizontal,
-                          connectorTheme: ConnectorThemeData(thickness: 3.0),
-                        ),
-                        builder: TimelineTileBuilder.connected(
-                          connectionDirection: ConnectionDirection.before,
-                          itemExtentBuilder: (ctx, index) => width / 9.5,
-                          contentsBuilder: (ctx, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                index == items.length - 1
-                                    ? '${items[index]}\nMy Goal'
-                                    : '${items[index]}',
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontWeight: index == items.length - 1
-                                      ? FontWeight.bold
-                                      : FontWeight.w600,
-                                  fontSize: 12,
-                                  color: DARK_GRAY,
-                                ),
-                              ),
-                            );
-                          },
-                          indicatorBuilder: (ctx, index) {
-                            Color color;
-                            if (items[index] == _processIndex) {
-                              color = BLACK;
-                            } else if (items[index] < _processIndex) {
-                              color = BLACK;
-                            } else {
-                              color = LIGHT_GRAY;
-                            }
-
-                            if (items[index] <= _processIndex) {
-                              return Container(
-                                height: width * 0.025,
-                                width: width * 0.025,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: color,
-                                ),
-                              );
-                            } else {
-                              return Container(
-                                height: width * 0.025,
-                                width: width * 0.025,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: color,
-                                ),
-                              );
-                            }
-                          },
-                          connectorBuilder: (ctx, index, type) {
-                            if (items[index] > 0) {
-                              if (items[index] == _processIndex) {
-                                return DecoratedLineConnector(
-                                  decoration: BoxDecoration(
-                                    color: getColor(items[index]),
-                                  ),
-                                );
-                              } else {
-                                return SolidLineConnector(
-                                  color: getColor(items[index]),
-                                );
-                              }
-                            } else {
-                              return null;
-                            }
-                          },
-                          itemCount: items.length,
-                        ),
-                      ),
-                    ),
-                    achievedScoreDetails(user),
-                  ],
-                )
-              : SizedBox();
-        } else {
-          return SizedBox();
-        }
-      },
     );
   }
 
