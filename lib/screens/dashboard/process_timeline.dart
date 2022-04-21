@@ -8,7 +8,7 @@ class ProcessTimelinePage extends StatelessWidget {
   final int processIndex;
 
   Color getColor(int index) {
-    if (items[index] < processIndex) {
+    if (items[index] <= processIndex) {
       return PRIMARY_COLOR;
     } else {
       return Color(0xffd1d2d7);
@@ -49,7 +49,7 @@ class ProcessTimelinePage extends StatelessWidget {
         indicatorBuilder: (_, index) {
           var color;
           var child;
-          if (items[index] < processIndex) {
+          if (items[index] <= processIndex) {
             color = PRIMARY_COLOR;
             child = Icon(
               Icons.check_rounded,

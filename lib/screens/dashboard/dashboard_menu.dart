@@ -131,9 +131,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _processIndex = user.totalSpentHrs != null ? user.totalSpentHrs! : 0;
           List<int> items =
               List<int>.generate(user.currentYearTargetHours!, (i) => i * 25)
-                  .take((user.currentYearTargetHours! / 23).round())
+                  .take((user.currentYearTargetHours! / 10).round())
                   .toList();
-
+          items
+              .removeWhere((element) => element > user.currentYearTargetHours!);
           return user.currentYearTargetHours != null &&
                   user.currentYearTargetHours != 0
               ? Stack(

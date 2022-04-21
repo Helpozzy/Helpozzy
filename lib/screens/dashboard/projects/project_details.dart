@@ -250,9 +250,11 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
               ? SizedBox()
               : project.isSignedUp!
                   ? SizedBox()
-                  : project.status == PROJECT_COMPLETED
+                  : project.status == TOGGLE_COMPLETE
                       ? SizedBox()
                       : projectTabType == ProjectTabType.OWN_TAB ||
+                              projectTabType ==
+                                  ProjectTabType.PROJECT_COMPLETED_TAB ||
                               projectTabType == ProjectTabType.MY_ENROLLED_TAB
                           ? SizedBox()
                           : SmallCommonButton(
@@ -339,7 +341,10 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
       controller: _tabController,
       children: [
         ProjectOtherDetailsScreen(project: project),
-        TaskTab(project: project),
+        TaskTab(
+          project: project,
+          projectTabType: projectTabType,
+        ),
         ProjectMembersTab(),
         Text(COMING_SOON_SCREEN_TEXT),
         Text(COMING_SOON_SCREEN_TEXT),

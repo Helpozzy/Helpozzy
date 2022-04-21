@@ -99,7 +99,8 @@ class ApiProvider {
   Future<Projects> getUserCompltedProjectsAPIProvider() async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('signed_up_projects')
-        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+        .where('is_approved_from_admin', isEqualTo: true)
         .get();
 
     return Projects.fromJson(list: querySnapshot.docs);
@@ -249,11 +250,11 @@ class ApiProvider {
                         .get()
                     : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
                         ? await firestore
-                            .collection('projects')
-                            .where('status', isEqualTo: TOGGLE_COMPLETE)
-                            .where('owner_id',
-                                isNotEqualTo:
+                            .collection('signed_up_projects')
+                            .where('signup_uid',
+                                isEqualTo:
                                     prefsObject.getString(CURRENT_USER_ID)!)
+                            .where('is_approved_from_admin', isEqualTo: true)
                             .get()
                         : projectTabType ==
                                 ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
@@ -269,6 +270,17 @@ class ApiProvider {
                                     isEqualTo: true)
                                 .get()
                             : await firestore.collection('projects').get();
+
+    return Projects.fromJson(list: querySnapshot.docs);
+  }
+
+  Future<Projects> getPrefsProjectsAPIProvider() async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('projects')
+        .where('status', isEqualTo: TOGGLE_NOT_STARTED)
+        .where('owner_id',
+            isNotEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+        .get();
 
     return Projects.fromJson(list: querySnapshot.docs);
   }
@@ -539,10 +551,10 @@ class ApiProvider {
   }
 
   Future<ResponseModel> removeEnrolledTaskAPIProvider(
-      String enrollesTaskId) async {
+      String enrolledTaskId) async {
     try {
       final DocumentReference documentReference =
-          firestore.collection('signed_up_tasks').doc(enrollesTaskId);
+          firestore.collection('signed_up_tasks').doc(enrolledTaskId);
       await documentReference.delete();
       return ResponseModel(success: true, message: 'Task request Declined');
     } catch (e) {

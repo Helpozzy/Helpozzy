@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/bloc/profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
 import 'package:helpozzy/screens/profile/points_screen.dart';
@@ -25,12 +24,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double height;
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
+  final ProfileBloc _profileBloc = ProfileBloc();
 
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _projectsBloc.getOwnCompletedProjects();
+    _profileBloc.getPrefsProjects();
     super.initState();
   }
 
@@ -62,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   null
                           ? organizationDetails(user.organizationDetails!)
                           : SizedBox(),
-                      projectPref(),
+                      projectPref(user),
                     ],
                   ),
                 ),
@@ -82,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                ownProjectsList(),
+                CommonDivider(),
               ],
             ),
           );
@@ -249,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: 4),
           Text(
-            '• ' + organizationDetails.discription!,
+            DOT + organizationDetails.discription!,
             style: _theme.textTheme.bodyText2!.copyWith(
               fontWeight: FontWeight.w600,
               color: PRIMARY_COLOR,
@@ -276,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget projectPref() {
+  Widget projectPref(SignUpAndUserModel user) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
@@ -288,9 +287,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           StreamBuilder<Projects>(
-            stream: _projectsBloc.getCompletedProjectsStream,
+            stream: _profileBloc.getPrefsProjectStream,
             builder: (context, projectSnapshot) {
               if (!projectSnapshot.hasData) {
+                _profileBloc.getPrefsProjects();
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Center(child: LinearLoader()),
@@ -299,9 +299,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               late List<CategoryModel> availCategory = [];
               categoriesList.forEach((category) {
                 projectSnapshot.data!.projectList.forEach((project) {
+                  // if (!availCategory.contains(project.categoryId)) {
                   if (project.categoryId == category.id) {
                     availCategory.add(category);
                   }
+                  // }
                 });
               });
               return availCategory.isNotEmpty
@@ -369,116 +371,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget ownProjectsList() {
-    return StreamBuilder<Projects>(
-      stream: _projectsBloc.getCompletedProjectsStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          _projectsBloc.getOwnCompletedProjects();
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Center(child: LinearLoader()),
-          );
-        }
-        final List<ProjectModel> projects = snapshot.data!.projectList;
-        return Column(
-          children: [
-            ListDividerLabel(
-              label: COMPLETED_PROJECT_TEXT,
-              hasIcon: true,
-              suffixIcon: Text(
-                projects.length.toString(),
-                style: _theme.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: projects.length,
-              separatorBuilder: (context, index) => CommonDivider(),
-              itemBuilder: (context, index) {
-                final ProjectModel project = projects[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ProjectDetailsInfo(project: project),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: width * 0.05,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              project.projectName!,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                color: BLUE_GRAY,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              project.organization != null &&
-                                      project.organization!.isNotEmpty
-                                  ? project.organization!
-                                  : project.categoryId == 0
-                                      ? VOLUNTEER_0
-                                      : project.categoryId == 1
-                                          ? FOOD_BANK_1
-                                          : project.categoryId == 2
-                                              ? TEACHING_2
-                                              : project.categoryId == 3
-                                                  ? HOMELESS_SHELTER_3
-                                                  : project.categoryId == 4
-                                                      ? ANIMAL_CARE_4
-                                                      : project.categoryId == 5
-                                                          ? SENIOR_CENTER_5
-                                                          : project.categoryId ==
-                                                                  6
-                                                              ? CHILDREN_AND_YOUTH_6
-                                                              : OTHER_7,
-                              style: _theme.textTheme.bodyText2!
-                                  .copyWith(color: DARK_GRAY),
-                            ),
-                            Text(
-                              DateFormatFromTimeStamp()
-                                  .dateFormatToEEEDDMMMYYYY(
-                                      timeStamp: project.startDate!),
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                color: DARK_BLUE,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            CommonDivider(),
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 16,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

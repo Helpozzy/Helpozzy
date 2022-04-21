@@ -213,8 +213,11 @@ class _MembersScreenState extends State<MembersScreen> {
                             onTapItem: () {
                               setState(() => volunteer.isSelected =
                                   !volunteer.isSelected!);
-                              if (volunteer.isSelected!)
-                                selectedItems.add(volunteer);
+                              if (volunteer.isSelected!) {
+                                if (!selectedItems.contains(volunteer)) {
+                                  selectedItems.add(volunteer);
+                                }
+                              }
                             },
                           )
                         : SizedBox()
@@ -226,8 +229,11 @@ class _MembersScreenState extends State<MembersScreen> {
                         onTapItem: () {
                           setState(() =>
                               volunteer.isSelected = !volunteer.isSelected!);
-                          if (volunteer.isSelected!)
-                            selectedItems.add(volunteer);
+                          if (volunteer.isSelected!) {
+                            if (!selectedItems.contains(volunteer)) {
+                              selectedItems.add(volunteer);
+                            }
+                          }
                         },
                       );
               },

@@ -13,15 +13,18 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class TaskTab extends StatefulWidget {
-  TaskTab({required this.project});
+  TaskTab({required this.project, this.projectTabType});
   final ProjectModel project;
+  final ProjectTabType? projectTabType;
   @override
-  _TaskTabState createState() => _TaskTabState(project: project);
+  _TaskTabState createState() =>
+      _TaskTabState(project: project, projectTabType: projectTabType);
 }
 
 class _TaskTabState extends State<TaskTab> {
-  _TaskTabState({required this.project});
+  _TaskTabState({required this.project, this.projectTabType});
   final ProjectModel project;
+  final ProjectTabType? projectTabType;
   late ThemeData _theme;
   late double height;
   late double width;
@@ -93,7 +96,7 @@ class _TaskTabState extends State<TaskTab> {
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.0),
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           if (isMyTask) {
             setState(() => myTaskExpanded = !myTaskExpanded);
@@ -180,7 +183,7 @@ class _TaskTabState extends State<TaskTab> {
                               size: 15,
                             )
                           : SizedBox(),
-                      SizedBox(width: 10),
+                      isMyTask ? SizedBox(width: 6) : SizedBox(),
                       Expanded(
                         child: TaskCard(
                           task: task,
@@ -245,27 +248,30 @@ class _TaskTabState extends State<TaskTab> {
                                               ],
                                             )
                                           : SizedBox()
-                              : task.taskOwnerId !=
-                                      prefsObject.getString(CURRENT_USER_ID)
-                                  ? SmallCommonButton(
-                                      text: SIGN_UP,
-                                      fontSize: 12,
-                                      buttonColor: DARK_GRAY,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) =>
-                                                VolunteerProjectTaskSignUp(
-                                              fromTask: true,
-                                              project: project,
-                                              task: task,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : SizedBox(),
+                              : projectTabType ==
+                                      ProjectTabType.PROJECT_COMPLETED_TAB
+                                  ? SizedBox()
+                                  : task.taskOwnerId !=
+                                          prefsObject.getString(CURRENT_USER_ID)
+                                      ? SmallCommonButton(
+                                          text: SIGN_UP,
+                                          fontSize: 12,
+                                          buttonColor: DARK_GRAY,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    VolunteerProjectTaskSignUp(
+                                                  fromTask: true,
+                                                  project: project,
+                                                  task: task,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : SizedBox(),
                           onTapItem: () async {
                             await Navigator.push(
                               context,

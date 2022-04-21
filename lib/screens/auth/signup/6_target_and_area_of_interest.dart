@@ -36,7 +36,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
         }
       });
       if (trackerVal.round() != 0) {
-        signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 225
+        signupAndUserModel.currentYearTargetHours = trackerVal.round() <= 200
             ? trackerVal.round()
             : int.parse(_targetHoursController.text);
         signupAndUserModel.areaOfInterests = selectedAreaOfInterests;
@@ -113,12 +113,7 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
                   value: trackerVal,
                   activeColor: PRIMARY_COLOR,
                   divisions: 9,
-                  onChanged: (value) {
-                    setState(() => trackerVal = value);
-                    if (trackerVal.round() == 225) {
-                      ScaffoldSnakBar().show(context, msg: ENTER_HRS_POPUP_MSG);
-                    }
-                  },
+                  onChanged: (value) => setState(() => trackerVal = value),
                 ),
               ),
               Text(

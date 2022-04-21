@@ -14,7 +14,6 @@ class ProjectsBloc {
   final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
-  final completedOwnProjectsController = PublishSubject<Projects>();
   final categorisedProjectsController = PublishSubject<Projects>();
   final selectedMembersController = PublishSubject<List<SignUpAndUserModel>>();
 
@@ -27,8 +26,6 @@ class ProjectsBloc {
       otherUserInfoController.stream;
   Stream<ProjectHelper> get getMonthlyProjectsStream =>
       projectsActivityStatusController.stream;
-  Stream<Projects> get getCompletedProjectsStream =>
-      completedOwnProjectsController.stream;
   Stream<Projects> get getCategorisedProjectsStream =>
       categorisedProjectsController.stream;
   Stream<List<SignUpAndUserModel>> get getSelectedMembersStream =>
@@ -126,11 +123,6 @@ class ProjectsBloc {
     }
   }
 
-  Future getOwnCompletedProjects() async {
-    final Projects response = await repo.getuserCompletedProjectsRepo();
-    completedOwnProjectsController.sink.add(response);
-  }
-
   Future getCategorisedProjects(int categoryId) async {
     final Projects response = await repo.getCategorisedProjectsRepo(categoryId);
     categorisedProjectsController.sink.add(response);
@@ -160,7 +152,6 @@ class ProjectsBloc {
     projectsController.close();
     otherUserInfoController.close();
     onGoingProjectsController.close();
-    completedOwnProjectsController.close();
     categorisedProjectsController.close();
     selectedMembersController.close();
   }

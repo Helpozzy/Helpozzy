@@ -27,6 +27,10 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)),
       );
 
+  String dateYYYY({required String timestamp}) => DateFormat.y().format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)),
+      );
+
   String durationToHHMM({required Duration duration}) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitHours = twoDigits(duration.inHours.remainder(60));

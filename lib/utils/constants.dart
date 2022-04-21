@@ -87,7 +87,12 @@ enum TaskProgressType {
   DECLINE,
 }
 
-enum OrganizationTypes { LLC, PARTNERSHIP, CORP, SOLE_PROP }
+enum OrganizationTypes {
+  LLC,
+  PARTNERSHIP,
+  CORP,
+  SOLE_PROP,
+}
 
 //Font family
 const QUICKSAND = 'Quicksand';
@@ -435,6 +440,7 @@ const LIVING_INFO_LABEL = 'Living Info';
 const ADDRESS_LABEL = 'Address';
 const ZIPCODE_LABEL = 'Zip Code';
 const CONTACT_INFO_LABEL = 'Contact Info';
+const TARGET_HOURS_LABEL = 'Target Hours';
 const PERSONAL_PHN_LABEL = 'Personal Phone Number';
 const PARENT_GUARDIAN_EMAIL_LABEL = 'Parent/Gaurdian Email';
 const RELATION_LABEL = 'Relation with Parent/Guardian';
@@ -531,7 +537,13 @@ const POINT_TO_REDEEM = 'Points to Redeem';
 const MEMBER_SINCE = 'Member since';
 const MEMBERSHIP_NUMBER = 'Membership number';
 const EARNED_POINT = 'Lifetime points earned';
-const SECOND_TEXT_POINTS = 'Earn 15 more points to reach Gold Badge';
+const EARN_POINTS = 'Earn ';
+const REMAING_POINT_TO_GET_BADGE = ' more points to reach ';
+const BEGINNER_BADGE = 'Beginner Badge';
+const BRONZE_BADGE = 'Bronze Badge';
+const SILVER_BADGE = 'Silver Badge';
+const GOLD_BADGE = 'Gold Badge';
+const LIFETIME_ACHIEVEMENT_BADGE = 'Lifetime Achievement Badge';
 
 //My Rewards Tab
 const REWARDS_RECEIVED = 'Rewards Received';
@@ -624,6 +636,7 @@ const TASK_MEMBERS_REQUIREMENT_HINT = 'Enter no of Members';
 const TASK_MINIMUM_AGE_HINT = 'Enter Minimum Age';
 const TASK_QUALIFICATION_HINT = 'Enter Qualification';
 const TASK_END_HINT = 'End Date';
+const SELECT_MEMBER_LABEL = 'Select Members';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 const SELECTED_HOURS_LABEL = 'Selected Hours';
 const ENTER_ESTIMATED_HOURS_HINT = 'Enter estimated hours';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/members_bloc.dart';
-import 'package:helpozzy/helper/rewards_helper.dart';
+import 'package:helpozzy/bloc/user_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -21,15 +22,17 @@ class _PointsTabScreenState extends State<PointsTabScreen>
   late double height;
   late double width;
 
-  bool boo = true;
+  late bool boo = true;
   late Animation<double> animation;
   late AnimationController controller;
-  final MembersBloc _membersBloc = MembersBloc();
+  final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
+      DateFormatFromTimeStamp();
 
   @override
   void initState() {
     super.initState();
-    _membersBloc.getMembers();
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
     controller =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     animation = Tween<double>(begin: 0, end: 500).animate(controller)
@@ -50,23 +53,32 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     });
   }
 
+  int ageCalculation(String timestamp) {
+    final birthday = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
+    final currentDate = DateTime.now();
+    print(currentDate.difference(birthday).inDays);
+    final int yrsOfAge =
+        (currentDate.difference(birthday).inDays / 365).round();
+    return yrsOfAge;
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return StreamBuilder<UserRewardsDetailsHelper>(
-      stream: _membersBloc.getuserRewardDetailsStream,
-      builder: (context, rewardDetailsSnapshot) {
-        if (!rewardDetailsSnapshot.hasData) {
+    return StreamBuilder<SignUpAndUserModel>(
+      stream: _userInfoBloc.userStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              topMemberShipSection(rewardDetailsSnapshot.data!),
-              membershipInfo(rewardDetailsSnapshot.data!),
+              topMemberShipSection(snapshot.data!),
+              membershipInfo(snapshot.data!),
             ],
           ),
         );
@@ -74,7 +86,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     );
   }
 
-  Widget topMemberShipSection(UserRewardsDetailsHelper userRewardsDetails) {
+  Widget topMemberShipSection(SignUpAndUserModel user) {
     return Container(
       height: height / 2.5,
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
@@ -85,15 +97,15 @@ class _PointsTabScreenState extends State<PointsTabScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  userRewardsDetails.totalPoint <= 25
+                  user.totalSpentHrs! <= 25
                       ? 'assets/images/medal_beginer.png'
-                      : userRewardsDetails.totalPoint <= 50
+                      : user.totalSpentHrs! <= 50
                           ? 'assets/images/medal_bronze.png'
-                          : userRewardsDetails.totalPoint <= 100
+                          : user.totalSpentHrs! <= 100
                               ? 'assets/images/medal_silver.png'
-                              : userRewardsDetails.totalPoint <= 150
+                              : user.totalSpentHrs! <= 150
                                   ? 'assets/images/medal_gold.png'
-                                  : userRewardsDetails.totalPoint <= 200
+                                  : user.totalSpentHrs! <= 200
                                       ? 'assets/images/trophy.png'
                                       : 'assets/images/medal_beginer.png',
                   height: height / 5.8,
@@ -104,15 +116,15 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      userRewardsDetails.totalPoint <= 25
+                      user.totalSpentHrs! <= 25
                           ? BEGINNER_MEMBER
-                          : userRewardsDetails.totalPoint <= 50
+                          : user.totalSpentHrs! <= 50
                               ? BRONZE_MEMBER
-                              : userRewardsDetails.totalPoint <= 100
+                              : user.totalSpentHrs! <= 100
                                   ? SILVER_MEMBER
-                                  : userRewardsDetails.totalPoint <= 150
+                                  : user.totalSpentHrs! <= 150
                                       ? GOLD_MEMBER
-                                      : userRewardsDetails.totalPoint <= 200
+                                      : user.totalSpentHrs! <= 200
                                           ? LIFETIME_ACHIEVMENT
                                           : BEGINNER_MEMBER,
                       style: _theme.textTheme.headline5!.copyWith(
@@ -129,7 +141,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                       ),
                     ),
                     Text(
-                      userRewardsDetails.totalPoint.toString(),
+                      user.totalSpentHrs!.toString(),
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: height / 10,
                         fontWeight: FontWeight.bold,
@@ -162,7 +174,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     );
   }
 
-  Widget membershipInfo(UserRewardsDetailsHelper userRewardsDetails) {
+  Widget membershipInfo(SignUpAndUserModel user) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 13.0),
       child: Column(
@@ -171,7 +183,9 @@ class _PointsTabScreenState extends State<PointsTabScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 21.0),
             child: Text(
-              SECOND_TEXT_POINTS,
+              EARN_POINTS +
+                  user.totalSpentHrs.toString() +
+                  REMAING_POINT_TO_GET_BADGE,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -187,9 +201,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                   child: LinearPercentIndicator(
                     lineHeight: 20.0,
                     animationDuration: 3000,
-                    percent:
-                        double.parse(userRewardsDetails.totalPoint.toString()) /
-                            100,
+                    percent: double.parse(user.totalSpentHrs!.toString()) / 100,
                     animateFromLastPercent: true,
                     progressColor: BLACK,
                     backgroundColor: DARK_ACCENT_GRAY,
@@ -197,7 +209,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                 ),
                 SizedBox(width: 5),
                 Text(
-                  '300',
+                  user.currentYearTargetHours.toString(),
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -210,9 +222,12 @@ class _PointsTabScreenState extends State<PointsTabScreen>
             color: DIVIDER_COLOR,
             height: 0.3,
           ),
-          infoTile(title: MEMBER_SINCE, data: '2020'),
-          infoTile(title: MEMBERSHIP_NUMBER, data: '8900 1199 1222 22'),
-          infoTile(title: EARNED_POINT, data: '722'),
+          infoTile(
+              title: MEMBER_SINCE,
+              data: _dateFormatFromTimeStamp.dateYYYY(
+                  timestamp: user.joiningDate!)),
+          // infoTile(title: MEMBERSHIP_NUMBER, data: '8900 1199 1222 22'),
+          infoTile(title: EARNED_POINT, data: user.totalSpentHrs.toString()),
         ],
       ),
     );

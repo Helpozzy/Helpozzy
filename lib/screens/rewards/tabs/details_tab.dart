@@ -20,7 +20,6 @@ class _DetailsTabScreenState extends State<DetailsTabScreen>
   @override
   void initState() {
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _animationController.repeat(reverse: true);

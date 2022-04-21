@@ -8,7 +8,6 @@ import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/members/members.dart';
-import 'package:helpozzy/screens/dashboard/members/memebers_widget.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -38,7 +37,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       TextEditingController();
   final TextEditingController _taskEndDateController = TextEditingController();
   final TextEditingController _taskMembersController = TextEditingController();
-  final TextEditingController _searchEmailController = TextEditingController();
   final TextEditingController _estimatedHoursController =
       TextEditingController();
   DateTime _selectedStartDate = DateTime.now();
@@ -94,6 +92,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
       final List<dynamic> selectedMembers = [];
+
       if (selectedItems.isNotEmpty) {
         selectedItems.forEach((element) {
           selectedMembers.add(element.userId!);
@@ -112,7 +111,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           qualification: _taskQualificationController.text,
           startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
           endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-          estimatedHrs: hrsTrackerVal.round(),
+          estimatedHrs: hrsTrackerVal.round() <= 10
+              ? hrsTrackerVal.round()
+              : int.parse(_estimatedHoursController.text),
           totalVolunteerHrs: 0,
           members: selectedMembers,
           status: _selectedIndexValue == 0
@@ -149,7 +150,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           qualification: _taskQualificationController.text,
           startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
           endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-          estimatedHrs: hrsTrackerVal.round(),
+          estimatedHrs: hrsTrackerVal.round() <= 10
+              ? hrsTrackerVal.round()
+              : int.parse(_estimatedHoursController.text),
           totalVolunteerHrs: 0,
           members: selectedMembers,
           status: _selectedIndexValue == 0
@@ -395,40 +398,23 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   }
 
   Widget inviteMembersSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CommonSimpleTextfield(
-          controller: _searchEmailController,
-          hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
-          validator: (val) {
-            return null;
-          },
-          onChanged: (val) => _projectsBloc.searchUsers(val),
-          prefixIcon: Icon(
-            CupertinoIcons.search,
-            color: BLACK,
+    return ListTile(
+      title: Text(SELECT_MEMBER_LABEL),
+      trailing: Icon(
+        Icons.group_outlined,
+        color: PRIMARY_COLOR,
+      ),
+      onTap: () async {
+        selectedItems = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MembersScreen(),
           ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              Icons.group_outlined,
-              color: PRIMARY_COLOR,
-            ),
-            onPressed: () async {
-              selectedItems = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MembersScreen(),
-                ),
-              );
-              if (selectedItems.isNotEmpty) {
-                _projectsBloc.getSelectedMembers(members: selectedItems);
-              }
-            },
-          ),
-        ),
-        expandSearchUserList(),
-      ],
+        );
+        if (selectedItems.isNotEmpty) {
+          _projectsBloc.getSelectedMembers(members: selectedItems);
+        }
+      },
     );
   }
 
@@ -440,80 +426,50 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           return Center(child: SizedBox());
         }
         return snapshot.data!.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: width * 0.04),
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final SignUpAndUserModel volunteer = snapshot.data![index];
-                  return MemberCard(volunteer: volunteer);
-                },
-              )
-            : SizedBox();
-      },
-    );
-  }
-
-  Widget expandSearchUserList() {
-    return StreamBuilder<List<SignUpAndUserModel>>(
-      stream: _projectsBloc.getOtherUsersStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(8.0),
-            child: LinearLoader(),
-          );
-        }
-        final List<SignUpAndUserModel> users = snapshot.data!;
-        return _searchEmailController.text.isNotEmpty && users.isNotEmpty
-            ? PreferredSize(
-                preferredSize: Size(width, height),
-                child: ListView.builder(
-                  itemCount: users.length,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(
-                    top: 6.0,
-                    bottom: 6,
-                    left: width * 0.09,
-                    right: width * 0.01,
-                  ),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () async {
-                        _searchEmailController.text = users[index].email!;
-                        await _projectsBloc.searchUsers('');
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            ? Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                child: Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: snapshot.data!
+                        .map(
+                          (volunteer) => Container(
+                            margin: EdgeInsets.symmetric(horizontal: 2.0),
+                            padding: EdgeInsets.only(
+                                top: 3.0, bottom: 3.0, left: 10.0, right: 3.0),
+                            decoration: BoxDecoration(
+                                color: PRIMARY_COLOR,
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  users[index].firstName!,
+                                  volunteer.firstName! +
+                                      ' ' +
+                                      volunteer.lastName!,
                                   style: _themeData.textTheme.bodyText2!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                      .copyWith(color: WHITE),
                                 ),
-                                Text(
-                                  users[index].email!,
-                                  style: _themeData.textTheme.bodyText2!
-                                      .copyWith(fontSize: 12),
-                                ),
+                                SizedBox(width: 3),
+                                InkWell(
+                                  onTap: () {
+                                    snapshot.data!.remove(volunteer);
+                                    selectedItems = snapshot.data!;
+                                    setState(() {});
+                                  },
+                                  child: Icon(
+                                    CupertinoIcons.multiply_circle_fill,
+                                    color: WHITE,
+                                    size: 20,
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                          Divider(),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        )
+                        .toList()),
               )
             : SizedBox();
       },
@@ -539,9 +495,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedStartDate)
-                  setState(() {
-                    _selectedStartDate = pickedDate;
-                  });
+                  setState(() => _selectedStartDate = pickedDate);
                 _taskStartDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
                         .dateFormatToYMD(dateTime: _selectedStartDate));
@@ -575,9 +529,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedEndDate)
-                  setState(() {
-                    _selectedEndDate = pickedDate;
-                  });
+                  setState(() => _selectedEndDate = pickedDate);
                 _taskEndDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
                         .dateFormatToYMD(dateTime: _selectedEndDate));

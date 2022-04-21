@@ -321,7 +321,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         onTap: () {
           FocusScope.of(context).unfocus();
           CommonDatepicker()
-              .showDatePickerDialog(context, previousDate: DateTime(1990))
+              .showDatePickerDialog(context, previousDate: DateTime(1930))
               .then((pickedDate) {
             if (pickedDate != null && pickedDate != _selectedBirthDate)
               setState(() {

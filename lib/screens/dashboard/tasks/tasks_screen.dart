@@ -69,7 +69,11 @@ class _TasksScreenState extends State<TasksScreen> {
               eventButton: SizedBox(),
               onTapItem: () {
                 setState(() => task.isSelected = !task.isSelected!);
-                if (task.isSelected!) selectedItems.add(task);
+                if (task.isSelected!) {
+                  if (!selectedItems.contains(task)) {
+                    selectedItems.add(task);
+                  }
+                }
               },
               onTapDelete: () async => await onDelete(task),
             );

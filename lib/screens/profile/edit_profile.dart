@@ -64,6 +64,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late OrganizationTypes _organizationType = OrganizationTypes.CORP;
   late bool nonProfitOrganization = false;
 
+  late double trackerVal = 0.0;
+  final TextEditingController _targetHoursController = TextEditingController();
+
   MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(
     mask: 'XX_XXXXXXX',
     filter: {'X': RegExp(r'[0-9]')},
@@ -144,7 +147,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         user.parentEmail != null ? user.parentEmail! : '';
     _relationController.text =
         user.relationshipWithParent != null ? user.relationshipWithParent! : '';
-
+    addressLocation = user.address!;
+    _targetHoursController.text = user.currentYearTargetHours!.toString();
+    trackerVal = user.currentYearTargetHours! > 200
+        ? 225
+        : user.currentYearTargetHours!.toDouble();
     _gradeLevelController.text =
         user.gradeLevel != null ? user.gradeLevel! : '';
     if (user.isOrganization!) {
@@ -177,7 +184,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
     final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
       userId: user.userId,
-      firstName: _firstNameController.text + ' ' + _lastNameController.text,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
       isOrganization: user.isOrganization,
       about: _aboutController.text,
       email: _emailController.text,
@@ -190,7 +198,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       schoolName: schoolLocation,
       gradeLevel: _gradeLevelController.text,
       areaOfInterests: user.areaOfInterests,
-      currentYearTargetHours: user.currentYearTargetHours,
+      currentYearTargetHours: trackerVal.round() <= 200
+          ? trackerVal.round()
+          : int.parse(_targetHoursController.text),
       dateOfBirth: user.dateOfBirth,
       joiningDate: user.joiningDate,
       pointGifted: user.pointGifted,
@@ -198,6 +208,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       rating: user.rating,
       reviewsByPersons: user.reviewsByPersons,
       volunteerType: user.volunteerType,
+      lastSeen: user.lastName,
+      presence: user.presence,
+      totalSpentHrs: user.totalSpentHrs,
     );
     //Edit Organization
     if (user.isOrganization!) {
@@ -349,6 +362,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: contactInfo(),
               ),
               Divider(),
+              user.isOrganization != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.04,
+                      ),
+                      child: userTargetHrs(),
+                    )
+                  : SizedBox(),
+              user.isOrganization != null ? Divider() : SizedBox(),
               user.isOrganization!
                   ? SizedBox()
                   : user.schoolName != null && user.schoolName!.isNotEmpty
@@ -366,9 +390,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: EdgeInsets.symmetric(
                     horizontal: width * 0.04, vertical: width * 0.05),
                 width: double.infinity,
-                child: CommonButton(
-                  text: SAVE_BUTTON,
-                  onPressed: () {},
+                child: StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _editProfileBloc.parentEmailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return CommonButton(
+                      text: SAVE_BUTTON,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (snapshot.data!) {
+                            await postModifiedData();
+                          } else {
+                            if (user.parentEmail != null) {
+                              if (user.parentEmail ==
+                                  _parentEmailController.text) {
+                                await postModifiedData();
+                              } else {
+                                PlatformAlertDialog().show(context,
+                                    title: ALERT,
+                                    content:
+                                        'Parent/Guardian email is not verified, Please verify your email.');
+                              }
+                            } else {
+                              await postModifiedData();
+                            }
+                          }
+                        }
+                      },
+                    );
+                  },
                 ),
               ),
             ],
@@ -710,6 +760,87 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   )
                 : SizedBox();
           },
+        ),
+      ],
+    );
+  }
+
+  Widget userTargetHrs() {
+    return Column(
+      children: [
+        labelWithTopPadding(TARGET_HOURS_LABEL),
+        SizedBox(height: 10),
+        targetFields(),
+      ],
+    );
+  }
+
+  Widget targetFields() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              '0',
+              style: _theme.textTheme.bodyText2!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: Slider(
+                min: 0,
+                max: 225,
+                label: trackerVal.round().toString(),
+                value: trackerVal,
+                activeColor: PRIMARY_COLOR,
+                divisions: 9,
+                onChanged: (value) => setState(() => trackerVal = value),
+              ),
+            ),
+            Text(
+              '200 +',
+              style: _theme.textTheme.bodyText2!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            trackerVal >= 225.0
+                ? Expanded(
+                    child: CommonSimpleTextfield(
+                      controller: _targetHoursController,
+                      hintText: ENTER_TARGET_HOURS_HINT,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val) {
+                        setState(() => _targetHoursController.selection =
+                            TextSelection.fromPosition(
+                                TextPosition(offset: val.length)));
+                      },
+                      validator: (phone) {
+                        if (phone!.isEmpty) {
+                          return 'Please enter estimated hours';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  )
+                : SizedBox(),
+            trackerVal >= 225.0 ? SizedBox(width: 15) : SizedBox(),
+            Column(
+              children: [
+                TextfieldLabelSmall(label: SELECTED_HOURS_LABEL),
+                Text(
+                  trackerVal.round() == 225
+                      ? '200+'
+                      : trackerVal.round().toString(),
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 24),
+                ),
+              ],
+            )
+          ],
         ),
       ],
     );
