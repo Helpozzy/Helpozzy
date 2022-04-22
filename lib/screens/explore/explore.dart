@@ -187,8 +187,10 @@ class _ExploreScreenState extends State<ExploreScreen>
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      CategorisedProjectsScreen(categoryId: category.id!),
+                  builder: (context) => CategorisedProjectsScreen(
+                    categoryId: category.id!,
+                    fromPrefs: false,
+                  ),
                 ),
               ),
               child: Column(

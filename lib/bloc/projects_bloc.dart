@@ -26,7 +26,7 @@ class ProjectsBloc {
       otherUserInfoController.stream;
   Stream<ProjectHelper> get getMonthlyProjectsStream =>
       projectsActivityStatusController.stream;
-  Stream<Projects> get getCategorisedProjectsStream =>
+  Stream<Projects> get getCategorisedSignedUpProjectsStream =>
       categorisedProjectsController.stream;
   Stream<List<SignUpAndUserModel>> get getSelectedMembersStream =>
       selectedMembersController.stream;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/profile_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
@@ -8,23 +9,34 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class CategorisedProjectsScreen extends StatefulWidget {
-  const CategorisedProjectsScreen({required this.categoryId});
+  const CategorisedProjectsScreen(
+      {required this.categoryId, required this.fromPrefs});
   final int categoryId;
+  final bool fromPrefs;
 
   @override
   _CategorisedProjectsScreenState createState() =>
-      _CategorisedProjectsScreenState();
+      _CategorisedProjectsScreenState(
+          categoryId: categoryId, fromPrefs: fromPrefs);
 }
 
 class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
+  _CategorisedProjectsScreenState(
+      {required this.categoryId, required this.fromPrefs});
+  final int categoryId;
+  final bool fromPrefs;
   late ThemeData _theme;
   late double height;
   late double width;
   final ProjectsBloc _projectsBloc = ProjectsBloc();
+  final ProfileBloc _profileBloc = ProfileBloc();
 
   @override
   void initState() {
-    _projectsBloc.getCategorisedProjects(widget.categoryId);
+    if (fromPrefs)
+      _profileBloc.getPrefsProjects(categoryId);
+    else
+      _projectsBloc.getCategorisedProjects(categoryId);
     super.initState();
   }
 
@@ -42,7 +54,9 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
 
   Widget projectListView() {
     return StreamBuilder<Projects>(
-      stream: _projectsBloc.getCategorisedProjectsStream,
+      stream: fromPrefs
+          ? _profileBloc.getPrefsProjectStream
+          : _projectsBloc.getCategorisedSignedUpProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(

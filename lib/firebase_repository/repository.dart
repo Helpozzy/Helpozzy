@@ -39,6 +39,9 @@ class Repository {
   Future<Projects> getCategorisedProjectsRepo(int categoryId) =>
       apiProvider.getCategorisedProjectsAPIProvider(categoryId);
 
+  Future<Projects> getCategorisedSignUpProjectsRepo(int categoryId) =>
+      apiProvider.getCategorisedSignedUpProjectsAPIProvider(categoryId);
+
   Future<SignUpAndUserModel> userInfoRepo(String uId) =>
       apiProvider.userInfoAPIProvider(uId);
 
@@ -67,9 +70,6 @@ class Repository {
 
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
       apiProvider.getProjectsAPIProvider(projectTabType: projectTabType);
-
-  Future<Projects> getPrefsProjectRepo() =>
-      apiProvider.getPrefsProjectsAPIProvider();
 
   Future<ProjectModel> getprojectByProjectIdRepo(
           String projectId, String signUpUserId) =>

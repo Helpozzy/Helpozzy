@@ -10,8 +10,9 @@ class ProfileBloc {
 
   Stream<Projects> get getPrefsProjectStream => prefsProjectsController.stream;
 
-  Future getPrefsProjects() async {
-    final Projects response = await repo.getPrefsProjectRepo();
+  Future getPrefsProjects(int categoryId) async {
+    final Projects response =
+        await repo.getCategorisedSignUpProjectsRepo(categoryId);
     prefsProjectsController.sink.add(response);
   }
 

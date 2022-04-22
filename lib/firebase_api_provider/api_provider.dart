@@ -115,12 +115,24 @@ class ApiProvider {
     return Projects.fromJson(list: querySnapshot.docs);
   }
 
+  Future<Projects> getCategorisedSignedUpProjectsAPIProvider(
+      int categoryId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('signed_up_projects')
+        .where('signup_uid', isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+        .where('is_approved_from_admin', isEqualTo: true)
+        .where('category_id', isEqualTo: categoryId)
+        .get();
+
+    return Projects.fromJson(list: querySnapshot.docs);
+  }
+
   Future<SignUpAndUserModel> userInfoAPIProvider(String uId) async {
     final DocumentReference documentRef =
         firestore.collection('users').doc(uId);
     final DocumentSnapshot doc = await documentRef.get();
-    final json = doc.data() as Map<String, dynamic>;
-    return SignUpAndUserModel.fromJson(json: json);
+    return SignUpAndUserModel.fromJson(
+        json: doc.data() as Map<String, dynamic>);
   }
 
   Future<ResponseModel> updateUserPresenceAPIProvider(
@@ -270,17 +282,6 @@ class ApiProvider {
                                     isEqualTo: true)
                                 .get()
                             : await firestore.collection('projects').get();
-
-    return Projects.fromJson(list: querySnapshot.docs);
-  }
-
-  Future<Projects> getPrefsProjectsAPIProvider() async {
-    final QuerySnapshot querySnapshot = await firestore
-        .collection('projects')
-        .where('status', isEqualTo: TOGGLE_NOT_STARTED)
-        .where('owner_id',
-            isNotEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
-        .get();
 
     return Projects.fromJson(list: querySnapshot.docs);
   }

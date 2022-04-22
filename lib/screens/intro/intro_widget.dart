@@ -18,7 +18,10 @@ class IntroWidget extends StatelessWidget {
           SliderWidget(),
           Padding(
             padding: EdgeInsets.only(top: height * 0.07),
-            child: TopAppLogo(size: height / 6),
+            child: TopAppLogo(
+              size: height / 6,
+              color: PRIMARY_COLOR,
+            ),
           ),
           _createButtonsContainer(context),
         ],

@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/profile_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
-import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
@@ -24,13 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double height;
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
-  final ProfileBloc _profileBloc = ProfileBloc();
 
   @override
   void initState() {
-    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _profileBloc.getPrefsProjects();
     super.initState();
+    _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
   }
 
   @override
@@ -286,89 +281,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: _theme.textTheme.bodyText2!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          StreamBuilder<Projects>(
-            stream: _profileBloc.getPrefsProjectStream,
-            builder: (context, projectSnapshot) {
-              if (!projectSnapshot.hasData) {
-                _profileBloc.getPrefsProjects();
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(child: LinearLoader()),
-                );
-              }
-              late List<CategoryModel> availCategory = [];
-              categoriesList.forEach((category) {
-                projectSnapshot.data!.projectList.forEach((project) {
-                  // if (!availCategory.contains(project.categoryId)) {
-                  if (project.categoryId == category.id) {
-                    availCategory.add(category);
-                  }
-                  // }
-                });
-              });
-              return availCategory.isNotEmpty
-                  ? Container(
-                      height: width * 0.25,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: availCategory.map((category) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CategorisedProjectsScreen(
-                                          categoryId: category.id!),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: width / 5.7,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    category.asset!,
-                                    fit: BoxFit.fill,
-                                    color: PRIMARY_COLOR,
-                                    height: width * 0.1,
-                                    width: width * 0.1,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    category.label!,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 3,
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      fontSize: 10,
-                                      color: PRIMARY_COLOR,
-                                      fontWeight: FontWeight.bold,
+          user.areaOfInterests!.isNotEmpty
+              ? Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        children: categoriesList.map((category) {
+                      return user.areaOfInterests!.contains(category.id)
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CategorisedProjectsScreen(
+                                      categoryId: category.id!,
+                                      fromPrefs: true,
                                     ),
-                                  )
-                                ],
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: width / 5.5,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      category.asset!,
+                                      fit: BoxFit.fill,
+                                      color: PRIMARY_COLOR,
+                                      height: width * 0.1,
+                                      width: width * 0.1,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      category.label!,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                      style:
+                                          _theme.textTheme.bodyText2!.copyWith(
+                                        fontSize: 10,
+                                        color: PRIMARY_COLOR,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        NO_PREFRENCES_FOUNDS,
-                        style: _theme.textTheme.bodyText2!.copyWith(
-                          color: DARK_GRAY,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-            },
-          ),
+                            )
+                          : SizedBox();
+                    }).toList()),
+                  ),
+                )
+              : Container(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Text(
+                    NO_PREFRENCES_FOUNDS,
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      color: DARK_GRAY,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
         ],
       ),
     );

@@ -39,48 +39,63 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
-  Future onApproveTaskLogHrs(NotificationModel notification) async {
+  Future onApproveTaskLogHrs(
+      NotificationModel notification, bool fromDeclineLogHrs) async {
     CircularLoader().show(context);
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
-    task.status = LOG_HRS_APPROVED;
-    task.isApprovedFromAdmin = true;
+    task.status = fromDeclineLogHrs ? TOGGLE_NOT_STARTED : LOG_HRS_APPROVED;
+    task.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
     if (updateTaskResponse.success!) {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: 'Log Hours Request Approved');
+      ScaffoldSnakBar().show(
+        context,
+        msg: fromDeclineLogHrs
+            ? 'Log hours request declined'
+            : 'Log Hours Request Approved',
+      );
       taskLogHrs.comment = _commentController.text;
       taskLogHrs.hrs = taskLogHrs.hrs;
       taskLogHrs.mins = taskLogHrs.mins;
-      taskLogHrs.isApprovedFromAdmin = true;
+      taskLogHrs.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-      notification.title = 'Log Hours Request Approved';
-      notification.subTitle = 'Your log hours for ${task.taskName} is approved';
-      notification.isUpdated = true;
+      notification.title = fromDeclineLogHrs
+          ? 'Log hours request declined'
+          : 'Log Hours Request Approved';
+      notification.subTitle = fromDeclineLogHrs
+          ? 'Your log hours request for ${task.taskName} is declined by owner, Please resubmit your volunteering hrs.'
+          : 'Your log hours for ${task.taskName} is approved';
+      notification.isUpdated = fromDeclineLogHrs ? false : true;
       notification.payload = taskLogHrs.toJson();
-      final ProjectModel? project = await _projectsBloc.getProjectByProjectId(
-          task.projectId!, task.signUpUserId!);
-      if (project!.totalTaskshrs != null) {
-        project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
-        await _editProfileBloc.updateTotalSpentHrs(
-            task.signUpUserId!, taskLogHrs.hrs!);
-        final ResponseModel response =
-            await _projectsBloc.updateEnrolledProjectHrs(
-                task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
-        if (response.success!) {
-          ScaffoldSnakBar().show(context, msg: response.message!);
-        } else {
-          ScaffoldSnakBar().show(context, msg: response.error!);
-        }
+      if (fromDeclineLogHrs) {
         await _notificationBloc.updateNotifications(notification);
         await _notificationBloc.getNotifications();
       } else {
-        await _notificationBloc.updateNotifications(notification);
-        await _notificationBloc.getNotifications();
+        final ProjectModel? project = await _projectsBloc.getProjectByProjectId(
+            task.projectId!, task.signUpUserId!);
+        if (project!.totalTaskshrs != null) {
+          project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
+          await _editProfileBloc.updateTotalSpentHrs(
+              task.signUpUserId!, taskLogHrs.hrs!);
+          final ResponseModel response =
+              await _projectsBloc.updateEnrolledProjectHrs(
+                  task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
+          if (response.success!) {
+            ScaffoldSnakBar().show(context, msg: response.message!);
+          } else {
+            ScaffoldSnakBar().show(context, msg: response.error!);
+          }
+          await _notificationBloc.updateNotifications(notification);
+          await _notificationBloc.getNotifications();
+        } else {
+          await _notificationBloc.updateNotifications(notification);
+          await _notificationBloc.getNotifications();
+        }
       }
     } else {
       CircularLoader().hide(context);
@@ -97,7 +112,10 @@ class _NotificationInboxState extends State<NotificationInbox> {
         await _taskBloc.updateEnrollTask(task);
     if (updateTaskResponse.success!) {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: 'Request Approved');
+      ScaffoldSnakBar().show(
+        context,
+        msg: 'Request Approved',
+      );
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Task Request Approved';
@@ -143,24 +161,34 @@ class _NotificationInboxState extends State<NotificationInbox> {
         await _notificationBloc.removeNotification(notification.id!);
 
     if (notificationResponse.success!) {
-      late ResponseModel response;
       if (notification.type == 0) {
         final ProjectModel project =
             ProjectModel.fromjson(json: notification.payload!);
-        response =
+        final ResponseModel response =
             await _projectsBloc.removeSignedUpProject(project.enrolledId!);
+        if (response.success!) {
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(context, msg: response.message!);
+        } else {
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(context, msg: response.error!);
+        }
       } else if (notification.type == 1) {
         final TaskModel task = TaskModel.fromjson(json: notification.payload!);
-        response =
+        final ResponseModel response =
             await _projectTaskBloc.removeEnrolledTask(task.enrollTaskId!);
-      }
-      if (response.success!) {
+        if (response.success!) {
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(context, msg: response.message!);
+        } else {
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(context, msg: response.error!);
+        }
+      } else if (notification.type == 2) {
         CircularLoader().hide(context);
-        ScaffoldSnakBar().show(context, msg: response.message!);
-      } else {
-        CircularLoader().hide(context);
-        ScaffoldSnakBar().show(context, msg: response.error!);
+        onApproveTaskLogHrs(notification, true);
       }
+
       await _notificationBloc.getNotifications();
     } else {
       CircularLoader().hide(context);
@@ -244,7 +272,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                         ? await onApproveTaskNotification(
                                             notification)
                                         : await onApproveTaskLogHrs(
-                                            notification);
+                                            notification, false);
                               },
                             ),
                             SizedBox(width: 6),
