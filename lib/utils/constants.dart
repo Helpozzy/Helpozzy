@@ -441,6 +441,7 @@ const ADDRESS_LABEL = 'Address';
 const ZIPCODE_LABEL = 'Zip Code';
 const CONTACT_INFO_LABEL = 'Contact Info';
 const TARGET_HOURS_LABEL = 'Target Hours';
+const AREA_OF_INTEREST_LABEL = 'Area of Interests';
 const PERSONAL_PHN_LABEL = 'Personal Phone Number';
 const PARENT_GUARDIAN_EMAIL_LABEL = 'Parent/Gaurdian Email';
 const RELATION_LABEL = 'Relation with Parent/Guardian';
@@ -943,7 +944,7 @@ Map<String, dynamic> rewardsList = {
 List<String> volunteerProjectImage = [
   'assets/images/volunteer_1.jpg',
   'assets/images/volunteer_2.jpg',
-  'assets/images/volunteer_3.jpg',
+  'assets/images/volunteer_3.png',
 ];
 
 List<String> childrenYouthProjectImage = [
@@ -983,8 +984,8 @@ List<String> homelessSeleterProjectImage = [
 ];
 
 List<String> otherProjectImage = [
-  'assets/images/other_1.jpg',
-  'assets/images/other_2.jpg',
+  'assets/images/other_1.png',
+  'assets/images/other_2.PNG',
   'assets/images/other_3.jpg',
 ];
 

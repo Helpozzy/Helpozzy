@@ -10,14 +10,14 @@ import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class TaskCard extends StatelessWidget {
   final TaskModel task;
+  final Widget? eventButton;
   final bool optionEnable;
   final bool selected;
-  final Widget eventButton;
   final GestureTapCallback? onTapItem;
   final GestureTapCallback? onTapDelete;
   TaskCard({
     required this.task,
-    required this.eventButton,
+    this.eventButton,
     this.optionEnable = false,
     this.selected = false,
     this.onTapDelete,

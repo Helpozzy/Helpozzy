@@ -41,7 +41,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
   Future onApproveTaskLogHrs(
       NotificationModel notification, bool fromDeclineLogHrs) async {
-    CircularLoader().show(context);
+    if (!fromDeclineLogHrs) CircularLoader().show(context);
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
@@ -55,7 +55,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       ScaffoldSnakBar().show(
         context,
         msg: fromDeclineLogHrs
-            ? 'Log hours request declined'
+            ? 'Log Hours Request Declined'
             : 'Log Hours Request Approved',
       );
       taskLogHrs.comment = _commentController.text;
@@ -65,7 +65,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = fromDeclineLogHrs
-          ? 'Log hours request declined'
+          ? 'Log Hours Request Declined'
           : 'Log Hours Request Approved';
       notification.subTitle = fromDeclineLogHrs
           ? 'Your log hours request for ${task.taskName} is declined by owner, Please resubmit your volunteering hrs.'
@@ -185,10 +185,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
           ScaffoldSnakBar().show(context, msg: response.error!);
         }
       } else if (notification.type == 2) {
-        CircularLoader().hide(context);
         onApproveTaskLogHrs(notification, true);
       }
-
       await _notificationBloc.getNotifications();
     } else {
       CircularLoader().hide(context);
@@ -204,21 +202,28 @@ class _NotificationInboxState extends State<NotificationInbox> {
     return Scaffold(body: body);
   }
 
-  Widget get body => SafeArea(
-        child: GestureDetector(
-          onPanDown: (_) => FocusScope.of(context).unfocus(),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.0,
-                  left: width * 0.04,
-                  right: width * 0.04,
+  Widget get body => RefreshIndicator(
+        color: PRIMARY_COLOR,
+        onRefresh: () => Future.delayed(
+          Duration(seconds: 1),
+          () => _notificationBloc.getNotifications(),
+        ),
+        child: SafeArea(
+          child: GestureDetector(
+            onPanDown: (_) => FocusScope.of(context).unfocus(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 15.0,
+                    left: width * 0.04,
+                    right: width * 0.04,
+                  ),
+                  child: SmallInfoLabel(label: NOTIFICATION_LABEL),
                 ),
-                child: SmallInfoLabel(label: NOTIFICATION_LABEL),
-              ),
-              Expanded(child: notificationsList()),
-            ],
+                Expanded(child: notificationsList()),
+              ],
+            ),
           ),
         ),
       );
@@ -235,7 +240,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
         return notifications.isNotEmpty
             ? ListView.separated(
                 shrinkWrap: true,
-                physics: ScrollPhysics(),
                 itemCount: notifications.length,
                 separatorBuilder: (context, index) => CommonDivider(),
                 itemBuilder: (context, index) {

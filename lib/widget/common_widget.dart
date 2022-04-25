@@ -247,6 +247,7 @@ class CommonSimpleTextfield extends StatelessWidget {
     required this.controller,
     required this.hintText,
     required this.validator,
+    this.textCapitalization,
     this.onChanged,
     this.maxLength,
     this.inputFormatters,
@@ -268,6 +269,7 @@ class CommonSimpleTextfield extends StatelessWidget {
   final int? maxLength;
   final TextInputType keyboardType;
   final bool obscureText;
+  final TextCapitalization? textCapitalization;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final int maxLines;
@@ -283,6 +285,9 @@ class CommonSimpleTextfield extends StatelessWidget {
       maxLines: maxLines,
       inputFormatters: inputFormatters,
       style: _theme.textTheme.bodyText2,
+      textCapitalization: textCapitalization != null
+          ? textCapitalization!
+          : TextCapitalization.none,
       keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       decoration: inputSimpleDecoration(

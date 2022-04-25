@@ -33,9 +33,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final bool fromEdit;
   final ProjectModel? project;
   final _formKey = GlobalKey<FormState>();
-  ProjectsBloc _projectsBloc = ProjectsBloc();
-  ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-  ProjectTaskBloc selectedTaskBloc = ProjectTaskBloc();
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
+  final ProjectTaskBloc selectedTaskBloc = ProjectTaskBloc();
   final TextEditingController _projNameController = TextEditingController();
   final TextEditingController _projDesController = TextEditingController();
   final TextEditingController _projLocationController = TextEditingController();
@@ -46,8 +46,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final TextEditingController _projCollaboraorController =
       TextEditingController();
   final TextEditingController _searchEmailController = TextEditingController();
-  DateTime _selectedStartDate = DateTime.now();
-  DateTime _selectedEndDate = DateTime.now();
+  late DateTime _selectedStartDate = DateTime.now();
+  late DateTime _selectedEndDate = DateTime.now();
   late ThemeData _themeData;
   late double width;
   late double height;
@@ -66,6 +66,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     _projectsBloc.getOtherUsersInfo();
     if (fromEdit) {
       listenProjectDetails();
+      _projectTaskBloc.getProjectAllTasks(project!.projectId!);
     }
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     super.initState();
@@ -540,7 +541,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: taskList(),
+          child: fromEdit ? projectTaskList() : projectSelectedList(),
         ),
       ],
     );
@@ -732,34 +733,51 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
   }
 
-  Widget taskList() {
+  Widget projectTaskList() {
+    return StreamBuilder<Tasks>(
+      stream: _projectTaskBloc.getProjectTasksStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: SizedBox());
+        }
+        final List<TaskModel> tasks = snapshot.data!.tasks;
+        return taskListWidget(tasks);
+      },
+    );
+  }
+
+  Widget projectSelectedList() {
     return StreamBuilder<List<TaskModel>>(
       stream: selectedTaskBloc.getSelectedTasksStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: SizedBox());
         }
-        return snapshot.data!.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final TaskModel task = snapshot.data![index];
-                  return TaskCard(
-                    task: task,
-                    onTapItem: () =>
-                        setState(() => task.isSelected = !task.isSelected!),
-                    selected: task.isSelected!,
-                    optionEnable: false,
-                    eventButton: SizedBox(),
-                  );
-                },
-              )
-            : SizedBox();
+        final List<TaskModel> tasks = snapshot.data!;
+        return taskListWidget(tasks);
       },
     );
+  }
+
+  Widget taskListWidget(List<TaskModel> tasks) {
+    return tasks.isNotEmpty
+        ? ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final TaskModel task = tasks[index];
+              return TaskCard(
+                task: task,
+                onTapItem: () =>
+                    setState(() => task.isSelected = !task.isSelected!),
+                selected: task.isSelected!,
+                optionEnable: false,
+              );
+            },
+          )
+        : SizedBox();
   }
 
   Widget startDateAndEndDateSection() {
@@ -781,9 +799,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   .showDatePickerDialog(context)
                   .then((pickedDate) {
                 if (pickedDate != null && pickedDate != _selectedStartDate)
-                  setState(() {
-                    _selectedStartDate = pickedDate;
-                  });
+                  setState(() => _selectedStartDate = pickedDate);
                 _projStartDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
                         .dateFormatToYMD(dateTime: _selectedStartDate));

@@ -66,7 +66,6 @@ class _TasksScreenState extends State<TasksScreen> {
               task: task,
               selected: task.isSelected! ? true : false,
               optionEnable: true,
-              eventButton: SizedBox(),
               onTapItem: () {
                 setState(() => task.isSelected = !task.isSelected!);
                 if (task.isSelected!) {

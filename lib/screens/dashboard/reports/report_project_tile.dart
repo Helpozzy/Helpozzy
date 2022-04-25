@@ -188,7 +188,6 @@ class _ReportProjectTileState extends State<ReportProjectTile> {
                       reportBloc
                           .getSignedUpProjectCompletedTasks(project.projectId!);
                     },
-                    eventButton: SizedBox(),
                   );
                 },
               )

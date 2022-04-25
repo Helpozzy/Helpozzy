@@ -5,6 +5,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
@@ -86,6 +87,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late String? schoolLocation = '';
   late List<AutocompletePrediction> schoolPredictions = [];
   late DetailsResult? schoolDetailsResult;
+
+  late List<int> selectedAreaOfInterests = [];
 
   @override
   void initState() {
@@ -182,6 +185,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (_imageFile != null) {
       profileUrl = await convertAndUpload(_imageFile!);
     }
+
+    selectedAreaOfInterests = [];
+    categoriesList.forEach((category) {
+      if (category.isSelected!) {
+        selectedAreaOfInterests.add(category.id!);
+      }
+    });
     final SignUpAndUserModel signUpAndUserModel = SignUpAndUserModel(
       userId: user.userId,
       firstName: _firstNameController.text,
@@ -197,7 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       relationshipWithParent: _relationController.text,
       schoolName: schoolLocation,
       gradeLevel: _gradeLevelController.text,
-      areaOfInterests: user.areaOfInterests,
+      areaOfInterests: selectedAreaOfInterests,
       currentYearTargetHours: trackerVal.round() <= 200
           ? trackerVal.round()
           : int.parse(_targetHoursController.text),
@@ -361,17 +371,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 child: contactInfo(),
               ),
-              Divider(),
-              user.isOrganization != null
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                        left: width * 0.05,
-                        right: width * 0.05,
-                        bottom: width * 0.04,
-                      ),
-                      child: userTargetHrs(),
-                    )
-                  : SizedBox(),
               user.isOrganization != null ? Divider() : SizedBox(),
               user.isOrganization!
                   ? SizedBox()
@@ -386,6 +385,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         )
                       : SizedBox(),
               user.isOrganization! ? organizationDetails() : SizedBox(),
+              Divider(),
+              user.isOrganization != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.04,
+                      ),
+                      child: userTargetHrs(),
+                    )
+                  : SizedBox(),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: width * 0.05,
+                  right: width * 0.05,
+                  bottom: width * 0.04,
+                ),
+                child: userProjectPrefs(),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: width * 0.04, vertical: width * 0.05),
@@ -442,6 +461,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CommonSimpleTextfield(
                     controller: _firstNameController,
                     hintText: ENTER_FIRST_NAME_HINT,
+                    textCapitalization: TextCapitalization.words,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                    ],
                     validator: (val) {
                       if (val!.isEmpty) {
                         return 'Enter your first name';
@@ -459,6 +482,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextfieldLabelSmall(label: LAST_NAME),
                   CommonSimpleTextfield(
                     controller: _lastNameController,
+                    textCapitalization: TextCapitalization.words,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                    ],
                     hintText: ENTER_LAST_NAME_HINT,
                     validator: (val) {
                       if (val!.isEmpty) {
@@ -478,6 +505,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           maxLines: 2,
           controller: _aboutController,
           hintText: ENTER_ABOUT_HINT,
+          textCapitalization: TextCapitalization.sentences,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+          ],
           validator: (val) {
             if (val!.isEmpty) {
               return 'Enter about your self';
@@ -842,6 +873,66 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             )
           ],
         ),
+      ],
+    );
+  }
+
+  Widget userProjectPrefs() {
+    return Column(
+      children: [
+        labelWithTopPadding(AREA_OF_INTEREST_LABEL),
+        SizedBox(height: 10),
+        Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 5,
+            runSpacing: 5,
+            children: categoriesList
+                .map(
+                  (category) => Card(
+                    elevation: 2.0,
+                    color: GRAY,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: 3.0, bottom: 3.0, left: 10.0, right: 3.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            category.label!,
+                            style: _theme.textTheme.bodyText2!
+                                .copyWith(color: PRIMARY_COLOR),
+                          ),
+                          SizedBox(width: 3),
+                          InkWell(
+                            onTap: () {
+                              if (category.isSelected!) {
+                                category.isSelected = false;
+                              } else {
+                                category.isSelected = true;
+                              }
+                              setState(() {});
+                            },
+                            child: Icon(
+                              user.areaOfInterests!.contains(category.id)
+                                  ? category.isSelected!
+                                      ? CupertinoIcons.check_mark_circled_solid
+                                      : CupertinoIcons.check_mark_circled
+                                  : category.isSelected!
+                                      ? CupertinoIcons.check_mark_circled_solid
+                                      : CupertinoIcons.check_mark_circled,
+                              color: DARK_GRAY,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                .toList()),
       ],
     );
   }
