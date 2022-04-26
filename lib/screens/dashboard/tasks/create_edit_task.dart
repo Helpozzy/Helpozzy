@@ -438,10 +438,15 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                           (volunteer) => Container(
                             margin: EdgeInsets.symmetric(horizontal: 2.0),
                             padding: EdgeInsets.only(
-                                top: 3.0, bottom: 3.0, left: 10.0, right: 3.0),
+                              top: 3.0,
+                              bottom: 3.0,
+                              left: 10.0,
+                              right: 3.0,
+                            ),
                             decoration: BoxDecoration(
-                                color: PRIMARY_COLOR,
-                                borderRadius: BorderRadius.circular(50)),
+                              color: PRIMARY_COLOR,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [

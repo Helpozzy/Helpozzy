@@ -148,86 +148,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         items: items,
                         processIndex: _processIndex,
                       ),
-
-                      // Timeline.tileBuilder(
-                      //   padding: EdgeInsets.symmetric(vertical: 2.0),
-                      //   shrinkWrap: true,
-                      //   theme: TimelineThemeData(
-                      //     direction: Axis.horizontal,
-                      //     connectorTheme: ConnectorThemeData(thickness: 3.0),
-                      //   ),
-                      //   builder: TimelineTileBuilder.connected(
-                      //     connectionDirection: ConnectionDirection.before,
-                      //     itemExtentBuilder: (ctx, index) => width / 9.5,
-                      //     contentsBuilder: (ctx, index) {
-                      //       return Padding(
-                      //         padding: const EdgeInsets.only(top: 5.0),
-                      //         child: Text(
-                      //           index == items.length - 1
-                      //               ? '${items[index]}\nMy Goal'
-                      //               : '${items[index]}',
-                      //           textAlign: TextAlign.center,
-                      //           maxLines: 3,
-                      //           style: _theme.textTheme.bodyText2!.copyWith(
-                      //             fontWeight: index == items.length - 1
-                      //                 ? FontWeight.bold
-                      //                 : FontWeight.w600,
-                      //             fontSize: 12,
-                      //             color: DARK_GRAY,
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //     indicatorBuilder: (ctx, index) {
-                      //       Color color;
-                      //       if (items[index] == _processIndex) {
-                      //         color = BLACK;
-                      //       } else if (items[index] < _processIndex) {
-                      //         color = BLACK;
-                      //       } else {
-                      //         color = LIGHT_GRAY;
-                      //       }
-
-                      //       if (items[index] <= _processIndex) {
-                      //         return Container(
-                      //           height: width * 0.025,
-                      //           width: width * 0.025,
-                      //           decoration: BoxDecoration(
-                      //             borderRadius: BorderRadius.circular(100),
-                      //             color: color,
-                      //           ),
-                      //         );
-                      //       } else {
-                      //         return Container(
-                      //           height: width * 0.025,
-                      //           width: width * 0.025,
-                      //           decoration: BoxDecoration(
-                      //             borderRadius: BorderRadius.circular(100),
-                      //             color: color,
-                      //           ),
-                      //         );
-                      //       }
-                      //     },
-                      //     connectorBuilder: (ctx, index, type) {
-                      //       if (items[index] > 0) {
-                      //         if (items[index] == _processIndex) {
-                      //           return DecoratedLineConnector(
-                      //             decoration: BoxDecoration(
-                      //               color: getColor(items[index]),
-                      //             ),
-                      //           );
-                      //         } else {
-                      //           return SolidLineConnector(
-                      //             color: getColor(items[index]),
-                      //           );
-                      //         }
-                      //       } else {
-                      //         return null;
-                      //       }
-                      //     },
-                      //     itemCount: items.length,
-                      //   ),
-                      // ),
                     ),
                     achievedScoreDetails(user),
                   ],
@@ -346,12 +266,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: snapshot.data!.menus.map((MenuModel menu) {
             return GestureDetector(
               onTap: () async => await onMenuTap(menu),
-              child: Card(
+              child: Container(
                 margin: EdgeInsets.all(10.0),
-                elevation: 0,
-                color: GRAY,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: GRAY,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

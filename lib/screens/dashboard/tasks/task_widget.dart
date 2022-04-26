@@ -195,6 +195,7 @@ class TaskCard extends StatelessWidget {
                       : SizedBox(),
               task.enrollTaskId != null
                   ? task.status == TOGGLE_COMPLETE ||
+                          task.status == TOGGLE_INPROGRESS ||
                           task.status == LOG_HRS ||
                           task.status == LOG_HRS_APPROVED
                       ? SizedBox()

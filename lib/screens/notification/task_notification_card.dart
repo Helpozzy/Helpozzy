@@ -61,7 +61,7 @@ class NotificationTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 2.0),
             child: Text(
-              DateFormatFromTimeStamp().dateFormatToEEEDDMMMYYYYatTime(
+              DateFormatFromTimeStamp().dateFormatToDDMMMYYYYatTime(
                   timeStamp: notification.timeStamp!),
               style: _theme.textTheme.bodyText2!
                   .copyWith(fontSize: 10, color: SILVER_GRAY),

@@ -349,7 +349,7 @@ class _VolunteerProjectTaskSignUpState
       backgroundColor: WHITE,
       showCountryOnly: false,
       dialogSize: Size(width, height - 30),
-      showFlagMain: true,
+      showFlagMain: false,
       dialogTextStyle: Theme.of(context).textTheme.bodyText2,
       flagWidth: 25.0,
       showOnlyCountryWhenClosed: false,

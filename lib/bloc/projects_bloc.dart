@@ -77,8 +77,6 @@ class ProjectsBloc {
         if (project.projectName!.contains(searchText) ||
             project.organization!.contains(searchText)) {
           searchedProjectList.add(project);
-          print(project.toJson());
-          print('Searched list length : ${searchedProjectList.length}');
         }
       });
       projectsController.sink.add(searchedProjectList);

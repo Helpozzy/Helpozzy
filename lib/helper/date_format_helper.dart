@@ -11,6 +11,11 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 
+  String dateFormatToDDMMMYYYYatTime({required String timeStamp}) =>
+      DateFormat('dd MMM yyyy, hh:mm a').format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
+      );
+
   String dateFormatToYMD({required DateTime dateTime}) =>
       DateFormat.yMd().format(dateTime);
 

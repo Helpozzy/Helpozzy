@@ -226,7 +226,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget projectListView() {
-    return StreamBuilder<dynamic>(
+    return StreamBuilder<List<ProjectModel>>(
       stream: _projectsBloc.getProjectsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -235,14 +235,14 @@ class _ExploreScreenState extends State<ExploreScreen>
             child: Center(child: LinearLoader()),
           );
         }
-        return snapshot.data.isNotEmpty
+        return snapshot.data!.isNotEmpty
             ? ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(8),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final ProjectModel project = snapshot.data[index];
+                  final ProjectModel project = snapshot.data![index];
                   return ProjectCard(
                     project: project,
                     onTapCard: () => Navigator.push(
