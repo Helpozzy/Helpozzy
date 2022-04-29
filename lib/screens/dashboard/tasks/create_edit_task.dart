@@ -402,7 +402,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       title: Text(SELECT_MEMBER_LABEL),
       trailing: Icon(
         Icons.group_outlined,
-        color: PRIMARY_COLOR,
+        color: DARK_PINK_COLOR,
       ),
       onTap: () async {
         selectedItems = await Navigator.push(
@@ -543,7 +543,10 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           ),
         ),
         SizedBox(width: 10),
-        Icon(Icons.calendar_today_rounded)
+        Icon(
+          Icons.calendar_today_rounded,
+          color: DARK_PINK_COLOR,
+        )
       ],
     );
   }

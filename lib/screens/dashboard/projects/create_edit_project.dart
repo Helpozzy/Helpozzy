@@ -488,7 +488,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(
-              vertical: width * 0.03, horizontal: width * 0.05),
+            vertical: width * 0.005,
+            horizontal: width * 0.05,
+          ),
           child: TextfieldLabelSmall(label: TASKS_LABEL),
         ),
         Padding(
@@ -496,20 +498,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CommonButtonWithIcon(
-                icon: Icons.add,
-                text: ADD_NEW_TASK_BUTTON,
-                fontSize: 12,
-                iconSize: 15,
-                onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => CreateEditTask(fromEdit: false)),
-                  );
-                  await _projectTaskBloc.getProjectAllTasks('');
-                },
-              ),
               TextButton(
                 onPressed: () async {
                   selectedItems = await Navigator.push(
@@ -518,20 +506,52 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       builder: (context) => TasksScreen(),
                     ),
                   );
-                  if (selectedItems.isNotEmpty) {
-                    selectedTaskBloc.getSelectedTasks(tasks: selectedItems);
-                  }
+                  setState(() {});
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.list_bullet, color: PURPLE_BLUE_COLOR),
+                    Icon(
+                      CupertinoIcons.list_bullet,
+                      color: DARK_PINK_COLOR,
+                      size: 18,
+                    ),
                     SizedBox(width: 5),
                     Text(
                       TASK_LIST_BUTTON,
                       style: _themeData.textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: PURPLE_BLUE_COLOR),
+                        fontWeight: FontWeight.w600,
+                        color: DARK_PINK_COLOR,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => CreateEditTask(fromEdit: false),
+                    ),
+                  );
+                  await _projectTaskBloc.getProjectAllTasks('');
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      CupertinoIcons.add_circled_solid,
+                      color: PURPLE_BLUE_COLOR,
+                      size: 18,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      ADD_NEW_TASK_BUTTON,
+                      style: _themeData.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: PURPLE_BLUE_COLOR,
+                      ),
                     )
                   ],
                 ),
@@ -541,10 +561,31 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: fromEdit ? projectTaskList() : projectSelectedList(),
+          child: taskListWidget(),
         ),
       ],
     );
+  }
+
+  Widget taskListWidget() {
+    return StreamBuilder<Tasks>(
+        stream: _projectTaskBloc.getProjectTasksStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return SizedBox();
+          }
+          return Column(
+            children: snapshot.data!.tasks
+                .map((task) => TaskCard(
+                      task: task,
+                      onTapItem: () =>
+                          setState(() => task.isSelected = !task.isSelected!),
+                      selected: task.isSelected!,
+                      optionEnable: false,
+                    ))
+                .toList(),
+          );
+        });
   }
 
   Widget projectCategoryDropdown() {
@@ -733,53 +774,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
   }
 
-  Widget projectTaskList() {
-    return StreamBuilder<Tasks>(
-      stream: _projectTaskBloc.getProjectTasksStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: SizedBox());
-        }
-        final List<TaskModel> tasks = snapshot.data!.tasks;
-        return taskListWidget(tasks);
-      },
-    );
-  }
-
-  Widget projectSelectedList() {
-    return StreamBuilder<List<TaskModel>>(
-      stream: selectedTaskBloc.getSelectedTasksStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: SizedBox());
-        }
-        final List<TaskModel> tasks = snapshot.data!;
-        return taskListWidget(tasks);
-      },
-    );
-  }
-
-  Widget taskListWidget(List<TaskModel> tasks) {
-    return tasks.isNotEmpty
-        ? ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final TaskModel task = tasks[index];
-              return TaskCard(
-                task: task,
-                onTapItem: () =>
-                    setState(() => task.isSelected = !task.isSelected!),
-                selected: task.isSelected!,
-                optionEnable: false,
-              );
-            },
-          )
-        : SizedBox();
-  }
-
   Widget startDateAndEndDateSection() {
     return Row(
       children: [
@@ -844,7 +838,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           ),
         ),
         SizedBox(width: 10),
-        Icon(Icons.calendar_today_rounded)
+        Icon(
+          Icons.calendar_today_rounded,
+          color: DARK_PINK_COLOR,
+        )
       ],
     );
   }

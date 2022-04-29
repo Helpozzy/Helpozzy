@@ -78,7 +78,6 @@ class ProjectTaskBloc {
     myTaskExpandController.close();
     allTaskExpandController.close();
     selectedTasksController.close();
-
     projectEnrolledTasksController.close();
     projectTasksController.close();
     projectTasksDetailsController.close();

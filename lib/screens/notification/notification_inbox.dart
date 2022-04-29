@@ -78,26 +78,23 @@ class _NotificationInboxState extends State<NotificationInbox> {
         await _notificationBloc.updateNotifications(notification);
         await _notificationBloc.getNotifications();
       } else {
-        final ProjectModel? project = await _projectsBloc.getProjectByProjectId(
-            task.projectId!, task.signUpUserId!);
-        if (project!.totalTaskshrs != null) {
-          project.totalTaskshrs = project.totalTaskshrs! + taskLogHrs.hrs!;
-          await _editProfileBloc.updateTotalSpentHrs(
-              task.signUpUserId!, taskLogHrs.hrs!);
-          final ResponseModel response =
-              await _projectsBloc.updateEnrolledProjectHrs(
-                  task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
-          if (response.success!) {
-            ScaffoldSnakBar().show(context, msg: response.message!);
-          } else {
-            ScaffoldSnakBar().show(context, msg: response.error!);
-          }
-          await _notificationBloc.updateNotifications(notification);
-          await _notificationBloc.getNotifications();
+        final ProjectModel taskProject = await _projectsBloc
+            .getProjectByProjectId(task.projectId!, task.signUpUserId!);
+
+        taskProject.totalTaskshrs =
+            taskProject.totalTaskshrs ?? 0 + taskLogHrs.hrs!;
+        await _editProfileBloc.updateTotalSpentHrs(
+            task.signUpUserId!, taskLogHrs.hrs!);
+        final ResponseModel response =
+            await _projectsBloc.updateEnrolledProjectHrs(
+                task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
+        if (response.success!) {
+          ScaffoldSnakBar().show(context, msg: response.message!);
         } else {
-          await _notificationBloc.updateNotifications(notification);
-          await _notificationBloc.getNotifications();
+          ScaffoldSnakBar().show(context, msg: response.error!);
         }
+        await _notificationBloc.updateNotifications(notification);
+        await _notificationBloc.getNotifications();
       }
     } else {
       CircularLoader().hide(context);

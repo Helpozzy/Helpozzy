@@ -16,7 +16,8 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   late double width;
-  late List<TaskModel> selectedItems = [];
+  late ThemeData _theme;
+  late List<TaskModel> tempSelectedTasks = [];
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+    _theme = Theme.of(context);
     return Scaffold(
       backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
@@ -34,7 +36,7 @@ class _TasksScreenState extends State<TasksScreen> {
         onBack: () => Navigator.pop(context),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pop(context, selectedItems),
+            onPressed: () => Navigator.pop(context, tempSelectedTasks),
             icon: Icon(
               Icons.check,
               color: DARK_PINK_COLOR,
@@ -53,31 +55,40 @@ class _TasksScreenState extends State<TasksScreen> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(
-            vertical: width * 0.04,
-            horizontal: width * 0.05,
-          ),
-          itemCount: snapshot.data!.tasks.length,
-          itemBuilder: (context, index) {
-            final TaskModel task = snapshot.data!.tasks[index];
-            return TaskCard(
-              task: task,
-              selected: task.isSelected! ? true : false,
-              optionEnable: true,
-              onTapItem: () {
-                setState(() => task.isSelected = !task.isSelected!);
-                if (task.isSelected!) {
-                  if (!selectedItems.contains(task)) {
-                    selectedItems.add(task);
-                  }
-                }
-              },
-              onTapDelete: () async => await onDelete(task),
-            );
-          },
-        );
+        return snapshot.data!.tasks.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.symmetric(
+                  vertical: width * 0.04,
+                  horizontal: width * 0.05,
+                ),
+                itemCount: snapshot.data!.tasks.length,
+                itemBuilder: (context, index) {
+                  final TaskModel task = snapshot.data!.tasks[index];
+                  return TaskCard(
+                    task: task,
+                    selected: task.isSelected! ? true : false,
+                    optionEnable: true,
+                    onTapItem: () {
+                      setState(() => task.isSelected = !task.isSelected!);
+                      if (task.isSelected!) {
+                        if (!tempSelectedTasks.contains(task)) {
+                          tempSelectedTasks.add(task);
+                        }
+                      }
+                    },
+                    onTapDelete: () async => await onDelete(task),
+                  );
+                },
+              )
+            : Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  NO_TASKS_FOUND,
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
+                ),
+              );
       },
     );
   }

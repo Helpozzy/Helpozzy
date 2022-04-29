@@ -193,7 +193,7 @@ class _ReportProjectTileState extends State<ReportProjectTile> {
               )
             : Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   NO_COMPLETED_TASKS_FOUND,
                   style: _theme.textTheme.bodyText2!.copyWith(

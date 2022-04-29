@@ -52,7 +52,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             CommonDivider(),
             Padding(
               padding: EdgeInsets.only(
-                  left: width * 0.08, right: width * 0.06, top: 10.0),
+                left: width * 0.08,
+                right: width * 0.06,
+                top: 10.0,
+              ),
               child: StreamBuilder<SignUpAndUserModel>(
                 stream: _userInfoBloc.userStream,
                 builder: (context, snapshot) {
