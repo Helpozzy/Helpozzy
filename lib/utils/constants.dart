@@ -261,8 +261,9 @@ const TAX_ID_NUM_HINT = 'XX_XXXXXXX';
 const INVITEES_EMAIL_ADDRESS_HINT = 'Email Address';
 
 //Reset password
-const RESET_PASSWORD = 'Forgot your password?';
-const RESER_PASS_MSG =
+const FORGOT_YOUR_PASSWORD = 'Forgot your password?';
+const RESET_PASSWORD = 'Reset Password';
+const RESET_PASS_MSG =
     "That's okay, it happens!\nEnter your email and Click on button below to reset your password.";
 
 //Dashboard scrreen

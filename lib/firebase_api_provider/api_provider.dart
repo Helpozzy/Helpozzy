@@ -293,7 +293,6 @@ class ApiProvider {
         .where('signup_uid', isEqualTo: signUpUserId)
         .where('project_id', isEqualTo: projectId)
         .get();
-    print(querySnapshot.docs.first.data() as Map<String, dynamic>);
     return ProjectModel.fromjson(
         json: querySnapshot.docs.first.data() as Map<String, dynamic>);
   }

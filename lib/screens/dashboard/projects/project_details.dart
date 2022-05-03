@@ -31,6 +31,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   late double width;
   late ThemeData _theme;
   late TabController _tabController;
+  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
 
   final ScrollController scrollController = ScrollController();
   late double currentPosition = 0.0;
@@ -248,27 +249,30 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           ),
           project.ownerId == prefsObject.getString(CURRENT_USER_ID)
               ? SizedBox()
-              : project.isSignedUp!
+              : currentTimeStamap > int.parse(project.endDate!)
                   ? SizedBox()
-                  : project.status == TOGGLE_COMPLETE
+                  : project.isSignedUp!
                       ? SizedBox()
-                      : projectTabType == ProjectTabType.OWN_TAB ||
-                              projectTabType ==
-                                  ProjectTabType.PROJECT_COMPLETED_TAB ||
-                              projectTabType == ProjectTabType.MY_ENROLLED_TAB
+                      : project.status == TOGGLE_COMPLETE
                           ? SizedBox()
-                          : SmallCommonButton(
-                              fontSize: 10,
-                              text: SIGN_UP,
-                              onPressed: () => Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) =>
-                                      VolunteerProjectTaskSignUp(
-                                          project: project),
+                          : projectTabType == ProjectTabType.OWN_TAB ||
+                                  projectTabType ==
+                                      ProjectTabType.PROJECT_COMPLETED_TAB ||
+                                  projectTabType ==
+                                      ProjectTabType.MY_ENROLLED_TAB
+                              ? SizedBox()
+                              : SmallCommonButton(
+                                  fontSize: 10,
+                                  text: SIGN_UP,
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          VolunteerProjectTaskSignUp(
+                                              project: project),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
         ],
       ),
     );

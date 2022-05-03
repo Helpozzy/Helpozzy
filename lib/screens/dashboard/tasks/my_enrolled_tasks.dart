@@ -30,6 +30,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
   late SignUpAndUserModel userModel;
+  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -176,57 +177,64 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                         Expanded(
                           child: TaskCard(
                             task: task,
-                            eventButton: task.status == LOG_HRS
+                            eventButton: currentTimeStamap >
+                                    int.parse(task.endDate!)
                                 ? SizedBox()
-                                : task.status == TOGGLE_NOT_STARTED
-                                    ? processButton(false, task)
-                                    : task.status == TOGGLE_INPROGRESS
-                                        ? processButton(true, task)
-                                        : Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 8.0,
-                                                  right: 8.0,
-                                                  bottom: 5.0,
-                                                ),
-                                                child: CommonSimpleTextfield(
-                                                  controller:
-                                                      _commentController,
-                                                  hintText: ENTER_COMMENT_HINT,
-                                                  prefixIcon: TextButton(
-                                                    onPressed: () =>
-                                                        showPickerModalBottomSheet(),
-                                                    child: Text(
-                                                      _dateFormatFromTimeStamp
-                                                          .durationToHHMM(
-                                                              duration:
-                                                                  initialTime),
-                                                      style: _theme
-                                                          .textTheme.bodyText2!
-                                                          .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14,
+                                : task.status == LOG_HRS
+                                    ? SizedBox()
+                                    : task.status == TOGGLE_NOT_STARTED
+                                        ? processButton(false, task)
+                                        : task.status == TOGGLE_INPROGRESS
+                                            ? processButton(true, task)
+                                            : Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                      left: 8.0,
+                                                      right: 8.0,
+                                                      bottom: 5.0,
+                                                    ),
+                                                    child:
+                                                        CommonSimpleTextfield(
+                                                      controller:
+                                                          _commentController,
+                                                      hintText:
+                                                          ENTER_COMMENT_HINT,
+                                                      prefixIcon: TextButton(
+                                                        onPressed: () =>
+                                                            showPickerModalBottomSheet(),
+                                                        child: Text(
+                                                          _dateFormatFromTimeStamp
+                                                              .durationToHHMM(
+                                                                  duration:
+                                                                      initialTime),
+                                                          style: _theme
+                                                              .textTheme
+                                                              .bodyText2!
+                                                              .copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
                                                       ),
+                                                      validator: (val) => null,
                                                     ),
                                                   ),
-                                                  validator: (val) => null,
-                                                ),
+                                                  SizedBox(height: 6),
+                                                  SmallCommonButton(
+                                                    text: LOG_HOURS_BUTTON,
+                                                    buttonColor:
+                                                        BUTTON_GRAY_COLOR,
+                                                    fontSize: 12,
+                                                    onPressed: () async =>
+                                                        updateTask(
+                                                      task,
+                                                      TaskProgressType.LOG_HRS,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(height: 6),
-                                              SmallCommonButton(
-                                                text: LOG_HOURS_BUTTON,
-                                                buttonColor: BUTTON_GRAY_COLOR,
-                                                fontSize: 12,
-                                                onPressed: () async =>
-                                                    updateTask(
-                                                  task,
-                                                  TaskProgressType.LOG_HRS,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                             onTapItem: () async {
                               await Navigator.push(
                                 context,

@@ -36,6 +36,7 @@ class _TaskTabState extends State<TaskTab> {
       DateFormatFromTimeStamp();
   final TaskBloc _taskBloc = TaskBloc();
   late Duration initialTime = Duration.zero;
+  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
 
   @override
   Widget build(BuildContext context) {
@@ -187,91 +188,100 @@ class _TaskTabState extends State<TaskTab> {
                       Expanded(
                         child: TaskCard(
                           task: task,
-                          eventButton: isMyTask
-                              ? task.status == TOGGLE_NOT_STARTED
-                                  ? processButton(
-                                      taskIsInProgress: false,
-                                      isMyTask: isMyTask,
-                                      task: task)
-                                  : task.status == TOGGLE_INPROGRESS
+                          eventButton: currentTimeStamap >
+                                  int.parse(task.endDate!)
+                              ? SizedBox()
+                              : isMyTask
+                                  ? task.status == TOGGLE_NOT_STARTED
                                       ? processButton(
-                                          taskIsInProgress: true,
+                                          taskIsInProgress: false,
                                           isMyTask: isMyTask,
                                           task: task)
-                                      : task.status == TOGGLE_COMPLETE
-                                          ? Column(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: 8.0,
-                                                    right: 8.0,
-                                                    bottom: 5.0,
-                                                  ),
-                                                  child: CommonSimpleTextfield(
-                                                    controller:
-                                                        _commentController,
-                                                    hintText:
-                                                        ENTER_COMMENT_HINT,
-                                                    prefixIcon: TextButton(
-                                                      onPressed: () =>
-                                                          showPickerModalBottomSheet(),
-                                                      child: Text(
-                                                        _dateFormatFromTimeStamp
-                                                            .durationToHHMM(
-                                                                duration:
-                                                                    initialTime),
-                                                        style: _theme.textTheme
-                                                            .bodyText2!
-                                                            .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 14,
+                                      : task.status == TOGGLE_INPROGRESS
+                                          ? processButton(
+                                              taskIsInProgress: true,
+                                              isMyTask: isMyTask,
+                                              task: task)
+                                          : task.status == TOGGLE_COMPLETE
+                                              ? Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                        left: 8.0,
+                                                        right: 8.0,
+                                                        bottom: 5.0,
+                                                      ),
+                                                      child:
+                                                          CommonSimpleTextfield(
+                                                        controller:
+                                                            _commentController,
+                                                        hintText:
+                                                            ENTER_COMMENT_HINT,
+                                                        prefixIcon: TextButton(
+                                                          onPressed: () =>
+                                                              showPickerModalBottomSheet(),
+                                                          child: Text(
+                                                            _dateFormatFromTimeStamp
+                                                                .durationToHHMM(
+                                                                    duration:
+                                                                        initialTime),
+                                                            style: _theme
+                                                                .textTheme
+                                                                .bodyText2!
+                                                                .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
                                                         ),
+                                                        validator: (val) =>
+                                                            null,
                                                       ),
                                                     ),
-                                                    validator: (val) => null,
+                                                    SizedBox(height: 6),
+                                                    SmallCommonButton(
+                                                      text: LOG_HOURS_BUTTON,
+                                                      buttonColor:
+                                                          BUTTON_GRAY_COLOR,
+                                                      fontSize: 12,
+                                                      onPressed: () async =>
+                                                          await onTapFunction(
+                                                        task,
+                                                        isMyTask,
+                                                        TaskProgressType
+                                                            .LOG_HRS,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : SizedBox()
+                                  : projectTabType ==
+                                          ProjectTabType.PROJECT_COMPLETED_TAB
+                                      ? SizedBox()
+                                      : task.taskOwnerId !=
+                                              prefsObject
+                                                  .getString(CURRENT_USER_ID)
+                                          ? SmallCommonButton(
+                                              text: SIGN_UP,
+                                              fontSize: 12,
+                                              buttonColor: DARK_GRAY,
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        VolunteerProjectTaskSignUp(
+                                                      fromTask: true,
+                                                      project: project,
+                                                      task: task,
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(height: 6),
-                                                SmallCommonButton(
-                                                  text: LOG_HOURS_BUTTON,
-                                                  buttonColor:
-                                                      BUTTON_GRAY_COLOR,
-                                                  fontSize: 12,
-                                                  onPressed: () async =>
-                                                      await onTapFunction(
-                                                    task,
-                                                    isMyTask,
-                                                    TaskProgressType.LOG_HRS,
-                                                  ),
-                                                ),
-                                              ],
+                                                );
+                                              },
                                             )
-                                          : SizedBox()
-                              : projectTabType ==
-                                      ProjectTabType.PROJECT_COMPLETED_TAB
-                                  ? SizedBox()
-                                  : task.taskOwnerId !=
-                                          prefsObject.getString(CURRENT_USER_ID)
-                                      ? SmallCommonButton(
-                                          text: SIGN_UP,
-                                          fontSize: 12,
-                                          buttonColor: DARK_GRAY,
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    VolunteerProjectTaskSignUp(
-                                                  fromTask: true,
-                                                  project: project,
-                                                  task: task,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      : SizedBox(),
+                                          : SizedBox(),
                           onTapItem: () async {
                             await Navigator.push(
                               context,

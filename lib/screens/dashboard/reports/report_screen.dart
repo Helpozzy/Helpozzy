@@ -20,7 +20,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late ThemeData _theme;
   late double height;
   late double width;
-  late List<ReportsDataModel> data = [];
   final DateFormatFromTimeStamp _dateFromTimeStamp = DateFormatFromTimeStamp();
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
@@ -36,21 +35,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
-    data = projectReportHelper.chartDetailsList
-        .where((element) => element.year == year)
+    final List<ReportsDataModel> filterdList = projectReportHelper
+        .chartDetailsList
+        .where((e) => e.year == year)
         .toList();
-    setState(() {});
+    _reportBloc.getFilteredReportProjects(filterdList);
   }
 
   Future loadProject(String year, String month) async {
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
-    data = projectReportHelper.chartDetailsList
-        .where((element) =>
-            element.year == year && element.month == month.substring(0, 3))
+    final List<ReportsDataModel> filterdList = projectReportHelper
+        .chartDetailsList
+        .where((e) => e.year == year && e.month == month.substring(0, 3))
         .toList();
-    setState(() {});
+    _reportBloc.getFilteredReportProjects(filterdList);
   }
 
   @override
@@ -167,104 +167,127 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget reportView() {
-    return AspectRatio(
-      aspectRatio: 1.66,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 8.0,
-                bottom: 15.0,
-                right: 8.0,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.center,
-                    barTouchData: BarTouchData(enabled: true),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: SideTitles(
-                        showTitles: true,
-                        getTextStyles: (context, value) => TextStyle(
-                          color: NORMAL_BAR_COLOR,
-                          fontSize: 10,
+    return StreamBuilder<List<ReportsDataModel>>(
+      stream: _reportBloc.getFilteredReportProjectsTaskStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox();
+        }
+        final List<ReportsDataModel> reportList = snapshot.data!;
+        return reportList.isNotEmpty
+            ? AspectRatio(
+                aspectRatio: 1.66,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          bottom: 15.0,
+                          right: 8.0,
                         ),
-                        margin: 10,
-                      ),
-                      leftTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        getTextStyles: (context, value) => TextStyle(
-                          color: NORMAL_BAR_COLOR,
-                          fontSize: 10,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.center,
+                              barTouchData: BarTouchData(enabled: true),
+                              titlesData: FlTitlesData(
+                                show: true,
+                                bottomTitles: SideTitles(
+                                  showTitles: true,
+                                  getTextStyles: (context, value) => TextStyle(
+                                    color: NORMAL_BAR_COLOR,
+                                    fontSize: 10,
+                                  ),
+                                  margin: 10,
+                                ),
+                                leftTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 40,
+                                  getTextStyles: (context, value) => TextStyle(
+                                    color: NORMAL_BAR_COLOR,
+                                    fontSize: 10,
+                                  ),
+                                  margin: 0,
+                                ),
+                                topTitles: SideTitles(showTitles: false),
+                                rightTitles: SideTitles(showTitles: false),
+                              ),
+                              gridData: FlGridData(
+                                show: true,
+                                checkToShowHorizontalLine: (value) =>
+                                    value % 10 == 0,
+                                getDrawingHorizontalLine: (value) => FlLine(
+                                  color: NORMAL_BAR_COLOR,
+                                  strokeWidth: 0.5,
+                                ),
+                                getDrawingVerticalLine: (value) => FlLine(
+                                  color: GRAY,
+                                  strokeWidth: 0.5,
+                                ),
+                              ),
+                              borderData: FlBorderData(
+                                show: true,
+                                border: Border(
+                                  bottom: BorderSide(width: 0.5),
+                                  left: BorderSide(width: 0.2),
+                                ),
+                              ),
+                              groupsSpace: reportList.length == 12 ? 13 : 30,
+                              barGroups: getData(reportList),
+                            ),
+                          ),
                         ),
-                        margin: 0,
                       ),
-                      topTitles: SideTitles(showTitles: false),
-                      rightTitles: SideTitles(showTitles: false),
-                    ),
-                    gridData: FlGridData(
-                      show: true,
-                      checkToShowHorizontalLine: (value) => value % 10 == 0,
-                      getDrawingHorizontalLine: (value) => FlLine(
-                        color: NORMAL_BAR_COLOR,
-                        strokeWidth: 0.5,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          CHART_HOURS_VERTICAL_LABEL,
+                          textAlign: TextAlign.center,
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(fontWeight: FontWeight.w600),
+                        ),
                       ),
-                      getDrawingVerticalLine: (value) => FlLine(
-                        color: GRAY,
-                        strokeWidth: 0.5,
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          CHART_MONTHS_LABEL,
+                          textAlign: TextAlign.center,
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border(
-                        bottom: BorderSide(width: 0.5),
-                        left: BorderSide(width: 0.2),
-                      ),
-                    ),
-                    groupsSpace: data.length == 12 ? 13 : 30,
-                    barGroups: getData(),
+                    ],
                   ),
                 ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                CHART_HOURS_VERTICAL_LABEL,
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                CHART_MONTHS_LABEL,
-                textAlign: TextAlign.center,
-                style: _theme.textTheme.bodyText2!
-                    .copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
-      ),
+              )
+            : Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 20.0,
+                ),
+                child: Text(
+                  NO_ACTIVITIES_FOUNDS,
+                  style: _theme.textTheme.headline5!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
+                ),
+              );
+      },
     );
   }
 
-  List<BarChartGroupData> getData() {
-    return data.map((e) {
+  List<BarChartGroupData> getData(List<ReportsDataModel> reportList) {
+    return reportList.map((e) {
       final yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
       return BarChartGroupData(
         x: e.hrs != null ? e.hrs! : 0,
         barRods: [
           BarChartRodData(
             toY: yVal,
-            width: data.length == 12 ? 12 : 20,
+            width: reportList.length == 12 ? 12 : 20,
             rodStackItems: [
               BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
               BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
@@ -280,52 +303,65 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget reportList() {
-    Reports reports = Reports.fromList(list: data);
-    return reports.reportList.isNotEmpty
-        ? ListView.separated(
-            shrinkWrap: true,
-            separatorBuilder: (context, index) => CommonDivider(),
-            physics: ScrollPhysics(),
-            itemCount: reports.reportList.length,
-            itemBuilder: (context, index) {
-              ReportsDataModel report = reports.reportList[index];
-              final ProjectModel project = report.project!;
-              return StreamBuilder<bool>(
-                initialData: false,
-                stream: _reportBloc.getProjectExpandStream,
-                builder: (context, snapshot) {
-                  return ReportProjectTile(
-                    project: project,
-                    isExpanded: snapshot.data!,
-                    reportBloc: _reportBloc,
+    return StreamBuilder<List<ReportsDataModel>>(
+      stream: _reportBloc.getFilteredReportProjectsTaskStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: LinearLoader(),
+          );
+        }
+        final List<ReportsDataModel> reportList = snapshot.data!;
+        Reports reports = Reports.fromList(list: reportList);
+        return reports.reportList.isNotEmpty
+            ? ListView.separated(
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => CommonDivider(),
+                physics: ScrollPhysics(),
+                itemCount: reports.reportList.length,
+                itemBuilder: (context, index) {
+                  ReportsDataModel report = reports.reportList[index];
+                  final ProjectModel project = report.project!;
+                  return StreamBuilder<bool>(
+                    initialData: false,
+                    stream: _reportBloc.getProjectExpandStream,
+                    builder: (context, snapshot) {
+                      return ReportProjectTile(
+                        project: project,
+                        isExpanded: snapshot.data!,
+                        reportBloc: _reportBloc,
+                      );
+                    },
                   );
                 },
+              )
+            : Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        NO_ACTIVITIES_FOUNDS,
+                        style: _theme.textTheme.headline5!.copyWith(
+                            color: DARK_GRAY, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        PLEASE_VISIT_OTHER,
+                        textAlign: TextAlign.center,
+                        style: _theme.textTheme.bodyText2!
+                            .copyWith(color: DARK_GRAY),
+                      ),
+                    ],
+                  ),
+                ),
               );
-            },
-          )
-        : Center(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    NO_ACTIVITIES_FOUNDS,
-                    style: _theme.textTheme.headline5!.copyWith(
-                        color: DARK_GRAY, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    PLEASE_VISIT_OTHER,
-                    textAlign: TextAlign.center,
-                    style:
-                        _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
-                  ),
-                ],
-              ),
-            ),
-          );
+      },
+    );
   }
 }

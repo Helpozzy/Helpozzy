@@ -38,11 +38,11 @@ class _ResetPasswordState extends State<ResetPassword> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          TopInfoLabel(label: RESET_PASSWORD),
+          TopInfoLabel(label: FORGOT_YOUR_PASSWORD),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.12),
             child: Text(
-              RESER_PASS_MSG,
+              RESET_PASS_MSG,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyText2!.copyWith(
                     fontSize: 14,

@@ -32,6 +32,8 @@ class _ProjectCardState extends State<ProjectCard> {
   final void Function()? onPressedSignUpButton;
   final ProjectModel project;
 
+  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -147,16 +149,18 @@ class _ProjectCardState extends State<ProjectCard> {
                         project.ownerId ==
                                 prefsObject.getString(CURRENT_USER_ID)
                             ? SizedBox()
-                            : project.isSignedUp!
+                            : currentTimeStamap > int.parse(project.endDate!)
                                 ? SizedBox()
-                                : project.status == PROJECT_COMPLETED
+                                : project.isSignedUp!
                                     ? SizedBox()
-                                    : SmallCommonButton(
-                                        fontSize: 12,
-                                        text: SIGN_UP,
-                                        buttonColor: DARK_PINK_COLOR,
-                                        onPressed: onPressedSignUpButton!,
-                                      ),
+                                    : project.status == TOGGLE_COMPLETE
+                                        ? SizedBox()
+                                        : SmallCommonButton(
+                                            fontSize: 12,
+                                            text: SIGN_UP,
+                                            buttonColor: DARK_PINK_COLOR,
+                                            onPressed: onPressedSignUpButton!,
+                                          ),
                         SizedBox(width: 5),
                       ],
                     ),

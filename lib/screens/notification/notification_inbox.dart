@@ -71,13 +71,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.subTitle = fromDeclineLogHrs
           ? 'Your log hours for ${task.taskName} is declined by owner, Please resubmit your volunteering hrs'
           : 'Your log hours for ${task.taskName} is approved';
-      notification.isUpdated =
-          fromDeclineLogHrs ? true : notification.isUpdated;
       notification.payload = taskLogHrs.toJson();
       if (fromDeclineLogHrs) {
+        notification.isUpdated = false;
         await _notificationBloc.updateNotifications(notification);
         await _notificationBloc.getNotifications();
       } else {
+        notification.isUpdated = true;
         final ProjectModel taskProject = await _projectsBloc
             .getProjectByProjectId(task.projectId!, task.signUpUserId!);
 

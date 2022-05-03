@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:google_place/google_place.dart';
 import 'package:helpozzy/bloc/edit_profile_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -89,13 +90,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late DetailsResult? schoolDetailsResult;
 
   late List<int> selectedAreaOfInterests = [];
+  late List<CategoryModel> tempList = [];
 
   @override
   void initState() {
     countryCode = CountryCode(code: '+1', name: 'US');
+    getCategories();
     listenUser();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     super.initState();
+  }
+
+  Future getCategories() async {
+    categoriesList.forEach((category) {
+      if (user.areaOfInterests!.contains(category.id)) {
+        category.isSelected = true;
+        tempList.add(category);
+      } else {
+        tempList.add(category);
+      }
+    });
   }
 
   Future<void> autoCompleteAddressSearch(String value) async {
@@ -506,9 +520,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: _aboutController,
           hintText: ENTER_ABOUT_HINT,
           textCapitalization: TextCapitalization.sentences,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
-          ],
           validator: (val) {
             if (val!.isEmpty) {
               return 'Enter about your self';
@@ -886,52 +897,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             alignment: WrapAlignment.start,
             spacing: 5,
             runSpacing: 5,
-            children: categoriesList
-                .map(
-                  (category) => Card(
-                    elevation: 2.0,
-                    color: GRAY,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: 3.0, bottom: 3.0, left: 10.0, right: 3.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            category.label!,
-                            style: _theme.textTheme.bodyText2!
-                                .copyWith(color: PRIMARY_COLOR),
-                          ),
-                          SizedBox(width: 3),
-                          InkWell(
-                            onTap: () {
-                              if (category.isSelected!) {
-                                category.isSelected = false;
-                              } else {
-                                category.isSelected = true;
-                              }
-                              setState(() {});
-                            },
-                            child: Icon(
-                              user.areaOfInterests!.contains(category.id)
-                                  ? category.isSelected!
-                                      ? CupertinoIcons.check_mark_circled_solid
-                                      : CupertinoIcons.check_mark_circled
-                                  : category.isSelected!
-                                      ? CupertinoIcons.check_mark_circled_solid
-                                      : CupertinoIcons.check_mark_circled,
-                              color: DARK_GRAY,
-                              size: 20,
-                            ),
-                          )
-                        ],
+            children: tempList
+                .map((category) => Card(
+                      elevation: 2.0,
+                      color: GRAY,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                    ),
-                  ),
-                )
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          top: 3.0,
+                          bottom: 3.0,
+                          left: 10.0,
+                          right: 3.0,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              category.label!,
+                              style: _theme.textTheme.bodyText2!
+                                  .copyWith(color: PRIMARY_COLOR),
+                            ),
+                            SizedBox(width: 3),
+                            InkWell(
+                              onTap: () => setState(() =>
+                                  category.isSelected = !category.isSelected!),
+                              child: Icon(
+                                category.isSelected!
+                                    ? CupertinoIcons.check_mark_circled_solid
+                                    : CupertinoIcons.check_mark_circled,
+                                color: DARK_GRAY,
+                                size: 20,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ))
                 .toList()),
       ],
     );
