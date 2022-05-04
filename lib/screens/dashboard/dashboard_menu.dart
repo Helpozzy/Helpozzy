@@ -50,37 +50,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             topContainerWithProgress(),
             CommonDivider(),
-            Padding(
-              padding: EdgeInsets.only(
-                left: width * 0.08,
-                right: width * 0.06,
-                top: 10.0,
-              ),
-              child: StreamBuilder<SignUpAndUserModel>(
-                stream: _userInfoBloc.userStream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text(
-                      LOADING,
-                      style: _theme.textTheme.headline6!.copyWith(
-                        color: DARK_GRAY,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.08,
+                        right: width * 0.06,
+                        top: 10.0,
                       ),
-                    );
-                  }
-                  return Text(
-                    'Hi, ${snapshot.data!.firstName}',
-                    style: _theme.textTheme.headline6!.copyWith(
-                      color: PRIMARY_COLOR,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      child: StreamBuilder<SignUpAndUserModel>(
+                        stream: _userInfoBloc.userStream,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Text(
+                              LOADING,
+                              style: _theme.textTheme.headline6!.copyWith(
+                                color: DARK_GRAY,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }
+                          return Text(
+                            'Hi, ${snapshot.data!.firstName}',
+                            style: _theme.textTheme.headline6!.copyWith(
+                              color: PRIMARY_COLOR,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                },
+                    menuGrid(),
+                  ],
+                ),
               ),
             ),
-            menuGrid(),
           ],
         ),
       ),

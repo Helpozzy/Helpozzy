@@ -36,7 +36,7 @@ class _TaskTabState extends State<TaskTab> {
       DateFormatFromTimeStamp();
   final TaskBloc _taskBloc = TaskBloc();
   late Duration initialTime = Duration.zero;
-  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
+  final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +188,14 @@ class _TaskTabState extends State<TaskTab> {
                       Expanded(
                         child: TaskCard(
                           task: task,
-                          eventButton: currentTimeStamap >
-                                  int.parse(task.endDate!)
+                          eventButton: DateFormatFromTimeStamp()
+                                      .dateTime(
+                                          timeStamp:
+                                              currentTimeStamp.toString())
+                                      .difference(DateFormatFromTimeStamp()
+                                          .dateTime(timeStamp: task.endDate!))
+                                      .inDays >
+                                  1
                               ? SizedBox()
                               : isMyTask
                                   ? task.status == TOGGLE_NOT_STARTED

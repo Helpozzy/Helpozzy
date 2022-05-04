@@ -210,6 +210,8 @@ const CURRENT_USER_DATA = 'currentUser';
 //Snakbar message
 const LOGIN_SUCEED_POPUP_MSG = 'Login Succeed';
 const SIGN_UP_FAILED_POPUP_MSG = 'Sign-Up Failed!';
+const AUTHENTICATION_SUCCESS_POPUP_MSG = 'Authentication Success!';
+const AUTHENTICATION_FAILED_POPUP_MSG = 'Authentication Failed!';
 const FAILED_POPUP_MSG = 'Failed!';
 const OTP_SENT_TO_POPUP_MSG = 'OTP sent to';
 const ENTER_HRS_POPUP_MSG = 'Enter your hrs in field';

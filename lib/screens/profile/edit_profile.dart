@@ -165,10 +165,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _relationController.text =
         user.relationshipWithParent != null ? user.relationshipWithParent! : '';
     addressLocation = user.address!;
-    _targetHoursController.text = user.currentYearTargetHours!.toString();
-    trackerVal = user.currentYearTargetHours! > 200
-        ? 225
-        : user.currentYearTargetHours!.toDouble();
+    if (!user.isOrganization!)
+      _targetHoursController.text = user.currentYearTargetHours!.toString();
+    if (!user.isOrganization!)
+      trackerVal = user.currentYearTargetHours! > 200
+          ? 225
+          : user.currentYearTargetHours!.toDouble();
     _gradeLevelController.text =
         user.gradeLevel != null ? user.gradeLevel! : '';
     if (user.isOrganization!) {
@@ -400,7 +402,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       : SizedBox(),
               user.isOrganization! ? organizationDetails() : SizedBox(),
               Divider(),
-              user.isOrganization != null
+              user.isOrganization != null && !user.isOrganization!
                   ? Padding(
                       padding: EdgeInsets.only(
                         left: width * 0.05,
@@ -635,10 +637,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           },
         ),
-        user.address != null && user.address!.isNotEmpty
-            ? locationCard(user.address!)
-            : addressLocation != null && addressLocation!.isNotEmpty
-                ? locationCard(addressLocation!)
+        addressLocation != null && addressLocation!.isNotEmpty
+            ? locationCard(addressLocation!)
+            : user.address != null && user.address!.isNotEmpty
+                ? locationCard(user.address!)
                 : SizedBox(),
       ],
     );
@@ -1086,7 +1088,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         icon: Icon(Icons.expand_more_rounded),
         validator: (val) {
-          if (val != null && _genderController.text.isNotEmpty) {
+          if (val == null && _genderController.text.isNotEmpty) {
             return 'Select gender want to continue';
           }
           return null;
@@ -1118,7 +1120,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SizedBox(height: 10),
             TextfieldLabelSmall(label: SCHOOL_NAME_LABEL),
             schoolLocationView(),
-            // schoolField(),
             SizedBox(width: 10),
             selectGradeDropDown(),
           ],

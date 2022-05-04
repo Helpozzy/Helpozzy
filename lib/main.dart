@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpozzy/app.dart';
 import 'package:helpozzy/firebase_repository/auth_repository.dart';
-import 'package:helpozzy/manager/life_cycle_manager.dart';
+import 'package:helpozzy/provider/life_cycle_manager.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/auth/login/bloc/login_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';

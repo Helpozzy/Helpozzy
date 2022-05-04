@@ -31,7 +31,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   late double width;
   late ThemeData _theme;
   late TabController _tabController;
-  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
+  final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   final ScrollController scrollController = ScrollController();
   late double currentPosition = 0.0;
@@ -249,7 +249,12 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           ),
           project.ownerId == prefsObject.getString(CURRENT_USER_ID)
               ? SizedBox()
-              : currentTimeStamap > int.parse(project.endDate!)
+              : DateFormatFromTimeStamp()
+                          .dateTime(timeStamp: currentTimeStamp.toString())
+                          .difference(DateFormatFromTimeStamp()
+                              .dateTime(timeStamp: project.endDate!))
+                          .inDays >
+                      1
                   ? SizedBox()
                   : project.isSignedUp!
                       ? SizedBox()

@@ -6,6 +6,9 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 
+  DateTime dateTime({required String timeStamp}) =>
+      DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp));
+
   String dateFormatToEEEDDMMMYYYYatTime({required String timeStamp}) =>
       DateFormat('EEE, dd MMM - yyyy, hh:mm a').format(
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),

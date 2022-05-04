@@ -30,7 +30,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
   late SignUpAndUserModel userModel;
-  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
+  final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -177,8 +177,14 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                         Expanded(
                           child: TaskCard(
                             task: task,
-                            eventButton: currentTimeStamap >
-                                    int.parse(task.endDate!)
+                            eventButton: DateFormatFromTimeStamp()
+                                        .dateTime(
+                                            timeStamp:
+                                                currentTimeStamp.toString())
+                                        .difference(DateFormatFromTimeStamp()
+                                            .dateTime(timeStamp: task.endDate!))
+                                        .inDays >
+                                    1
                                 ? SizedBox()
                                 : task.status == LOG_HRS
                                     ? SizedBox()

@@ -32,7 +32,7 @@ class _ProjectCardState extends State<ProjectCard> {
   final void Function()? onPressedSignUpButton;
   final ProjectModel project;
 
-  final int currentTimeStamap = DateTime.now().millisecondsSinceEpoch;
+  final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,15 @@ class _ProjectCardState extends State<ProjectCard> {
                         project.ownerId ==
                                 prefsObject.getString(CURRENT_USER_ID)
                             ? SizedBox()
-                            : currentTimeStamap > int.parse(project.endDate!)
+                            : DateFormatFromTimeStamp()
+                                        .dateTime(
+                                            timeStamp:
+                                                currentTimeStamp.toString())
+                                        .difference(DateFormatFromTimeStamp()
+                                            .dateTime(
+                                                timeStamp: project.endDate!))
+                                        .inDays >
+                                    1
                                 ? SizedBox()
                                 : project.isSignedUp!
                                     ? SizedBox()
