@@ -3,7 +3,7 @@ import 'package:helpozzy/bloc/report_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/tasks/task_details.dart';
-import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 

@@ -156,7 +156,7 @@ class _ProjectCardState extends State<ProjectCard> {
                                         .difference(DateFormatFromTimeStamp()
                                             .dateTime(
                                                 timeStamp: project.endDate!))
-                                        .inDays >
+                                        .inDays >=
                                     1
                                 ? SizedBox()
                                 : project.isSignedUp!

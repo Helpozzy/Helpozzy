@@ -12,7 +12,7 @@ import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/tasks/create_edit_task.dart';
-import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_card.dart';
 import 'package:helpozzy/screens/dashboard/tasks/tasks_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
@@ -440,11 +440,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             );
           },
         ),
-        project != null && project!.location!.isNotEmpty
-            ? locationCard(project!.location!)
-            : location != null && location!.isNotEmpty
-                ? locationCard(location!)
-                : SizedBox(),
+        location != null && location!.isNotEmpty
+            ? locationCard(location!)
+            : project != null && project!.location!.isNotEmpty
+                ? locationCard(project!.location!)
+                : location != null && location!.isNotEmpty
+                    ? locationCard(location!)
+                    : SizedBox(),
       ],
     );
   }
@@ -597,7 +599,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
           icon: Icon(Icons.expand_more_rounded),
           validator: (val) {
-            if (val != null && _projCategoryController.text.isEmpty) {
+            if (val == null && _projCategoryController.text.isEmpty) {
               return 'Select any category';
             }
             return null;

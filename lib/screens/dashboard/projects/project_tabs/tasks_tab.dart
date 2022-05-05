@@ -8,7 +8,7 @@ import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
 import 'package:helpozzy/screens/dashboard/tasks/task_details.dart';
-import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -194,7 +194,7 @@ class _TaskTabState extends State<TaskTab> {
                                               currentTimeStamp.toString())
                                       .difference(DateFormatFromTimeStamp()
                                           .dateTime(timeStamp: task.endDate!))
-                                      .inDays >
+                                      .inDays >=
                                   1
                               ? SizedBox()
                               : isMyTask

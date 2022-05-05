@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/provider/auth_service.dart';
 import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -13,23 +12,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late double height;
   late double width;
-
-  Future runBiomatricAuth() async {
-    bool isAuthenticated = await AuthService.authenticateUser();
-    if (isAuthenticated) {
-      Navigator.pushNamedAndRemoveUntil(context, HOME_SCREEN, (route) => false);
-      ScaffoldSnakBar().show(context, msg: AUTHENTICATION_SUCCESS_POPUP_MSG);
-    } else {
-      Navigator.pushNamedAndRemoveUntil(context, INTRO, (route) => false);
-      ScaffoldSnakBar().show(context, msg: AUTHENTICATION_FAILED_POPUP_MSG);
-    }
-  }
-
-  @override
-  void initState() {
-    // runBiomatricAuth();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

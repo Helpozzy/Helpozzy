@@ -6,7 +6,7 @@ import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'create_edit_task.dart';
-import 'task_widget.dart';
+import 'task_card.dart';
 
 class TasksScreen extends StatefulWidget {
   @override

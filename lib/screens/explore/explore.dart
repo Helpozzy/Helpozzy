@@ -52,25 +52,33 @@ class _ExploreScreenState extends State<ExploreScreen>
             searchField(),
             CommonDivider(),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: width * 0.05,
-                        right: width * 0.05,
-                        bottom: width * 0.02,
-                        top: 5,
+              child: RefreshIndicator(
+                onRefresh: () => Future.delayed(
+                  Duration(seconds: 1),
+                  () async => await _projectsBloc.getProjects(),
+                ),
+                color: PRIMARY_COLOR,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: width * 0.05,
+                          right: width * 0.05,
+                          bottom: width * 0.02,
+                          top: 5,
+                        ),
+                        child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
                       ),
-                      child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
-                    ),
-                    categoryView(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
-                    ),
-                    projectListView(),
-                  ],
+                      categoryView(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                        child:
+                            SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
+                      ),
+                      projectListView(),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -351,7 +351,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               getHint: SELCT_GENDER_HINT, isDropDown: true),
           icon: Icon(Icons.expand_more_rounded),
           validator: (val) {
-            if (_genderController.text.isEmpty) {
+            if (val == null && _genderController.text.isEmpty) {
               return 'Select gender want to continue';
             }
             return null;

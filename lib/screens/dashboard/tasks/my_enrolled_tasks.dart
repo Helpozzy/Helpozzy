@@ -10,7 +10,7 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/task_log_hrs_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/screens/dashboard/tasks/task_details.dart';
-import 'package:helpozzy/screens/dashboard/tasks/task_widget.dart';
+import 'package:helpozzy/screens/dashboard/tasks/task_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -183,7 +183,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
                                                 currentTimeStamp.toString())
                                         .difference(DateFormatFromTimeStamp()
                                             .dateTime(timeStamp: task.endDate!))
-                                        .inDays >
+                                        .inDays >=
                                     1
                                 ? SizedBox()
                                 : task.status == LOG_HRS

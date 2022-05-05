@@ -253,7 +253,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                           .dateTime(timeStamp: currentTimeStamp.toString())
                           .difference(DateFormatFromTimeStamp()
                               .dateTime(timeStamp: project.endDate!))
-                          .inDays >
+                          .inDays >=
                       1
                   ? SizedBox()
                   : project.isSignedUp!

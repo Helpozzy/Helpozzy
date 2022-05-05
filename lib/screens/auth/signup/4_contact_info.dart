@@ -203,7 +203,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
         });
       },
       validator: (val) {
-        if (_relationController.text.isEmpty) {
+        if (val == null && _relationController.text.isEmpty) {
           return 'Select relationship status';
         }
         return null;

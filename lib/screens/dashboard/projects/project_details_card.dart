@@ -46,7 +46,6 @@ class _ProjectTileState extends State<ProjectTile> {
   late ThemeData _theme;
   late double width;
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   Future<void> showDeletePrompt() async {
     await PlatformAlertDialog().showWithAction(
@@ -72,17 +71,17 @@ class _ProjectTileState extends State<ProjectTile> {
               Navigator.of(context).pop();
               CircularLoader().show(context);
               final ResponseModel response =
-                  await _projectsBloc.deleteProject(project.projectId!);
+                  await projectsBloc.deleteProject(project.projectId!);
               if (response.success!) {
                 CircularLoader().hide(context);
                 ScaffoldSnakBar()
                     .show(context, msg: PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG);
-                await _projectsBloc.getProjects(projectTabType: projectTabType);
+                await projectsBloc.getProjects(projectTabType: projectTabType);
               } else {
                 CircularLoader().hide(context);
                 ScaffoldSnakBar()
                     .show(context, msg: PROJECT_NOT_DELETED_ERROR_POPUP_MSG);
-                await _projectsBloc.getProjects(projectTabType: projectTabType);
+                await projectsBloc.getProjects(projectTabType: projectTabType);
               }
             },
             text: DELETE_BUTTON,

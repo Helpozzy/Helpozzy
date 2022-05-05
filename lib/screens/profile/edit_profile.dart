@@ -1217,7 +1217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
       },
       validator: (val) {
-        if (val != null && _relationController.text.isEmpty) {
+        if (val == null && _relationController.text.isEmpty) {
           return 'Select relationship status';
         }
         return null;
@@ -1249,12 +1249,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             decoration: inputSimpleDecoration(getHint: GRADE_HINT),
             isExpanded: true,
             onChanged: (String? newValue) {
-              setState(() {
-                _gradeLevelController.text = newValue!;
-              });
+              setState(() => _gradeLevelController.text = newValue!);
             },
             validator: (val) {
-              if (_gradeLevelController.text.isNotEmpty &&
+              if (val == null &&
+                  _gradeLevelController.text.isNotEmpty &&
                   _gradeLevelController.text == GRADE_HINT) {
                 return 'Please select grade level';
               }

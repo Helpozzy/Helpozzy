@@ -30,6 +30,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   void initState() {
+    getProjects();
+    super.initState();
+  }
+
+  Future getProjects() async {
     projectsBloc.getProjects(projectTabType: projectTabType);
     if (projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB) {
       projectsBloc.getProjectsActivityStatus(projectTabType: projectTabType);
@@ -37,7 +42,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
       projectsBloc.getProjectsActivityStatus(projectTabType: projectTabType);
     }
-    super.initState();
   }
 
   @override
@@ -71,69 +75,76 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   }
 
   Widget projectList(Stream<List<ProjectModel>>? stream) {
-    return StreamBuilder<List<ProjectModel>>(
-      stream: stream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: LinearLoader());
-        }
-        final List<ProjectModel> projects = snapshot.data!;
-        return projects.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                itemCount: projects.length,
-                itemBuilder: (context, index) {
-                  final ProjectModel project = projects[index];
-                  return StreamBuilder<bool>(
-                    initialData: false,
-                    stream: projectsBloc.getProjectExpandStream,
-                    builder: (context, snapshot) {
-                      return InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectDetailsInfo(
-                              project: project,
-                              projectTabType: projectTabType,
+    return RefreshIndicator(
+      onRefresh: () => Future.delayed(
+        Duration(seconds: 1),
+        () async => await getProjects(),
+      ),
+      color: PRIMARY_COLOR,
+      child: StreamBuilder<List<ProjectModel>>(
+        stream: stream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: LinearLoader());
+          }
+          final List<ProjectModel> projects = snapshot.data!;
+          return projects.isNotEmpty
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  itemCount: projects.length,
+                  itemBuilder: (context, index) {
+                    final ProjectModel project = projects[index];
+                    return StreamBuilder<bool>(
+                      initialData: false,
+                      stream: projectsBloc.getProjectExpandStream,
+                      builder: (context, snapshot) {
+                        return InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectDetailsInfo(
+                                project: project,
+                                projectTabType: projectTabType,
+                              ),
                             ),
                           ),
+                          child: ProjectTile(
+                            projectTabType: projectTabType,
+                            project: project,
+                            isExpanded: snapshot.data!,
+                            projectsBloc: projectsBloc,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                )
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          NO_PROJECTS_FOUNDS,
+                          style: _theme.textTheme.headline5!.copyWith(
+                              color: DARK_GRAY, fontWeight: FontWeight.bold),
                         ),
-                        child: ProjectTile(
-                          projectTabType: projectTabType,
-                          project: project,
-                          isExpanded: snapshot.data!,
-                          projectsBloc: projectsBloc,
+                        SizedBox(height: 8),
+                        Text(
+                          PLEASE_VISIT_OTHER,
+                          textAlign: TextAlign.center,
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(color: DARK_GRAY),
                         ),
-                      );
-                    },
-                  );
-                },
-              )
-            : Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        NO_PROJECTS_FOUNDS,
-                        style: _theme.textTheme.headline5!.copyWith(
-                            color: DARK_GRAY, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        PLEASE_VISIT_OTHER,
-                        textAlign: TextAlign.center,
-                        style: _theme.textTheme.bodyText2!
-                            .copyWith(color: DARK_GRAY),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-      },
+                );
+        },
+      ),
     );
   }
 

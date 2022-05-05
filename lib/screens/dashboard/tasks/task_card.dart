@@ -119,11 +119,13 @@ class TaskCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    task.taskName!,
-                    style: _theme.textTheme.bodyText2!.copyWith(
-                      color: UNSELECTED_TAB_COLOR,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      task.taskName!,
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        color: UNSELECTED_TAB_COLOR,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(
