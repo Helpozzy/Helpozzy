@@ -265,8 +265,19 @@ const INVITEES_EMAIL_ADDRESS_HINT = 'Email Address';
 //Reset password
 const FORGOT_YOUR_PASSWORD = 'Forgot your password?';
 const RESET_PASSWORD = 'Reset Password';
+const TERMS_AND_CONDITION_1 = 'By signing up, you agree to HelPozzy';
+const TERMS_AND_CONDITION = ' terms and conditions ';
+const TERMS_AND_CONDITION_2 = 'and acknowledge you have read the';
+const PRIVACY_POLICY = ' privacy policy.';
+const SENTENCE_END = '.';
 const RESET_PASS_MSG =
     "That's okay, it happens!\nEnter your email and Click on button below to reset your password.";
+const PASSWORD_TOOLTIP =
+    '- At least 8 characters—the more characters, the better.'
+    '\n- A mixture of both uppercase and lowercase letters.'
+    '\n- A mixture of letters and numbers.'
+    '\n- Inclusion of at least one special character'
+    '\n e.g., ! @ # ? ]';
 
 //Dashboard scrreen
 const PROJECTS_TILE = 'Projects';
@@ -320,6 +331,8 @@ const CURRENT_YEAR_TARGET_HOURS = 'Target hours for current year';
 const CHOOSE_YOUR_PASSWORD = 'Choose your password';
 const PASSWORD = 'Password';
 const CONFIRM_PASSWORD = 'Confirm Password';
+const FINGERPRINT_AND_FACE_ID = 'Fingerprint & Face ID';
+const PRIVACY_AND_SECURITY = 'Privacy & Security';
 const CHANGE_COUNTRY_CODE = 'Change country code';
 const RELATIONSHIP_STATUS = 'Relationship';
 const SCHOOL_STATE = 'State of School';

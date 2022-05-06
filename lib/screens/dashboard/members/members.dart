@@ -233,6 +233,8 @@ class _MembersScreenState extends State<MembersScreen> {
                             if (!selectedItems.contains(volunteer)) {
                               selectedItems.add(volunteer);
                             }
+                          } else {
+                            selectedItems.remove(volunteer);
                           }
                         },
                       );

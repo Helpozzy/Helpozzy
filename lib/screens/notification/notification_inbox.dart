@@ -46,7 +46,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
     task.status = fromDeclineLogHrs ? TOGGLE_NOT_STARTED : LOG_HRS_APPROVED;
-    task.isApprovedFromAdmin = true;
+    task.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
@@ -255,31 +255,33 @@ class _NotificationInboxState extends State<NotificationInbox> {
                             : SizedBox(),
                     childrens: notification.isUpdated!
                         ? []
-                        : [
-                            SmallCommonButton(
-                              fontSize: 12,
-                              buttonColor: GREEN,
-                              text: APPROVE_BUTTON,
-                              onPressed: () async {
-                                notification.type == 0
-                                    ? await onApproveProjectNotification(
-                                        notification)
-                                    : notification.type == 1
-                                        ? await onApproveTaskNotification(
+                        : notification.type == 2
+                            ? [
+                                SmallCommonButton(
+                                  fontSize: 12,
+                                  buttonColor: GREEN,
+                                  text: APPROVE_BUTTON,
+                                  onPressed: () async {
+                                    notification.type == 0
+                                        ? await onApproveProjectNotification(
                                             notification)
-                                        : await onApproveTaskLogHrs(
-                                            notification, false);
-                              },
-                            ),
-                            SizedBox(width: 6),
-                            SmallCommonButton(
-                              fontSize: 12,
-                              buttonColor: SILVER_GRAY,
-                              text: DECLINE_BUTTON,
-                              onPressed: () async =>
-                                  await onDecline(notification),
-                            ),
-                          ],
+                                        : notification.type == 1
+                                            ? await onApproveTaskNotification(
+                                                notification)
+                                            : await onApproveTaskLogHrs(
+                                                notification, false);
+                                  },
+                                ),
+                                SizedBox(width: 6),
+                                SmallCommonButton(
+                                  fontSize: 12,
+                                  buttonColor: SILVER_GRAY,
+                                  text: DECLINE_BUTTON,
+                                  onPressed: () async =>
+                                      await onDecline(notification),
+                                ),
+                              ]
+                            : [],
                   );
                 },
               )

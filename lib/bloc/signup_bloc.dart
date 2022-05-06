@@ -21,6 +21,8 @@ class SignUpBloc {
       PublishSubject<bool>();
   final PublishSubject<bool> showPasswordController = PublishSubject<bool>();
   final PublishSubject<bool> showConfirmPassController = PublishSubject<bool>();
+  final PublishSubject<bool> checkTermsConditionController =
+      PublishSubject<bool>();
 
   Stream<bool> get signUpDetailsStream => signUpController.stream;
   Stream<bool> get otpSentStream => otpSentController.stream;
@@ -31,6 +33,7 @@ class SignUpBloc {
 
   Stream<bool> get showPassStream => showPasswordController.stream;
   Stream<bool> get showConfirmPassStream => showConfirmPassController.stream;
+  Stream<bool> get termsConditionStream => checkTermsConditionController.stream;
 
   Future<ResponseModel> registerUser(
       SignUpAndUserModel signupAndUserModel, String password) async {
@@ -84,6 +87,10 @@ class SignUpBloc {
     showConfirmPassController.sink.add(show);
   }
 
+  Future changeTermsConditionPrivacyPolicy(bool show) async {
+    checkTermsConditionController.sink.add(show);
+  }
+
   void dispose() {
     signUpController.close();
     emailVerifiedController.close();
@@ -92,5 +99,6 @@ class SignUpBloc {
     parentsEmailVerifiedController.close();
     showPasswordController.close();
     showConfirmPassController.close();
+    checkTermsConditionController.close();
   }
 }

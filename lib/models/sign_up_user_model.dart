@@ -42,6 +42,7 @@ class SignUpAndUserModel {
     this.lastSeen,
     this.presence,
     this.isSelected,
+    // this.biometricEnable,
   });
 
   SignUpAndUserModel.fromJson({required Map<String, dynamic> json}) {
@@ -85,6 +86,7 @@ class SignUpAndUserModel {
         : json['organization_details'];
     presence = json['presence'];
     lastSeen = json['last_seen'];
+    // biometricEnable = json['biometric_enable'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -118,6 +120,7 @@ class SignUpAndUserModel {
           : organizationDetails,
       'last_seen': lastSeen,
       'presence': presence,
+      // 'biometric_enable': biometricEnable,
     };
   }
 
@@ -150,4 +153,5 @@ class SignUpAndUserModel {
   late String? lastSeen;
   late bool? presence = false;
   late bool? isSelected = false;
+  // late bool? biometricEnable = false;
 }

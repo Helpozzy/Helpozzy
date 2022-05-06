@@ -52,7 +52,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double noOfMemberTrackerVal = 0.0;
   late double minimumAgeTrackerVal = 7.0;
   int _selectedIndexValue = 0;
-  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -91,13 +90,14 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
-      final List<dynamic> selectedMembers = [];
-
-      if (selectedItems.isNotEmpty) {
-        selectedItems.forEach((element) {
-          selectedMembers.add(element.userId!);
-        });
-      }
+      final List<String> members = [];
+      _projectsBloc.getSelectedMembersStream.listen((selectedMembers) {
+        if (selectedMembers.isNotEmpty) {
+          selectedMembers.forEach((member) {
+            members.add(member.userId!);
+          });
+        }
+      });
 
       if (fromEdit) {
         final TaskModel taskDetails = TaskModel(
@@ -115,7 +115,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               ? hrsTrackerVal.round()
               : int.parse(_estimatedHoursController.text),
           totalVolunteerHrs: 0,
-          members: selectedMembers,
+          members: members,
           status: _selectedIndexValue == 0
               ? TOGGLE_NOT_STARTED
               : _selectedIndexValue == 1
@@ -154,7 +154,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
               ? hrsTrackerVal.round()
               : int.parse(_estimatedHoursController.text),
           totalVolunteerHrs: 0,
-          members: selectedMembers,
+          members: members,
           status: _selectedIndexValue == 0
               ? TOGGLE_NOT_STARTED
               : _selectedIndexValue == 1
@@ -405,14 +405,14 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         color: DARK_PINK_COLOR,
       ),
       onTap: () async {
-        selectedItems = await Navigator.push(
+        final List<SignUpAndUserModel> selectedItems = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MembersScreen(),
           ),
         );
         if (selectedItems.isNotEmpty) {
-          _projectsBloc.getSelectedMembers(members: selectedItems);
+          await _projectsBloc.getSelectedMembers(members: selectedItems);
         }
       },
     );
@@ -461,7 +461,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                                 InkWell(
                                   onTap: () {
                                     snapshot.data!.remove(volunteer);
-                                    selectedItems = snapshot.data!;
                                     setState(() {});
                                   },
                                   child: Icon(

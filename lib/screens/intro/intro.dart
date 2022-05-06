@@ -11,10 +11,10 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   Future runBiomatricAuth() async {
-    final bool biomatericAvail = await Authentication.bometricIsSupported();
-    if (biomatericAvail) {
+    final bool biometricAvail = await Authentication().bometricIsSupported();
+    if (biometricAvail) {
       final bool isAuthenticated =
-          await Authentication.authenticateWithBiometrics();
+          await Authentication().authenticateWithBiometrics();
       if (isAuthenticated) {
         await Navigator.pushNamedAndRemoveUntil(
             context, HOME_SCREEN, (route) => false);
