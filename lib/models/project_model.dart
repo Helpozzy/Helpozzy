@@ -6,6 +6,7 @@ class Projects {
       final project = element.data() as Map<String, dynamic>;
       projectList.add(ProjectModel.fromjson(json: project));
     });
+    projectList.sort((a, b) => a.projectName!.compareTo(b.projectName!));
   }
   late List<ProjectModel> projectList = [];
 }

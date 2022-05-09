@@ -234,7 +234,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       rating: user.rating,
       reviewsByPersons: user.reviewsByPersons,
       volunteerType: user.volunteerType,
-      lastSeen: user.lastName,
+      lastSeen: user.lastSeen,
       presence: user.presence,
       totalSpentHrs: user.totalSpentHrs,
     );
@@ -1088,18 +1088,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         icon: Icon(Icons.expand_more_rounded),
         validator: (val) {
-          if (val == null && _genderController.text.isNotEmpty) {
+          if (val == null && _genderController.text.isEmpty) {
             return 'Select gender want to continue';
           }
           return null;
         },
         isExpanded: true,
         onTap: () => FocusScope.of(context).unfocus(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _genderController.text = newValue!;
-          });
-        },
+        onChanged: (String? newValue) =>
+            setState(() => _genderController.text = newValue!),
         items: gendersItems.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,

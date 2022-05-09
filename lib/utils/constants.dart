@@ -657,7 +657,7 @@ const SELECT_MEMBER_LABEL = 'Select Members';
 const POST_ON_LOCAL_FEED = 'Post on Local Feed';
 const SELECTED_HOURS_LABEL = 'Selected Hours';
 const ENTER_ESTIMATED_HOURS_HINT = 'Enter estimated hours';
-const WAITING_FOR_APPROVAL = 'Waiting for approval';
+const WAITING_FOR_APPROVAL = 'Waiting for log hours approval';
 const LOG_HRS = 'Log Hrs';
 const LOG_HRS_APPROVED = 'Log Hrs Approved';
 

@@ -59,6 +59,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   late DetailsResult? detailsResult;
   late double latitude = 0.0;
   late double longitude = 0.0;
+  late List<TaskModel> selectedItems = [];
 
   @override
   void initState() {
@@ -154,15 +155,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           ? await _projectsBloc.updateProject(modifiedProject)
           : await _projectsBloc.postProject(modifiedProject);
       if (response.success!) {
-        _projectTaskBloc.getSelectedTasksStream.listen((selectedTasks) async {
-          if (selectedTasks.isNotEmpty) {
-            for (int i = 0; i < selectedTasks.length; i++) {
-              selectedTasks[i].projectId = response.returnValue;
-              await _projectTaskBloc.updateTask(selectedTasks[i]);
-            }
+        if (selectedItems.isNotEmpty) {
+          for (int i = 0; i < selectedItems.length; i++) {
+            selectedItems[i].projectId = response.returnValue;
+            await _projectTaskBloc.updateTask(selectedItems[i]);
           }
-        });
-
+        }
         await clearFields();
         CircularLoader().hide(context);
         Navigator.of(context).pop();
@@ -504,7 +502,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             children: [
               TextButton(
                 onPressed: () async {
-                  final List<TaskModel> selectedItems = await Navigator.push(
+                  selectedItems = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TasksScreen(),
@@ -601,7 +599,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         SizedBox(height: width * 0.05),
         TextfieldLabelSmall(label: PROJECT_CATEGORY_LABEL),
         DropdownButtonFormField<CategoryModel>(
-          decoration: inputSimpleDecoration(getHint: SELECT_CATEGORY_HINT),
+          decoration: inputSimpleDecoration(
+            getHint: _projCategoryController.text.isNotEmpty
+                ? _projCategoryController.text
+                : SELECT_CATEGORY_HINT,
+          ),
           icon: Icon(Icons.expand_more_rounded),
           validator: (val) {
             if (val == null && _projCategoryController.text.isEmpty) {

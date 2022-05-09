@@ -51,7 +51,8 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double hrsTrackerVal = 0.0;
   late double noOfMemberTrackerVal = 0.0;
   late double minimumAgeTrackerVal = 7.0;
-  int _selectedIndexValue = 0;
+  late int _selectedIndexValue = 0;
+  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -91,13 +92,11 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
       final List<String> members = [];
-      _projectsBloc.getSelectedMembersStream.listen((selectedMembers) {
-        if (selectedMembers.isNotEmpty) {
-          selectedMembers.forEach((member) {
-            members.add(member.userId!);
-          });
-        }
-      });
+      if (selectedItems.isNotEmpty) {
+        selectedItems.forEach((member) {
+          members.add(member.userId!);
+        });
+      }
 
       if (fromEdit) {
         final TaskModel taskDetails = TaskModel(
@@ -405,7 +404,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         color: DARK_PINK_COLOR,
       ),
       onTap: () async {
-        final List<SignUpAndUserModel> selectedItems = await Navigator.push(
+        selectedItems = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MembersScreen(),

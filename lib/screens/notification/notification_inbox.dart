@@ -45,7 +45,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     final TaskLogHrsModel taskLogHrs =
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
-    task.status = fromDeclineLogHrs ? TOGGLE_NOT_STARTED : LOG_HRS_APPROVED;
+    task.status = fromDeclineLogHrs ? TOGGLE_COMPLETE : LOG_HRS_APPROVED;
     task.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
@@ -62,7 +62,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       taskLogHrs.hrs = taskLogHrs.hrs;
       taskLogHrs.mins = taskLogHrs.mins;
       taskLogHrs.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
-      notification.type = fromDeclineLogHrs ? 1 : notification.type;
+      notification.type = notification.type;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = fromDeclineLogHrs
@@ -186,6 +186,21 @@ class _NotificationInboxState extends State<NotificationInbox> {
     }
   }
 
+  bool itLogHrDecline(NotificationModel notification) {
+    if (notification.type == 2) {
+      final TaskLogHrsModel taskLogHrsModel =
+          TaskLogHrsModel.fromjson(json: notification.payload!);
+      if (taskLogHrsModel.isApprovedFromAdmin != null &&
+          !taskLogHrsModel.isApprovedFromAdmin!) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -238,25 +253,28 @@ class _NotificationInboxState extends State<NotificationInbox> {
                   final NotificationModel notification = notifications[index];
                   return NotificationTile(
                     notification: notification,
-                    commentBox: notification.isUpdated!
+                    commentBox: itLogHrDecline(notification)
                         ? SizedBox()
-                        : notification.type == 2
-                            ? Container(
-                                height: 35,
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10.0),
-                                child: CommonRoundedTextfield(
-                                  fillColor: GRAY,
-                                  controller: _commentController,
-                                  hintText: ENTER_COMMENT_HINT,
-                                  validator: (val) => null,
-                                ),
-                              )
-                            : SizedBox(),
-                    childrens: notification.isUpdated!
+                        : notification.isUpdated!
+                            ? SizedBox()
+                            : notification.type == 2
+                                ? Container(
+                                    height: 35,
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10.0),
+                                    child: CommonRoundedTextfield(
+                                      fillColor: GRAY,
+                                      controller: _commentController,
+                                      hintText: ENTER_COMMENT_HINT,
+                                      validator: (val) => null,
+                                    ),
+                                  )
+                                : SizedBox(),
+                    childrens: itLogHrDecline(notification)
                         ? []
-                        : notification.type == 2
-                            ? [
+                        : notification.isUpdated!
+                            ? []
+                            : [
                                 SmallCommonButton(
                                   fontSize: 12,
                                   buttonColor: GREEN,
@@ -280,8 +298,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                   onPressed: () async =>
                                       await onDecline(notification),
                                 ),
-                              ]
-                            : [],
+                              ],
                   );
                 },
               )

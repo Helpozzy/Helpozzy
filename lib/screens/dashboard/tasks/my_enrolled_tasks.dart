@@ -80,7 +80,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
         await _taskBloc.updateEnrollTask(enrolledTaskModel);
     if (response.success!) {
       CircularLoader().hide(context);
-      _taskBloc.getEnrolledTasks();
+      await _taskBloc.getEnrolledTasks();
       ScaffoldSnakBar().show(
         context,
         msg: taskProgressType == TaskProgressType.COMPLETED
@@ -123,10 +123,10 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
             await _notificationBloc.postNotification(notification);
         if (notificationResponse.success!) {
           await ScaffoldSnakBar().show(context, msg: response.message!);
-          _taskBloc.getEnrolledTasks();
+          await _taskBloc.getEnrolledTasks();
         } else {
           await ScaffoldSnakBar().show(context, msg: response.error!);
-          _taskBloc.getEnrolledTasks();
+          await _taskBloc.getEnrolledTasks();
         }
       }
     } else {

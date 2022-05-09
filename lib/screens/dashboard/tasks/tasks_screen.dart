@@ -81,11 +81,10 @@ class _TasksScreenState extends State<TasksScreen> {
                   );
                 },
               )
-            : Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+            : Center(
                 child: Text(
                   NO_TASKS_FOUND,
-                  style: _theme.textTheme.bodyText2!
+                  style: _theme.textTheme.headline6!
                       .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
                 ),
               );

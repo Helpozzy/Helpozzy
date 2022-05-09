@@ -63,7 +63,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             ? RECENTLY_COMPLETED_LABEL
                             : LATEST_CONTRIBUTION_HOURS_LABEL,
               ),
-        Expanded(child: projectList(projectsBloc.getProjectsStream)),
+        Expanded(child: projectList()),
         projectTabType == ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
             ? ListDividerLabel(label: DateTime.now().year.toString())
             : SizedBox(),
@@ -74,7 +74,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
     );
   }
 
-  Widget projectList(Stream<List<ProjectModel>>? stream) {
+  Widget projectList() {
     return RefreshIndicator(
       onRefresh: () => Future.delayed(
         Duration(seconds: 1),
@@ -82,7 +82,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       ),
       color: PRIMARY_COLOR,
       child: StreamBuilder<List<ProjectModel>>(
-        stream: stream,
+        stream: projectsBloc.getProjectsStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: LinearLoader());

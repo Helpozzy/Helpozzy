@@ -143,7 +143,7 @@ class ApiProvider {
           .doc(prefsObject.getString(CURRENT_USER_ID));
       await documentReference.update({
         'presence': presence,
-        'time_stamp': timeStamp,
+        'last_seen': timeStamp,
       });
       return ResponseModel(
         success: true,
@@ -363,8 +363,7 @@ class ApiProvider {
                 .get()
             : await firestore
                 .collection('tasks')
-                .where('task_id', isEqualTo: null)
-                .where('project_id', isEqualTo: null)
+                .where('project_id', isNull: true)
                 .where('owner_id',
                     isEqualTo: prefsObject.getString(CURRENT_USER_ID))
                 .get();
