@@ -36,6 +36,12 @@ class TaskBloc {
     return response;
   }
 
+  Future<ResponseModel> removeEnrollTask(String enrollTaskId) async {
+    final ResponseModel response =
+        await repo.removeEnrollTaskRepo(enrollTaskId);
+    return response;
+  }
+
   void dispose() {
     enrolledTasksController.close();
     tasksDetailsController.close();

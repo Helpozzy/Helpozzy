@@ -49,102 +49,117 @@ class _TaskTabState extends State<TaskTab> {
   Future updateTask(
       TaskModel task, bool isMyTask, TaskProgressType taskProgressType) async {
     CircularLoader().show(context);
-    TaskModel enrolledTaskModel = TaskModel(
-      enrollTaskId: task.enrollTaskId,
-      taskOwnerId: task.taskOwnerId,
-      taskId: task.taskId,
-      signUpUserId: task.signUpUserId,
-      projectId: task.projectId,
-      taskName: task.taskName,
-      description: task.description,
-      memberRequirement: task.memberRequirement,
-      ageRestriction: task.ageRestriction,
-      qualification: task.qualification,
-      startDate: task.startDate,
-      endDate: task.endDate,
-      estimatedHrs: task.estimatedHrs,
-      status: taskProgressType == TaskProgressType.START
-          ? TOGGLE_INPROGRESS
-          : taskProgressType == TaskProgressType.COMPLETED
-              ? TOGGLE_COMPLETE
-              : taskProgressType == TaskProgressType.LOG_HRS
-                  ? LOG_HRS
-                  : taskProgressType == TaskProgressType.DECLINE
-                      ? TOGGLE_NOT_STARTED
-                      : task.status,
-      totalVolunteerHrs: task.totalVolunteerHrs,
-      isApprovedFromAdmin: taskProgressType == TaskProgressType.DECLINE
-          ? false
-          : task.isApprovedFromAdmin,
-    );
-    final ResponseModel response =
-        await _taskBloc.updateEnrollTask(enrolledTaskModel);
-    if (response.success!) {
-      CircularLoader().hide(context);
-      if (isMyTask) {
-        await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
+    if (taskProgressType == TaskProgressType.DECLINE) {
+      final ResponseModel response =
+          await _taskBloc.removeEnrollTask(task.enrollTaskId!);
+      if (response.success!) {
+        CircularLoader().hide(context);
+        await _taskBloc.getEnrolledTasks();
+        ScaffoldSnakBar().show(context, msg: response.message!);
       } else {
-        await _projectTaskBloc.getProjectAllTasks(project.projectId!);
-      }
-      ScaffoldSnakBar().show(
-        context,
-        msg: taskProgressType == TaskProgressType.COMPLETED
-            ? TASK_COMPLETED_POPUP_MSG
-            : taskProgressType == TaskProgressType.START
-                ? TASK_STARTED_POPUP_MSG
-                : taskProgressType == TaskProgressType.DECLINE
-                    ? TASK_DECLINE_POPUP_MSG
-                    : taskProgressType == TaskProgressType.LOG_HRS
-                        ? TASK_LOG_HRS_POPUP_MSG
-                        : task.status!,
-      );
-
-      if (taskProgressType == TaskProgressType.LOG_HRS) {
-        final TaskLogHrsModel logHrsModel = TaskLogHrsModel(
-          timeStamp: DateTime.now().millisecondsSinceEpoch,
-          hrs: int.parse(DateFormatFromTimeStamp()
-              .durationToHHMM(duration: initialTime)
-              .split(':')[0]),
-          mins: int.parse(DateFormatFromTimeStamp()
-              .durationToHHMM(duration: initialTime)
-              .split(':')[1]),
-          comment: _commentController.text,
-          isApprovedFromAdmin: false,
-          data: enrolledTaskModel.toJson(),
-        );
-        await ScaffoldSnakBar().show(context, msg: response.message!);
-        final NotificationModel notification = NotificationModel(
-          type: 2,
-          userFrom: prefsObject.getString(CURRENT_USER_ID),
-          userTo: task.taskOwnerId,
-          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: 'Log Task Hours Request',
-          payload: logHrsModel.toJson(),
-          subTitle:
-              "${userModel.firstName} want's to log hours of the ${task.taskName}",
-        );
-
-        final ResponseModel notificationResponse =
-            await _notificationBloc.postNotification(notification);
-        if (notificationResponse.success!) {
-          await ScaffoldSnakBar().show(context, msg: response.message!);
-          if (isMyTask) {
-            await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
-          } else {
-            await _projectTaskBloc.getProjectAllTasks(project.projectId!);
-          }
-        } else {
-          await ScaffoldSnakBar().show(context, msg: response.error!);
-          if (isMyTask) {
-            await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
-          } else {
-            await _projectTaskBloc.getProjectAllTasks(project.projectId!);
-          }
-        }
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: response.error!);
       }
     } else {
-      CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+      TaskModel enrolledTaskModel = TaskModel(
+        enrollTaskId: task.enrollTaskId,
+        taskOwnerId: task.taskOwnerId,
+        taskId: task.taskId,
+        signUpUserId: task.signUpUserId,
+        projectId: task.projectId,
+        taskName: task.taskName,
+        description: task.description,
+        memberRequirement: task.memberRequirement,
+        ageRestriction: task.ageRestriction,
+        qualification: task.qualification,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        estimatedHrs: task.estimatedHrs,
+        status: taskProgressType == TaskProgressType.START
+            ? TOGGLE_INPROGRESS
+            : taskProgressType == TaskProgressType.COMPLETED
+                ? TOGGLE_COMPLETE
+                : taskProgressType == TaskProgressType.LOG_HRS
+                    ? LOG_HRS
+                    : taskProgressType == TaskProgressType.DECLINE
+                        ? TOGGLE_NOT_STARTED
+                        : task.status,
+        totalVolunteerHrs: task.totalVolunteerHrs,
+        isApprovedFromAdmin: taskProgressType == TaskProgressType.DECLINE
+            ? false
+            : task.isApprovedFromAdmin,
+      );
+      final ResponseModel response =
+          await _taskBloc.updateEnrollTask(enrolledTaskModel);
+      if (response.success!) {
+        CircularLoader().hide(context);
+        if (isMyTask) {
+          await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
+        } else {
+          await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+        }
+        ScaffoldSnakBar().show(
+          context,
+          msg: taskProgressType == TaskProgressType.COMPLETED
+              ? TASK_COMPLETED_POPUP_MSG
+              : taskProgressType == TaskProgressType.START
+                  ? TASK_STARTED_POPUP_MSG
+                  : taskProgressType == TaskProgressType.DECLINE
+                      ? TASK_DECLINE_POPUP_MSG
+                      : taskProgressType == TaskProgressType.LOG_HRS
+                          ? TASK_LOG_HRS_POPUP_MSG
+                          : task.status!,
+        );
+
+        if (taskProgressType == TaskProgressType.LOG_HRS) {
+          final TaskLogHrsModel logHrsModel = TaskLogHrsModel(
+            timeStamp: DateTime.now().millisecondsSinceEpoch,
+            hrs: int.parse(DateFormatFromTimeStamp()
+                .durationToHHMM(duration: initialTime)
+                .split(':')[0]),
+            mins: int.parse(DateFormatFromTimeStamp()
+                .durationToHHMM(duration: initialTime)
+                .split(':')[1]),
+            comment: _commentController.text,
+            isApprovedFromAdmin: false,
+            data: enrolledTaskModel.toJson(),
+          );
+          await ScaffoldSnakBar().show(context, msg: response.message!);
+          final NotificationModel notification = NotificationModel(
+            type: 2,
+            userFrom: prefsObject.getString(CURRENT_USER_ID),
+            userTo: task.taskOwnerId,
+            timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+            title: 'Log Task Hours Request',
+            payload: logHrsModel.toJson(),
+            subTitle:
+                "${userModel.firstName} want's to log hours of the ${task.taskName}",
+          );
+
+          final ResponseModel notificationResponse =
+              await _notificationBloc.postNotification(notification);
+          if (notificationResponse.success!) {
+            await ScaffoldSnakBar().show(context, msg: response.message!);
+            if (isMyTask) {
+              await _projectTaskBloc
+                  .getProjectEnrolledTasks(project.projectId!);
+            } else {
+              await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+            }
+          } else {
+            await ScaffoldSnakBar().show(context, msg: response.error!);
+            if (isMyTask) {
+              await _projectTaskBloc
+                  .getProjectEnrolledTasks(project.projectId!);
+            } else {
+              await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+            }
+          }
+        }
+      } else {
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
+      }
     }
   }
 

@@ -114,6 +114,9 @@ class Repository {
   Future<ResponseModel> updateEnrollTaskRepo(TaskModel task) =>
       apiProvider.updateEnrollTaskAPIProvider(task);
 
+  Future<ResponseModel> removeEnrollTaskRepo(String enrollTaskId) =>
+      apiProvider.removeEnrollTaskAPIProvider(enrollTaskId);
+
   Future<ResponseModel> postEnrolledTaskRepo(TaskModel enrolledTaskModel) =>
       apiProvider.postEnrolledTasksAPIProvider(enrolledTaskModel);
 

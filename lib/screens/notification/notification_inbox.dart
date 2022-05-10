@@ -46,7 +46,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         TaskLogHrsModel.fromjson(json: notification.payload!);
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
     task.status = fromDeclineLogHrs ? TOGGLE_COMPLETE : LOG_HRS_APPROVED;
-    task.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
+    task.isApprovedFromAdmin = true;
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
@@ -65,6 +65,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.type = notification.type;
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      notification.isUpdated = true;
       notification.title = fromDeclineLogHrs
           ? 'Log Hours Request Declined'
           : 'Log Hours Request Approved';
@@ -73,11 +74,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
           : 'Your log hours for ${task.taskName} is approved';
       notification.payload = taskLogHrs.toJson();
       if (fromDeclineLogHrs) {
-        notification.isUpdated = false;
         await _notificationBloc.updateNotifications(notification);
         await _notificationBloc.getNotifications();
       } else {
-        notification.isUpdated = true;
         final ProjectModel taskProject = await _projectsBloc
             .getProjectByProjectId(task.projectId!, task.signUpUserId!);
 
@@ -191,7 +190,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       final TaskLogHrsModel taskLogHrsModel =
           TaskLogHrsModel.fromjson(json: notification.payload!);
       if (taskLogHrsModel.isApprovedFromAdmin != null &&
-          !taskLogHrsModel.isApprovedFromAdmin!) {
+          taskLogHrsModel.isApprovedFromAdmin!) {
         return true;
       } else {
         return false;

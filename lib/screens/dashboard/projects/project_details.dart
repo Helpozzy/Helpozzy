@@ -38,7 +38,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
 
   @override
   void initState() {
-    _tabController = TabController(length: 5, initialIndex: 0, vsync: this);
+    _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -328,8 +328,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           _tab(text: DETAILS_TAB),
           _tab(text: TASKS_TAB),
           _tab(text: MEMBERS_TAB),
-          _tab(text: MESSENGER_TAB),
-          _tab(text: ATTACHMENTS_TAB),
+          // _tab(text: MESSENGER_TAB),
+          // _tab(text: ATTACHMENTS_TAB),
         ],
       );
 
@@ -355,8 +355,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           projectTabType: projectTabType,
         ),
         ProjectMembersTab(),
-        Text(COMING_SOON_SCREEN_TEXT),
-        Text(COMING_SOON_SCREEN_TEXT),
+        // Text(COMING_SOON_SCREEN_TEXT),
+        // Text(COMING_SOON_SCREEN_TEXT),
       ],
     );
   }

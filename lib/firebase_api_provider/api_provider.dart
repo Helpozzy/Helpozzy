@@ -348,6 +348,15 @@ class ApiProvider {
     }
   }
 
+  Future<ResponseModel> removeEnrollTaskAPIProvider(String enrollTaskId) async {
+    try {
+      await firestore.collection('signed_up_tasks').doc(enrollTaskId).delete();
+      return ResponseModel(success: true, message: 'Task declined');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Task not declined');
+    }
+  }
+
   Future<Tasks> getProjectTasksAPIProvider(String projectId, bool isOwn) async {
     final QuerySnapshot querySnapshot = isOwn
         ? await firestore

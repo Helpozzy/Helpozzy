@@ -517,6 +517,9 @@ const PROJECT_HOURS_LABEL = 'Project Hours';
 const PROJECTS_LABEL = 'Projects : ';
 const TOTAL_HRS_LABEL = 'Total volunteering hours : ';
 const SERVICE_RECORDS = 'Service records';
+const NO_RECORDS_FOUNDS = 'No records found';
+const NO_ANALYST_FOUNDS =
+    'No analyst record found, Go to project and do volunteering';
 
 //Project sign up
 const VOLUNTEER_EMAIL_LABEL = 'Volunteer Email';

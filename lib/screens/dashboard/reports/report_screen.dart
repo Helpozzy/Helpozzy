@@ -269,10 +269,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   horizontal: 10.0,
                   vertical: 20.0,
                 ),
-                child: Text(
-                  NO_ACTIVITIES_FOUNDS,
-                  style: _theme.textTheme.headline5!
-                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      NO_RECORDS_FOUNDS,
+                      style: _theme.textTheme.headline6!.copyWith(
+                          color: DARK_GRAY, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      NO_ANALYST_FOUNDS,
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText2!
+                          .copyWith(color: DARK_GRAY),
+                    ),
+                  ],
                 ),
               );
       },
@@ -337,28 +349,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   );
                 },
               )
-            : Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        NO_ACTIVITIES_FOUNDS,
-                        style: _theme.textTheme.headline5!.copyWith(
-                            color: DARK_GRAY, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        PLEASE_VISIT_OTHER,
-                        textAlign: TextAlign.center,
-                        style: _theme.textTheme.bodyText2!
-                            .copyWith(color: DARK_GRAY),
-                      ),
-                    ],
-                  ),
+            : Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 20.0),
+                child: Text(
+                  NO_ACTIVITIES_FOUNDS,
+                  style: _theme.textTheme.headline6!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
                 ),
               );
       },

@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   null
                           ? organizationDetails(user.organizationDetails!)
                           : SizedBox(),
-                      projectPref(user),
+                      user.isOrganization! ? SizedBox() : projectPref(user),
                     ],
                   ),
                 ),
@@ -290,18 +290,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: categoriesList.map((category) {
                       return user.areaOfInterests!.contains(category.id)
                           ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CategorisedProjectsScreen(
-                                      categoryId: category.id!,
-                                      fromPrefs: true,
-                                    ),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CategorisedProjectsScreen(
+                                    categoryId: category.id!,
+                                    fromPrefs: true,
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                               child: SizedBox(
                                 width: width / 5.5,
                                 child: Column(
