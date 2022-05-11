@@ -11,7 +11,7 @@ class ProjectTaskBloc {
   final allTaskExpandController = PublishSubject<bool>();
   final projectEnrolledTasksController = PublishSubject<Tasks>();
   final projectTasksController = PublishSubject<Tasks>();
-  final projectTasksDetailsController = PublishSubject<TaskHelper>();
+  final projectTasksDetailsController = PublishSubject<TasksStatusHelper>();
   final selectedTasksController = PublishSubject<List<TaskModel>>();
 
   Stream<bool> get getMyTaskExpandedStream => myTaskExpandController.stream;
@@ -19,7 +19,7 @@ class ProjectTaskBloc {
   Stream<Tasks> get getProjectEnrolledTasksStream =>
       projectEnrolledTasksController.stream;
   Stream<Tasks> get getProjectTasksStream => projectTasksController.stream;
-  Stream<TaskHelper> get getProjectTaskDetailsStream =>
+  Stream<TasksStatusHelper> get getProjectTaskDetailsStream =>
       projectTasksDetailsController.stream;
   Stream<List<TaskModel>> get getSelectedTasksStream =>
       selectedTasksController.stream;
@@ -50,7 +50,8 @@ class ProjectTaskBloc {
 
   Future getProjectTaskDetails(String projectId) async {
     final Tasks response = await repo.getProjectTasksRepo(projectId, false);
-    final TaskHelper projectHelper = TaskHelper(tasks: response.tasks);
+    final TasksStatusHelper projectHelper =
+        TasksStatusHelper(tasks: response.tasks);
     projectTasksDetailsController.sink.add(projectHelper);
   }
 

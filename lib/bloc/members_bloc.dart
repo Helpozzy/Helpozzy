@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
+import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,12 +12,15 @@ class MembersBloc {
   final userRewardDetailsController =
       PublishSubject<UserRewardsDetailsHelper>();
   final _searchMembersList = BehaviorSubject<dynamic>();
+  final _searchProjectMembersList = BehaviorSubject<dynamic>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => membersController.stream;
   Stream<UserRewardsDetailsHelper> get getuserRewardDetailsStream =>
       userRewardDetailsController.stream;
   Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
+  Stream<dynamic> get getSearchedProjectMembersStream =>
+      _searchProjectMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future getMembers() async {
@@ -45,6 +49,26 @@ class MembersBloc {
         }
       });
       _searchMembersList.sink.add(searchedMembersList);
+    }
+  }
+
+  Future searchProjectMembers(
+      {required String searchText, required String projectId}) async {
+    searchedMembersList = [];
+    final ProjectTasksHelper projectTaskHelper =
+        await repo.projectUsersRepo(projectId);
+    if (searchText.isEmpty) {
+      _searchProjectMembersList.sink.add(projectTaskHelper.projectMembers);
+    } else {
+      projectTaskHelper.projectMembers.forEach((volunteer) {
+        if (volunteer.firstName!
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            volunteer.email!.toLowerCase().contains(searchText.toLowerCase())) {
+          searchedMembersList.add(volunteer);
+        }
+      });
+      _searchProjectMembersList.sink.add(searchedMembersList);
     }
   }
 
@@ -79,6 +103,7 @@ class MembersBloc {
     membersController.close();
     userRewardDetailsController.close();
     _searchMembersList.close();
+    _searchProjectMembersList.close();
     _filteredFavContoller.close();
   }
 }

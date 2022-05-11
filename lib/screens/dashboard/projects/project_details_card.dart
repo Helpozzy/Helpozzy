@@ -382,7 +382,7 @@ class _ProjectTileState extends State<ProjectTile> {
   }
 
   Widget taskDetails() {
-    return StreamBuilder<TaskHelper>(
+    return StreamBuilder<TasksStatusHelper>(
       stream: _projectTaskBloc.getProjectTaskDetailsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

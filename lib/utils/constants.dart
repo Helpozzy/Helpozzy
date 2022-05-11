@@ -537,6 +537,9 @@ const EDIT_PROFILE_APPBAR = 'Edit Profile';
 const TASK_DETAILS_APPBAR = 'Task Detail';
 const PVSA_CHART_APPBAR = "President's Volunteer Service Award Chart";
 
+//Member Tab
+const NO_MEMBERS_AVAILABLE = 'No members available';
+
 //Details Tab
 const COLUMN_ONE = 'Age\nGroup\n(Yrs old)';
 const COLUMN_TWO = 'Kids\n(5-10)';

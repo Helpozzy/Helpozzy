@@ -910,8 +910,13 @@ class CommonDividerWithVal extends StatelessWidget {
 
 //Placer Holder
 class CommonUserProfileOrPlaceholder extends StatelessWidget {
-  CommonUserProfileOrPlaceholder({this.imgUrl, required this.size});
+  CommonUserProfileOrPlaceholder({
+    this.imgUrl,
+    required this.size,
+    this.borderColor,
+  });
   final String? imgUrl;
+  final Color? borderColor;
   final double size;
   @override
   Widget build(BuildContext context) {
@@ -920,7 +925,7 @@ class CommonUserProfileOrPlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           width: 2,
-          color: PRIMARY_COLOR,
+          color: borderColor ?? PRIMARY_COLOR,
         ),
       ),
       child: ClipRRect(

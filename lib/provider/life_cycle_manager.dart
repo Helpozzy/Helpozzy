@@ -17,32 +17,43 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   void initState() {
     super.initState();
+    _userInfoBloc.udateUserPresence(
+      DateTime.now().millisecondsSinceEpoch.toString(),
+      true,
+    );
     WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      _userInfoBloc.udateUserPresence(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        false,
-      );
-    } else if (state == AppLifecycleState.resumed) {
-      _userInfoBloc.udateUserPresence(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        true,
-      );
-    } else if (state == AppLifecycleState.detached) {
-      _userInfoBloc.udateUserPresence(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        false,
-      );
-    } else if (state == AppLifecycleState.inactive) {
-      _userInfoBloc.udateUserPresence(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        false,
-      );
+    switch (state) {
+      case AppLifecycleState.resumed:
+        await _userInfoBloc.udateUserPresence(
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          true,
+        );
+        break;
+      case AppLifecycleState.paused:
+        await _userInfoBloc.udateUserPresence(
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          false,
+        );
+        break;
+      case AppLifecycleState.detached:
+        await _userInfoBloc.udateUserPresence(
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          false,
+        );
+        break;
+      case AppLifecycleState.inactive:
+        await _userInfoBloc.udateUserPresence(
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          false,
+        );
+        break;
+      default:
+        break;
     }
     print('AppLifecycleState state:  $state');
   }

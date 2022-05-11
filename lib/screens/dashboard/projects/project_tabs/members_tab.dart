@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -9,11 +8,16 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectMembersTab extends StatefulWidget {
+  ProjectMembersTab({required this.projectId});
+  final String projectId;
   @override
-  _ProjectMembersTabState createState() => _ProjectMembersTabState();
+  _ProjectMembersTabState createState() =>
+      _ProjectMembersTabState(projectId: projectId);
 }
 
 class _ProjectMembersTabState extends State<ProjectMembersTab> {
+  _ProjectMembersTabState({required this.projectId});
+  final String projectId;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
@@ -24,7 +28,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
 
   @override
   void initState() {
-    _membersBloc.searchMembers(searchText: '');
+    _membersBloc.searchProjectMembers(searchText: '', projectId: projectId);
     super.initState();
   }
 
@@ -69,7 +73,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 ),
               ),
               validator: (val) => null,
-              onChanged: (val) => _membersBloc.searchMembers(searchText: val),
+              onChanged: (val) => _membersBloc.searchProjectMembers(
+                  searchText: val, projectId: projectId),
             ),
           ),
           CommonDivider(),
@@ -81,20 +86,30 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
 
   Widget membersList() {
     return StreamBuilder<dynamic>(
-      stream: _membersBloc.getSearchedMembersStream,
+      stream: _membersBloc.getSearchedProjectMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        return ListView.separated(
-          separatorBuilder: (context, index) => CommonDivider(),
-          shrinkWrap: true,
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            final SignUpAndUserModel volunteer = snapshot.data[index];
-            return memberItem(volunteer: volunteer);
-          },
-        );
+        return snapshot.data.isNotEmpty
+            ? ListView.separated(
+                separatorBuilder: (context, index) => CommonDivider(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final SignUpAndUserModel volunteer = snapshot.data[index];
+                  return memberItem(volunteer: volunteer);
+                },
+              )
+            : Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: width * 0.15),
+                child: Text(
+                  NO_MEMBERS_AVAILABLE,
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
+                ),
+              );
       },
     );
   }
@@ -108,7 +123,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: CommonUserProfileOrPlaceholder(
-              size: width * 0.10,
+              size: width * 0.12,
+              borderColor: volunteer.presence! ? GREEN : PRIMARY_COLOR,
               imgUrl: volunteer.profileUrl,
             ),
           ),
@@ -117,19 +133,10 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    CommonBadge(
-                      color: volunteer.presence! ? GREEN : RED_COLOR,
-                      size: width * 0.02,
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      volunteer.firstName! + ' ' + volunteer.lastName!,
-                      style: _theme.textTheme.bodyText2!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                Text(
+                  volunteer.firstName! + ' ' + volunteer.lastName!,
+                  style: _theme.textTheme.bodyText2!
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   getLastSeen(volunteer.lastSeen!),
@@ -143,37 +150,6 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 3.0,
-                        bottom: 3.0,
-                        right: 5.0,
-                      ),
-                      child: RatingBar.builder(
-                        initialRating: volunteer.rating!,
-                        ignoreGestures: true,
-                        minRating: 1,
-                        itemSize: 15,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        unratedColor: GRAY,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: AMBER_COLOR,
-                        ),
-                        onRatingUpdate: (rating) => print(rating),
-                      ),
-                    ),
-                    Text(
-                      '(${volunteer.reviewsByPersons} Reviews)',
-                      style: _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
-                    ),
-                  ],
                 ),
               ],
             ),

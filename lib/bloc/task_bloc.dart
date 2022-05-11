@@ -8,11 +8,12 @@ class TaskBloc {
   final repo = Repository();
 
   final enrolledTasksController = PublishSubject<Tasks>();
-  final tasksDetailsController = PublishSubject<TaskHelper>();
+  final tasksDetailsController = PublishSubject<TasksStatusHelper>();
   final taskInfoController = PublishSubject<TaskModel>();
 
   Stream<Tasks> get getEnrolledTasksStream => enrolledTasksController.stream;
-  Stream<TaskHelper> get getTaskDetailsStream => tasksDetailsController.stream;
+  Stream<TasksStatusHelper> get getTaskDetailsStream =>
+      tasksDetailsController.stream;
   Stream<TaskModel> get getTaskInfoStream => taskInfoController.stream;
 
   Future getEnrolledTasks() async {

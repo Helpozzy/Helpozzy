@@ -33,7 +33,7 @@ class CommonPicker {
     } else {
       late XFile? pickedFile;
       try {
-        pickedFile = await _picker.pickImage(source: source!);
+        pickedFile = await _picker.pickImage(source: source!, imageQuality: 50);
       } catch (e) {
         print(e);
       }
