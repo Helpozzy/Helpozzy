@@ -922,14 +922,26 @@ class CommonUserProfileOrPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(
+          size > 50
+              ? 25
+              : size < 35
+                  ? 13
+                  : 18,
+        ),
         border: Border.all(
           width: 2,
           color: borderColor ?? PRIMARY_COLOR,
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(
+          size > 50
+              ? 23
+              : size < 35
+                  ? 11
+                  : 16,
+        ),
         child: CachedNetworkImage(
           placeholder: (context, url) => Center(
             child: CircularProgressIndicator(

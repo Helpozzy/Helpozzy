@@ -27,14 +27,14 @@ class MemberCard extends StatelessWidget {
       child: Card(
         elevation: 4,
         color: selected ? GRAY : WHITE,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding: EdgeInsets.symmetric(
               vertical: width * 0.035, horizontal: width * 0.04),
           child: Row(
             children: [
               CommonUserProfileOrPlaceholder(
-                size: width * 0.11,
+                size: width * 0.12,
                 imgUrl: volunteer.profileUrl,
               ),
               SizedBox(width: 10),
@@ -51,7 +51,7 @@ class MemberCard extends StatelessWidget {
                       volunteer.address!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
+                      style: _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
                     ),
                     Row(
                       children: [

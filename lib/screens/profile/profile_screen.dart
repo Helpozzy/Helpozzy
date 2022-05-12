@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
@@ -91,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(top: 15.0, bottom: 10.0),
       decoration: BoxDecoration(
           border: Border.all(width: 0.7, color: GRAY),
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(18)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -104,13 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             child: Container(
-              margin: EdgeInsets.only(bottom: 10, top: 5.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: PRIMARY_COLOR.withOpacity(0.8),
-              ),
+              margin: EdgeInsets.symmetric(vertical: 5.0),
               child: CommonUserProfileOrPlaceholder(
-                size: width / 5,
+                size: width / 5.5,
                 imgUrl: user.profileUrl!,
               ),
             ),
@@ -271,6 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget projectPref(SignUpAndUserModel user) {
+    final List<CategoryModel> userPrefs = categoriesList
+        .where((category) => user.areaOfInterests!.contains(category.id))
+        .toList();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
@@ -282,55 +282,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           user.areaOfInterests!.isNotEmpty
-              ? Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: categoriesList.map((category) {
-                      return user.areaOfInterests!.contains(category.id)
-                          ? GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CategorisedProjectsScreen(
-                                    categoryId: category.id!,
-                                    fromPrefs: true,
-                                  ),
-                                ),
-                              ),
-                              child: SizedBox(
-                                width: width / 5.5,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      category.asset!,
-                                      fit: BoxFit.fill,
-                                      color: PRIMARY_COLOR,
-                                      height: width * 0.1,
-                                      width: width * 0.1,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      category.label!,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 3,
-                                      style:
-                                          _theme.textTheme.bodyText2!.copyWith(
-                                        fontSize: 10,
-                                        color: PRIMARY_COLOR,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          : SizedBox();
-                    }).toList()),
+              ? GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: (3),
+                    childAspectRatio: 2,
                   ),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: userPrefs.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final CategoryModel category = userPrefs[index];
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategorisedProjectsScreen(
+                            categoryId: category.id!,
+                            fromPrefs: true,
+                          ),
+                        ),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: BLUR_GRAY,
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 3.0,
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              category.asset!,
+                              fit: BoxFit.fill,
+                              color: PRIMARY_COLOR,
+                              height: width * 0.07,
+                              width: width * 0.07,
+                            ),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                category.label!,
+                                maxLines: 3,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: _theme.textTheme.bodyText2!.copyWith(
+                                  fontSize: 10,
+                                  color: DARK_GRAY_FONT_COLOR,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 )
               : Container(
                   padding: EdgeInsets.symmetric(vertical: 10.0),

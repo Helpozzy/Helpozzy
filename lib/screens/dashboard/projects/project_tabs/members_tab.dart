@@ -28,8 +28,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
 
   @override
   void initState() {
-    _membersBloc.searchProjectMembers(searchText: '', projectId: projectId);
     super.initState();
+    _membersBloc.searchProjectMembers(searchText: '', projectId: projectId);
   }
 
   String getLastSeen(String timeStamp) {
@@ -123,12 +123,12 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: CommonUserProfileOrPlaceholder(
-              size: width * 0.12,
+              size: width * 0.11,
               borderColor: volunteer.presence! ? GREEN : PRIMARY_COLOR,
               imgUrl: volunteer.profileUrl,
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 5),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,12 +136,12 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 Text(
                   volunteer.firstName! + ' ' + volunteer.lastName!,
                   style: _theme.textTheme.bodyText2!
-                      .copyWith(fontWeight: FontWeight.bold),
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 13),
                 ),
                 Text(
                   getLastSeen(volunteer.lastSeen!),
                   style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 10,
+                    fontSize: 9,
                     color: UNSELECTED_TAB_COLOR,
                   ),
                 ),

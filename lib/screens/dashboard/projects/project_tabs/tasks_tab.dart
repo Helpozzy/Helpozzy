@@ -197,7 +197,7 @@ class _TaskTabState extends State<TaskTab> {
                       prefixWidget: CommonUserProfileOrPlaceholder(
                         imgUrl:
                             prefsObject.getString(CURRENT_USER_PROFILE_URL)!,
-                        size: width / 12,
+                        size: width / 13,
                       ),
                       label: MY_TASKS_LABEL,
                       isMyTask: true,
@@ -211,10 +211,13 @@ class _TaskTabState extends State<TaskTab> {
             stream: _projectTaskBloc.geAllTaskExpandedStream,
             builder: (context, snapshot) {
               return tasksCategoriesCard(
-                prefixWidget: Icon(
-                  CupertinoIcons.square_list,
-                  size: width / 12,
-                  color: BLUE_GRAY,
+                prefixWidget: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Icon(
+                    Icons.format_list_bulleted_rounded,
+                    size: width / 14,
+                    color: PRIMARY_COLOR,
+                  ),
                 ),
                 label: VIEW_ALL_TASKS_LABEL,
                 isMyTask: false,
@@ -248,7 +251,8 @@ class _TaskTabState extends State<TaskTab> {
           }
         },
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           elevation: 3,
           child: Padding(
             padding:

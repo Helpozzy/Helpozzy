@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
+import 'package:helpozzy/models/project_task_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
@@ -166,14 +166,13 @@ class ApiProvider {
     return Users.fromJson(list: querySnapshot.docs);
   }
 
-  Future<ProjectTasksHelper> projectUsersAPIProvider(String projectId) async {
+  Future<ProjectMembers> projectMembersAPIProvider(String projectId) async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('tasks')
         .where('project_id', isEqualTo: projectId)
         .where('owner_id', isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
-    final Tasks tasks = Tasks.fromJson(list: querySnapshot.docs);
-    return ProjectTasksHelper(tasks: tasks.tasks);
+    return ProjectMembers.fromJson(querySnapshot.docs);
   }
 
   Future<ResponseModel> postProjectAPIProvider(ProjectModel project) async {

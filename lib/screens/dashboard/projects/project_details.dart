@@ -322,7 +322,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         controller: _tabController,
         indicatorColor: DARK_PINK_COLOR,
         indicatorSize: TabBarIndicatorSize.tab,
-        indicatorWeight: 3.0,
+        indicatorWeight: 2.5,
         enableFeedback: true,
         tabs: [
           _tab(text: DETAILS_TAB),

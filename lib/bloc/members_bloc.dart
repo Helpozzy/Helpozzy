@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
-import 'package:helpozzy/helper/task_helper.dart';
+import 'package:helpozzy/models/project_task_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,7 +14,7 @@ class MembersBloc {
   final userRewardDetailsController =
       PublishSubject<UserRewardsDetailsHelper>();
   final _searchMembersList = BehaviorSubject<dynamic>();
-  final _searchProjectMembersList = BehaviorSubject<dynamic>();
+  final StreamController _searchProjectMembersList = BehaviorSubject<dynamic>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => membersController.stream;
@@ -52,23 +54,26 @@ class MembersBloc {
     }
   }
 
+  dynamic searchedProjectMembersList = [];
+
   Future searchProjectMembers(
       {required String searchText, required String projectId}) async {
-    searchedMembersList = [];
-    final ProjectTasksHelper projectTaskHelper =
-        await repo.projectUsersRepo(projectId);
+    searchedProjectMembersList = [];
+    final ProjectMembers projectMembersList =
+        await repo.projectMembersRepo(projectId);
+    print(projectMembersList.projectMembers);
     if (searchText.isEmpty) {
-      _searchProjectMembersList.sink.add(projectTaskHelper.projectMembers);
+      _searchProjectMembersList.sink.add(projectMembersList.projectMembers);
     } else {
-      projectTaskHelper.projectMembers.forEach((volunteer) {
+      projectMembersList.projectMembers.forEach((volunteer) {
         if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
             volunteer.email!.toLowerCase().contains(searchText.toLowerCase())) {
-          searchedMembersList.add(volunteer);
+          searchedProjectMembersList.add(volunteer);
         }
       });
-      _searchProjectMembersList.sink.add(searchedMembersList);
+      _searchProjectMembersList.sink.add(searchedProjectMembersList);
     }
   }
 

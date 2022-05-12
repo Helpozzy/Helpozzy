@@ -1,6 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
-import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
+import 'package:helpozzy/models/project_task_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
@@ -52,8 +52,8 @@ class Repository {
 
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
 
-  Future<ProjectTasksHelper> projectUsersRepo(String projectId) =>
-      apiProvider.projectUsersAPIProvider(projectId);
+  Future<ProjectMembers> projectMembersRepo(String projectId) =>
+      apiProvider.projectMembersAPIProvider(projectId);
 
   Future<ResponseModel> postProjectSignupRepo(ProjectModel projectSignUpVal) =>
       apiProvider.postProjectSignupAPIProvider(projectSignUpVal);

@@ -971,66 +971,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget userProfilePic() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          padding: EdgeInsets.all(3),
-          margin: EdgeInsets.only(top: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: PRIMARY_COLOR.withOpacity(0.8),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: _imageFile != null
-                ? Image.file(
-                    File(_imageFile!.path),
-                    fit: BoxFit.cover,
-                    height: width / 4.5,
-                    width: width / 4.5,
-                  )
-                : CachedNetworkImage(
-                    imageUrl: user.profileUrl!,
-                    fit: BoxFit.cover,
-                    height: width / 4.5,
-                    width: width / 4.5,
-                    alignment: Alignment.center,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress, color: WHITE),
-                    errorWidget: (context, url, error) => Center(
-                        child:
-                            CommonUserProfileOrPlaceholder(size: width / 4.5)),
-                  ),
-          ),
+    return GestureDetector(
+      onTap: () => imageOptionPopup(),
+      child: Container(
+        padding: EdgeInsets.all(3),
+        margin: EdgeInsets.only(top: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          color: PRIMARY_COLOR.withOpacity(0.8),
         ),
-        Positioned(
-          bottom: 2,
-          right: 2,
-          child: GestureDetector(
-            onTap: () => imageOptionPopup(),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100), color: WHITE),
-              child: Container(
-                height: 22,
-                width: 22,
-                margin: EdgeInsets.all(1.5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: PRIMARY_COLOR.withOpacity(0.8)),
-                child: Icon(
-                  Icons.edit_rounded,
-                  color: WHITE,
-                  size: 12,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(29),
+          child: _imageFile != null
+              ? Image.file(
+                  File(_imageFile!.path),
+                  fit: BoxFit.cover,
+                  height: width / 4.5,
+                  width: width / 4.5,
+                )
+              : CachedNetworkImage(
+                  imageUrl: user.profileUrl!,
+                  fit: BoxFit.cover,
+                  height: width / 4.5,
+                  width: width / 4.5,
+                  alignment: Alignment.center,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress, color: WHITE),
+                  errorWidget: (context, url, error) => Center(
+                      child: CommonUserProfileOrPlaceholder(size: width / 4.5)),
                 ),
-              ),
-            ),
-          ),
         ),
-      ],
+      ),
     );
   }
 

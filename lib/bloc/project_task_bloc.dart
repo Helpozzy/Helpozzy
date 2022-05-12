@@ -50,8 +50,7 @@ class ProjectTaskBloc {
 
   Future getProjectTaskDetails(String projectId) async {
     final Tasks response = await repo.getProjectTasksRepo(projectId, false);
-    final TasksStatusHelper projectHelper =
-        TasksStatusHelper(tasks: response.tasks);
+    final TasksStatusHelper projectHelper = TasksStatusHelper(response.tasks);
     projectTasksDetailsController.sink.add(projectHelper);
   }
 
