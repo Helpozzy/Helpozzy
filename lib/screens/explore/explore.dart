@@ -101,7 +101,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             height: 37,
             child: TextField(
               controller: _searchController,
-              onChanged: (val) => _projectsBloc.searchProject(val),
+              onChanged: (val) => _projectsBloc.getProjects(searchText: val),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
                 hintText: TYPE_KEYWORD_HINT,
@@ -121,7 +121,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 suffixIcon: IconButton(
                   onPressed: () {
                     _searchController.clear();
-                    _projectsBloc.searchProject('');
+                    _projectsBloc.getProjects(searchText: '');
                   },
                   icon: Icon(
                     Icons.close_rounded,
@@ -253,6 +253,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                   final ProjectModel project = snapshot.data![index];
                   return ProjectCard(
                     project: project,
+                    onProjectLiked: () =>
+                        setState(() => project.isLiked = !project.isLiked!),
                     onTapCard: () => Navigator.push(
                       context,
                       MaterialPageRoute(

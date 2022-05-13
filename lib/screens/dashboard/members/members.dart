@@ -187,7 +187,7 @@ class _MembersScreenState extends State<MembersScreen> {
   }
 
   Widget membersList() {
-    return StreamBuilder<dynamic>(
+    return StreamBuilder<List<SignUpAndUserModel>>(
       stream: _membersBloc.getSearchedMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -196,9 +196,9 @@ class _MembersScreenState extends State<MembersScreen> {
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.symmetric(horizontal: 15.0),
-          itemCount: snapshot.data.length,
+          itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
-            final SignUpAndUserModel volunteer = snapshot.data[index];
+            final SignUpAndUserModel volunteer = snapshot.data![index];
             return StreamBuilder<bool>(
               initialData: favVolunteers,
               stream: _membersBloc.getFavVolunteersStream,

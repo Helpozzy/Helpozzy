@@ -85,19 +85,19 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   }
 
   Widget membersList() {
-    return StreamBuilder<dynamic>(
+    return StreamBuilder<List<SignUpAndUserModel>>(
       stream: _membersBloc.getSearchedProjectMembersStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        return snapshot.data.isNotEmpty
+        return snapshot.data!.isNotEmpty
             ? ListView.separated(
                 separatorBuilder: (context, index) => CommonDivider(),
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final SignUpAndUserModel volunteer = snapshot.data[index];
+                  final SignUpAndUserModel volunteer = snapshot.data![index];
                   return memberItem(volunteer: volunteer);
                 },
               )

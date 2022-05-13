@@ -76,6 +76,8 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                       snapshot.data!.projectList[index];
                   return ProjectCard(
                     project: project,
+                    onProjectLiked: () =>
+                        setState(() => project.isLiked = !project.isLiked!),
                     onTapCard: () => Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -50,37 +50,39 @@ class ProjectsBloc {
     return response;
   }
 
-  Future<List<ProjectModel>> getProjects(
-      {ProjectTabType? projectTabType}) async {
+  List<ProjectModel> searchedProjects = [];
+
+  Future getProjects(
+      {ProjectTabType? projectTabType, String? searchText}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
-    projectsFromAPI = response.projectList;
-    projectsController.sink.add(response.projectList);
-    return response.projectList;
+    searchedProjects.clear();
+    projectsController.sink.done;
+    if (searchText != null) {
+      if (searchText.isEmpty) {
+        projectsController.sink.add(response.projectList);
+      } else {
+        response.projectList.forEach((project) {
+          if (project.projectName!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              project.organization!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase())) {
+            searchedProjects.add(project);
+          }
+        });
+        projectsController.sink.add(searchedProjects);
+      }
+    } else {
+      projectsController.sink.add(response.projectList);
+    }
   }
 
   Future<ResponseModel> removeSignedUpProject(String enrolledProjectId) async {
     final ResponseModel response =
         await repo.removeEnrolledProjectRepo(enrolledProjectId);
     return response;
-  }
-
-  List<ProjectModel> projectsFromAPI = [];
-  List<ProjectModel> searchedProjectList = [];
-
-  Future searchProject(String searchText) async {
-    searchedProjectList = [];
-    if (searchText.isEmpty) {
-      projectsController.sink.add(projectsFromAPI);
-    } else {
-      projectsFromAPI.forEach((project) {
-        if (project.projectName!.contains(searchText) ||
-            project.organization!.contains(searchText)) {
-          searchedProjectList.add(project);
-        }
-      });
-      projectsController.sink.add(searchedProjectList);
-    }
   }
 
   Future getProjectsActivityStatus(

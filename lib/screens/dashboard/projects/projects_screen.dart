@@ -62,7 +62,18 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         fillColor: GRAY,
                         controller: _searchController,
                         hintText: SEARCH_PROJECT_HINT,
-                        onChanged: (val) => _projectsBloc.searchProject(val),
+                        onChanged: (val) => _projectsBloc.getProjects(
+                            projectTabType: _tabController.index == 0
+                                ? ProjectTabType.PROJECT_OPEN_TAB
+                                : _tabController.index == 1
+                                    ? ProjectTabType.PROJECT_UPCOMING_TAB
+                                    : _tabController.index == 2
+                                        ? ProjectTabType.MY_PROJECTS_TAB
+                                        : _tabController.index == 3
+                                            ? ProjectTabType
+                                                .PROJECT_COMPLETED_TAB
+                                            : null,
+                            searchText: val),
                         validator: (val) => null,
                       ),
                     ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-
 import 'project_details_card.dart';
 import 'project_details.dart';
 
@@ -27,6 +27,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   late double height;
   late double width;
   late bool isExpanded = false;
+
+  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
 
   @override
   void initState() {
@@ -112,7 +114,16 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                           child: ProjectTile(
                             projectTabType: projectTabType,
                             project: project,
+                            onPressed: () {
+                              setState(() => project.isTaskDetailsExpanded =
+                                  !project.isTaskDetailsExpanded!);
+                              if (project.isTaskDetailsExpanded!) {
+                                _projectTaskBloc
+                                    .getProjectTaskDetails(project.projectId!);
+                              }
+                            },
                             isExpanded: snapshot.data!,
+                            projectTaskBloc: _projectTaskBloc,
                             projectsBloc: projectsBloc,
                           ),
                         );

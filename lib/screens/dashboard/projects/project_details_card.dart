@@ -13,41 +13,23 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
-class ProjectTile extends StatefulWidget {
+class ProjectTile extends StatelessWidget {
   ProjectTile({
     required this.project,
     required this.projectTabType,
     required this.isExpanded,
     required this.projectsBloc,
+    required this.projectTaskBloc,
+    required this.onPressed,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
   final ProjectsBloc projectsBloc;
-  @override
-  _ProjectTileState createState() => _ProjectTileState(
-      project: project,
-      projectTabType: projectTabType,
-      isExpanded: isExpanded,
-      projectsBloc: projectsBloc);
-}
+  final ProjectTaskBloc projectTaskBloc;
+  final void Function()? onPressed;
 
-class _ProjectTileState extends State<ProjectTile> {
-  _ProjectTileState({
-    required this.project,
-    required this.projectTabType,
-    required this.isExpanded,
-    required this.projectsBloc,
-  });
-  final ProjectTabType projectTabType;
-  final ProjectModel project;
-  final bool isExpanded;
-  final ProjectsBloc projectsBloc;
-  late ThemeData _theme;
-  late double width;
-  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-
-  Future<void> showDeletePrompt() async {
+  Future<void> showDeletePrompt(BuildContext context, ThemeData _theme) async {
     await PlatformAlertDialog().showWithAction(
       context,
       title: CONFIRM,
@@ -93,15 +75,15 @@ class _ProjectTileState extends State<ProjectTile> {
 
   @override
   Widget build(BuildContext context) {
-    _theme = Theme.of(context);
-    width = MediaQuery.of(context).size.width;
+    final ThemeData _theme = Theme.of(context);
+    final double width = MediaQuery.of(context).size.width;
     return projectTabType == ProjectTabType.OWN_TAB ||
             projectTabType == ProjectTabType.MY_ENROLLED_TAB
-        ? slidableInfoTile()
-        : simpleInfoTile();
+        ? slidableInfoTile(_theme, width)
+        : simpleInfoTile(_theme, width);
   }
 
-  Widget slidableInfoTile() {
+  Widget slidableInfoTile(ThemeData _theme, double width) {
     return Slidable(
       key: const ValueKey(0),
       closeOnScroll: true,
@@ -129,7 +111,8 @@ class _ProjectTileState extends State<ProjectTile> {
           ),
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) => showDeletePrompt(),
+            onPressed: (BuildContext context) =>
+                showDeletePrompt(context, _theme),
             backgroundColor: RED_COLOR,
             foregroundColor: WHITE,
             icon: CupertinoIcons.trash,
@@ -137,11 +120,11 @@ class _ProjectTileState extends State<ProjectTile> {
           ),
         ],
       ),
-      child: simpleInfoTile(),
+      child: simpleInfoTile(_theme, width),
     );
   }
 
-  Widget simpleInfoTile() {
+  Widget simpleInfoTile(ThemeData _theme, double width) {
     return Column(
       children: [
         Padding(
@@ -219,7 +202,7 @@ class _ProjectTileState extends State<ProjectTile> {
                       projectsBloc.isExpanded(isExpanded);
                       if (project.isProjectDetailsExpanded! &&
                           project.isTaskDetailsExpanded!) {
-                        _projectTaskBloc
+                        projectTaskBloc
                             .getProjectTaskDetails(project.projectId!);
                       }
                     },
@@ -248,7 +231,7 @@ class _ProjectTileState extends State<ProjectTile> {
                     )
                   : SizedBox(),
               project.isProjectDetailsExpanded!
-                  ? projectDetails(project)
+                  ? projectDetails(project, _theme, width)
                   : SizedBox(),
               project.isTaskDetailsExpanded! &&
                       project.isProjectDetailsExpanded!
@@ -259,7 +242,7 @@ class _ProjectTileState extends State<ProjectTile> {
                   : SizedBox(),
               project.isProjectDetailsExpanded!
                   ? project.isTaskDetailsExpanded!
-                      ? taskDetails()
+                      ? taskDetails(_theme, width)
                       : SizedBox()
                   : SizedBox()
             ],
@@ -270,12 +253,14 @@ class _ProjectTileState extends State<ProjectTile> {
     );
   }
 
-  Widget projectDetails(ProjectModel project) {
+  Widget projectDetails(ProjectModel project, ThemeData _theme, double width) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         children: [
           projectExpandDetails(
+            _theme,
+            width,
             title: LOCATION,
             detail: project.location!,
             hasIcon: true,
@@ -285,6 +270,8 @@ class _ProjectTileState extends State<ProjectTile> {
             },
           ),
           projectExpandDetails(
+            _theme,
+            width,
             title: CONTACT,
             detail: project.contactName! + '\n' + project.contactNumber!,
             hasIcon: true,
@@ -294,25 +281,23 @@ class _ProjectTileState extends State<ProjectTile> {
             },
           ),
           projectExpandDetails(
+            _theme,
+            width,
             title: STATUS_LABEL,
             detail: project.status!,
             hasIcon: false,
           ),
           SizedBox(height: 3),
           projectExpandDetails(
+            _theme,
+            width,
             title: ENROLLMENTS_LABEL,
             detail: project.enrollmentCount.toString() + MEMBERS_SIGNED_UP,
             hasIcon: false,
           ),
           SizedBox(height: 4),
           SmallCommonButtonWithIcon(
-            onPressed: () {
-              setState(() => project.isTaskDetailsExpanded =
-                  !project.isTaskDetailsExpanded!);
-              if (project.isTaskDetailsExpanded!) {
-                _projectTaskBloc.getProjectTaskDetails(project.projectId!);
-              }
-            },
+            onPressed: onPressed,
             icon: project.isTaskDetailsExpanded!
                 ? Icons.keyboard_arrow_up_rounded
                 : Icons.keyboard_arrow_down_rounded,
@@ -328,7 +313,7 @@ class _ProjectTileState extends State<ProjectTile> {
     );
   }
 
-  Widget projectExpandDetails(
+  Widget projectExpandDetails(ThemeData _theme, double width,
       {required String title,
       required String detail,
       required bool hasIcon,
@@ -381,9 +366,9 @@ class _ProjectTileState extends State<ProjectTile> {
     );
   }
 
-  Widget taskDetails() {
+  Widget taskDetails(ThemeData _theme, double width) {
     return StreamBuilder<TasksStatusHelper>(
-      stream: _projectTaskBloc.getProjectTaskDetailsStream,
+      stream: projectTaskBloc.getProjectTaskDetailsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -398,18 +383,21 @@ class _ProjectTileState extends State<ProjectTile> {
           child: Column(
             children: [
               tasksStatusTile(
+                _theme,
                 color: GREEN,
                 title: COMPLETED_TASKS,
                 icon: Icons.checklist_rtl_outlined,
                 count: snapshot.data!.projectCompleted,
               ),
               tasksStatusTile(
+                _theme,
                 color: AMBER_COLOR,
                 title: INPROGRESS_TASKS,
                 icon: Icons.access_time,
                 count: snapshot.data!.projectInProgress,
               ),
               tasksStatusTile(
+                _theme,
                 color: Colors.red,
                 title: NOT_STARTED_TASKS,
                 icon: Icons.warning_amber_rounded,
@@ -422,7 +410,8 @@ class _ProjectTileState extends State<ProjectTile> {
     );
   }
 
-  Widget tasksStatusTile({
+  Widget tasksStatusTile(
+    ThemeData _theme, {
     required String title,
     IconData? icon,
     Color? color,

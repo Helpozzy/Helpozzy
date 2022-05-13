@@ -13,15 +13,16 @@ class MembersBloc {
   final membersController = PublishSubject<Users>();
   final userRewardDetailsController =
       PublishSubject<UserRewardsDetailsHelper>();
-  final _searchMembersList = BehaviorSubject<dynamic>();
-  final StreamController _searchProjectMembersList = BehaviorSubject<dynamic>();
+  final _searchMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
+  final _searchProjectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => membersController.stream;
   Stream<UserRewardsDetailsHelper> get getuserRewardDetailsStream =>
       userRewardDetailsController.stream;
-  Stream<dynamic> get getSearchedMembersStream => _searchMembersList.stream;
-  Stream<dynamic> get getSearchedProjectMembersStream =>
+  Stream<List<SignUpAndUserModel>> get getSearchedMembersStream =>
+      _searchMembersList.stream;
+  Stream<List<SignUpAndUserModel>> get getSearchedProjectMembersStream =>
       _searchProjectMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
@@ -33,7 +34,7 @@ class MembersBloc {
         .add(UserRewardsDetailsHelper.fromUsers(users));
   }
 
-  dynamic searchedMembersList = [];
+  List<SignUpAndUserModel> searchedMembersList = [];
 
   Future searchMembers({required String searchText}) async {
     final Users users =
@@ -54,7 +55,7 @@ class MembersBloc {
     }
   }
 
-  dynamic searchedProjectMembersList = [];
+  List<SignUpAndUserModel> searchedProjectMembersList = [];
 
   Future searchProjectMembers(
       {required String searchText, required String projectId}) async {

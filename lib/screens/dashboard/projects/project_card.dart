@@ -5,32 +5,17 @@ import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class ProjectCard extends StatefulWidget {
-  const ProjectCard({
+class ProjectCard extends StatelessWidget {
+  ProjectCard({
     this.onTapCard,
     required this.project,
     required this.onPressedSignUpButton,
+    required this.onProjectLiked,
   });
   final GestureTapCallback? onTapCard;
   final void Function()? onPressedSignUpButton;
   final ProjectModel project;
-
-  @override
-  _ProjectCardState createState() => _ProjectCardState(
-      onTapCard: onTapCard,
-      onPressedSignUpButton: onPressedSignUpButton,
-      project: project);
-}
-
-class _ProjectCardState extends State<ProjectCard> {
-  _ProjectCardState({
-    this.onTapCard,
-    required this.project,
-    required this.onPressedSignUpButton,
-  });
-  final GestureTapCallback? onTapCard;
-  final void Function()? onPressedSignUpButton;
-  final ProjectModel project;
+  final VoidCallback? onProjectLiked;
 
   final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -179,9 +164,7 @@ class _ProjectCardState extends State<ProjectCard> {
                 top: 0,
                 right: 0,
                 child: IconButton(
-                  onPressed: () {
-                    setState(() => project.isLiked = !project.isLiked!);
-                  },
+                  onPressed: onProjectLiked,
                   icon: Icon(
                     project.isLiked!
                         ? Icons.favorite_rounded
