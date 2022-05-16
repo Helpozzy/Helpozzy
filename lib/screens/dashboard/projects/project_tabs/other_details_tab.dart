@@ -337,38 +337,40 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                       imgUrl: snapshot.data!.profileUrl,
                     ),
                     SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          snapshot.data!.firstName!,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          snapshot.data!.address!,
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: 10,
-                            color: DARK_GRAY,
-                            fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            snapshot.data!.firstName!,
+                            style: _theme.textTheme.bodyText2!
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        SizedBox(height: 5),
-                        RatingBar.builder(
-                          initialRating: 0,
-                          minRating: 1,
-                          itemSize: 15,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          unratedColor: LIGHT_GRAY,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                          itemBuilder: (context, _) =>
-                              Icon(Icons.star, color: AMBER_COLOR),
-                          onRatingUpdate: (rating) =>
-                              setState(() => selectedRating = rating),
-                        ),
-                      ],
+                          Text(
+                            snapshot.data!.address!,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: DARK_GRAY,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          RatingBar.builder(
+                            initialRating: 0,
+                            minRating: 1,
+                            itemSize: 15,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            unratedColor: LIGHT_GRAY,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                            itemBuilder: (context, _) =>
+                                Icon(Icons.star, color: AMBER_COLOR),
+                            onRatingUpdate: (rating) =>
+                                setState(() => selectedRating = rating),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -469,38 +471,41 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                         imgUrl: review.imageUrl,
                       ),
                       SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            review.name!,
-                            style: _theme.textTheme.bodyText2!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            review.address!,
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 10,
-                              color: DARK_GRAY,
-                              fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              review.name!,
+                              style: _theme.textTheme.bodyText2!
+                                  .copyWith(fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          SizedBox(height: 5),
-                          RatingBar.builder(
-                            initialRating: review.rating!,
-                            minRating: 1,
-                            itemSize: 15,
-                            ignoreGestures: true,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            unratedColor: LIGHT_GRAY,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                            itemBuilder: (context, _) =>
-                                Icon(Icons.star, color: AMBER_COLOR),
-                            onRatingUpdate: (rating) => print(rating),
-                          ),
-                        ],
+                            Text(
+                              review.address!,
+                              style: _theme.textTheme.bodyText2!.copyWith(
+                                fontSize: 10,
+                                color: DARK_GRAY,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            RatingBar.builder(
+                              initialRating: review.rating!,
+                              minRating: 1,
+                              itemSize: 15,
+                              ignoreGestures: true,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              unratedColor: LIGHT_GRAY,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 1.0),
+                              itemBuilder: (context, _) =>
+                                  Icon(Icons.star, color: AMBER_COLOR),
+                              onRatingUpdate: (rating) => print(rating),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

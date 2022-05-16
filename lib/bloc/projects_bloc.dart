@@ -14,7 +14,7 @@ class ProjectsBloc {
   final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
-  final categorisedProjectsController = PublishSubject<Projects>();
+  final categorisedProjectsController = PublishSubject<List<ProjectModel>>();
   final selectedMembersController = PublishSubject<List<SignUpAndUserModel>>();
 
   Stream<bool> get getProjectExpandStream =>
@@ -26,7 +26,7 @@ class ProjectsBloc {
       otherUserInfoController.stream;
   Stream<ProjectHelper> get getMonthlyProjectsStream =>
       projectsActivityStatusController.stream;
-  Stream<Projects> get getCategorisedSignedUpProjectsStream =>
+  Stream<List<ProjectModel>> get getCategorisedSignedUpProjectsStream =>
       categorisedProjectsController.stream;
   Stream<List<SignUpAndUserModel>> get getSelectedMembersStream =>
       selectedMembersController.stream;
@@ -57,7 +57,6 @@ class ProjectsBloc {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
     searchedProjects.clear();
-    projectsController.sink.done;
     if (searchText != null) {
       if (searchText.isEmpty) {
         projectsController.sink.add(response.projectList);
@@ -123,9 +122,31 @@ class ProjectsBloc {
     }
   }
 
-  Future getCategorisedProjects(int categoryId) async {
+  List<ProjectModel> searchedCategorisedProjects = [];
+
+  Future getCategorisedProjects(
+      {required int categoryId, String? searchText}) async {
     final Projects response = await repo.getCategorisedProjectsRepo(categoryId);
-    categorisedProjectsController.sink.add(response);
+    searchedCategorisedProjects.clear();
+    if (searchText != null) {
+      if (searchText.isEmpty) {
+        categorisedProjectsController.sink.add(response.projectList);
+      } else {
+        response.projectList.forEach((project) {
+          if (project.projectName!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              project.organization!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase())) {
+            searchedCategorisedProjects.add(project);
+          }
+        });
+        categorisedProjectsController.sink.add(searchedCategorisedProjects);
+      }
+    } else {
+      categorisedProjectsController.sink.add(response.projectList);
+    }
   }
 
   Future<ProjectModel> getProjectByProjectId(

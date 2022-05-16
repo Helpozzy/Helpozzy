@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -16,7 +16,6 @@ class ProjectCard extends StatelessWidget {
   final void Function()? onPressedSignUpButton;
   final ProjectModel project;
   final VoidCallback? onProjectLiked;
-
   final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
@@ -28,26 +27,26 @@ class ProjectCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
         child: Card(
-          elevation: 0,
+          elevation: 3,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 child: Image.asset(
                   project.imageUrl!,
                   fit: BoxFit.cover,
-                  height: height / 4,
+                  height: height / 3.7,
                   width: double.infinity,
                 ),
               ),
               Container(
-                height: height / 4,
+                height: height / 3.7,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -60,9 +59,9 @@ class ProjectCard extends StatelessWidget {
                 ),
               ),
               Container(
-                height: height / 4,
+                height: height / 3.7,
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -89,44 +88,25 @@ class ProjectCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                project.location!,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 11,
-                                  color: MATE_WHITE,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              Icon(
+                                CupertinoIcons.location,
+                                size: 15,
+                                color: WHITE,
                               ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  RatingBar.builder(
-                                    initialRating: project.rating!,
-                                    minRating: 1,
-                                    itemSize: 12,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    unratedColor: GRAY,
-                                    itemCount: 5,
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: AMBER_COLOR,
-                                    ),
-                                    onRatingUpdate: (rating) => print(rating),
+                              SizedBox(width: 3),
+                              Expanded(
+                                child: Text(
+                                  project.location!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
+                                    fontSize: 12,
+                                    color: MATE_WHITE,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '(${project.reviewCount} Reviews)',
-                                    style: _theme.textTheme.bodyText2!.copyWith(
-                                      fontSize: 10,
-                                      color: GRAY,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),

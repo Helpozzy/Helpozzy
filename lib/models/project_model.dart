@@ -30,9 +30,7 @@ class ProjectModel {
     this.location,
     this.projectLocationLati,
     this.projectLocationLongi,
-    this.reviewCount,
     this.enrollmentCount,
-    this.rating,
     this.aboutOrganizer,
     this.status,
     this.isApprovedFromAdmin,
@@ -58,11 +56,7 @@ class ProjectModel {
     projectLocationLongi = json['location_longitude'];
     contactName = json['contact_person_name'];
     contactNumber = json['contact_number'];
-    reviewCount = json['review_count'];
     enrollmentCount = json['enrollment_count'];
-    rating = json['rating'] is double
-        ? json['rating']
-        : double.parse(json['rating'].toString());
     aboutOrganizer = json['about_organizer'];
     status = json['status'];
     isApprovedFromAdmin = json['is_approved_from_admin'];
@@ -88,9 +82,7 @@ class ProjectModel {
       'location_longitude': projectLocationLongi,
       'contact_person_name': contactName,
       'contact_number': contactNumber,
-      'review_count': reviewCount,
       'enrollment_count': enrollmentCount,
-      'rating': rating,
       'about_organizer': aboutOrganizer,
       'status': status,
       'is_approved_from_admin': isApprovedFromAdmin,
@@ -115,8 +107,6 @@ class ProjectModel {
   late String? location;
   late double? projectLocationLati;
   late double? projectLocationLongi;
-  late int? reviewCount;
-  late double? rating;
   late String? aboutOrganizer;
   late String? status;
   late int? enrollmentCount;

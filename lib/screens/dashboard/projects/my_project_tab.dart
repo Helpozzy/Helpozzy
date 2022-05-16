@@ -18,7 +18,6 @@ class _MyProjectTabState extends State<MyProjectTab>
   final ProjectsBloc projectsBloc;
   late TabController _tabController;
   late double width;
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
 
   @override
   void initState() {
@@ -37,9 +36,9 @@ class _MyProjectTabState extends State<MyProjectTab>
         height: 38,
         child: TabBar(
           controller: _tabController,
-          indicatorColor: PRIMARY_COLOR,
+          indicatorColor: DARK_PINK_COLOR,
           indicatorSize: TabBarIndicatorSize.tab,
-          indicatorWeight: 2.5,
+          indicatorWeight: 2,
           isScrollable: false,
           tabs: [
             _tab(OWN_TAB),
@@ -72,11 +71,11 @@ class _MyProjectTabState extends State<MyProjectTab>
                 children: [
                   ProjectListScreen(
                     projectTabType: ProjectTabType.OWN_TAB,
-                    projectsBloc: _projectsBloc,
+                    projectsBloc: projectsBloc,
                   ),
                   ProjectListScreen(
                     projectTabType: ProjectTabType.MY_ENROLLED_TAB,
-                    projectsBloc: _projectsBloc,
+                    projectsBloc: projectsBloc,
                   ),
                 ],
               ),

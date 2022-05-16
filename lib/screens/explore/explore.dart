@@ -96,44 +96,32 @@ class _ExploreScreenState extends State<ExploreScreen>
         children: [
           SmallInfoLabel(label: SEARCH_PROJECT_LABEL),
           SizedBox(height: width * 0.03),
-          Container(
+          SizedBox(
             width: width / 1,
             height: 37,
-            child: TextField(
-              controller: _searchController,
-              onChanged: (val) => _projectsBloc.getProjects(searchText: val),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(top: 1.0, bottom: 1.0),
-                hintText: TYPE_KEYWORD_HINT,
-                hintStyle: _themeData.textTheme.bodyText2!.copyWith(
-                  fontSize: 14,
-                  color: DARK_GRAY,
-                ),
-                fillColor: WHITE.withOpacity(0.23),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Icon(
-                    CupertinoIcons.search,
-                    color: DARK_GRAY,
-                    size: 20,
-                  ),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    _searchController.clear();
-                    _projectsBloc.getProjects(searchText: '');
-                  },
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: DARK_GRAY,
-                    size: 20,
-                  ),
-                ),
-                enabledBorder: searchBarDecoration(),
-                disabledBorder: searchBarDecoration(),
-                focusedBorder: searchBarDecoration(),
-                border: searchBarDecoration(),
+            child: CommonRoundedTextfield(
+              textAlignCenter: false,
+              prefixIcon: Icon(
+                CupertinoIcons.search,
+                color: DARK_MARUN,
+                size: 18,
               ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  _projectsBloc.getProjects(searchText: '');
+                },
+                icon: Icon(
+                  CupertinoIcons.clear,
+                  color: DARK_MARUN,
+                  size: 18,
+                ),
+              ),
+              fillColor: GRAY,
+              controller: _searchController,
+              hintText: TYPE_KEYWORD_HINT,
+              onChanged: (val) => _projectsBloc.getProjects(searchText: val),
+              validator: (val) => null,
             ),
           ),
         ],
@@ -196,7 +184,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 context,
                 MaterialPageRoute(
                   builder: (context) => CategorisedProjectsScreen(
-                    categoryId: category.id!,
+                    category: category,
                     fromPrefs: false,
                   ),
                 ),
@@ -274,7 +262,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               )
             : Center(
                 child: Text(
-                  'Not available..',
+                  NOT_AVAILABLE,
                   style: _themeData.textTheme.bodyText2,
                 ),
               );

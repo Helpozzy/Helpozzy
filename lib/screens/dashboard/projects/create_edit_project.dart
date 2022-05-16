@@ -134,8 +134,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         projectLocationLati: latitude,
         projectLocationLongi: longitude,
         organization: '',
-        rating: 0.0,
-        reviewCount: 0,
         enrollmentCount: 0,
         projectName: _projNameController.text,
         description: _projDesController.text,

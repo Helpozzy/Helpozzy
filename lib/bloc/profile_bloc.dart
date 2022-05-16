@@ -5,15 +5,36 @@ import 'package:rxdart/rxdart.dart';
 class ProfileBloc {
   final repo = Repository();
 
-  final PublishSubject<Projects> prefsProjectsController =
-      PublishSubject<Projects>();
+  final prefsProjectsController = PublishSubject<List<ProjectModel>>();
 
-  Stream<Projects> get getPrefsProjectStream => prefsProjectsController.stream;
+  Stream<List<ProjectModel>> get getPrefsProjectStream =>
+      prefsProjectsController.stream;
 
-  Future getPrefsProjects(int categoryId) async {
+  List<ProjectModel> searchedPrefsProjects = [];
+
+  Future getPrefsProjects({required int categoryId, String? searchText}) async {
     final Projects response =
         await repo.getCategorisedSignUpProjectsRepo(categoryId);
-    prefsProjectsController.sink.add(response);
+    searchedPrefsProjects.clear();
+    if (searchText != null) {
+      if (searchText.isEmpty) {
+        prefsProjectsController.sink.add(response.projectList);
+      } else {
+        response.projectList.forEach((project) {
+          if (project.projectName!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              project.organization!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase())) {
+            searchedPrefsProjects.add(project);
+          }
+        });
+        prefsProjectsController.sink.add(searchedPrefsProjects);
+      }
+    } else {
+      prefsProjectsController.sink.add(response.projectList);
+    }
   }
 
   void dispose() {

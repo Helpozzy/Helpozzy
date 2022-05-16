@@ -48,9 +48,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
 
   Widget body() {
     return GestureDetector(
-      onPanDown: (_) {
-        FocusScope.of(context).unfocus();
-      },
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Column(
         children: [
           Container(

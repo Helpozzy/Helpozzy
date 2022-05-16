@@ -111,6 +111,7 @@ class ApiProvider {
     final QuerySnapshot querySnapshot = await firestore
         .collection('projects')
         .where('category_id', isEqualTo: categoryId)
+        .where('owner_id', isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
 
     return Projects.fromJson(list: querySnapshot.docs);

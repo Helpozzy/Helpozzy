@@ -42,70 +42,37 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   PreferredSize topSearchWithTab() => PreferredSize(
-        preferredSize: Size(width, width / 5),
+        preferredSize: Size(width, width / 4.8),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 38,
-                      child: CommonRoundedTextfield(
-                        textAlignCenter: true,
-                        prefixIcon: Icon(
-                          CupertinoIcons.search,
-                          color: DARK_GRAY,
-                          size: 18,
-                        ),
-                        fillColor: GRAY,
-                        controller: _searchController,
-                        hintText: SEARCH_PROJECT_HINT,
-                        onChanged: (val) => _projectsBloc.getProjects(
-                            projectTabType: _tabController.index == 0
-                                ? ProjectTabType.PROJECT_OPEN_TAB
-                                : _tabController.index == 1
-                                    ? ProjectTabType.PROJECT_UPCOMING_TAB
-                                    : _tabController.index == 2
-                                        ? ProjectTabType.MY_PROJECTS_TAB
-                                        : _tabController.index == 3
-                                            ? ProjectTabType
-                                                .PROJECT_COMPLETED_TAB
-                                            : null,
-                            searchText: val),
-                        validator: (val) => null,
-                      ),
-                    ),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.035),
+              child: SizedBox(
+                height: 42,
+                child: CommonRoundedTextfield(
+                  prefixIcon: Icon(
+                    CupertinoIcons.search,
+                    color: DARK_MARUN,
+                    size: 20,
                   ),
-                  SizedBox(width: 8),
-                  SmallCommonButtonWithIcon(
-                    text: ADD_PROJECT_BUTTON,
-                    icon: Icons.add,
-                    fontSize: 13,
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CreateEditProject(fromEdit: false),
-                        ),
-                      );
-                      await _projectsBloc.getProjects(
-                        projectTabType: _tabController.index == 0
-                            ? ProjectTabType.PROJECT_OPEN_TAB
-                            : _tabController.index == 1
-                                ? ProjectTabType.PROJECT_UPCOMING_TAB
-                                : _tabController.index == 2
-                                    ? ProjectTabType.MY_PROJECTS_TAB
-                                    : _tabController.index == 3
-                                        ? ProjectTabType.PROJECT_COMPLETED_TAB
-                                        : null,
-                      );
-                    },
+                  suffixIcon: createNewProjectButton(),
+                  fillColor: GRAY,
+                  controller: _searchController,
+                  hintText: SEARCH_PROJECT_HINT,
+                  onChanged: (val) => _projectsBloc.getProjects(
+                    projectTabType: _tabController.index == 0
+                        ? ProjectTabType.PROJECT_OPEN_TAB
+                        : _tabController.index == 1
+                            ? ProjectTabType.PROJECT_UPCOMING_TAB
+                            : _tabController.index == 2
+                                ? ProjectTabType.MY_PROJECTS_TAB
+                                : _tabController.index == 3
+                                    ? ProjectTabType.PROJECT_COMPLETED_TAB
+                                    : null,
+                    searchText: val,
                   ),
-                ],
+                  validator: (val) => null,
+                ),
               ),
             ),
             _tabBar(),
@@ -113,11 +80,44 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         ),
       );
 
+  Widget createNewProjectButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+      child: SmallCommonButtonWithIcon(
+        text: ADD_PROJECT_BUTTON,
+        icon: Icons.add,
+        iconSize: 18,
+        fontSize: 14,
+        buttonColor: DARK_MARUN,
+        onPressed: () async {
+          FocusScope.of(context).unfocus();
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateEditProject(fromEdit: false),
+            ),
+          );
+          await _projectsBloc.getProjects(
+            projectTabType: _tabController.index == 0
+                ? ProjectTabType.PROJECT_OPEN_TAB
+                : _tabController.index == 1
+                    ? ProjectTabType.PROJECT_UPCOMING_TAB
+                    : _tabController.index == 2
+                        ? ProjectTabType.MY_PROJECTS_TAB
+                        : _tabController.index == 3
+                            ? ProjectTabType.PROJECT_COMPLETED_TAB
+                            : null,
+          );
+        },
+      ),
+    );
+  }
+
   TabBar _tabBar() => TabBar(
         controller: _tabController,
         indicatorColor: DARK_PINK_COLOR,
         indicatorSize: TabBarIndicatorSize.tab,
-        indicatorWeight: 2.5,
+        indicatorWeight: 2,
         isScrollable: true,
         tabs: [
           _tab(PROJECT_OPEN_TAB),

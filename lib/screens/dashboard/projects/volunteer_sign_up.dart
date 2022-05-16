@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/notification_bloc.dart';
 import 'package:helpozzy/bloc/project_sign_up_bloc.dart';
+import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -53,6 +55,7 @@ class _VolunteerProjectTaskSignUpState
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phnController = TextEditingController();
+  final ProjectReviewsBloc _projectReviewsBloc = ProjectReviewsBloc();
 
   Future getUserData() async {
     final String userData = prefsObject.getString(CURRENT_USER_DATA)!;
@@ -82,8 +85,6 @@ class _VolunteerProjectTaskSignUpState
         location: project!.location,
         projectLocationLati: project!.projectLocationLati,
         projectLocationLongi: project!.projectLocationLongi,
-        rating: project!.rating,
-        reviewCount: project!.reviewCount,
         status: project!.status,
         enrollmentCount: project!.enrollmentCount,
         imageUrl: project!.imageUrl,
@@ -185,6 +186,7 @@ class _VolunteerProjectTaskSignUpState
 
   @override
   void initState() {
+    _projectReviewsBloc.getProjectReviews(project!.projectId!);
     countryCode = CountryCode(code: '+1', name: 'US');
     getUserData();
     super.initState();
@@ -460,41 +462,65 @@ class _VolunteerProjectTaskSignUpState
           ),
         ),
         !fromTask
-            ? Positioned(
-                bottom: 10,
-                left: 18,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RatingBar.builder(
-                      initialRating: project!.rating!,
-                      ignoreGestures: true,
-                      minRating: 1,
-                      itemSize: 14,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      unratedColor: WHITE,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: AMBER_COLOR,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
-                    Text(
-                      ' (${project!.reviewCount} Reviews)',
+            ? StreamBuilder<Reviews>(
+                stream: _projectReviewsBloc.getProjectReviewsStream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text(
+                      LOADING,
                       style: _theme.textTheme.bodyText2!.copyWith(
-                        color: WHITE,
-                        fontSize: 12,
+                        fontSize: 10,
+                        color: GRAY,
                         fontWeight: FontWeight.w600,
                       ),
+                    );
+                  }
+                  late double rating = 0.0;
+                  if (snapshot.data!.reviews.isNotEmpty) {
+                    rating = snapshot.data!.reviews
+                            .map((m) => m.rating)
+                            .reduce((a, b) => a! + b!)! /
+                        snapshot.data!.reviews.length;
+                  }
+                  return Positioned(
+                    bottom: 10,
+                    left: 18,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RatingBar.builder(
+                          initialRating: rating,
+                          ignoreGestures: true,
+                          minRating: 1,
+                          itemSize: 14,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          unratedColor: WHITE,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: AMBER_COLOR,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+                          },
+                        ),
+                        Text(
+                          snapshot.data!.reviews.isNotEmpty
+                              ? ' (${snapshot.data!.reviews.length} Reviews)'
+                              : ' (0 Reviews)',
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            color: WHITE,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               )
             : SizedBox(),
         !fromTask

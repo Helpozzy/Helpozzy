@@ -455,7 +455,7 @@ InputDecoration inputRoundedDecoration(
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     contentPadding: EdgeInsets.only(
-      left: suffixIcon != null ? 80 : 30,
+      left: 30,
       right: isDropDown ? 15 : 30,
     ),
     focusedErrorBorder: OutlineInputBorder(

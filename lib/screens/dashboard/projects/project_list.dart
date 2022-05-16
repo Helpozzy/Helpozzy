@@ -4,8 +4,10 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'project_details_card.dart';
 import 'project_details.dart';
 
@@ -44,6 +46,50 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB) {
       projectsBloc.getProjectsActivityStatus(projectTabType: projectTabType);
     }
+  }
+
+  Future<void> showDeletePrompt(ProjectModel project) async {
+    await PlatformAlertDialog().showWithAction(
+      context,
+      title: CONFIRM,
+      content: DELETE_PROJECT_TEXT,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () async {
+              Navigator.of(context).pop();
+              CircularLoader().show(context);
+              final ResponseModel response =
+                  await projectsBloc.deleteProject(project.projectId!);
+              if (response.success!) {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG);
+                await projectsBloc.getProjects(projectTabType: projectTabType);
+              } else {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: PROJECT_NOT_DELETED_ERROR_POPUP_MSG);
+                await projectsBloc.getProjects(projectTabType: projectTabType);
+              }
+            },
+            text: DELETE_BUTTON,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -114,7 +160,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                           child: ProjectTile(
                             projectTabType: projectTabType,
                             project: project,
-                            onPressed: () {
+                            onPressedTaskDetail: () {
                               setState(() => project.isTaskDetailsExpanded =
                                   !project.isTaskDetailsExpanded!);
                               if (project.isTaskDetailsExpanded!) {
@@ -122,6 +168,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                     .getProjectTaskDetails(project.projectId!);
                               }
                             },
+                            onPressedDelete: (context) =>
+                                showDeletePrompt(project),
                             isExpanded: snapshot.data!,
                             projectTaskBloc: _projectTaskBloc,
                             projectsBloc: projectsBloc,

@@ -297,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => CategorisedProjectsScreen(
-                            categoryId: category.id!,
+                            category: category,
                             fromPrefs: true,
                           ),
                         ),

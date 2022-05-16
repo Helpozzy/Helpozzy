@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/task_model.dart';
-import 'package:helpozzy/screens/dashboard/tasks/create_edit_task.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class TaskCard extends StatelessWidget {
   final TaskModel task;
@@ -14,12 +12,14 @@ class TaskCard extends StatelessWidget {
   final bool optionEnable;
   final bool selected;
   final GestureTapCallback? onTapItem;
-  final GestureTapCallback? onTapDelete;
+  final SlidableActionCallback? onTapEdit;
+  final SlidableActionCallback? onTapDelete;
   TaskCard({
     required this.task,
     this.eventButton,
     this.optionEnable = false,
     this.selected = false,
+    this.onTapEdit,
     this.onTapDelete,
     this.onTapItem,
   });
@@ -28,34 +28,6 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData _theme = Theme.of(context);
     return optionEnable ? slidableInfoTile(_theme) : simpleInfoTile(_theme);
-  }
-
-  Future<void> showDeletePrompt(BuildContext context, ThemeData _theme) async {
-    await PlatformAlertDialog().showWithAction(
-      context,
-      title: CONFIRM,
-      content: DELETE_TASK_TEXT,
-      actions: [
-        TextButton(
-          onPressed: () async => Navigator.of(context).pop(),
-          child: Text(
-            CANCEL_BUTTON,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: PRIMARY_COLOR,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          child: SmallCommonButton(
-            fontSize: 12,
-            onPressed: onTapDelete,
-            text: DELETE_BUTTON,
-          ),
-        ),
-      ],
-    );
   }
 
   Widget slidableInfoTile(ThemeData _theme) {
@@ -68,25 +40,14 @@ class TaskCard extends StatelessWidget {
         children: [
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateEditTask(
-                    fromEdit: true,
-                    task: task,
-                  ),
-                ),
-              );
-            },
+            onPressed: onTapEdit,
             foregroundColor: PRIMARY_COLOR,
             icon: CupertinoIcons.pencil_ellipsis_rectangle,
             autoClose: true,
           ),
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) =>
-                showDeletePrompt(context, _theme),
+            onPressed: onTapDelete,
             foregroundColor: RED_COLOR,
             icon: CupertinoIcons.trash,
             autoClose: true,

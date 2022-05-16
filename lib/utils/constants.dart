@@ -304,6 +304,7 @@ const ANIMAL_CARE = 'Animal\nCare';
 const SENIOR_CENTER = 'Senior\nCenter';
 const CHILDREN_AND_YOUTH = 'Children\nand Youth';
 const MORE = 'More..';
+const NOT_AVAILABLE = 'Not available..';
 
 //Project list labels
 const NEW_PROJECT_LABEL = 'New Projects';

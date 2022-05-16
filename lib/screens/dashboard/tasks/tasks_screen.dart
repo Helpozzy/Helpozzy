@@ -5,6 +5,7 @@ import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'create_edit_task.dart';
 import 'task_card.dart';
 
@@ -23,6 +24,34 @@ class _TasksScreenState extends State<TasksScreen> {
   void initState() {
     _projectTaskBloc.getProjectAllTasks('');
     super.initState();
+  }
+
+  Future<void> showDeletePrompt(TaskModel task) async {
+    await PlatformAlertDialog().showWithAction(
+      context,
+      title: CONFIRM,
+      content: DELETE_TASK_TEXT,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () async => await onDelete(task),
+            text: DELETE_BUTTON,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -77,7 +106,8 @@ class _TasksScreenState extends State<TasksScreen> {
                         }
                       }
                     },
-                    onTapDelete: () async => await onDelete(task),
+                    onTapEdit: (context) => onEdit(task),
+                    onTapDelete: (context) => showDeletePrompt(task),
                   );
                 },
               )

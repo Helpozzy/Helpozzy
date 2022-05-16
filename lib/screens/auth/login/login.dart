@@ -53,9 +53,7 @@ class LoginPage extends StatelessWidget {
         }
       },
       child: GestureDetector(
-        onPanDown: (_) {
-          FocusScope.of(context).unfocus();
-        },
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

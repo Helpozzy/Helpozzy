@@ -6,11 +6,9 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/platform_alert_dialog.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectTile extends StatelessWidget {
@@ -20,58 +18,16 @@ class ProjectTile extends StatelessWidget {
     required this.isExpanded,
     required this.projectsBloc,
     required this.projectTaskBloc,
-    required this.onPressed,
+    required this.onPressedTaskDetail,
+    required this.onPressedDelete,
   });
   final ProjectTabType projectTabType;
   final ProjectModel project;
   final bool isExpanded;
   final ProjectsBloc projectsBloc;
   final ProjectTaskBloc projectTaskBloc;
-  final void Function()? onPressed;
-
-  Future<void> showDeletePrompt(BuildContext context, ThemeData _theme) async {
-    await PlatformAlertDialog().showWithAction(
-      context,
-      title: CONFIRM,
-      content: DELETE_PROJECT_TEXT,
-      actions: [
-        TextButton(
-          onPressed: () async => Navigator.of(context).pop(),
-          child: Text(
-            CANCEL_BUTTON,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: PRIMARY_COLOR,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          child: SmallCommonButton(
-            fontSize: 12,
-            onPressed: () async {
-              Navigator.of(context).pop();
-              CircularLoader().show(context);
-              final ResponseModel response =
-                  await projectsBloc.deleteProject(project.projectId!);
-              if (response.success!) {
-                CircularLoader().hide(context);
-                ScaffoldSnakBar()
-                    .show(context, msg: PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG);
-                await projectsBloc.getProjects(projectTabType: projectTabType);
-              } else {
-                CircularLoader().hide(context);
-                ScaffoldSnakBar()
-                    .show(context, msg: PROJECT_NOT_DELETED_ERROR_POPUP_MSG);
-                await projectsBloc.getProjects(projectTabType: projectTabType);
-              }
-            },
-            text: DELETE_BUTTON,
-          ),
-        ),
-      ],
-    );
-  }
+  final void Function()? onPressedTaskDetail;
+  final SlidableActionCallback? onPressedDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +67,7 @@ class ProjectTile extends StatelessWidget {
           ),
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) =>
-                showDeletePrompt(context, _theme),
+            onPressed: onPressedDelete,
             backgroundColor: RED_COLOR,
             foregroundColor: WHITE,
             icon: CupertinoIcons.trash,
@@ -297,7 +252,7 @@ class ProjectTile extends StatelessWidget {
           ),
           SizedBox(height: 4),
           SmallCommonButtonWithIcon(
-            onPressed: onPressed,
+            onPressed: onPressedTaskDetail,
             icon: project.isTaskDetailsExpanded!
                 ? Icons.keyboard_arrow_up_rounded
                 : Icons.keyboard_arrow_down_rounded,
