@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -346,17 +347,28 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                             style: _theme.textTheme.bodyText2!
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            snapshot.data!.address!,
-                            style: _theme.textTheme.bodyText2!.copyWith(
-                              fontSize: 10,
-                              color: DARK_GRAY,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.location,
+                                color: DARK_GRAY,
+                                size: 14,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  snapshot.data!.address!,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
+                                    fontSize: 10,
+                                    color: DARK_GRAY,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 5),
                           RatingBar.builder(
-                            initialRating: 0,
+                            initialRating: selectedRating,
                             minRating: 1,
                             itemSize: 15,
                             direction: Axis.horizontal,
@@ -480,13 +492,24 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                               style: _theme.textTheme.bodyText2!
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              review.address!,
-                              style: _theme.textTheme.bodyText2!.copyWith(
-                                fontSize: 10,
-                                color: DARK_GRAY,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Row(
+                              children: [
+                                Icon(
+                                  CupertinoIcons.location,
+                                  color: DARK_GRAY,
+                                  size: 14,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    review.address!,
+                                    style: _theme.textTheme.bodyText2!.copyWith(
+                                      fontSize: 10,
+                                      color: DARK_GRAY,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 5),
                             RatingBar.builder(

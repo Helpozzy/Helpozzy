@@ -122,8 +122,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Text(
                       user.firstName! + ' ' + user.lastName!,
-                      style: _theme.textTheme.headline6!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: _theme.textTheme.headline6!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: DARK_MARUN,
+                      ),
                     ),
                     SizedBox(width: 5),
                     InkWell(
@@ -285,9 +287,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: (3),
-                    childAspectRatio: 2,
+                    childAspectRatio: 2.5,
                   ),
                   physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
                   itemCount: userPrefs.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
@@ -302,44 +305,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: BLUR_GRAY,
+                      child: Card(
+                        elevation: 0,
+                        color: LIGHT_BLUE,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        margin: EdgeInsets.symmetric(
-                          vertical: 5.0,
-                          horizontal: 3.0,
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              category.asset!,
-                              fit: BoxFit.fill,
-                              color: PRIMARY_COLOR,
-                              height: width * 0.07,
-                              width: width * 0.07,
-                            ),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                category.label!,
-                                maxLines: 3,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: _theme.textTheme.bodyText2!.copyWith(
-                                  fontSize: 10,
-                                  color: DARK_GRAY_FONT_COLOR,
-                                  fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                category.asset!,
+                                fit: BoxFit.fill,
+                                color: DARK_GRAY,
+                                height: width * 0.06,
+                                width: width * 0.06,
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(
+                                  category.label!,
+                                  maxLines: 3,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: _theme.textTheme.bodyText2!.copyWith(
+                                    fontSize: 10,
+                                    color: DARK_GRAY,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );

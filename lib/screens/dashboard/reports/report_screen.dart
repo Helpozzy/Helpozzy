@@ -24,14 +24,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final ReportBloc _reportBloc = ReportBloc();
+  late String selectedYear = DateTime.now().year.toString();
+  late String selectedMonth = '';
 
   @override
   void initState() {
-    loadMonth(DateTime.now().year.toString());
+    loadMonth(selectedYear);
     super.initState();
   }
 
   Future loadMonth(String year) async {
+    selectedYear = year;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
@@ -43,6 +46,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future loadProject(String year, String month) async {
+    selectedYear = year;
+    selectedMonth = month;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
@@ -77,7 +82,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ),
             ),
-            ListDividerLabel(label: ANALYSIS_LABEL),
+            ListDividerLabel(
+              label: selectedMonth.isNotEmpty
+                  ? ANALYSIS_LABEL +
+                      ' : ' +
+                      selectedMonth.toUpperCase() +
+                      ' - ' +
+                      selectedYear
+                  : ANALYSIS_LABEL + ' : ' + selectedYear,
+            ),
             filterDropDown(),
             reportView(),
             SizedBox(height: width * 0.05),

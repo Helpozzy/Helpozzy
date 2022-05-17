@@ -54,7 +54,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
           Container(
             height: 34,
             margin: EdgeInsets.symmetric(
-              horizontal: width * 0.05,
+              horizontal: width * 0.03,
               vertical: 5.0,
             ),
             child: CommonRoundedTextfield(
@@ -72,10 +72,11 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
               ),
               validator: (val) => null,
               onChanged: (val) => _membersBloc.searchProjectMembers(
-                  searchText: val, projectId: projectId),
+                searchText: val,
+                projectId: projectId,
+              ),
             ),
           ),
-          CommonDivider(),
           Expanded(child: membersList()),
         ],
       ),

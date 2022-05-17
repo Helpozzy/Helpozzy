@@ -20,7 +20,7 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     final _theme = Theme.of(context);
     return GestureDetector(
       onTap: onTapCard,
@@ -37,13 +37,13 @@ class ProjectCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: Image.asset(
                   project.imageUrl!,
-                  fit: BoxFit.cover,
-                  height: height / 3.7,
+                  fit: BoxFit.fill,
+                  height: width / 2,
                   width: double.infinity,
                 ),
               ),
               Container(
-                height: height / 3.7,
+                height: width / 2,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -59,7 +59,7 @@ class ProjectCard extends StatelessWidget {
                 ),
               ),
               Container(
-                height: height / 3.7,
+                height: width / 2,
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: Column(

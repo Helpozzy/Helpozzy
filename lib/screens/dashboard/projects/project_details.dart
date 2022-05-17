@@ -85,17 +85,17 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
       pinned: false,
       delegate: SliverAppBarDelegate(
         minHeight: height / 10,
-        maxHeight: height / 4,
+        maxHeight: height / 3.5,
         child: Stack(
           children: [
             Image.asset(
               project.imageUrl!,
-              fit: BoxFit.cover,
-              height: height / 4,
+              fit: BoxFit.fill,
+              height: height / 3.5,
               width: double.infinity,
             ),
             Container(
-              height: height / 4,
+              height: height / 3.5,
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(

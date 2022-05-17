@@ -26,7 +26,7 @@ class MemberCard extends StatelessWidget {
       onTap: onTapItem,
       child: Card(
         elevation: 4,
-        color: selected ? GRAY : WHITE,
+        color: selected ? ACCENT_GRAY : WHITE,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding: EdgeInsets.symmetric(
