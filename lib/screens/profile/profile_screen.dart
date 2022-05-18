@@ -295,21 +295,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final CategoryModel category = userPrefs[index];
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategorisedProjectsScreen(
-                            category: category,
-                            fromPrefs: true,
-                          ),
-                        ),
+                    return Card(
+                      elevation: 0,
+                      color: LIGHT_BLUE,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Card(
-                        elevation: 0,
-                        color: LIGHT_BLUE,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      child: InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategorisedProjectsScreen(
+                              category: category,
+                              fromPrefs: true,
+                            ),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

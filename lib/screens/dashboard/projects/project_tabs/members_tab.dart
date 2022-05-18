@@ -144,11 +144,24 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                     color: UNSELECTED_TAB_COLOR,
                   ),
                 ),
-                Text(
-                  volunteer.address!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
+                SizedBox(height: 2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      CupertinoIcons.location,
+                      size: width * 0.03,
+                    ),
+                    Expanded(
+                      child: Text(
+                        volunteer.address!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
