@@ -13,10 +13,12 @@ import 'package:helpozzy/models/task_log_hrs_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
+import 'package:helpozzy/screens/dashboard/tasks/create_edit_task.dart';
 import 'package:helpozzy/screens/dashboard/tasks/task_details.dart';
 import 'package:helpozzy/screens/dashboard/tasks/task_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class TaskTab extends StatefulWidget {
   TaskTab({required this.project, this.projectTabType});
@@ -176,6 +178,51 @@ class _TaskTabState extends State<TaskTab> {
     super.initState();
   }
 
+  Future<void> showDeletePrompt(TaskModel task) async {
+    await PlatformAlertDialog().showWithAction(
+      context,
+      title: CONFIRM,
+      content: DELETE_TASK_TEXT,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () async {
+              Navigator.of(context).pop();
+              CircularLoader().show(context);
+              task.projectId = null;
+              final ResponseModel response =
+                  await _projectTaskBloc.updateTask(task);
+              if (response.success!) {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: TASK_DELETED_SUCCESSFULLY_POPUP_MSG);
+                await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+              } else {
+                CircularLoader().hide(context);
+                ScaffoldSnakBar()
+                    .show(context, msg: TASK_NOT_DELETED_ERROR_POPUP_MSG);
+                await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+              }
+            },
+            text: DELETE_BUTTON,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -330,6 +377,7 @@ class _TaskTabState extends State<TaskTab> {
                       Expanded(
                         child: TaskCard(
                           task: task,
+                          fromSelectTask: true,
                           eventButton: DateFormatFromTimeStamp()
                                       .dateTime(
                                           timeStamp:
@@ -438,13 +486,26 @@ class _TaskTabState extends State<TaskTab> {
                               ),
                             );
                             if (isMyTask) {
-                              _projectTaskBloc
+                              await _projectTaskBloc
                                   .getProjectEnrolledTasks(project.projectId!);
                             } else {
-                              _projectTaskBloc
+                              await _projectTaskBloc
                                   .getProjectAllTasks(project.projectId!);
                             }
                           },
+                          onTapEditFromAttachedTask: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateEditTask(fromEdit: true, task: task),
+                              ),
+                            );
+                            await _projectTaskBloc
+                                .getProjectAllTasks(project.projectId!);
+                          },
+                          onTapRemoveFromAttachedTask: () async =>
+                              await showDeletePrompt(task),
                         ),
                       ),
                     ],
@@ -473,9 +534,7 @@ class _TaskTabState extends State<TaskTab> {
         ),
       ),
       isScrollControlled: true,
-      builder: (builder) {
-        return cupertinoTimePicker();
-      },
+      builder: (builder) => cupertinoTimePicker(),
     );
   }
 

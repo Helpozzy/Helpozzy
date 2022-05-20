@@ -229,18 +229,18 @@ const TASK_STARTED_POPUP_MSG = 'Task started';
 const TASK_DECLINE_POPUP_MSG = 'Task Declined';
 const TASK_LOG_HRS_POPUP_MSG = 'Task Hrs submited to admin, Wait for approve';
 const TASK_NOT_UPDATED_POPUP_MSG = 'Technical issue! Task not updated';
-const TASK_DELETED_POPUP_MSG = 'Task deleted!';
-const SOMETHING_WENT_WRONG_POPUP_MSG = 'Something went wrong!';
 const MESSAGE_COPIED_POPUP_MSG = 'Message copied';
 const PROFILE_UPDATED_POPUP_MSG = 'Profile Updated';
 const PROFILE_NOT_UPDATED_POPUP_MSG = 'Technical issue! Profile not updated';
 const TASK_UPDATED_SUCCESSFULLY_POPUP_MSG = 'Task updated successfully!';
 const TASK_CREATED_SUCCESSFULLY_POPUP_MSG = 'Task created successfully!';
+const TASK_DELETED_SUCCESSFULLY_POPUP_MSG = 'Task deleted successfully!';
 const TASK_NOT_UPDATED_ERROR_POPUP_MSG =
     'Task not updated due some error, Try again!';
 const TASK_NOT_CREATED_ERROR_POPUP_MSG =
     'Task not created due some error, Try again!';
-const REVIEW_POSTED_POPUP_MSG = 'Review posted';
+const TASK_NOT_DELETED_ERROR_POPUP_MSG =
+    'Task not deleted due some error, Try again!';
 const REVIEW_NOT_POSTED_ERROR_POPUP_MSG = 'Try again! Review not posted';
 
 //Oraganization sign up

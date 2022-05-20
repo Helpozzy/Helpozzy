@@ -130,7 +130,7 @@ class Repository {
   Future<Tasks> getSelectedTasksRepo(List<String> taskIds) =>
       apiProvider.getSelectedTasksAPIProvider(taskIds);
 
-  Future<bool> postReviewRepo(ReviewModel review) =>
+  Future<ResponseModel> postReviewRepo(ReviewModel review) =>
       apiProvider.postReviewAPIProvider(review);
 
   Future<Reviews> getProjectReviewsRepo(String projectId) =>

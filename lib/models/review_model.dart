@@ -12,6 +12,7 @@ class Reviews {
 
 class ReviewModel {
   ReviewModel({
+    this.reviewId,
     this.projectId,
     this.reviewerId,
     this.imageUrl,
@@ -23,6 +24,7 @@ class ReviewModel {
   });
 
   ReviewModel.fromjson({required Map<String, dynamic> json}) {
+    reviewId = json['review_id'];
     projectId = json['project_id'];
     reviewerId = json['reviewer_id'];
     imageUrl = json['image_url'];
@@ -37,6 +39,7 @@ class ReviewModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'review_id': reviewId,
       'project_id': projectId,
       'reviewer_id': reviewerId,
       'image_url': imageUrl,
@@ -48,6 +51,7 @@ class ReviewModel {
     };
   }
 
+  late String? reviewId;
   late String? projectId;
   late String? reviewerId;
   late String? imageUrl;

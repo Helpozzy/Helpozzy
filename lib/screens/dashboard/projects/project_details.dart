@@ -377,7 +377,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     return TabBarView(
       controller: _tabController,
       children: [
-        ProjectOtherDetailsScreen(project: project),
+        ProjectDetailsTab(project: project),
         TaskTab(
           project: project,
           projectTabType: projectTabType,

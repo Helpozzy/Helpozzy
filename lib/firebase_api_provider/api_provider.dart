@@ -173,7 +173,7 @@ class ApiProvider {
         .where('project_id', isEqualTo: projectId)
         .where('owner_id', isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
-    return ProjectMembers.fromJson(querySnapshot.docs);
+    return ProjectMembers.fromJson(taskList: querySnapshot.docs);
   }
 
   Future<ResponseModel> postProjectAPIProvider(ProjectModel project) async {
@@ -604,14 +604,34 @@ class ApiProvider {
     return Tasks.fromJson(list: tasks);
   }
 
-  Future<bool> postReviewAPIProvider(ReviewModel reviewModel) async {
+  Future<ResponseModel> postReviewAPIProvider(ReviewModel reviewModel) async {
     try {
-      final DocumentReference documentReference =
-          firestore.collection('reviews').doc();
-      await documentReference.set(reviewModel.toJson());
-      return true;
+      final QuerySnapshot querySnapshot = await firestore
+          .collection('reviews')
+          .where('project_id', isEqualTo: reviewModel.projectId)
+          .where('reviewer_id', isEqualTo: reviewModel.reviewerId)
+          .get();
+      if (querySnapshot.docs.first.exists) {
+        querySnapshot.docs.first.reference.update(reviewModel.toJson());
+        return ResponseModel(
+          success: true,
+          message: 'Review updated',
+        );
+      } else {
+        final DocumentReference documentReference =
+            firestore.collection('reviews').doc();
+        reviewModel.reviewId = documentReference.id;
+        await documentReference.set(reviewModel.toJson());
+        return ResponseModel(
+          success: true,
+          message: 'Review posted',
+        );
+      }
     } catch (e) {
-      return false;
+      return ResponseModel(
+        success: false,
+        error: 'Failed!',
+      );
     }
   }
 

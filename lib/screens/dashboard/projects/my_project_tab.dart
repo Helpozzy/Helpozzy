@@ -5,24 +5,24 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'project_list.dart';
 
 class MyProjectTab extends StatefulWidget {
-  MyProjectTab({required this.projectsBloc});
+  MyProjectTab({required this.projectsBloc, required this.tabController});
   final ProjectsBloc projectsBloc;
+  final TabController tabController;
   @override
-  _MyProjectTabState createState() =>
-      _MyProjectTabState(projectsBloc: projectsBloc);
+  _MyProjectTabState createState() => _MyProjectTabState(
+      projectsBloc: projectsBloc, tabController: tabController);
 }
 
 class _MyProjectTabState extends State<MyProjectTab>
     with TickerProviderStateMixin {
-  _MyProjectTabState({required this.projectsBloc});
+  _MyProjectTabState({required this.projectsBloc, required this.tabController});
   final ProjectsBloc projectsBloc;
-  late TabController _tabController;
+  final TabController tabController;
   late double width;
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
-    _tabController.addListener(() => FocusScope.of(context).unfocus());
+    tabController.addListener(() => FocusScope.of(context).unfocus());
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _MyProjectTabState extends State<MyProjectTab>
   Widget _tabBar() => SizedBox(
         height: 38,
         child: TabBar(
-          controller: _tabController,
+          controller: tabController,
           indicatorColor: DARK_PINK_COLOR,
           indicatorSize: TabBarIndicatorSize.tab,
           indicatorWeight: 2,
@@ -67,7 +67,7 @@ class _MyProjectTabState extends State<MyProjectTab>
             child: GestureDetector(
               onPanDown: (_) => FocusScope.of(context).unfocus(),
               child: TabBarView(
-                controller: _tabController,
+                controller: tabController,
                 children: [
                   ProjectListScreen(
                     projectTabType: ProjectTabType.OWN_TAB,

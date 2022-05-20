@@ -11,26 +11,36 @@ class TaskCard extends StatelessWidget {
   final Widget? eventButton;
   final bool optionEnable;
   final bool selected;
+  final bool fromSelectTask;
   final GestureTapCallback? onTapItem;
   final SlidableActionCallback? onTapEdit;
   final SlidableActionCallback? onTapDelete;
+  final void Function()? onTapEditFromAttachedTask;
+  final void Function()? onTapRemoveFromAttachedTask;
   TaskCard({
     required this.task,
     this.eventButton,
     this.optionEnable = false,
+    this.fromSelectTask = false,
     this.selected = false,
     this.onTapEdit,
     this.onTapDelete,
     this.onTapItem,
+    this.onTapEditFromAttachedTask,
+    this.onTapRemoveFromAttachedTask,
   });
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = Theme.of(context);
-    return optionEnable ? slidableInfoTile(_theme) : simpleInfoTile(_theme);
+    final ThemeData _theme = Theme.of(context);
+    final double width = MediaQuery.of(context).size.width;
+    return optionEnable
+        ? slidableInfoTile(context, _theme, width)
+        : simpleInfoTile(context, _theme, width);
   }
 
-  Widget slidableInfoTile(ThemeData _theme) {
+  Widget slidableInfoTile(
+      BuildContext context, ThemeData _theme, double width) {
     return Slidable(
       key: const ValueKey(0),
       closeOnScroll: true,
@@ -54,11 +64,11 @@ class TaskCard extends StatelessWidget {
           ),
         ],
       ),
-      child: simpleInfoTile(_theme),
+      child: simpleInfoTile(context, _theme, width),
     );
   }
 
-  Widget simpleInfoTile(ThemeData _theme) {
+  Widget simpleInfoTile(BuildContext context, ThemeData _theme, double width) {
     return GestureDetector(
       onTap: onTapItem,
       child: Card(
@@ -98,6 +108,34 @@ class TaskCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  task.taskOwnerId == prefsObject.getString(CURRENT_USER_ID) &&
+                          fromSelectTask
+                      ? SizedBox(width: 6)
+                      : SizedBox(),
+                  task.taskOwnerId == prefsObject.getString(CURRENT_USER_ID) &&
+                          fromSelectTask
+                      ? InkWell(
+                          onTap: onTapEditFromAttachedTask,
+                          child: Icon(
+                            CupertinoIcons.pencil_ellipsis_rectangle,
+                            size: width * 0.04,
+                          ),
+                        )
+                      : SizedBox(),
+                  task.taskOwnerId == prefsObject.getString(CURRENT_USER_ID) &&
+                          fromSelectTask
+                      ? SizedBox(width: 6)
+                      : SizedBox(),
+                  task.taskOwnerId == prefsObject.getString(CURRENT_USER_ID) &&
+                          fromSelectTask
+                      ? InkWell(
+                          onTap: onTapRemoveFromAttachedTask,
+                          child: Icon(
+                            CupertinoIcons.clear,
+                            size: width * 0.04,
+                          ),
+                        )
+                      : SizedBox()
                 ],
               ),
               Padding(

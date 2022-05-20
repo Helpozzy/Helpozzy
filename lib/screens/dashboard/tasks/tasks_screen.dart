@@ -142,10 +142,10 @@ class _TasksScreenState extends State<TasksScreen> {
         await _projectTaskBloc.deleteTask(task.taskId!);
     if (response.success!) {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: TASK_DELETED_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: TASK_DELETED_SUCCESSFULLY_POPUP_MSG);
     } else {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: SOMETHING_WENT_WRONG_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: TASK_NOT_DELETED_ERROR_POPUP_MSG);
     }
     await _projectTaskBloc.getProjectAllTasks('');
   }

@@ -22,7 +22,7 @@ class UserInfoBloc {
   }
 
   Future<ResponseModel> udateUserPresence(
-      String timeStamp, bool presence) async {
+      {required String timeStamp, required bool presence}) async {
     final ResponseModel response =
         await repo.updateUserPresenceRepo(timeStamp, presence);
     return response;

@@ -62,7 +62,6 @@ class MembersBloc {
     searchedProjectMembersList = [];
     final ProjectMembers projectMembersList =
         await repo.projectMembersRepo(projectId);
-    print(projectMembersList.projectMembers);
     if (searchText.isEmpty) {
       _searchProjectMembersList.sink.add(projectMembersList.projectMembers);
     } else {

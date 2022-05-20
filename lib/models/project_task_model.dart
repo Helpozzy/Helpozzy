@@ -4,8 +4,8 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 
 class ProjectMembers {
-  ProjectMembers.fromJson(List<QueryDocumentSnapshot<Object?>> list) {
-    list.forEach((element) {
+  ProjectMembers.fromJson({required List<QueryDocumentSnapshot> taskList}) {
+    taskList.forEach((element) {
       final TaskModel task =
           TaskModel.fromjson(json: element.data() as Map<String, dynamic>);
       if (task.members != null && task.members!.isNotEmpty) {
@@ -19,6 +19,5 @@ class ProjectMembers {
       }
     });
   }
-
   final List<SignUpAndUserModel> projectMembers = [];
 }

@@ -16,6 +16,7 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  late TabController _myProjectTabController;
   late double width;
   final TextEditingController _searchController = TextEditingController();
   final ProjectsBloc _projectsBloc = ProjectsBloc();
@@ -23,6 +24,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   @override
   void initState() {
     _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
+    _myProjectTabController =
+        TabController(length: 2, initialIndex: 0, vsync: this);
     _tabController.addListener(() => FocusScope.of(context).unfocus());
     super.initState();
   }
@@ -65,7 +68,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         : _tabController.index == 1
                             ? ProjectTabType.PROJECT_UPCOMING_TAB
                             : _tabController.index == 2
-                                ? ProjectTabType.MY_PROJECTS_TAB
+                                ? _myProjectTabController.index == 0
+                                    ? ProjectTabType.OWN_TAB
+                                    : ProjectTabType.MY_ENROLLED_TAB
                                 : _tabController.index == 3
                                     ? ProjectTabType.PROJECT_COMPLETED_TAB
                                     : null,
@@ -103,7 +108,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                 : _tabController.index == 1
                     ? ProjectTabType.PROJECT_UPCOMING_TAB
                     : _tabController.index == 2
-                        ? ProjectTabType.MY_PROJECTS_TAB
+                        ? _myProjectTabController.index == 0
+                            ? ProjectTabType.OWN_TAB
+                            : ProjectTabType.MY_ENROLLED_TAB
                         : _tabController.index == 3
                             ? ProjectTabType.PROJECT_COMPLETED_TAB
                             : null,
@@ -152,7 +159,10 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               projectTabType: ProjectTabType.PROJECT_UPCOMING_TAB,
               projectsBloc: _projectsBloc,
             ),
-            MyProjectTab(projectsBloc: _projectsBloc),
+            MyProjectTab(
+              projectsBloc: _projectsBloc,
+              tabController: _myProjectTabController,
+            ),
             ProjectListScreen(
               projectTabType: ProjectTabType.PROJECT_COMPLETED_TAB,
               projectsBloc: _projectsBloc,

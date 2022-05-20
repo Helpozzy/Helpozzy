@@ -1,4 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -10,8 +11,8 @@ class ProjectReviewsBloc {
   Stream<Reviews> get getProjectReviewsStream =>
       projectReviewsController.stream;
 
-  Future<bool> postReview(ReviewModel reviewModel) async {
-    final bool response = await repo.postReviewRepo(reviewModel);
+  Future<ResponseModel> postReview(ReviewModel reviewModel) async {
+    final ResponseModel response = await repo.postReviewRepo(reviewModel);
     return response;
   }
 

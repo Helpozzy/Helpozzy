@@ -7,22 +7,23 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
-class ProjectOtherDetailsScreen extends StatefulWidget {
-  ProjectOtherDetailsScreen({required this.project});
+class ProjectDetailsTab extends StatefulWidget {
+  ProjectDetailsTab({required this.project});
   final ProjectModel project;
   @override
-  _ProjectOtherDetailsScreenState createState() =>
-      _ProjectOtherDetailsScreenState(project: project);
+  _ProjectDetailsTabState createState() =>
+      _ProjectDetailsTabState(project: project);
 }
 
-class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
-  _ProjectOtherDetailsScreenState({required this.project});
+class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
+  _ProjectDetailsTabState({required this.project});
   final ProjectModel project;
   late double height;
   late double width;
@@ -348,6 +349,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
                                 CupertinoIcons.location,
@@ -430,15 +433,17 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
     reviewModel.rating = selectedRating;
     reviewModel.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
     reviewModel.reviewText = _reviewController.text;
-    final bool response = await _projectReviewsBloc.postReview(reviewModel);
+    final ResponseModel response =
+        await _projectReviewsBloc.postReview(reviewModel);
 
-    if (response) {
-      ScaffoldSnakBar().show(context, msg: REVIEW_POSTED_POPUP_MSG);
+    if (response.success!) {
+      ScaffoldSnakBar().show(context, msg: response.message!);
       selectedRating = 0.0;
       _reviewController.clear();
+      setState(() {});
       _projectReviewsBloc.getProjectReviews(project.projectId!);
     } else {
-      ScaffoldSnakBar().show(context, msg: REVIEW_NOT_POSTED_ERROR_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: response.error!);
     }
   }
 
@@ -493,6 +498,8 @@ class _ProjectOtherDetailsScreenState extends State<ProjectOtherDetailsScreen> {
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Icon(
                                   CupertinoIcons.location,

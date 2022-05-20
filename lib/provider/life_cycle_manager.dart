@@ -18,8 +18,8 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   void initState() {
     super.initState();
     _userInfoBloc.udateUserPresence(
-      DateTime.now().millisecondsSinceEpoch.toString(),
-      true,
+      timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+      presence: true,
     );
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -30,38 +30,35 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
     switch (state) {
       case AppLifecycleState.resumed:
         await _userInfoBloc.udateUserPresence(
-          DateTime.now().millisecondsSinceEpoch.toString(),
-          true,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          presence: true,
         );
         break;
       case AppLifecycleState.paused:
         await _userInfoBloc.udateUserPresence(
-          DateTime.now().millisecondsSinceEpoch.toString(),
-          false,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          presence: false,
         );
         break;
       case AppLifecycleState.detached:
         await _userInfoBloc.udateUserPresence(
-          DateTime.now().millisecondsSinceEpoch.toString(),
-          false,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          presence: false,
         );
         break;
       case AppLifecycleState.inactive:
         await _userInfoBloc.udateUserPresence(
-          DateTime.now().millisecondsSinceEpoch.toString(),
-          false,
+          timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          presence: false,
         );
         break;
       default:
         break;
     }
-    print('AppLifecycleState state:  $state');
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
+  Widget build(BuildContext context) => widget.child;
 
   @override
   void dispose() {
