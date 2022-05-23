@@ -59,42 +59,57 @@ class ApiProvider {
     return VolunteerTypes.fromJson(volunteers['volunteer']);
   }
 
-  Future<bool> postSignUpAPIProvider(
+  Future<ResponseModel> postSignUpAPIProvider(
       SignUpAndUserModel signupAndUserModel) async {
-    final DocumentReference documentRef =
-        firestore.collection('users').doc(signupAndUserModel.userId);
-    await documentRef.set(signupAndUserModel.toJson()).catchError((onError) {
-      print(onError.toString());
-    });
-    return true;
+    try {
+      final DocumentReference documentRef =
+          firestore.collection('users').doc(signupAndUserModel.userId);
+      await documentRef.set(signupAndUserModel.toJson());
+      return ResponseModel(success: true);
+    } catch (e) {
+      return ResponseModel(success: false);
+    }
   }
 
-  Future<bool> editProfileAPIProvider(Map<String, dynamic> json) async {
-    final DocumentReference documentRef = firestore
-        .collection('users')
-        .doc(prefsObject.getString(CURRENT_USER_ID));
-    await documentRef.update(json).catchError((onError) {
-      print(onError.toString());
-    });
-    return true;
-  }
-
-  Future<bool> updateTotalSpentHrsAPIProvider(
-      String signUpUserId, int hrs) async {
-    await firestore
-        .collection('users')
-        .doc(signUpUserId)
-        .get()
-        .then((value) async {
-      SignUpAndUserModel user = SignUpAndUserModel.fromJson(
-          json: value.data() as Map<String, dynamic>);
-
-      await firestore.collection('users').doc(signUpUserId).update(
-          {'total_spent_hrs': user.totalSpentHrs! + hrs}).catchError((onError) {
+  Future<ResponseModel> editProfileAPIProvider(
+      Map<String, dynamic> json) async {
+    try {
+      final DocumentReference documentRef = firestore
+          .collection('users')
+          .doc(prefsObject.getString(CURRENT_USER_ID));
+      await documentRef.update(json).catchError((onError) {
         print(onError.toString());
       });
-    });
-    return true;
+      return ResponseModel(success: true, message: PROFILE_UPDATED_POPUP_MSG);
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: PROFILE_NOT_UPDATED_POPUP_MSG);
+    }
+  }
+
+  Future<ResponseModel> updateTotalSpentHrsAPIProvider(
+      String signUpUserId, int hrs) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(signUpUserId)
+          .get()
+          .then((value) async {
+        SignUpAndUserModel user = SignUpAndUserModel.fromJson(
+            json: value.data() as Map<String, dynamic>);
+
+        await firestore
+            .collection('users')
+            .doc(signUpUserId)
+            .update({'total_spent_hrs': user.totalSpentHrs! + hrs}).catchError(
+                (onError) {
+          print(onError.toString());
+        });
+      });
+      return ResponseModel(success: true, message: 'Total hours updated');
+    } catch (e) {
+      return ResponseModel(success: false, error: 'Total hrs not updated');
+    }
   }
 
   Future<Projects> getUserCompltedProjectsAPIProvider() async {

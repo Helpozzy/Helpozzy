@@ -12,6 +12,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
@@ -258,15 +259,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
       signUpAndUserModel.organizationDetails = organizationSignUpModel;
     }
-    final bool response =
+    final ResponseModel response =
         await _editProfileBloc.editProfile(signUpAndUserModel);
-    if (response) {
+    if (response.success!) {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: PROFILE_UPDATED_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: response.message!);
       Navigator.of(context).pop();
     } else {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: PROFILE_NOT_UPDATED_POPUP_MSG);
+      ScaffoldSnakBar().show(context, msg: response.error!);
     }
   }
 
@@ -301,6 +302,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     width = MediaQuery.of(context).size.width;
     _theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(
         title: EDIT_PROFILE_APPBAR,
         actions: [
@@ -318,10 +320,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         if (user.parentEmail == _parentEmailController.text) {
                           await postModifiedData();
                         } else {
-                          PlatformAlertDialog().show(context,
-                              title: ALERT,
-                              content:
-                                  'Parent/Guardian email is not verified, Please verify your email.');
+                          PlatformAlertDialog().show(
+                            context,
+                            title: ALERT,
+                            content: 'Parent/Guardian email is not verified,'
+                                ' Please verify your email.',
+                          );
                         }
                       } else {
                         await postModifiedData();
@@ -522,12 +526,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: _aboutController,
           hintText: ENTER_ABOUT_HINT,
           textCapitalization: TextCapitalization.sentences,
-          validator: (val) {
-            if (val!.isEmpty) {
-              return 'Enter about your self';
-            }
-            return null;
-          },
+          validator: (val) => val!.isEmpty ? 'Enter about your self' : null,
         ),
         SizedBox(height: 15),
         TextfieldLabelSmall(label: EMAIL_LABEL),

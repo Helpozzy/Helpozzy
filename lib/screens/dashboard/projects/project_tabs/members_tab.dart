@@ -116,7 +116,9 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   Widget memberItem({required SignUpAndUserModel volunteer}) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          vertical: width * 0.035, horizontal: width * 0.04),
+        vertical: width * 0.035,
+        horizontal: width * 0.04,
+      ),
       child: Row(
         children: [
           Padding(

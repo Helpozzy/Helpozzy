@@ -1,4 +1,5 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/provider/email_verfication_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,14 +24,17 @@ class EditProfileBloc {
     organizationDetailsExpand.sink.add(expand);
   }
 
-  Future<bool> editProfile(SignUpAndUserModel signupAndUserModel) async {
-    final bool response =
+  Future<ResponseModel> editProfile(
+      SignUpAndUserModel signupAndUserModel) async {
+    final ResponseModel response =
         await repo.postEditProfileDetailsRepo(signupAndUserModel.toJson());
     return response;
   }
 
-  Future<bool> updateTotalSpentHrs(String signUpUserId, int hrs) async {
-    final bool response = await repo.updateTotalSpentHrsRepo(signUpUserId, hrs);
+  Future<ResponseModel> updateTotalSpentHrs(
+      String signUpUserId, int hrs) async {
+    final ResponseModel response =
+        await repo.updateTotalSpentHrsRepo(signUpUserId, hrs);
     return response;
   }
 

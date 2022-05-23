@@ -25,13 +25,14 @@ class Repository {
   Future<VolunteerTypes> volunteerListRepo() =>
       apiProvider.volunteerListAPIProvider();
 
-  Future<bool> postSignUpDetailsRepo(SignUpAndUserModel signupAndUserModel) =>
+  Future<ResponseModel> postSignUpDetailsRepo(
+          SignUpAndUserModel signupAndUserModel) =>
       apiProvider.postSignUpAPIProvider(signupAndUserModel);
 
-  Future<bool> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
+  Future<ResponseModel> postEditProfileDetailsRepo(Map<String, dynamic> json) =>
       apiProvider.editProfileAPIProvider(json);
 
-  Future<bool> updateTotalSpentHrsRepo(String signUpUserId, int hrs) =>
+  Future<ResponseModel> updateTotalSpentHrsRepo(String signUpUserId, int hrs) =>
       apiProvider.updateTotalSpentHrsAPIProvider(signUpUserId, hrs);
 
   Future<Projects> getuserCompletedProjectsRepo() =>

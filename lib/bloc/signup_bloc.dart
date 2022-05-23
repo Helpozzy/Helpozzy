@@ -42,10 +42,10 @@ class SignUpBloc {
     try {
       signupAndUserModel.userId = result!.user!.uid;
       prefsObject.setString(CURRENT_USER_ID, signupAndUserModel.userId!);
-      final bool response =
+      final ResponseModel response =
           await repo.postSignUpDetailsRepo(signupAndUserModel);
       return ResponseModel(
-        success: response,
+        success: response.success,
         message: result.message,
       );
     } catch (e) {

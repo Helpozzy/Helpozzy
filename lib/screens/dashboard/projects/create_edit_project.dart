@@ -609,7 +609,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             }
             return null;
           },
-          isExpanded: false,
+          isExpanded: true,
           onChanged: (CategoryModel? newValue) {
             setState(() {
               _projCategoryController.text = newValue!.label!;
