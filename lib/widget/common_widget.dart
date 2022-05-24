@@ -1049,11 +1049,9 @@ class LinearLoader extends StatelessWidget {
 class ListDividerLabel extends StatelessWidget {
   ListDividerLabel({
     required this.label,
-    this.hasIcon = false,
     this.suffixIcon,
   });
   final String label;
-  final bool hasIcon;
   final Widget? suffixIcon;
   @override
   Widget build(BuildContext context) {
@@ -1074,7 +1072,7 @@ class ListDividerLabel extends StatelessWidget {
                   ),
             ),
           ),
-          hasIcon ? suffixIcon! : SizedBox(),
+          suffixIcon != null ? suffixIcon! : SizedBox(),
         ],
       ),
     );

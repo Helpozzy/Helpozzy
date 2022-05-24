@@ -7,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 class CommonUrlLauncher {
   Future launchCall(String contact) async {
     String url = 'tel://$contact';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch Call $url';
     }
@@ -17,10 +17,10 @@ class CommonUrlLauncher {
   Future launchMap(String address) async {
     final uri =
         Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': '$address'});
-    if (await canLaunch(uri.toString())) {
-      await launch(uri.toString());
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch Map ${uri.toString()}';
+      throw 'Could not launch Map $uri';
     }
   }
 
@@ -28,15 +28,15 @@ class CommonUrlLauncher {
     final uri =
         Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': '$lat,$lng'});
     if (Platform.isAndroid) {
-      if (await canLaunch(uri.toString())) {
-        await launch(uri.toString());
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
       } else {
-        throw 'Could not launch Map ${uri.toString()}';
+        throw 'Could not launch Map $uri';
       }
     } else {
       final String urlAppleMaps = 'https://maps.apple.com/?q=$lat,$lng';
-      if (await canLaunch(urlAppleMaps)) {
-        await launch(urlAppleMaps);
+      if (await canLaunchUrl(Uri.parse(urlAppleMaps))) {
+        await launchUrl(Uri.parse(urlAppleMaps));
       } else {
         throw 'Could not launch $urlAppleMaps';
       }

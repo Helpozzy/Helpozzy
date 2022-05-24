@@ -334,7 +334,6 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   Widget contactPersontile() {
     return ListDividerLabel(
       label: PROJECT_LEAD_LABEL + project.contactName!,
-      hasIcon: true,
       suffixIcon: InkWell(
         onTap: () => CommonUrlLauncher().launchCall(project.contactNumber!),
         child: Icon(

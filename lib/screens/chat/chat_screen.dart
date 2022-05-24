@@ -12,7 +12,6 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Chat extends StatefulWidget {
   const Chat({required this.peerUser});
@@ -707,14 +706,6 @@ class _ChatState extends State<Chat> {
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
       );
-    }
-  }
-
-  dynamic launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw "Url couldn't launch";
     }
   }
 

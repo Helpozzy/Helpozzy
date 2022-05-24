@@ -43,7 +43,7 @@ dependencies:
   geolocator: ^8.0.1
   geocoding: ^2.0.1
   provider: ^6.0.2
-  fl_chart: ^0.46.0
+  fl_chart: ^0.50.6
   email_validator: ^2.0.1
   equatable: ^2.0.3
   mask_text_input_formatter: ^2.1.0

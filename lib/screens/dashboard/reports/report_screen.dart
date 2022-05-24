@@ -90,6 +90,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ' - ' +
                       selectedYear
                   : ANALYSIS_LABEL + ' : ' + selectedYear,
+              // suffixIcon: InkWell(
+              //   onTap: () async {
+              //     selectedYear = DateTime.now().year.toString();
+              //     selectedMonth = '';
+              //     setState(() {});
+              //     loadMonth(selectedYear);
+              //   },
+              //   child: Icon(
+              //     CupertinoIcons.refresh,
+              //     color: PRIMARY_COLOR,
+              //     size: 16,
+              //   ),
+              // ),
             ),
             filterDropDown(),
             reportView(),
@@ -196,7 +209,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 8.0,
+                          left: 20.0,
                           bottom: 15.0,
                           right: 8.0,
                         ),
@@ -208,25 +221,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               barTouchData: BarTouchData(enabled: true),
                               titlesData: FlTitlesData(
                                 show: true,
-                                bottomTitles: SideTitles(
-                                  showTitles: true,
-                                  getTextStyles: (context, value) => TextStyle(
-                                    color: NORMAL_BAR_COLOR,
-                                    fontSize: 10,
+                                bottomTitles: AxisTitles(
+                                  axisNameSize: 10,
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 20,
                                   ),
-                                  margin: 10,
                                 ),
-                                leftTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 40,
-                                  getTextStyles: (context, value) => TextStyle(
-                                    color: NORMAL_BAR_COLOR,
-                                    fontSize: 10,
+                                leftTitles: AxisTitles(
+                                  axisNameSize: 10,
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 20,
                                   ),
-                                  margin: 0,
                                 ),
-                                topTitles: SideTitles(showTitles: false),
-                                rightTitles: SideTitles(showTitles: false),
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
                               ),
                               gridData: FlGridData(
                                 show: true,

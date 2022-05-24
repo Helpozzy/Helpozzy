@@ -21,7 +21,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
       timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
       presence: true,
     );
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -62,7 +62,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }
