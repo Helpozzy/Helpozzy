@@ -18,6 +18,8 @@ class ProjectMembers {
         });
       }
     });
+    projectMembers.sort((a, b) =>
+        a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
   }
-  final List<SignUpAndUserModel> projectMembers = [];
+  late List<SignUpAndUserModel> projectMembers = [];
 }

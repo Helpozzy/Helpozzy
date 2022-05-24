@@ -1,6 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/notification_model.dart';
-import 'package:helpozzy/models/project_task_model.dart';
+import 'package:helpozzy/models/project_members_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/cities_model.dart';

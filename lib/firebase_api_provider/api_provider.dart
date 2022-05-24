@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helpozzy/models/notification_model.dart';
-import 'package:helpozzy/models/project_task_model.dart';
+import 'package:helpozzy/models/project_members_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/cities_model.dart';

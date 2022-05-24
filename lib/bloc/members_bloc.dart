@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
-import 'package:helpozzy/models/project_task_model.dart';
+import 'package:helpozzy/models/project_members_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';

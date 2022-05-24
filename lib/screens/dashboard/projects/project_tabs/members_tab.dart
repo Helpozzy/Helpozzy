@@ -184,17 +184,17 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      CupertinoIcons.chat_bubble_text,
-                      color: BLACK,
-                      size: 20,
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () {},
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Icon(
+                //       CupertinoIcons.chat_bubble_text,
+                //       color: BLACK,
+                //       size: 20,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
