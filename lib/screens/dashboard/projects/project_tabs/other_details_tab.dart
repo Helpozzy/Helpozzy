@@ -360,6 +360,8 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
                               Expanded(
                                 child: Text(
                                   snapshot.data!.address!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: _theme.textTheme.bodyText2!.copyWith(
                                     fontSize: 10,
                                     color: DARK_GRAY,
@@ -509,6 +511,8 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
                                 Expanded(
                                   child: Text(
                                     review.address!,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: _theme.textTheme.bodyText2!.copyWith(
                                       fontSize: 10,
                                       color: DARK_GRAY,
@@ -635,10 +639,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
                       project.projectLocationLati!,
                       project.projectLocationLongi!,
                     ),
-                    icon: Icon(
-                      Icons.directions,
-                      color: GREEN,
-                    ),
+                    icon: Icon(Icons.directions, color: GREEN),
                   ),
                 ),
               ),

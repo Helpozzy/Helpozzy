@@ -292,7 +292,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     Divider(),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          vertical: width * 0.04, horizontal: width * 0.05),
+                        vertical: width * 0.04,
+                        horizontal: width * 0.05,
+                      ),
                       child: TextfieldLabelSmall(
                           label: TASK_MEMBERS_REQUIREMENT_LABEL),
                     ),
