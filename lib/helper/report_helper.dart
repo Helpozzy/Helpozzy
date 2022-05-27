@@ -24,3 +24,18 @@ class ProjectReportHelper {
 
   late List<ReportsDataModel> chartDetailsList = [];
 }
+
+// class ReportHelper {
+//   ReportHelper.fromProjects(List<ReportsDataModel> monthlyReport) {
+//     late List<ProjectModel> projects = [];
+    
+//     monthlyReport.forEach((project) {
+//       chartDetailsList.add(ReportsDataModel(
+//         month: projectStartMonth,
+//         year: projectStartYear,
+//         hrs: project.totalTaskshrs,
+//         project: project,
+//       ));
+//     });
+//   }
+// }

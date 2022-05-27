@@ -42,7 +42,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         .chartDetailsList
         .where((e) => e.year == year)
         .toList();
-    _reportBloc.getFilteredReportProjects(filterdList);
+    await _reportBloc.getFilteredReportProjects(filterdList);
   }
 
   Future loadProject(String year, String month) async {
@@ -55,7 +55,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         .chartDetailsList
         .where((e) => e.year == year && e.month == month.substring(0, 3))
         .toList();
-    _reportBloc.getFilteredReportProjects(filterdList);
+    await _reportBloc.getFilteredReportProjects(filterdList);
   }
 
   @override
