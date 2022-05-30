@@ -3,13 +3,15 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_log_hrs_model.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_widget.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
   final List<Widget>? childrens;
-  final Widget? commentBox;
+  final bool? hasCommentBox;
+  final TextEditingController _commentController = TextEditingController();
   NotificationTile(
-      {required this.notification, this.commentBox, this.childrens});
+      {required this.notification, this.hasCommentBox, this.childrens});
 
   String getComment() {
     final TaskLogHrsModel taskLogHrsModel =
@@ -121,13 +123,30 @@ class NotificationTile extends StatelessWidget {
                   ],
                 )
               : SizedBox(),
-          commentBox != null ? commentBox! : SizedBox(),
-          childrens != null
-              ? Padding(
-                  padding: notification.type == 2
-                      ? const EdgeInsets.only(top: 0.0)
-                      : const EdgeInsets.only(top: 10.0),
-                  child: Row(children: childrens!),
+          hasCommentBox! || childrens!.isNotEmpty
+              ? Container(
+                  height: 45,
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      hasCommentBox!
+                          ? Expanded(
+                              child: CommonRoundedTextfield(
+                                fillColor: GRAY,
+                                controller: _commentController,
+                                hintText: ENTER_COMMENT_HINT,
+                                validator: (val) => null,
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(width: 3),
+                      childrens != null
+                          ? Row(children: childrens!)
+                          : SizedBox(),
+                    ],
+                  ),
                 )
               : SizedBox(),
         ],

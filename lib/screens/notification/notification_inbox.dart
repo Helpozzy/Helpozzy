@@ -27,7 +27,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
   late ThemeData _theme;
   final NotificationBloc _notificationBloc = NotificationBloc();
   final ProjectsBloc _projectsBloc = ProjectsBloc();
-  final TextEditingController _commentController = TextEditingController();
   final TaskBloc _taskBloc = TaskBloc();
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
@@ -58,7 +57,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
             ? 'Log Hours Request Declined'
             : 'Log Hours Request Approved',
       );
-      taskLogHrs.comment = _commentController.text;
+      // taskLogHrs.comment = _commentController.text;
       taskLogHrs.hrs = taskLogHrs.hrs;
       taskLogHrs.mins = taskLogHrs.mins;
       taskLogHrs.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
@@ -252,32 +251,28 @@ class _NotificationInboxState extends State<NotificationInbox> {
                   final NotificationModel notification = notifications[index];
                   return NotificationTile(
                     notification: notification,
-                    commentBox: itLogHrDecline(notification)
-                        ? SizedBox()
+                    hasCommentBox: itLogHrDecline(notification)
+                        ? false
                         : notification.isUpdated!
-                            ? SizedBox()
+                            ? false
                             : notification.type == 2
-                                ? Container(
-                                    height: 35,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10.0),
-                                    child: CommonRoundedTextfield(
-                                      fillColor: GRAY,
-                                      controller: _commentController,
-                                      hintText: ENTER_COMMENT_HINT,
-                                      validator: (val) => null,
-                                    ),
-                                  )
-                                : SizedBox(),
+                                ? true
+                                : false,
                     childrens: itLogHrDecline(notification)
                         ? []
                         : notification.isUpdated!
                             ? []
                             : [
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: GREEN,
-                                  text: APPROVE_BUTTON,
+                                FloatingActionButton(
+                                  heroTag: 0,
+                                  mini: true,
+                                  elevation: 1,
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    color: WHITE,
+                                    size: width * 0.05,
+                                  ),
+                                  backgroundColor: GREEN,
                                   onPressed: () async {
                                     notification.type == 0
                                         ? await onApproveProjectNotification(
@@ -289,11 +284,16 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                                 notification, false);
                                   },
                                 ),
-                                SizedBox(width: 6),
-                                SmallCommonButton(
-                                  fontSize: 12,
-                                  buttonColor: SILVER_GRAY,
-                                  text: DECLINE_BUTTON,
+                                FloatingActionButton(
+                                  heroTag: 1,
+                                  mini: true,
+                                  elevation: 1,
+                                  child: Icon(
+                                    Icons.close_rounded,
+                                    color: WHITE,
+                                    size: width * 0.05,
+                                  ),
+                                  backgroundColor: RED_COLOR,
                                   onPressed: () async =>
                                       await onDecline(notification),
                                 ),
