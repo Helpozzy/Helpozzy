@@ -135,7 +135,7 @@ class _TaskTabState extends State<TaskTab> {
             title: 'Log Task Hours Request',
             payload: logHrsModel.toJson(),
             subTitle:
-                "${userModel.firstName} want's to log hours of the ${task.taskName}",
+                "${userModel.firstName} want's to log hours of the ${task.taskName}.",
           );
 
           final ResponseModel notificationResponse =

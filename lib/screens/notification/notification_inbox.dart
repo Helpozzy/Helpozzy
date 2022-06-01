@@ -69,8 +69,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
           ? 'Log Hours Request Declined'
           : 'Log Hours Request Approved';
       notification.subTitle = fromDeclineLogHrs
-          ? 'Your log hours for ${task.taskName} is declined by owner, Please resubmit your volunteering hrs'
-          : 'Your log hours for ${task.taskName} is approved';
+          ? 'Your log hours for ${task.taskName} is declined by owner, Please resubmit your volunteering hrs.'
+          : 'Your log hours for ${task.taskName} is approved.';
       notification.payload = taskLogHrs.toJson();
       if (fromDeclineLogHrs) {
         await _notificationBloc.updateNotifications(notification);
@@ -114,7 +114,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Task Request Approved';
       notification.subTitle =
-          'Your ${task.taskName} sign-up request is approved';
+          'Your ${task.taskName} sign-up request is approved.';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
       await _notificationBloc.getNotifications();
@@ -139,7 +139,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Project Request Approved';
       notification.subTitle =
-          'Your ${signUpProject.projectName} sign-up request is approved';
+          'Your ${signUpProject.projectName} sign-up request is approved.';
       notification.isUpdated = true;
       await _notificationBloc.updateNotifications(notification);
       await _notificationBloc.getNotifications();

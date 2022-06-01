@@ -166,7 +166,7 @@ class _VolunteerProjectTaskSignUpState
           payload: taskSignUpVal.toJson(),
           subTitle:
               "${userModel.firstName} want's to volunteer in the ${task!.taskName}"
-              " of project ${project!.projectName}",
+              " of project ${project!.projectName}.",
         );
 
         final ResponseModel notificationResponse =
