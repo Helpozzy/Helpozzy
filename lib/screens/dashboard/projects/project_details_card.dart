@@ -33,8 +33,7 @@ class ProjectTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
     final double width = MediaQuery.of(context).size.width;
-    return projectTabType == ProjectTabType.OWN_TAB ||
-            projectTabType == ProjectTabType.MY_ENROLLED_TAB
+    return projectTabType == ProjectTabType.OWN_TAB
         ? slidableInfoTile(_theme, width)
         : simpleInfoTile(_theme, width);
   }
@@ -55,7 +54,7 @@ class ProjectTile extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => CreateEditProject(
                     fromEdit: true,
-                    project: project,
+                    projectID: project.projectId,
                   ),
                 ),
               );

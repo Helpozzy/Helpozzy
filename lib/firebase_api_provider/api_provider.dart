@@ -188,7 +188,7 @@ class ApiProvider {
         .where('project_id', isEqualTo: projectId)
         .where('owner_id', isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
-    return ProjectMembers.fromJson(taskList: querySnapshot.docs);
+    return ProjectMembers.fromJson(querySnapshot.docs);
   }
 
   Future<ResponseModel> postProjectAPIProvider(ProjectModel project) async {
@@ -312,11 +312,21 @@ class ApiProvider {
     return Projects.fromJson(list: querySnapshot.docs);
   }
 
-  Future<ProjectModel> getProjectByProjectIdAPIProvider(
+  Future<ProjectModel> getSignedUpProjectByProjectIdAPIProvider(
       String projectId, String signUpUserId) async {
     final QuerySnapshot querySnapshot = await firestore
         .collection('signed_up_projects')
         .where('signup_uid', isEqualTo: signUpUserId)
+        .where('project_id', isEqualTo: projectId)
+        .get();
+    return ProjectModel.fromjson(
+        json: querySnapshot.docs.first.data() as Map<String, dynamic>);
+  }
+
+  Future<ProjectModel> getProjectByProjectIdAPIProvider(
+      String projectId) async {
+    final QuerySnapshot querySnapshot = await firestore
+        .collection('projects')
         .where('project_id', isEqualTo: projectId)
         .get();
     return ProjectModel.fromjson(
@@ -626,7 +636,7 @@ class ApiProvider {
           .where('project_id', isEqualTo: reviewModel.projectId)
           .where('reviewer_id', isEqualTo: reviewModel.reviewerId)
           .get();
-      if (querySnapshot.docs.first.exists) {
+      if (querySnapshot.docs.isNotEmpty && querySnapshot.docs.first.exists) {
         querySnapshot.docs.first.reference.update(reviewModel.toJson());
         return ResponseModel(
           success: true,
@@ -651,11 +661,11 @@ class ApiProvider {
   }
 
   Future<Reviews> getProjectReviewsAPIProvider(String projectId) async {
+    print(projectId);
     final QuerySnapshot querySnapshot = await firestore
         .collection('reviews')
         .where('project_id', isEqualTo: projectId)
         .get();
-
     return Reviews.fromSnapshot(list: querySnapshot.docs);
   }
 

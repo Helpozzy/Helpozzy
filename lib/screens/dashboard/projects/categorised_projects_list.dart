@@ -142,7 +142,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectDetailsInfo(project: project),
+                            ProjectDetailsInfo(projectID: project.projectId!),
                       ),
                     ),
                     onPressedSignUpButton: () => Navigator.push(

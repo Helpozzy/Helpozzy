@@ -4,8 +4,8 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 
 class ProjectMembers {
-  ProjectMembers.fromJson({required List<QueryDocumentSnapshot> taskList}) {
-    taskList.forEach((element) {
+  ProjectMembers.fromJson(List<QueryDocumentSnapshot> tasks) {
+    tasks.forEach((element) {
       final TaskModel task =
           TaskModel.fromjson(json: element.data() as Map<String, dynamic>);
       if (task.members != null && task.members!.isNotEmpty) {
@@ -21,5 +21,5 @@ class ProjectMembers {
     projectMembers.sort((a, b) =>
         a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
   }
-  late List<SignUpAndUserModel> projectMembers = [];
+  final List<SignUpAndUserModel> projectMembers = [];
 }

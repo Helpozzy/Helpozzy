@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -16,32 +17,33 @@ import 'project_tabs/tasks_tab.dart';
 import 'volunteer_sign_up.dart';
 
 class ProjectDetailsInfo extends StatefulWidget {
-  ProjectDetailsInfo({required this.project, this.projectTabType});
-  final ProjectModel project;
+  ProjectDetailsInfo({required this.projectID, this.projectTabType});
+  final String projectID;
   final ProjectTabType? projectTabType;
   @override
   _ProjectDetailsInfoState createState() => _ProjectDetailsInfoState(
-      project: project, projectTabType: projectTabType);
+      projectID: projectID, projectTabType: projectTabType);
 }
 
 class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     with TickerProviderStateMixin {
-  _ProjectDetailsInfoState({required this.project, this.projectTabType});
+  _ProjectDetailsInfoState({required this.projectID, this.projectTabType});
   final ProjectTabType? projectTabType;
-  final ProjectModel project;
+  final String projectID;
   late double height;
   late double width;
   late ThemeData _theme;
   late TabController _tabController;
   final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
   final ProjectReviewsBloc _projectReviewsBloc = ProjectReviewsBloc();
-
+  final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ScrollController scrollController = ScrollController();
   late double currentPosition = 0.0;
 
   @override
   void initState() {
-    _projectReviewsBloc.getProjectReviews(project.projectId!);
+    _projectReviewsBloc.getProjectReviews(projectID);
+    _projectsBloc.getProjectByProjectId(projectID);
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
@@ -55,32 +57,39 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            projectOrganizer(),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  scheduleTiming(),
-                  contactPersontile(),
+      body: StreamBuilder<ProjectModel>(
+          stream: _projectsBloc.getProjectByIdStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: LinearLoader());
+            }
+            return SafeArea(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: <Widget>[
+                  projectOrganizer(snapshot.data!),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        scheduleTiming(snapshot.data!),
+                        contactPersontile(snapshot.data!),
+                      ],
+                    ),
+                  ),
+                  SliverFillRemaining(
+                    child: Scaffold(
+                      appBar: _tabBar(),
+                      body: _getPage(snapshot.data!),
+                    ),
+                  ),
                 ],
               ),
-            ),
-            SliverFillRemaining(
-              child: Scaffold(
-                appBar: _tabBar(),
-                body: _getPage(),
-              ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
-  Widget projectOrganizer() {
+  Widget projectOrganizer(ProjectModel project) {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
@@ -172,30 +181,32 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                   )
                 : SizedBox(),
             currentPosition < height / 10
-                ? StreamBuilder<Reviews>(
-                    stream: _projectReviewsBloc.getProjectReviewsStream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Text(
-                          LOADING,
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: 10,
-                            color: GRAY,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
-                      }
-                      late double rating = 0.0;
-                      if (snapshot.data!.reviews.isNotEmpty) {
-                        rating = snapshot.data!.reviews
-                                .map((m) => m.rating)
-                                .reduce((a, b) => a! + b!)! /
-                            snapshot.data!.reviews.length;
-                      }
-                      return Positioned(
-                        bottom: 10,
-                        left: 18,
-                        child: Row(
+                ? Positioned(
+                    bottom: 10,
+                    left: 18,
+                    child: StreamBuilder<Reviews>(
+                      stream: _projectReviewsBloc.getProjectReviewsStream,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          _projectReviewsBloc
+                              .getProjectReviews(project.projectId!);
+                          return Text(
+                            LOADING,
+                            style: _theme.textTheme.bodyText2!.copyWith(
+                              fontSize: 10,
+                              color: GRAY,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }
+                        late double rating = 0.0;
+                        if (snapshot.data!.reviews.isNotEmpty) {
+                          rating = snapshot.data!.reviews
+                                  .map((m) => m.rating)
+                                  .reduce((a, b) => a! + b!)! /
+                              snapshot.data!.reviews.length;
+                        }
+                        return Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -227,9 +238,10 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                               ),
                             ),
                           ],
-                        ),
-                      );
-                    })
+                        );
+                      },
+                    ),
+                  )
                 : SizedBox(),
             currentPosition < height / 10
                 ? Positioned(
@@ -255,7 +267,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     );
   }
 
-  Widget scheduleTiming() {
+  Widget scheduleTiming(ProjectModel project) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.035),
       child: Row(
@@ -331,7 +343,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     );
   }
 
-  Widget contactPersontile() {
+  Widget contactPersontile(ProjectModel project) {
     return ListDividerLabel(
       label: PROJECT_LEAD_LABEL + project.contactName!,
       suffixIcon: InkWell(
@@ -372,7 +384,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         ),
       );
 
-  Widget _getPage() {
+  Widget _getPage(ProjectModel project) {
     return TabBarView(
       controller: _tabController,
       children: [

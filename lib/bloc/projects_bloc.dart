@@ -11,6 +11,7 @@ class ProjectsBloc {
 
   final projectDetailsExpandController = PublishSubject<bool>();
   final projectsController = PublishSubject<List<ProjectModel>>();
+  final projectByIdController = PublishSubject<ProjectModel>();
   final onGoingProjectsController = PublishSubject<Projects>();
   final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
@@ -20,6 +21,7 @@ class ProjectsBloc {
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
   Stream<List<ProjectModel>> get getProjectsStream => projectsController.stream;
+  Stream<ProjectModel> get getProjectByIdStream => projectByIdController.stream;
   Stream<Projects> get getOnGoingProjectsStream =>
       onGoingProjectsController.stream;
   Stream<List<SignUpAndUserModel>> get getOtherUsersStream =>
@@ -149,10 +151,17 @@ class ProjectsBloc {
     }
   }
 
-  Future<ProjectModel> getProjectByProjectId(
+  Future<ProjectModel> getSignedUpProjectByProjectId(
       String projectId, String signUpUserId) async {
     final ProjectModel response =
-        await repo.getprojectByProjectIdRepo(projectId, signUpUserId);
+        await repo.getSignedUpProjectByProjectIdRepo(projectId, signUpUserId);
+    return response;
+  }
+
+  Future<ProjectModel> getProjectByProjectId(String projectId) async {
+    final ProjectModel response =
+        await repo.getProjectByProjectIdRepo(projectId);
+    projectByIdController.sink.add(response);
     return response;
   }
 
@@ -172,6 +181,7 @@ class ProjectsBloc {
     projectsActivityStatusController.close();
     projectsController.close();
     otherUserInfoController.close();
+    projectByIdController.close();
     onGoingProjectsController.close();
     categorisedProjectsController.close();
     selectedMembersController.close();

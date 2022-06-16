@@ -77,7 +77,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         await _notificationBloc.getNotifications();
       } else {
         final ProjectModel taskProject = await _projectsBloc
-            .getProjectByProjectId(task.projectId!, task.signUpUserId!);
+            .getSignedUpProjectByProjectId(task.projectId!, task.signUpUserId!);
 
         taskProject.totalTaskshrs =
             taskProject.totalTaskshrs ?? 0 + taskLogHrs.hrs!;

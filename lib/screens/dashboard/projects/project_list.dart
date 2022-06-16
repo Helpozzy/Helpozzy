@@ -152,7 +152,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProjectDetailsInfo(
-                                project: project,
+                                projectID: project.projectId!,
                                 projectTabType: projectTabType,
                               ),
                             ),

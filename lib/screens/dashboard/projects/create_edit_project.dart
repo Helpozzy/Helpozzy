@@ -20,18 +20,18 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class CreateEditProject extends StatefulWidget {
-  CreateEditProject({required this.fromEdit, this.project});
+  CreateEditProject({required this.fromEdit, this.projectID});
   final bool fromEdit;
-  final ProjectModel? project;
+  final String? projectID;
   @override
   _CreateEditProjectState createState() =>
-      _CreateEditProjectState(fromEdit: fromEdit, project: project);
+      _CreateEditProjectState(fromEdit: fromEdit, projectID: projectID);
 }
 
 class _CreateEditProjectState extends State<CreateEditProject> {
-  _CreateEditProjectState({required this.fromEdit, this.project});
+  _CreateEditProjectState({required this.fromEdit, this.projectID});
   final bool fromEdit;
-  final ProjectModel? project;
+  final String? projectID;
   final _formKey = GlobalKey<FormState>();
   final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
@@ -64,12 +64,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   @override
   void initState() {
     _projectsBloc.getOtherUsersInfo();
-    if (fromEdit) {
-      listenProjectDetails();
-      _projectTaskBloc.getProjectAllTasks(project!.projectId!);
-    }
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
+    listenExistingDetails();
     super.initState();
+  }
+
+  Future listenExistingDetails() async {
+    if (fromEdit) {
+      _projectsBloc.getProjectByProjectId(projectID!);
+      listenProjectDetails();
+      _projectTaskBloc.getProjectAllTasks(projectID!);
+    }
   }
 
   Future<void> autoCompleteSearch(String value) async {
@@ -80,39 +85,42 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   Future listenProjectDetails() async {
-    _projNameController.text = project!.projectName!;
-    _projDesController.text = project!.description!;
-    selectedCategoryId = project!.categoryId!;
-    _projCategoryController.text = selectedCategoryId == 0
-        ? VOLUNTEER_0
-        : selectedCategoryId == 1
-            ? FOOD_BANK_1
-            : selectedCategoryId == 2
-                ? TEACHING_2
-                : selectedCategoryId == 3
-                    ? HOMELESS_SHELTER_3
-                    : selectedCategoryId == 4
-                        ? ANIMAL_CARE_4
-                        : selectedCategoryId == 5
-                            ? SENIOR_CENTER_5
-                            : selectedCategoryId == 6
-                                ? CHILDREN_AND_YOUTH_6
-                                : OTHER_7;
-    location = project!.location!;
-    _selectedStartDate =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(project!.startDate!));
-    _selectedEndDate =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(project!.endDate!));
-    _projStartDateController.text =
-        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
-    _projEndDateController.text =
-        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
-    _selectedIndexValue = project!.status == TOGGLE_NOT_STARTED
-        ? 0
-        : project!.status == TOGGLE_INPROGRESS
-            ? 1
-            : 2;
-    setState(() {});
+    _projectsBloc.getProjectByIdStream.listen((project) {
+      _projNameController.text = project.projectName!;
+      _projDesController.text = project.description!;
+      selectedCategoryId = project.categoryId!;
+      _projCategoryController.text = selectedCategoryId == 0
+          ? VOLUNTEER_0
+          : selectedCategoryId == 1
+              ? FOOD_BANK_1
+              : selectedCategoryId == 2
+                  ? TEACHING_2
+                  : selectedCategoryId == 3
+                      ? HOMELESS_SHELTER_3
+                      : selectedCategoryId == 4
+                          ? ANIMAL_CARE_4
+                          : selectedCategoryId == 5
+                              ? SENIOR_CENTER_5
+                              : selectedCategoryId == 6
+                                  ? CHILDREN_AND_YOUTH_6
+                                  : OTHER_7;
+      location = project.location!;
+      latitude = project.projectLocationLati!;
+      longitude = project.projectLocationLongi!;
+      _selectedStartDate =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(project.startDate!));
+      _selectedEndDate =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(project.endDate!));
+      _projStartDateController.text = DateFormatFromTimeStamp()
+          .dateFormatToYMD(dateTime: _selectedStartDate);
+      _projEndDateController.text =
+          DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
+      _selectedIndexValue = project.status == TOGGLE_NOT_STARTED
+          ? 0
+          : project.status == TOGGLE_INPROGRESS
+              ? 1
+              : 2;
+    });
   }
 
   Future onAddEditProject() async {
@@ -123,59 +131,67 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           jsonDecode(userData) as Map<String, dynamic>;
       final currentUser = SignUpAndUserModel.fromJson(json: json);
       CircularLoader().show(context);
-      final ProjectModel modifiedProject = ProjectModel(
-        categoryId: selectedCategoryId,
-        projectId: project != null ? project!.projectId : '',
-        aboutOrganizer: SAMPLE_LONG_TEXT,
-        contactName: currentUser.firstName,
-        contactNumber: currentUser.personalPhnNo,
-        imageUrl: img(),
-        location: location,
-        projectLocationLati: latitude,
-        projectLocationLongi: longitude,
-        organization: '',
-        enrollmentCount: 0,
-        projectName: _projNameController.text,
-        description: _projDesController.text,
-        startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-        endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-        ownerId: prefsObject.getString(CURRENT_USER_ID)!,
-        collaboratorsCoadmin: _projCollaboraorController.text,
-        status: _selectedIndexValue == 0
-            ? TOGGLE_NOT_STARTED
-            : _selectedIndexValue == 1
-                ? TOGGLE_INPROGRESS
-                : TOGGLE_COMPLETE,
-        totalTaskshrs: 0,
-      );
-
-      final ResponseModel response = fromEdit
-          ? await _projectsBloc.updateProject(modifiedProject)
-          : await _projectsBloc.postProject(modifiedProject);
-      if (response.success!) {
-        if (selectedItems.isNotEmpty) {
-          for (int i = 0; i < selectedItems.length; i++) {
-            selectedItems[i].projectId = response.returnValue;
-            await _projectTaskBloc.updateTask(selectedItems[i]);
-          }
-        }
-        await clearFields();
-        CircularLoader().hide(context);
-        Navigator.of(context).pop();
-        ScaffoldSnakBar().show(
-          context,
-          msg: fromEdit
-              ? PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG
-              : PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG,
+      if (location != null && location!.isNotEmpty) {
+        final ProjectModel modifiedProject = ProjectModel(
+          categoryId: selectedCategoryId,
+          projectId: projectID ?? '',
+          aboutOrganizer: SAMPLE_LONG_TEXT,
+          contactName: currentUser.firstName,
+          contactNumber: currentUser.personalPhnNo,
+          imageUrl: img(),
+          location: location,
+          projectLocationLati: latitude,
+          projectLocationLongi: longitude,
+          organization: '',
+          enrollmentCount: 0,
+          projectName: _projNameController.text,
+          description: _projDesController.text,
+          startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+          endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+          ownerId: prefsObject.getString(CURRENT_USER_ID)!,
+          collaboratorsCoadmin: _projCollaboraorController.text,
+          status: _selectedIndexValue == 0
+              ? TOGGLE_NOT_STARTED
+              : _selectedIndexValue == 1
+                  ? TOGGLE_INPROGRESS
+                  : TOGGLE_COMPLETE,
+          totalTaskshrs: 0,
         );
+
+        final ResponseModel response = fromEdit
+            ? await _projectsBloc.updateProject(modifiedProject)
+            : await _projectsBloc.postProject(modifiedProject);
+        if (response.success!) {
+          if (selectedItems.isNotEmpty) {
+            for (int i = 0; i < selectedItems.length; i++) {
+              selectedItems[i].projectId = response.returnValue;
+              await _projectTaskBloc.updateTask(selectedItems[i]);
+            }
+          }
+          await clearFields();
+          CircularLoader().hide(context);
+          Navigator.of(context).pop();
+          ScaffoldSnakBar().show(
+            context,
+            msg: fromEdit
+                ? PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG
+                : PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG,
+          );
+        } else {
+          await clearFields();
+          CircularLoader().hide(context);
+          ScaffoldSnakBar().show(
+            context,
+            msg: fromEdit
+                ? PROJECT_NOT_UPDATED_ERROR_POPUP_MSG
+                : PROJECT_NOT_CREATED_ERROR_POPUP_MSG,
+          );
+        }
       } else {
-        await clearFields();
         CircularLoader().hide(context);
         ScaffoldSnakBar().show(
           context,
-          msg: fromEdit
-              ? PROJECT_NOT_UPDATED_ERROR_POPUP_MSG
-              : PROJECT_NOT_CREATED_ERROR_POPUP_MSG,
+          msg: PROJECT_SELECT_LOCATION,
         );
       }
     }
@@ -438,13 +454,22 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             );
           },
         ),
-        location != null && location!.isNotEmpty
-            ? locationCard(location!)
-            : project != null && project!.location!.isNotEmpty
-                ? locationCard(project!.location!)
-                : location != null && location!.isNotEmpty
-                    ? locationCard(location!)
-                    : SizedBox(),
+        StreamBuilder<ProjectModel>(
+          stream: _projectsBloc.getProjectByIdStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return location != null && location!.isNotEmpty
+                  ? locationCard(location!)
+                  : SizedBox();
+            }
+            final ProjectModel project = snapshot.data!;
+            return location != null && location!.isNotEmpty
+                ? locationCard(location!)
+                : project.location!.isNotEmpty
+                    ? locationCard(project.location!)
+                    : SizedBox();
+          },
+        ),
       ],
     );
   }
@@ -636,36 +661,36 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         Row(
           children: [
             appImageButton(
+              'instagram.png',
               onPressed: () => CommonUrlLauncher().launchApp(
                 androidPackageName: 'com.instagram.android',
                 iosUrlScheme: 'instagram://',
                 subject: 'Test share text!',
               ),
-              asset: 'instagram.png',
             ),
             appImageButton(
+              'whatsapp.png',
               onPressed: () => CommonUrlLauncher().launchApp(
                 androidPackageName: 'com.whatsapp',
                 iosUrlScheme: 'whatsapp://',
                 subject: 'Test share text!',
               ),
-              asset: 'whatsapp.png',
             ),
             appImageButton(
+              'twitter.png',
               onPressed: () => CommonUrlLauncher().launchApp(
                 androidPackageName: 'com.twitter.android',
                 iosUrlScheme: 'twitter://',
                 subject: 'Test share text!',
               ),
-              asset: 'twitter.png',
             ),
             appImageButton(
+              'snapchat.png',
               onPressed: () => CommonUrlLauncher().launchApp(
                 androidPackageName: 'com.snapchat.android',
                 iosUrlScheme: 'snapchat://',
                 subject: 'Test share text!',
               ),
-              asset: 'snapchat.png',
             ),
           ],
         ),
@@ -773,13 +798,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  IconButton appImageButton({
-    required void Function()? onPressed,
-    required String asset,
-  }) {
-    return IconButton(
-        onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
-  }
+  IconButton appImageButton(String asset, {void Function()? onPressed}) =>
+      IconButton(
+          onPressed: onPressed, icon: Image.asset('assets/images/$asset'));
 
   Widget startDateAndEndDateSection() {
     return Row(

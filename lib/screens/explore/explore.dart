@@ -247,7 +247,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProjectDetailsInfo(project: project),
+                            ProjectDetailsInfo(projectID: project.projectId!),
                       ),
                     ),
                     onPressedSignUpButton: () => Navigator.push(

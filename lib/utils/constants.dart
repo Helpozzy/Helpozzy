@@ -224,6 +224,7 @@ const PROJECT_NOT_UPDATED_ERROR_POPUP_MSG =
     'Project not updated due some error, Try again!';
 const PROJECT_NOT_DELETED_ERROR_POPUP_MSG =
     'Project not deleted due some error, Try again!';
+const PROJECT_SELECT_LOCATION = 'Add project location';
 const TASK_COMPLETED_POPUP_MSG = 'Task completed';
 const TASK_STARTED_POPUP_MSG = 'Task started';
 const TASK_DECLINE_POPUP_MSG = 'Task Declined';
