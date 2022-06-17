@@ -188,7 +188,9 @@ class ApiProvider {
         .where('project_id', isEqualTo: projectId)
         .where('owner_id', isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
         .get();
-    return ProjectMembers.fromJson(querySnapshot.docs);
+    final ProjectMembers members = ProjectMembers.fromJson(querySnapshot.docs);
+    await Future.delayed(const Duration(seconds: 2));
+    return members;
   }
 
   Future<ResponseModel> postProjectAPIProvider(ProjectModel project) async {

@@ -4,22 +4,25 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 
 class ProjectMembers {
-  ProjectMembers.fromJson(List<QueryDocumentSnapshot> tasks) {
+  const ProjectMembers({required this.projectMembers});
+  final List<SignUpAndUserModel> projectMembers;
+  factory ProjectMembers.fromJson(List<QueryDocumentSnapshot> tasks) {
+    List<SignUpAndUserModel> projectMembersTest = [];
     tasks.forEach((element) {
       final TaskModel task =
           TaskModel.fromjson(json: element.data() as Map<String, dynamic>);
       if (task.members != null && task.members!.isNotEmpty) {
         task.members!.forEach((memberId) async {
-          if (!projectMembers.contains(memberId)) {
+          if (!projectMembersTest.contains(memberId)) {
             final SignUpAndUserModel user =
                 await Repository().userInfoRepo(memberId);
-            projectMembers.add(user);
+            projectMembersTest.add(user);
           }
         });
       }
     });
-    projectMembers.sort((a, b) =>
+    projectMembersTest.sort((a, b) =>
         a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
+    return ProjectMembers(projectMembers: projectMembersTest);
   }
-  final List<SignUpAndUserModel> projectMembers = [];
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
@@ -47,6 +48,9 @@ class MembersBloc {
         if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
+            volunteer.lastName!
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
             volunteer.email!.toLowerCase().contains(searchText.toLowerCase())) {
           searchedMembersList.add(volunteer);
         }
@@ -69,8 +73,11 @@ class MembersBloc {
         if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
-            volunteer.email!.toLowerCase().contains(searchText.toLowerCase())) {
+            volunteer.lastName!
+                .toLowerCase()
+                .contains(searchText.toLowerCase())) {
           searchedProjectMembersList.add(volunteer);
+          log(searchedProjectMembersList.length.toString());
         }
       });
       _searchProjectMembersList.sink.add(searchedProjectMembersList);
