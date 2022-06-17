@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:helpozzy/firebase_repository/repository.dart';
+import 'package:helpozzy/helper/members_helper.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
-import 'package:helpozzy/models/project_members_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -64,12 +64,14 @@ class MembersBloc {
   Future searchProjectMembers(
       {required String searchText, required String projectId}) async {
     searchedProjectMembersList = [];
-    final ProjectMembers projectMembersList =
-        await repo.projectMembersRepo(projectId);
+    final Tasks tasksResponse =
+        await repo.getProjectTasksRepo(projectId, false);
+    final List<SignUpAndUserModel> _projectMember =
+        await ProjectMembers().fromTasks(tasksResponse.tasks);
     if (searchText.isEmpty) {
-      _searchProjectMembersList.sink.add(projectMembersList.projectMembers);
+      _searchProjectMembersList.sink.add(_projectMember);
     } else {
-      projectMembersList.projectMembers.forEach((volunteer) {
+      _projectMember.forEach((volunteer) {
         if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||

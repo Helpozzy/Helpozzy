@@ -1,6 +1,5 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/notification_model.dart';
-import 'package:helpozzy/models/project_members_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/cities_model.dart';
@@ -52,9 +51,6 @@ class Repository {
       apiProvider.updateUserPresenceAPIProvider(timeStamp, presence);
 
   Future<Users> usersRepo(String uId) => apiProvider.usersAPIProvider(uId);
-
-  Future<ProjectMembers> projectMembersRepo(String projectId) =>
-      apiProvider.projectMembersAPIProvider(projectId);
 
   Future<ResponseModel> postProjectSignupRepo(ProjectModel projectSignUpVal) =>
       apiProvider.postProjectSignupAPIProvider(projectSignUpVal);
