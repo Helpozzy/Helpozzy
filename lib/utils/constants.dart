@@ -162,7 +162,7 @@ const MSG_SIGN_UP = 'Sign Up';
 const MSG_LOGIN = 'Login';
 const MSG_NEW_USER = 'New User? ';
 const MSG_FORGOT_PASSWORD = 'Forgot your password? ';
-const MSG_RESET_IT = 'Reset it';
+const MSG_RESET_IT = 'Reset It';
 
 //Option Text
 const SELECT_OPTION = 'Select Option';
@@ -272,7 +272,7 @@ const TERMS_AND_CONDITION_2 = 'and acknowledge you have read the';
 const PRIVACY_POLICY = ' privacy policy.';
 const SENTENCE_END = '.';
 const RESET_PASS_MSG =
-    "That's okay, it happens!\nEnter your email and Click on button below to reset your password.";
+    "That's okay, It happens! Enter your email and Click on button below to reset your password.";
 const PASSWORD_TOOLTIP =
     '- At least 8 characters—the more characters, the better.'
     '\n- A mixture of both uppercase and lowercase letters.'

@@ -11,16 +11,16 @@ import 'package:rxdart/rxdart.dart';
 class MembersBloc {
   final repo = Repository();
 
-  final membersController = PublishSubject<Users>();
-  final userRewardDetailsController =
+  final _membersController = PublishSubject<Users>();
+  final _userRewardDetailsController =
       PublishSubject<UserRewardsDetailsHelper>();
   final _searchMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _searchProjectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
-  Stream<Users> get getMembersStream => membersController.stream;
+  Stream<Users> get getMembersStream => _membersController.stream;
   Stream<UserRewardsDetailsHelper> get getuserRewardDetailsStream =>
-      userRewardDetailsController.stream;
+      _userRewardDetailsController.stream;
   Stream<List<SignUpAndUserModel>> get getSearchedMembersStream =>
       _searchMembersList.stream;
   Stream<List<SignUpAndUserModel>> get getSearchedProjectMembersStream =>
@@ -30,8 +30,8 @@ class MembersBloc {
   Future getMembers() async {
     final Users users =
         await repo.usersRepo(prefsObject.getString(CURRENT_USER_ID)!);
-    membersController.sink.add(users);
-    userRewardDetailsController.sink
+    _membersController.sink.add(users);
+    _userRewardDetailsController.sink
         .add(UserRewardsDetailsHelper.fromUsers(users));
   }
 
@@ -114,8 +114,8 @@ class MembersBloc {
   }
 
   void dispose() {
-    membersController.close();
-    userRewardDetailsController.close();
+    _membersController.close();
+    _userRewardDetailsController.close();
     _searchMembersList.close();
     _searchProjectMembersList.close();
     _filteredFavContoller.close();

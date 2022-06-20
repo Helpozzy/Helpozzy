@@ -67,5 +67,11 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow permission to attach Photo/Video in app</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow permission to attach Photo/Video in app</string>
+	<key>NSMicrophoneUsageDescription </key>
+	<string>Allow permission to use microphone in app</string>
 </dict>
 </plist>

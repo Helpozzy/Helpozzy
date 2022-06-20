@@ -11,7 +11,7 @@ class ResetPasswordDialog {
         builder: (context) {
           return Dialog(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             backgroundColor: SCREEN_BACKGROUND,
             child: ResetPassword(),
           );
@@ -31,16 +31,27 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width;
     return Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          TopInfoLabel(label: FORGOT_YOUR_PASSWORD),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.12),
+            padding: EdgeInsets.only(top: width * 0.05),
+            child: Text(
+              FORGOT_YOUR_PASSWORD,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 12),
             child: Text(
               RESET_PASS_MSG,
               textAlign: TextAlign.center,
@@ -51,9 +62,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                   ),
             ),
           ),
-          SizedBox(height: 12),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: width * 0.06),
             child: CommonRoundedTextfield(
               controller: _emailController,
               hintText: ENTER_EMAIL_HINT,
@@ -75,9 +85,9 @@ class _ResetPasswordState extends State<ResetPassword> {
               margin: buildEdgeInsetsCustom(
                   width: width,
                   left: 0.15,
-                  top: 20.0,
+                  top: 15.0,
                   right: 0.15,
-                  bottom: 20.0),
+                  bottom: 15.0),
               width: double.infinity,
               child: CommonButton(
                 text: SEND_MAIL_BUTTON,
