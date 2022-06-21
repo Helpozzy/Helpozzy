@@ -972,12 +972,13 @@ class CommonAppBar {
     double? fontSize,
     double elevation = 0.0,
     PreferredSizeWidget? bottom,
+    Color? backgroundColor,
     bool backButton = true,
   }) {
     return AppBar(
       centerTitle: true,
       elevation: elevation,
-      backgroundColor: WHITE,
+      backgroundColor: backgroundColor ?? WHITE,
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyText2!.copyWith(

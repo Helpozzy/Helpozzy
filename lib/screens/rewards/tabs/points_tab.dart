@@ -77,6 +77,19 @@ class _PointsTabScreenState extends State<PointsTabScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                width: double.infinity,
+                color: BLACK,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  SECOND_REWARD_DETAILS_TEXT,
+                  style: _theme.textTheme.bodyText2!.copyWith(
+                    color: WHITE,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
               topMemberShipSection(snapshot.data!),
               membershipInfo(snapshot.data!),
             ],
@@ -88,10 +101,10 @@ class _PointsTabScreenState extends State<PointsTabScreen>
 
   Widget topMemberShipSection(SignUpAndUserModel user) {
     return Container(
-      height: height / 2.5,
+      height: height / 4,
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
       width: animation.value,
-      color: ACCENT_GRAY,
+      color: GRAY,
       child: animation.value > 400
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -140,13 +153,25 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
-                      user.totalSpentHrs!.toString(),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: height / 10,
-                        fontWeight: FontWeight.bold,
-                        color: DARK_PINK_COLOR,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          user.totalSpentHrs!.toString(),
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontSize: height / 10,
+                            fontWeight: FontWeight.bold,
+                            color: DARK_PINK_COLOR,
+                          ),
+                        ),
+                        SizedBox(width: 3),
+                        Text(
+                          HRS_LABEL,
+                          style: _theme.textTheme.bodyText2!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                     // Text(
                     //   POINT_TO_REDEEM,
@@ -184,7 +209,8 @@ class _PointsTabScreenState extends State<PointsTabScreen>
             padding: const EdgeInsets.symmetric(horizontal: 21.0),
             child: Text(
               EARN_POINTS +
-                  user.totalSpentHrs.toString() +
+                  (user.currentYearTargetHours! - user.totalSpentHrs!)
+                      .toString() +
                   REMAING_POINT_TO_GET_BADGE,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontSize: 10,
@@ -201,10 +227,26 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                   child: LinearPercentIndicator(
                     lineHeight: 20.0,
                     animationDuration: 3000,
-                    percent: double.parse(user.totalSpentHrs!.toString()) / 100,
+                    percent: double.parse(user.totalSpentHrs.toString()) /
+                        user.currentYearTargetHours!,
+                    center: Text(
+                      (double.parse(user.totalSpentHrs.toString()) /
+                                  (user.currentYearTargetHours! / 100))
+                              .toString() +
+                          ' %',
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 10,
+                        color: double.parse(user.totalSpentHrs.toString()) /
+                                    (user.currentYearTargetHours! / 100) >
+                                45.0
+                            ? WHITE
+                            : BLACK,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     animateFromLastPercent: true,
                     progressColor: BLACK,
-                    backgroundColor: DARK_ACCENT_GRAY,
+                    backgroundColor: GRAY,
                   ),
                 ),
                 SizedBox(width: 5),

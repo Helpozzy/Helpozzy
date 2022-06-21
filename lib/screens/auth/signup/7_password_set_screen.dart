@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/provider/auth_service.dart';
+import 'package:helpozzy/screens/auth/signup/privacy_policy_or_terms_condition.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -315,7 +316,13 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   TextSpan(
                     text: TERMS_AND_CONDITION,
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => print('Terms & condition'),
+                      ..onTap = () async => await Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  AgreementScreen(isPrivacyPolicy: false),
+                            ),
+                          ),
                     style: _theme.textTheme.bodySmall!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: PRIMARY_COLOR,
@@ -330,7 +337,13 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   TextSpan(
                     text: PRIVACY_POLICY,
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => print('Privacy policy'),
+                      ..onTap = () async => await Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  AgreementScreen(isPrivacyPolicy: true),
+                            ),
+                          ),
                     style: _theme.textTheme.bodySmall!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: PRIMARY_COLOR,

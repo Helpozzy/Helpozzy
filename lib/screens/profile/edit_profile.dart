@@ -405,7 +405,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         )
                       : SizedBox(),
               user.isOrganization! ? organizationDetails() : SizedBox(),
-              Divider(),
               user.isOrganization != null && !user.isOrganization!
                   ? Padding(
                       padding: EdgeInsets.only(

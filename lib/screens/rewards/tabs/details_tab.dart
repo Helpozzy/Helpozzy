@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/rewards_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/profile/points_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class DetailsTabScreen extends StatefulWidget {
@@ -188,18 +190,26 @@ class _DetailsTabScreenState extends State<DetailsTabScreen>
         itemCount: points.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          final PointsModel data = points[index];
-          return currentUser!.totalSpentHrs! > data.to &&
-                  currentUser.totalSpentHrs! < data.from &&
+          final PointsModel point = points[index];
+          return currentUser!.totalSpentHrs! > point.to &&
+                  currentUser.totalSpentHrs! < point.from &&
                   ageCalculation(currentUser.dateOfBirth!) >
                       reward.points[index].to &&
                   ageCalculation(currentUser.dateOfBirth!) <
                       reward.points[index].from
-              ? FadeTransition(
-                  opacity: _animationController,
-                  child: pointBoxContainer(data, true),
+              ? GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => PointsScreen(),
+                    ),
+                  ),
+                  child: FadeTransition(
+                    opacity: _animationController,
+                    child: pointBoxContainer(point, true),
+                  ),
                 )
-              : pointBoxContainer(data, false);
+              : pointBoxContainer(point, false);
         },
       ),
     );
