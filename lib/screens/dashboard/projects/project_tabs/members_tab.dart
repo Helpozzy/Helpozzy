@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
-import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_tabs/member_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/url_launcher.dart';
 
 class ProjectMembersTab extends StatefulWidget {
   ProjectMembersTab({required this.projectId});
@@ -20,8 +19,6 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   final String projectId;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
-  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
-      DateFormatFromTimeStamp();
   late double width;
   late double height;
   late ThemeData _theme;
@@ -30,12 +27,6 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   void initState() {
     super.initState();
     _membersBloc.searchProjectMembers(searchText: '', projectId: projectId);
-  }
-
-  String getLastSeen(String timeStamp) {
-    final String lastseen =
-        _dateFormatFromTimeStamp.getPastTimeFromCurrent(timeStamp);
-    return lastseen;
   }
 
   @override
@@ -97,7 +88,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final SignUpAndUserModel volunteer = snapshot.data![index];
-                  return memberItem(volunteer: volunteer);
+                  return MemberTabCard(volunteer: volunteer);
                 },
               )
             : Container(
@@ -112,96 +103,6 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 ),
               );
       },
-    );
-  }
-
-  Widget memberItem({required SignUpAndUserModel volunteer}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: width * 0.035,
-        horizontal: width * 0.04,
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: CommonUserProfileOrPlaceholder(
-              size: width * 0.11,
-              borderColor: volunteer.presence! ? GREEN : PRIMARY_COLOR,
-              imgUrl: volunteer.profileUrl,
-            ),
-          ),
-          SizedBox(width: 5),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  volunteer.firstName! + ' ' + volunteer.lastName!,
-                  style: _theme.textTheme.bodyText2!
-                      .copyWith(fontWeight: FontWeight.bold, fontSize: 13),
-                ),
-                Text(
-                  getLastSeen(volunteer.lastSeen!),
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 9,
-                    color: UNSELECTED_TAB_COLOR,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      CupertinoIcons.location,
-                      size: width * 0.03,
-                    ),
-                    Expanded(
-                      child: Text(
-                        volunteer.address!,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () async =>
-                      CommonUrlLauncher().launchCall(volunteer.personalPhnNo!),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      CupertinoIcons.phone,
-                      color: BLACK,
-                      size: 20,
-                    ),
-                  ),
-                ),
-                // InkWell(
-                //   onTap: () {},
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Icon(
-                //       CupertinoIcons.chat_bubble_text,
-                //       color: BLACK,
-                //       size: 20,
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

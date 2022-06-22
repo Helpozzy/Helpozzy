@@ -6,6 +6,7 @@ import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
+import 'package:helpozzy/screens/chat/recent_chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
@@ -396,7 +397,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         ProjectMembersTab(
           projectId: project.projectId!,
         ),
-        Text(COMING_SOON_SCREEN_TEXT),
+        RecentChatHistory(),
         // Text(COMING_SOON_SCREEN_TEXT),
       ],
     );

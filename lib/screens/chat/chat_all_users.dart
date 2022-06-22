@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
-import 'package:helpozzy/screens/chat/chat_screen.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/chat/chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class AllUsersScreen extends StatefulWidget {
+class ChatAllUsers extends StatefulWidget {
   @override
-  _AllUsersScreenState createState() => _AllUsersScreenState();
+  _ChatAllUsersState createState() => _ChatAllUsersState();
 }
 
-class _AllUsersScreenState extends State<AllUsersScreen> {
+class _ChatAllUsersState extends State<ChatAllUsers> {
   late TextTheme _textTheme;
   late double width;
   late List<DocumentSnapshot> usersList = [];
@@ -43,50 +42,32 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       body: SafeArea(
         child: usersList.isNotEmpty
             ? ListView.separated(
-                separatorBuilder: (context, int index) => Divider(
-                  thickness: 0.0,
-                  height: 1,
-                  color: GRAY,
-                ),
+                separatorBuilder: (context, int index) => CommonDivider(),
                 shrinkWrap: true,
                 itemCount: usersList.length,
                 itemBuilder: (context, index) {
                   final Map<String, dynamic> json =
                       usersList[index].data() as Map<String, dynamic>;
-                  final ChatListItem chatListItem = ChatListItem.fromJson(json);
+                  final SignUpAndUserModel user =
+                      SignUpAndUserModel.fromJson(json: json);
+                  final ChatListItem chatListItem = ChatListItem(
+                    badge: '',
+                    content: '',
+                    email: user.email!,
+                    id: user.userId!,
+                    name: user.firstName! + ' ' + user.lastName!,
+                    profileUrl: user.profileUrl!,
+                    timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+                    type: 0,
+                  );
                   return Container(
                     padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                     alignment: Alignment.centerLeft,
                     child: ListTile(
-                      leading: chatListItem.profileUrl.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: CachedNetworkImage(
-                                imageUrl: chatListItem.profileUrl,
-                                fit: BoxFit.cover,
-                                height: 45,
-                                width: 45,
-                                alignment: Alignment.center,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) => Center(
-                                  child: CircularProgressIndicator(
-                                    color: PRIMARY_COLOR,
-                                    strokeWidth: 1.5,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    CircleAvatar(
-                                  radius: 24,
-                                  child: Image.asset(
-                                      'assets/images/user_placeholder.png'),
-                                ),
-                              ),
-                            )
-                          : CircleAvatar(
-                              radius: 24,
-                              backgroundImage: AssetImage(
-                                  'assets/images/user_placeholder.png'),
-                            ),
+                      leading: CommonUserProfileOrPlaceholder(
+                        size: width * 0.11,
+                        imgUrl: chatListItem.profileUrl,
+                      ),
                       title: Text(
                         chatListItem.name,
                         style: _textTheme.bodyText2!.copyWith(
@@ -94,6 +75,10 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                           color: PRIMARY_COLOR,
                           fontWeight: FontWeight.w700,
                         ),
+                      ),
+                      subtitle: Text(
+                        user.email!,
+                        style: _textTheme.bodyText2!.copyWith(color: DARK_GRAY),
                       ),
                       onTap: () {
                         Navigator.push(
@@ -109,7 +94,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
               )
             : Center(
                 child: Text(
-                  'Persons not Available',
+                  'Volunteer not a0vailable',
                   style: _textTheme.headline6!.copyWith(color: ACCENT_GRAY),
                 ),
               ),

@@ -24,34 +24,29 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   _ChatState({required this.peerUser});
   final ChatListItem peerUser;
-
-  late String groupChatId;
+  late double width;
+  late double height;
+  late ThemeData _theme;
+  late String groupChatId = '';
   late List listMessage;
   late File imageFile;
-  late bool isLoading;
-  late bool isLoadingPreviousMsg;
-  late String imageUrl;
+  late bool isLoading = false;
+  late bool isLoadingPreviousMsg = false;
+  late String imageUrl = '';
   int limit = 20;
-  Map userData = {};
-  Map receiverData = {};
-  late double width;
-  late ThemeData _theme;
+  late Map userData = {};
+  late Map receiverData = {};
 
-  final imagePicker = ImagePicker();
-
+  final ImagePicker imagePicker = ImagePicker();
   final TextEditingController textEditingController = TextEditingController();
-  ScrollController listScrollController = ScrollController();
+  late ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
-  final _key = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     getUserData();
-    groupChatId = '';
-    isLoading = false;
-    isLoadingPreviousMsg = false;
-    imageUrl = '';
     readLocal();
     removeBadge();
   }
@@ -157,86 +152,78 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     _theme = Theme.of(context);
     listScrollController = ScrollController()..addListener(_scrollListener);
     return WillPopScope(
       onWillPop: removeActiveUser,
-      child: Scaffold(
-        key: _key,
-        appBar: chatScreenAppBar(),
-        body: Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                buildListMessage(),
-                buildInput(),
-              ],
-            ),
-            isLoadingPreviousMsg
-                ? LinearProgressIndicator(color: PRIMARY_COLOR)
-                : SizedBox(),
-          ],
+      child: GestureDetector(
+        onPanDown: (_) => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          key: _key,
+          appBar: appBar(),
+          body: Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Container(
+                height: height,
+                width: width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      WHITE,
+                      MATE_WHITE,
+                      PRIMARY_COLOR.withOpacity(0.2),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  buildListMessage(),
+                  buildInput(),
+                ],
+              ),
+              isLoadingPreviousMsg
+                  ? LinearProgressIndicator(color: PRIMARY_COLOR)
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  AppBar chatScreenAppBar() {
-    return AppBar(
-      centerTitle: false,
-      elevation: 1,
-      backgroundColor: WHITE,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
-        onPressed: () => removeActiveUser(),
-      ),
-      titleSpacing: 0.0,
-      title: Row(
-        children: <Widget>[
-          Container(
-            height: width * 0.1,
-            width: width * 0.1,
-            decoration: BoxDecoration(
-              color: DARK_PINK_COLOR,
-              borderRadius: BorderRadius.circular(100),
+  AppBar appBar() => AppBar(
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: WHITE,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
+          onPressed: () => removeActiveUser(),
+        ),
+        titleSpacing: 0.0,
+        title: Row(
+          children: <Widget>[
+            CommonUserProfileOrPlaceholder(
+              size: width * 0.08,
+              imgUrl: peerUser.profileUrl,
             ),
-            padding: EdgeInsets.all(1.5),
-            margin: const EdgeInsets.only(right: 8.0),
-            child: ClipRRect(
-              child: peerUser.profileUrl == ''
-                  ? Image.asset('assets/images/user_placeholder.png')
-                  : GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                FullScreenView(imgUrl: peerUser.profileUrl),
-                          ),
-                        );
-                      },
-                      child: CachedNetworkImage(
-                        imageUrl: peerUser.profileUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-              borderRadius: BorderRadius.circular(100),
+            SizedBox(width: 5),
+            Center(
+              child: Text(
+                peerUser.name,
+                style: _theme.textTheme.bodyText2!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: DARK_PINK_COLOR,
+                    fontSize: 18),
+              ),
             ),
-          ),
-          Center(
-            child: Text(
-              peerUser.name,
-              style: _theme.textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: DARK_PINK_COLOR,
-                  fontSize: 18),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget buildListMessage() {
     return Flexible(
@@ -254,9 +241,7 @@ class _ChatState extends State<Chat> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: LinearLoader(),
-                  );
+                  return Center(child: LinearLoader());
                 } else {
                   listMessage = snapshot.data!.docs;
                   return listMessage.isNotEmpty
@@ -272,7 +257,7 @@ class _ChatState extends State<Chat> {
                           child: Text(
                             'Start Conversation',
                             style: _theme.textTheme.headline6!
-                                .copyWith(color: GRAY),
+                                .copyWith(color: DARK_GRAY),
                           ),
                         );
                 }
@@ -283,41 +268,42 @@ class _ChatState extends State<Chat> {
 
   Future chooseSourceOfPhoto(context) async {
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 72,
-            color: GRAY,
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    onPressed: () {
-                      _cameraPicker();
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.photo_camera),
-                    color: PRIMARY_COLOR,
-                    iconSize: 32.0,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      _galleryPicker();
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.photo_library),
-                    color: PRIMARY_COLOR,
-                    iconSize: 32.0,
-                  )
-                ],
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 72,
+          color: GRAY,
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    _cameraPicker();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.photo_camera),
+                  color: PRIMARY_COLOR,
+                  iconSize: 32.0,
+                ),
+                IconButton(
+                  onPressed: () {
+                    _galleryPicker();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.photo_library),
+                  color: PRIMARY_COLOR,
+                  iconSize: 32.0,
+                )
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
-  dynamic _cameraPicker() async {
+  Future _cameraPicker() async {
     XFile? captureFile = await imagePicker.pickImage(
         imageQuality: 100,
         maxWidth: 800,
@@ -326,14 +312,12 @@ class _ChatState extends State<Chat> {
 
     final File? cameraImage = File(captureFile!.path);
     if (cameraImage != null) {
-      setState(() {
-        isLoading = true;
-      });
+      setState(() => isLoading = true);
       uploadFile(cameraImage);
     }
   }
 
-  dynamic _galleryPicker() async {
+  Future _galleryPicker() async {
     final XFile? pickedFile = await imagePicker.pickImage(
         imageQuality: 100,
         maxWidth: 800,
@@ -397,9 +381,7 @@ class _ChatState extends State<Chat> {
   }) {
     int badgeCount = 0;
     if (content.trim() != '') {
-      setState(() {
-        contentMsg = textEditingController.text;
-      });
+      setState(() => contentMsg = textEditingController.text);
       textEditingController.clear();
 
       final documentReference = FirebaseFirestore.instance
@@ -619,6 +601,7 @@ class _ChatState extends State<Chat> {
     } else {
       // Left message (Peer message)
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -677,7 +660,6 @@ class _ChatState extends State<Chat> {
                     ),
             ],
           ),
-
           // Time
           isLastMessageLeft(index)
               ? Container(
@@ -704,78 +686,51 @@ class _ChatState extends State<Chat> {
                 )
               : SizedBox()
         ],
-        crossAxisAlignment: CrossAxisAlignment.start,
       );
     }
   }
 
   Widget buildInput() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(
-            bottom: 10.0, left: 14.0, top: 8.0, right: 4.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: TextField(
-                style: _theme.textTheme.bodyText2,
-                controller: textEditingController,
-                minLines: 1,
-                textCapitalization: TextCapitalization.sentences,
-                maxLines: 2,
-                decoration: InputDecoration(
-                  enabledBorder: inputDecoration(),
-                  disabledBorder: inputDecoration(),
-                  focusedBorder: inputDecoration(),
-                  border: inputDecoration(),
-                  fillColor: GRAY,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: IconButton(
-                      icon: Icon(
-                        CupertinoIcons.photo_fill_on_rectangle_fill,
-                        color: PRIMARY_COLOR,
-                      ),
-                      onPressed: () {
-                        chooseSourceOfPhoto(context);
-                      },
-                    ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: CommonRoundedTextfield(
+              controller: textEditingController,
+              textAlignCenter: false,
+              textCapitalization: TextCapitalization.sentences,
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: IconButton(
+                  icon: Icon(
+                    CupertinoIcons.photo_fill_on_rectangle_fill,
+                    color: PRIMARY_COLOR,
                   ),
-                  hintText: ENTER_MESSAGE_HINT,
-                  filled: true,
-                  hintStyle: _theme.textTheme.bodyText2,
+                  onPressed: () => chooseSourceOfPhoto(context),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 5.0),
-              child: IconButton(
-                iconSize: 28,
-                icon: Image.asset(
-                  'assets/images/send.png',
+              suffixIcon: InkWell(
+                child: Icon(
+                  CupertinoIcons.play_circle_fill,
                   color: PRIMARY_COLOR,
-                  height: 35,
-                  width: 35,
+                  size: width * 0.09,
                 ),
-                onPressed: () async {
-                  onSendMessage(
-                    content: textEditingController.text,
-                    isImage: false,
-                    type: 0,
-                  );
-                },
+                onTap: () async => onSendMessage(
+                  content: textEditingController.text,
+                  isImage: false,
+                  type: 0,
+                ),
               ),
+              fillColor: GRAY,
+              hintText: ENTER_MESSAGE_HINT,
+              validator: (val) => null,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-  OutlineInputBorder inputDecoration() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100),
-      borderSide: BorderSide(width: 1, color: PRIMARY_COLOR),
     );
   }
 }
