@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/models/message_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
@@ -145,7 +146,6 @@ class _ChatState extends State<Chat> {
         .collection('users')
         .doc(prefsObject.getString(CURRENT_USER_ID))
         .update({'chattingWith': peerUser.id});
-
     setState(() {});
   }
 
@@ -216,9 +216,10 @@ class _ChatState extends State<Chat> {
               child: Text(
                 peerUser.name,
                 style: _theme.textTheme.bodyText2!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: DARK_PINK_COLOR,
-                    fontSize: 18),
+                  fontWeight: FontWeight.w600,
+                  color: DARK_PINK_COLOR,
+                  fontSize: 18,
+                ),
               ),
             ),
           ],
@@ -244,11 +245,12 @@ class _ChatState extends State<Chat> {
                   return Center(child: LinearLoader());
                 } else {
                   listMessage = snapshot.data!.docs;
-                  return listMessage.isNotEmpty
+                  Messages chat = Messages.fromJson(list: snapshot.data!.docs);
+                  return chat.messages.isNotEmpty
                       ? ListView.builder(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           itemBuilder: (context, index) =>
-                              buildItem(context, index, listMessage[index]),
+                              buildItem(context, index, chat.messages[index]),
                           itemCount: snapshot.data!.docs.length,
                           reverse: true,
                           controller: listScrollController,
@@ -486,19 +488,18 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  Widget buildItem(BuildContext context, int index, DocumentSnapshot document) {
-    if (document['id_from'] == prefsObject.getString(CURRENT_USER_ID)) {
+  Widget buildItem(BuildContext context, int index, MessageModel message) {
+    if (message.idFrom == prefsObject.getString(CURRENT_USER_ID)) {
       // Sent Message (my message)
       return Column(
         children: <Widget>[
           Row(
             children: <Widget>[
-              document['type'] == 0
+              message.type == 0
                   // Text
                   ? GestureDetector(
                       onLongPress: () {
-                        Clipboard.setData(
-                            ClipboardData(text: document['content']));
+                        Clipboard.setData(ClipboardData(text: message.content));
                         ScaffoldSnakBar()
                             .show(context, msg: MESSAGE_COPIED_POPUP_MSG);
                       },
@@ -516,7 +517,7 @@ class _ChatState extends State<Chat> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
                           child: Text(
-                            document['content'],
+                            message.content,
                             style: _theme.textTheme.bodyText2!
                                 .copyWith(color: WHITE),
                           ),
@@ -548,7 +549,7 @@ class _ChatState extends State<Chat> {
                               ),
                               clipBehavior: Clip.hardEdge,
                             ),
-                            imageUrl: document['content'],
+                            imageUrl: message.content,
                             width: MediaQuery.of(context).size.width - 100,
                             height: 200.0,
                             fit: BoxFit.cover,
@@ -560,7 +561,7 @@ class _ChatState extends State<Chat> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  FullScreenView(imgUrl: document['content']),
+                                  FullScreenView(imgUrl: message.content),
                             ),
                           );
                         },
@@ -583,7 +584,7 @@ class _ChatState extends State<Chat> {
                         child: Text(
                           DateFormat('dd MMM hh:mm a').format(
                             DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document['timestamp']),
+                              int.parse(message.timestamp),
                             ),
                           ),
                           style: _theme.textTheme.bodyText2!.copyWith(
@@ -605,7 +606,7 @@ class _ChatState extends State<Chat> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              document['type'] == 0
+              message.type == 0
                   ? Container(
                       width: MediaQuery.of(context).size.width - 100,
                       padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
@@ -619,9 +620,11 @@ class _ChatState extends State<Chat> {
                           right: 24),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                        child: Text(document['content'],
-                            style: _theme.textTheme.bodyText2!
-                                .copyWith(color: WHITE)),
+                        child: Text(
+                          message.content,
+                          style: _theme.textTheme.bodyText2!
+                              .copyWith(color: WHITE),
+                        ),
                       ),
                     )
                   : Container(
@@ -650,7 +653,7 @@ class _ChatState extends State<Chat> {
                             ),
                             clipBehavior: Clip.hardEdge,
                           ),
-                          imageUrl: document['content'],
+                          imageUrl: message.content,
                           width: MediaQuery.of(context).size.width - 100,
                           height: 200.0,
                           fit: BoxFit.cover,
@@ -673,7 +676,7 @@ class _ChatState extends State<Chat> {
                       Text(
                         DateFormat('dd MMM hh:mm a').format(
                           DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(document['timestamp']),
+                            int.parse(message.timestamp),
                           ),
                         ),
                         style: TextStyle(
@@ -701,6 +704,7 @@ class _ChatState extends State<Chat> {
             child: CommonRoundedTextfield(
               controller: textEditingController,
               textAlignCenter: false,
+              borderEnable: false,
               textCapitalization: TextCapitalization.sentences,
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 8.0),

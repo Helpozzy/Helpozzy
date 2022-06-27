@@ -94,7 +94,7 @@ class _ChatAllUsersState extends State<ChatAllUsers> {
               )
             : Center(
                 child: Text(
-                  'Volunteer not a0vailable',
+                  'Volunteer not available',
                   style: _textTheme.headline6!.copyWith(color: ACCENT_GRAY),
                 ),
               ),

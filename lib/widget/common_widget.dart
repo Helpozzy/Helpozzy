@@ -113,6 +113,7 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.borderEnable = true,
     this.textAlignCenter = true,
     this.textCapitalization = TextCapitalization.none,
   });
@@ -131,6 +132,7 @@ class CommonRoundedTextfield extends StatelessWidget {
   final Widget? suffixIcon;
   final bool? textAlignCenter;
   final TextCapitalization textCapitalization;
+  final bool? borderEnable;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +154,7 @@ class CommonRoundedTextfield extends StatelessWidget {
         getHint: hintText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        borderEnable: borderEnable,
       ),
       validator: validator,
       onChanged: onChanged,
@@ -441,12 +444,14 @@ Widget topBarTitleWidget(context, title) {
   );
 }
 
-InputDecoration inputRoundedDecoration(
-    {required String getHint,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    Color? fillColor,
-    bool isDropDown = false}) {
+InputDecoration inputRoundedDecoration({
+  required String getHint,
+  Widget? prefixIcon,
+  Widget? suffixIcon,
+  Color? fillColor,
+  bool? borderEnable,
+  bool isDropDown = false,
+}) {
   return InputDecoration(
     hintText: getHint,
     hintStyle: TextStyle(color: DARK_GRAY),
@@ -460,19 +465,24 @@ InputDecoration inputRoundedDecoration(
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: WHITE, width: 1),
+      borderSide:
+          borderEnable! ? BorderSide(color: WHITE, width: 1) : BorderSide.none,
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: RED_COLOR, width: 1),
+      borderSide: borderEnable
+          ? BorderSide(color: RED_COLOR, width: 1)
+          : BorderSide.none,
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: WHITE, width: 1),
+      borderSide:
+          borderEnable ? BorderSide(color: WHITE, width: 1) : BorderSide.none,
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-      borderSide: BorderSide(color: WHITE, width: 1),
+      borderSide:
+          borderEnable ? BorderSide(color: WHITE, width: 1) : BorderSide.none,
     ),
   );
 }

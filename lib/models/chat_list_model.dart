@@ -1,3 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class ChatList {
+  ChatList.fromSnapshot({required List<QueryDocumentSnapshot<Object?>> list}) {
+    list.forEach((element) {
+      final chatItem = element.data() as Map<String, dynamic>;
+      chats.add(ChatListItem.fromJson(chatItem));
+    });
+    chats.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  }
+
+  late List<ChatListItem> chats = [];
+}
+
 class ChatListItem {
   String badge;
   String profileUrl;

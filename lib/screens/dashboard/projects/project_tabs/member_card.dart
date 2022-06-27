@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/chat/chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -88,7 +90,25 @@ class MemberTabCard extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    final ChatListItem chatListItem = ChatListItem(
+                      badge: '',
+                      content: '',
+                      email: volunteer.email!,
+                      id: volunteer.userId!,
+                      name: volunteer.firstName! + ' ' + volunteer.lastName!,
+                      profileUrl: volunteer.profileUrl!,
+                      timestamp:
+                          DateTime.now().millisecondsSinceEpoch.toString(),
+                      type: 0,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Chat(peerUser: chatListItem),
+                      ),
+                    );
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(

@@ -16,6 +16,7 @@ class MembersBloc {
       PublishSubject<UserRewardsDetailsHelper>();
   final _searchMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _searchProjectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
+  final _projectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => _membersController.stream;
@@ -25,6 +26,8 @@ class MembersBloc {
       _searchMembersList.stream;
   Stream<List<SignUpAndUserModel>> get getSearchedProjectMembersStream =>
       _searchProjectMembersList.stream;
+  Stream<List<SignUpAndUserModel>> get getProjectMembersStream =>
+      _projectMembersList.stream;
   Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future getMembers() async {
@@ -57,6 +60,14 @@ class MembersBloc {
       });
       _searchMembersList.sink.add(searchedMembersList);
     }
+  }
+
+  Future getProjectMembers(String projectId) async {
+    final Tasks tasksResponse =
+        await repo.getProjectTasksRepo(projectId, false);
+    final List<SignUpAndUserModel> _projectMember =
+        await ProjectMembers().fromTasks(tasksResponse.tasks);
+    _projectMembersList.sink.add(_projectMember);
   }
 
   List<SignUpAndUserModel> searchedProjectMembersList = [];
@@ -117,6 +128,7 @@ class MembersBloc {
     _membersController.close();
     _userRewardDetailsController.close();
     _searchMembersList.close();
+    _projectMembersList.close();
     _searchProjectMembersList.close();
     _filteredFavContoller.close();
   }

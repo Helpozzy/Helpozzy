@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -701,5 +702,16 @@ class ApiProvider {
         .get();
 
     return Notifications.fromSnapshot(list: querySnapshot.docs);
+  }
+
+  //Chat API provider
+  Future<ChatList> getChatHistory() async {
+    final Query query = FirebaseFirestore.instance
+        .collection('chat_list')
+        .doc(prefsObject.getString(CURRENT_USER_ID)!)
+        .collection(prefsObject.getString(CURRENT_USER_ID)!);
+    final QuerySnapshot querySnapshot =
+        await query.orderBy('timestamp', descending: true).get();
+    return ChatList.fromSnapshot(list: querySnapshot.docs);
   }
 }
