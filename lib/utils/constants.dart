@@ -488,6 +488,9 @@ const TRANSFER_POINT_TAB = 'Transfer Points';
 const CHAT_TITLE = 'Chat';
 const ALL_USERS_TITLE = 'Volunteers in project';
 const ENTER_MESSAGE_HINT = 'Enter Message';
+const GROUP_CHAT_TITLE = 'Group Chat';
+const SART_CONVERSATION = 'Start Conversation';
+const START_NEW_CONVERSATION = 'Start new conversation';
 
 //Notification
 const NOTIFICATION_LABEL = 'Notifications';

@@ -394,8 +394,8 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           project: project,
           projectTabType: projectTabType,
         ),
-        ProjectMembersTab(projectId: project.projectId!),
-        RecentChatHistory(projectId: project.projectId!),
+        ProjectMembersTab(project: project),
+        RecentChatHistory(project: project),
         // Text(COMING_SOON_SCREEN_TEXT),
       ],
     );

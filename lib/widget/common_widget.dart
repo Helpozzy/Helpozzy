@@ -449,7 +449,7 @@ InputDecoration inputRoundedDecoration({
   Widget? prefixIcon,
   Widget? suffixIcon,
   Color? fillColor,
-  bool? borderEnable,
+  bool? borderEnable = true,
   bool isDropDown = false,
 }) {
   return InputDecoration(

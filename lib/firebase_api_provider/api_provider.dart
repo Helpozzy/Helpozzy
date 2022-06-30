@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/models/message_model.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -705,13 +706,35 @@ class ApiProvider {
   }
 
   //Chat API provider
-  Future<ChatList> getChatHistory() async {
+  Future<ChatList> getChatHistory(String projectId) async {
     final Query query = FirebaseFirestore.instance
         .collection('chat_list')
-        .doc(prefsObject.getString(CURRENT_USER_ID)!)
+        .doc(projectId)
         .collection(prefsObject.getString(CURRENT_USER_ID)!);
     final QuerySnapshot querySnapshot =
         await query.orderBy('timestamp', descending: true).get();
     return ChatList.fromSnapshot(list: querySnapshot.docs);
+  }
+
+  Future<Chats> getMessages(String groupChatId, int limit) async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('messages')
+        .doc(groupChatId)
+        .collection(groupChatId)
+        .orderBy('timestamp', descending: true)
+        .limit(limit)
+        .get();
+    return Chats.fromJson(list: querySnapshot.docs);
+  }
+
+  Future<Chats> getGroupMessages(String groupChatId, int limit) async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('group_messages')
+        .doc(groupChatId)
+        .collection(groupChatId)
+        .orderBy('timestamp', descending: true)
+        .limit(limit)
+        .get();
+    return Chats.fromJson(list: querySnapshot.docs);
   }
 }

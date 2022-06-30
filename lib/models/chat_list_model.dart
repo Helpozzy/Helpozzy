@@ -13,7 +13,7 @@ class ChatList {
 }
 
 class ChatListItem {
-  String badge;
+  int badge;
   String profileUrl;
   String name;
   int type;
@@ -34,7 +34,7 @@ class ChatListItem {
 
   factory ChatListItem.fromJson(Map<String, dynamic> json) {
     return ChatListItem(
-      badge: json['badge'] ?? '',
+      badge: json['badge'] ?? 0,
       name: json['name'] ?? '',
       profileUrl: json['profile_image'] ?? '',
       type: json['type'] ?? 0,

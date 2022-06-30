@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/chat_bloc.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/chat/chat.dart';
+import 'package:helpozzy/screens/chat/group_chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
 class RecentChatHistory extends StatefulWidget {
-  RecentChatHistory({required this.projectId});
-  final String projectId;
+  RecentChatHistory({required this.project});
+  final ProjectModel project;
   @override
   _RecentChatHistoryState createState() =>
-      _RecentChatHistoryState(projectId: projectId);
+      _RecentChatHistoryState(project: project);
 }
 
 class _RecentChatHistoryState extends State<RecentChatHistory> {
-  _RecentChatHistoryState({required this.projectId});
-  final String projectId;
+  _RecentChatHistoryState({required this.project});
+  final ProjectModel project;
   late TextTheme _textTheme;
   late double width;
   final ChatBloc _chatBloc = ChatBloc();
@@ -27,8 +29,8 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
 
   @override
   void initState() {
-    _membersBloc.getProjectMembers(projectId);
-    _chatBloc.getCurrentChatHistory();
+    _membersBloc.getProjectMembers(project.projectId!);
+    _chatBloc.getCurrentChatHistory(project.projectId!);
     super.initState();
   }
 
@@ -55,65 +57,79 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
             child: LinearLoader(),
           );
         }
-        final List<SignUpAndUserModel> volunteer = snapshot.data!;
-        return SizedBox(
-          width: width - (width * 0.05),
-          child: InkWell(
-            onTap: () async {},
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Stack(
-                        children: <Widget>[
-                          CommonUserProfileOrPlaceholder(
-                            size: width * 0.10,
-                            imgUrl: volunteer[0].profileUrl,
-                            borderColor:
-                                volunteer[0].presence! ? GREEN : PRIMARY_COLOR,
-                          ),
-                          Positioned(
-                            left: 15.0,
-                            child: CommonUserProfileOrPlaceholder(
-                              size: width * 0.10,
-                              imgUrl: volunteer[1].profileUrl,
-                              borderColor: volunteer[1].presence!
-                                  ? GREEN
-                                  : PRIMARY_COLOR,
+        final List<SignUpAndUserModel> volunteers = snapshot.data!;
+        return volunteers.isNotEmpty &&
+                (volunteers.contains(project.ownerId) ||
+                    volunteers.contains(prefsObject.getString(CURRENT_USER_ID)))
+            ? SizedBox(
+                width: width - (width * 0.05),
+                child: InkWell(
+                  onTap: () async => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => GroupChat(
+                        volunteers: volunteers,
+                        project: project,
+                      ),
+                    ),
+                  ),
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Stack(
+                              children: <Widget>[
+                                CommonUserProfileOrPlaceholder(
+                                  size: width * 0.10,
+                                  imgUrl: volunteers[0].profileUrl,
+                                  borderColor: volunteers[0].presence!
+                                      ? GREEN
+                                      : PRIMARY_COLOR,
+                                ),
+                                Positioned(
+                                  left: 15.0,
+                                  child: CommonUserProfileOrPlaceholder(
+                                    size: width * 0.10,
+                                    imgUrl: volunteers[1].profileUrl,
+                                    borderColor: volunteers[1].presence!
+                                        ? GREEN
+                                        : PRIMARY_COLOR,
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 30.0,
+                                  child: CommonUserProfileOrPlaceholder(
+                                    size: width * 0.10,
+                                    imgUrl: volunteers[2].profileUrl,
+                                    borderColor: volunteers[2].presence!
+                                        ? GREEN
+                                        : PRIMARY_COLOR,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          Positioned(
-                            left: 30.0,
-                            child: CommonUserProfileOrPlaceholder(
-                              size: width * 0.10,
-                              imgUrl: volunteer[2].profileUrl,
-                              borderColor: volunteer[2].presence!
-                                  ? GREEN
-                                  : PRIMARY_COLOR,
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              GROUP_CHAT_TITLE,
+                              style:
+                                  _textTheme.bodyText2!.copyWith(fontSize: 16),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        'Group Chat',
-                        style: _textTheme.bodyText2!.copyWith(fontSize: 16),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        );
+              )
+            : SizedBox();
       },
     );
   }
@@ -162,7 +178,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                             : SizedBox(),
                         Text(
                           chatListItem.content.contains('firebasestorage')
-                              ? 'Attachment'
+                              ? 'Image'
                               : chatListItem.content,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -176,11 +192,14 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                     onTap: () async {
                       await Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => Chat(peerUser: chatListItem),
+                        CupertinoPageRoute(
+                          builder: (context) => Chat(
+                            peerUser: chatListItem,
+                            project: project,
+                          ),
                         ),
                       );
-                      await _chatBloc.getCurrentChatHistory();
+                      await _chatBloc.getCurrentChatHistory(project.projectId!);
                     },
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -196,12 +215,10 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                             color: PRIMARY_COLOR,
                           ),
                         ),
-                        chatListItem.badge.isNotEmpty &&
-                                chatListItem.badge != '0'
+                        chatListItem.badge != 0
                             ? SizedBox(height: 6)
                             : SizedBox(),
-                        chatListItem.badge.isNotEmpty &&
-                                chatListItem.badge != '0'
+                        chatListItem.badge != 0
                             ? Container(
                                 width: 16,
                                 height: 16,
@@ -211,9 +228,9 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    chatListItem.badge == '0'
+                                    chatListItem.badge == 0
                                         ? ''
-                                        : chatListItem.badge,
+                                        : chatListItem.badge.toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .caption!
@@ -231,7 +248,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(bottom: width * 0.2),
                 child: Text(
-                  'Start new conversation',
+                  START_NEW_CONVERSATION,
                   style: _textTheme.headline6!.copyWith(color: DARK_GRAY),
                 ),
               );

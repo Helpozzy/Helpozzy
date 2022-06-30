@@ -4,23 +4,23 @@ import 'package:helpozzy/models/task_model.dart';
 
 class ProjectMembers {
   Future<List<SignUpAndUserModel>> fromTasks(List<TaskModel> tasks) async {
-    List<SignUpAndUserModel> projectMembersTest = [];
+    List<SignUpAndUserModel> projectMembers = [];
     if (tasks.isNotEmpty) {
       for (int i = 0; i < tasks.length; i++) {
         if (tasks[i].members != null && tasks[i].members!.isNotEmpty) {
           tasks[i].members!.forEach((memberId) async {
-            if (!projectMembersTest.contains(memberId)) {
+            if (!projectMembers.contains(memberId)) {
               final SignUpAndUserModel user =
                   await Repository().userInfoRepo(memberId);
-              projectMembersTest.add(user);
+              projectMembers.add(user);
             }
           });
         }
       }
     }
-    projectMembersTest.sort((a, b) =>
+    projectMembers.sort((a, b) =>
         a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
     await Future.delayed(Duration(seconds: 1));
-    return projectMembersTest;
+    return projectMembers;
   }
 }

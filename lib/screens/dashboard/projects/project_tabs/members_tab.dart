@@ -1,22 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_tabs/member_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class ProjectMembersTab extends StatefulWidget {
-  ProjectMembersTab({required this.projectId});
-  final String projectId;
+  ProjectMembersTab({required this.project});
+  final ProjectModel project;
   @override
   _ProjectMembersTabState createState() =>
-      _ProjectMembersTabState(projectId: projectId);
+      _ProjectMembersTabState(project: project);
 }
 
 class _ProjectMembersTabState extends State<ProjectMembersTab> {
-  _ProjectMembersTabState({required this.projectId});
-  final String projectId;
+  _ProjectMembersTabState({required this.project});
+  final ProjectModel project;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
   late double width;
@@ -26,7 +27,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   @override
   void initState() {
     super.initState();
-    _membersBloc.searchProjectMembers(searchText: '', projectId: projectId);
+    _membersBloc.searchProjectMembers(
+        searchText: '', projectId: project.projectId!);
   }
 
   @override
@@ -64,7 +66,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
               validator: (val) => null,
               onChanged: (val) => _membersBloc.searchProjectMembers(
                 searchText: val,
-                projectId: projectId,
+                projectId: project.projectId!,
               ),
             ),
           ),
@@ -88,7 +90,13 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final SignUpAndUserModel volunteer = snapshot.data![index];
-                  return MemberTabCard(volunteer: volunteer);
+                  return volunteer.userId !=
+                          prefsObject.getString(CURRENT_USER_ID)
+                      ? MemberTabCard(
+                          volunteer: volunteer,
+                          project: project,
+                        )
+                      : SizedBox();
                 },
               )
             : Container(

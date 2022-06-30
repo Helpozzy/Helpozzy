@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_api_provider/api_provider.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/models/message_model.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -153,5 +154,12 @@ class Repository {
       apiProvider.removeNotificationAPIProvider(id);
 
   //Chat API provider
-  Future<ChatList> getChatHistoryRepo() => apiProvider.getChatHistory();
+  Future<ChatList> getChatHistoryRepo(String projectId) =>
+      apiProvider.getChatHistory(projectId);
+
+  Future<Chats> getMessagesRepo(String projectId, int limit) =>
+      apiProvider.getMessages(projectId, limit);
+
+  Future<Chats> getGroupMessagesRepo(String projectId, int limit) =>
+      apiProvider.getGroupMessages(projectId, limit);
 }

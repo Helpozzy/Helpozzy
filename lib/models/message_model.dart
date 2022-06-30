@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Messages {
-  Messages.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
+class Chats {
+  Chats.fromJson({required List<QueryDocumentSnapshot<Object?>> list}) {
     list.forEach((element) {
       final project = element.data() as Map<String, dynamic>;
       messages.add(MessageModel.fromJson(project));
@@ -29,7 +29,7 @@ class MessageModel {
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
         content: json["content"],
         idFrom: json["id_from"],
-        idTo: json["id_to"],
+        idTo: json["id_to"] ?? '',
         timestamp: json["timestamp"],
         type: json["type"],
       );

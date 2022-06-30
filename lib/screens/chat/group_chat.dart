@@ -18,17 +18,18 @@ import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class Chat extends StatefulWidget {
-  const Chat({required this.peerUser, required this.project});
-  final ChatListItem peerUser;
+class GroupChat extends StatefulWidget {
+  GroupChat({required this.volunteers, required this.project});
+  final List<SignUpAndUserModel> volunteers;
   final ProjectModel project;
   @override
-  _ChatState createState() => _ChatState(peerUser: peerUser, project: project);
+  _ChatState createState() =>
+      _ChatState(volunteers: volunteers, project: project);
 }
 
-class _ChatState extends State<Chat> {
-  _ChatState({required this.peerUser, required this.project});
-  final ChatListItem peerUser;
+class _ChatState extends State<GroupChat> {
+  _ChatState({required this.volunteers, required this.project});
+  final List<SignUpAndUserModel> volunteers;
   final ProjectModel project;
   late double width;
   late double height;
@@ -39,7 +40,6 @@ class _ChatState extends State<Chat> {
   late bool isLoadingPreviousMsg = false;
   late String imageUrl = '';
   int limit = 20;
-  late SignUpAndUserModel userModel;
 
   final ImagePicker imagePicker = ImagePicker();
   final TextEditingController textEditingController = TextEditingController();
@@ -47,15 +47,15 @@ class _ChatState extends State<Chat> {
   final FocusNode focusNode = FocusNode();
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final ChatBloc _chatBloc = ChatBloc();
+  late SignUpAndUserModel userModel;
 
   @override
   void initState() {
     super.initState();
-    getUserData();
-    readLocal();
-    removeBadge();
+    groupChatId = project.projectId!;
     listenUserData();
-    _chatBloc.getChat(groupChatId, limit);
+    _chatBloc.getGroupChat(groupChatId, limit);
+    removeBadge();
   }
 
   Future listenUserData() async {
@@ -65,37 +65,16 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  Future getUserData() async {
-    prefsObject.setString(PEER_USRE_ID, peerUser.id);
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(peerUser.id)
-        .get()
-        .then((value) async {
-      setState(() {});
-      await FirebaseFirestore.instance
-          .collection('user_currently_active')
-          .doc(userModel.userId)
-          .collection(userModel.userId!)
-          .doc(peerUser.id)
-          .set({'user_id': peerUser.id});
-    });
-  }
-
   Future removeBadge() async {
     await FirebaseFirestore.instance
-        .collection('chat_list')
+        .collection('group_chat')
         .doc(project.projectId)
-        .collection(prefsObject.getString(CURRENT_USER_ID)!)
-        .doc(peerUser.id)
         .get()
         .then((data) async {
       if (data.data() != null) {
         await FirebaseFirestore.instance
-            .collection('chat_list')
+            .collection('group_chat')
             .doc(project.projectId)
-            .collection(prefsObject.getString(CURRENT_USER_ID)!)
-            .doc(peerUser.id)
             .update({'badge': 0});
       }
     });
@@ -108,23 +87,9 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  Future<bool> removeActiveUser() async {
-    prefsObject.remove(PEER_USRE_ID);
-    await FirebaseFirestore.instance
-        .collection('user_currently_active')
-        .doc(userModel.userId)
-        .collection(userModel.userId!)
-        .doc(peerUser.id)
-        .delete();
-    Navigator.pop(context, true);
-    return false;
-  }
-
-  void startLoader() {
-    setState(() {
-      isLoadingPreviousMsg = true;
-      fetchData();
-    });
+  Future startLoader() async {
+    setState(() => isLoadingPreviousMsg = true);
+    await fetchData();
   }
 
   Future fetchData() async {
@@ -137,22 +102,7 @@ class _ChatState extends State<Chat> {
       isLoadingPreviousMsg = false;
       limit = limit + 20;
     });
-    await _chatBloc.getChat(groupChatId, limit);
-  }
-
-  void readLocal() {
-    if (prefsObject.getString(CURRENT_USER_ID).hashCode <=
-        peerUser.id.hashCode) {
-      groupChatId = '${prefsObject.getString(CURRENT_USER_ID)}-${peerUser.id}';
-    } else {
-      groupChatId = '${peerUser.id}-${prefsObject.getString(CURRENT_USER_ID)}';
-    }
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(prefsObject.getString(CURRENT_USER_ID))
-        .update({'chattingWith': peerUser.id});
-    setState(() {});
+    await _chatBloc.getGroupChat(groupChatId, limit);
   }
 
   @override
@@ -161,42 +111,39 @@ class _ChatState extends State<Chat> {
     height = MediaQuery.of(context).size.height;
     _theme = Theme.of(context);
     listScrollController = ScrollController()..addListener(_scrollListener);
-    return WillPopScope(
-      onWillPop: removeActiveUser,
-      child: GestureDetector(
-        onPanDown: (_) => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          key: _key,
-          appBar: appBar(),
-          body: Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              Container(
-                height: height,
-                width: width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      WHITE,
-                      MATE_WHITE,
-                      PRIMARY_COLOR.withOpacity(0.2),
-                    ],
-                  ),
+    return GestureDetector(
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        key: _key,
+        appBar: appBar(),
+        body: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    WHITE,
+                    MATE_WHITE,
+                    PRIMARY_COLOR.withOpacity(0.2),
+                  ],
                 ),
               ),
-              Column(
-                children: <Widget>[
-                  buildListMessage(),
-                  buildInput(),
-                ],
-              ),
-              isLoadingPreviousMsg
-                  ? LinearProgressIndicator(color: PRIMARY_COLOR)
-                  : SizedBox(),
-            ],
-          ),
+            ),
+            Column(
+              children: <Widget>[
+                buildListMessage(),
+                buildInput(),
+              ],
+            ),
+            isLoadingPreviousMsg
+                ? LinearProgressIndicator(color: PRIMARY_COLOR)
+                : SizedBox(),
+          ],
         ),
       ),
     );
@@ -208,19 +155,47 @@ class _ChatState extends State<Chat> {
         backgroundColor: WHITE,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
-          onPressed: () => removeActiveUser(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         titleSpacing: 0.0,
         title: Row(
           children: <Widget>[
-            CommonUserProfileOrPlaceholder(
-              size: width * 0.08,
-              imgUrl: peerUser.profileUrl,
+            Expanded(
+              flex: 1,
+              child: Stack(
+                children: <Widget>[
+                  CommonUserProfileOrPlaceholder(
+                    size: width * 0.08,
+                    imgUrl: volunteers[0].profileUrl,
+                    borderColor:
+                        volunteers[0].presence! ? GREEN : PRIMARY_COLOR,
+                  ),
+                  Positioned(
+                    left: 15.0,
+                    child: CommonUserProfileOrPlaceholder(
+                      size: width * 0.08,
+                      imgUrl: volunteers[1].profileUrl,
+                      borderColor:
+                          volunteers[1].presence! ? GREEN : PRIMARY_COLOR,
+                    ),
+                  ),
+                  Positioned(
+                    left: 30.0,
+                    child: CommonUserProfileOrPlaceholder(
+                      size: width * 0.08,
+                      imgUrl: volunteers[2].profileUrl,
+                      borderColor:
+                          volunteers[2].presence! ? GREEN : PRIMARY_COLOR,
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(width: 5),
-            Center(
+            Expanded(
+              flex: 4,
               child: Text(
-                peerUser.name,
+                project.projectName!,
                 style: _theme.textTheme.bodyText2!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: DARK_PINK_COLOR,
@@ -235,9 +210,11 @@ class _ChatState extends State<Chat> {
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
-          ? Center(child: LinearLoader())
+          ? Center(
+              child: LinearLoader(),
+            )
           : StreamBuilder<Chats>(
-              stream: _chatBloc.getMessagesStream,
+              stream: _chatBloc.getGroupMessagesStream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: LinearLoader());
@@ -245,16 +222,16 @@ class _ChatState extends State<Chat> {
                 final List<MessageModel> chat = snapshot.data!.messages;
                 return chat.isNotEmpty
                     ? ListView.builder(
-                        controller: listScrollController,
+                        reverse: true,
                         padding: EdgeInsets.symmetric(vertical: 10.0),
                         itemBuilder: (context, index) =>
                             buildItem(context, chat, index, chat[index]),
                         itemCount: chat.length,
-                        reverse: true,
+                        controller: listScrollController,
                       )
                     : Center(
                         child: Text(
-                          'Start Conversation',
+                          SART_CONVERSATION,
                           style: _theme.textTheme.headline6!
                               .copyWith(color: DARK_GRAY),
                         ),
@@ -311,7 +288,7 @@ class _ChatState extends State<Chat> {
     final File? cameraImage = File(captureFile!.path);
     if (cameraImage != null) {
       setState(() => isLoading = true);
-      await uploadFile(cameraImage);
+      uploadFile(cameraImage);
     }
   }
 
@@ -323,8 +300,10 @@ class _ChatState extends State<Chat> {
         source: ImageSource.gallery);
     final File? galleryImage = File(pickedFile!.path);
     if (galleryImage != null) {
-      setState(() => isLoading = true);
-      await uploadFile(galleryImage);
+      setState(() {
+        isLoading = true;
+      });
+      uploadFile(galleryImage);
     }
   }
 
@@ -338,8 +317,10 @@ class _ChatState extends State<Chat> {
         .putFile(image);
     final String imageUrl = await storageUploadTask.ref.getDownloadURL();
 
-    setState(() => isLoading = false);
-    await onSendMessage(content: imageUrl, isImage: true, type: 1);
+    setState(() {
+      isLoading = false;
+      onSendMessage(content: imageUrl, isImage: true, type: 1);
+    });
   }
 
   bool isLastMessageLeft(List<MessageModel> chat, int index) {
@@ -376,7 +357,7 @@ class _ChatState extends State<Chat> {
       textEditingController.clear();
 
       final documentReference = FirebaseFirestore.instance
-          .collection('messages')
+          .collection('group_messages')
           .doc(groupChatId)
           .collection(groupChatId)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
@@ -386,68 +367,24 @@ class _ChatState extends State<Chat> {
           documentReference,
           {
             'id_from': prefsObject.getString(CURRENT_USER_ID),
-            'id_to': peerUser.id,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
             'type': type,
           },
         );
       }).then((onValue) async {
-        await FirebaseFirestore.instance
-            .collection('chat_list')
-            .doc(project.projectId)
-            .collection(prefsObject.getString(CURRENT_USER_ID)!)
-            .doc(peerUser.id)
-            .set({
-          'user_id': peerUser.id,
-          'name': peerUser.name,
-          'email': peerUser.email,
-          'type': type,
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          'content': content,
-          'badge': 0,
-          'profile_image': peerUser.profileUrl,
-        }).then((onValue) async {
-          try {
+        try {
+          await FirebaseFirestore.instance
+              .collection('group_chat')
+              .doc(project.projectId)
+              .get()
+              .then((doc) async {
+            final ChatListItem chatItem =
+                ChatListItem.fromJson(doc.data() as Map<String, dynamic>);
+
             await FirebaseFirestore.instance
-                .collection('chat_list')
+                .collection('group_chat')
                 .doc(project.projectId)
-                .collection(peerUser.id)
-                .doc(prefsObject.getString(CURRENT_USER_ID))
-                .get()
-                .then((doc) async {
-              final ChatListItem chatItem =
-                  ChatListItem.fromJson(doc.data() as Map<String, dynamic>);
-              await FirebaseFirestore.instance
-                  .collection('chat_list')
-                  .doc(project.projectId)
-                  .collection(peerUser.id)
-                  .doc(prefsObject.getString(CURRENT_USER_ID))
-                  .set({
-                'user_id': prefsObject.getString(CURRENT_USER_ID),
-                'name': userModel.firstName! + ' ' + userModel.lastName!,
-                'email': userModel.email,
-                'type': type,
-                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                'content': content,
-                'badge': chatItem.badge + 1,
-                'profile_image': userModel.profileUrl,
-              }).then((value) async {
-                await FirebaseFirestore.instance
-                    .collection('user_currently_active')
-                    .doc(peerUser.id)
-                    .collection(peerUser.id)
-                    .where('user_id', isEqualTo: userModel.userId)
-                    .get();
-              });
-            });
-            await _chatBloc.getChat(groupChatId, limit);
-          } catch (e) {
-            await FirebaseFirestore.instance
-                .collection('chat_list')
-                .doc(project.projectId)
-                .collection(peerUser.id)
-                .doc(prefsObject.getString(CURRENT_USER_ID))
                 .set({
               'user_id': prefsObject.getString(CURRENT_USER_ID),
               'name': userModel.firstName! + ' ' + userModel.lastName!,
@@ -455,20 +392,31 @@ class _ChatState extends State<Chat> {
               'type': type,
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
-              'badge': 1,
+              'badge': chatItem.badge + 1,
               'profile_image': userModel.profileUrl,
-            }).then((value) async {
-              await FirebaseFirestore.instance
-                  .collection('user_currently_active')
-                  .doc(peerUser.id)
-                  .collection(peerUser.id)
-                  .where('user_id', isEqualTo: userModel.userId)
-                  .get();
             });
-            await _chatBloc.getChat(groupChatId, limit);
-          }
-        });
+          });
+          await _chatBloc.getGroupChat(groupChatId, limit);
+        } catch (e) {
+          await FirebaseFirestore.instance
+              .collection('group_chat')
+              .doc(project.projectId)
+              .set({
+            'user_id': prefsObject.getString(CURRENT_USER_ID),
+            'name': userModel.firstName! + ' ' + userModel.lastName!,
+            'email': userModel.email,
+            'type': type,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'content': content,
+            'badge': 1,
+            'profile_image': userModel.profileUrl,
+          });
+          await _chatBloc.getGroupChat(groupChatId, limit);
+        }
       });
+
+      await listScrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     }
   }
 
@@ -633,7 +581,7 @@ class _ChatState extends State<Chat> {
                             ),
                           ),
                           errorWidget: (context, url, error) => Material(
-                            child: Text('Chat not available'),
+                            child: Text('GroupChat not available'),
                             borderRadius: BorderRadius.all(
                               Radius.circular(12.0),
                             ),

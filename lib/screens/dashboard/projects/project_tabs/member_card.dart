@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/chat/chat.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -9,8 +10,10 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class MemberTabCard extends StatelessWidget {
-  MemberTabCard({Key? key, required this.volunteer}) : super(key: key);
+  MemberTabCard({Key? key, required this.volunteer, required this.project})
+      : super(key: key);
   final SignUpAndUserModel volunteer;
+  final ProjectModel project;
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
 
@@ -92,7 +95,7 @@ class MemberTabCard extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     final ChatListItem chatListItem = ChatListItem(
-                      badge: '',
+                      badge: 0,
                       content: '',
                       email: volunteer.email!,
                       id: volunteer.userId!,
@@ -105,7 +108,10 @@ class MemberTabCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Chat(peerUser: chatListItem),
+                        builder: (context) => Chat(
+                          peerUser: chatListItem,
+                          project: project,
+                        ),
                       ),
                     );
                   },
