@@ -55,7 +55,7 @@ class _ChatState extends State<Chat> {
     readLocal();
     removeBadge();
     listenUserData();
-    _chatBloc.getChat(groupChatId, limit);
+    _chatBloc.getChat(project.projectId!, groupChatId, limit);
   }
 
   Future listenUserData() async {
@@ -75,7 +75,7 @@ class _ChatState extends State<Chat> {
       setState(() {});
       await FirebaseFirestore.instance
           .collection('user_currently_active')
-          .doc(userModel.userId)
+          .doc(project.projectId)
           .collection(userModel.userId!)
           .doc(peerUser.id)
           .set({'user_id': peerUser.id});
@@ -112,7 +112,7 @@ class _ChatState extends State<Chat> {
     prefsObject.remove(PEER_USRE_ID);
     await FirebaseFirestore.instance
         .collection('user_currently_active')
-        .doc(userModel.userId)
+        .doc(project.projectId)
         .collection(userModel.userId!)
         .doc(peerUser.id)
         .delete();
@@ -137,7 +137,7 @@ class _ChatState extends State<Chat> {
       isLoadingPreviousMsg = false;
       limit = limit + 20;
     });
-    await _chatBloc.getChat(groupChatId, limit);
+    await _chatBloc.getChat(project.projectId!, groupChatId, limit);
   }
 
   void readLocal() {
@@ -377,7 +377,7 @@ class _ChatState extends State<Chat> {
 
       final documentReference = FirebaseFirestore.instance
           .collection('messages')
-          .doc(groupChatId)
+          .doc(project.projectId)
           .collection(groupChatId)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
@@ -441,7 +441,7 @@ class _ChatState extends State<Chat> {
                     .get();
               });
             });
-            await _chatBloc.getChat(groupChatId, limit);
+            await _chatBloc.getChat(project.projectId!, groupChatId, limit);
           } catch (e) {
             await FirebaseFirestore.instance
                 .collection('chat_list')
@@ -465,7 +465,7 @@ class _ChatState extends State<Chat> {
                   .where('user_id', isEqualTo: userModel.userId)
                   .get();
             });
-            await _chatBloc.getChat(groupChatId, limit);
+            await _chatBloc.getChat(project.projectId!, groupChatId, limit);
           }
         });
       });

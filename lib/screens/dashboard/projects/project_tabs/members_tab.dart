@@ -83,20 +83,21 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        return snapshot.data!.isNotEmpty
+        final List<SignUpAndUserModel> volunteers = snapshot.data!
+            .where((volunteer) =>
+                volunteer.userId != prefsObject.getString(CURRENT_USER_ID))
+            .toList();
+        return volunteers.isNotEmpty
             ? ListView.separated(
                 separatorBuilder: (context, index) => CommonDivider(),
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final SignUpAndUserModel volunteer = snapshot.data![index];
-                  return volunteer.userId !=
-                          prefsObject.getString(CURRENT_USER_ID)
-                      ? MemberTabCard(
-                          volunteer: volunteer,
-                          project: project,
-                        )
-                      : SizedBox();
+                  return MemberTabCard(
+                    volunteer: volunteer,
+                    project: project,
+                  );
                 },
               )
             : Container(

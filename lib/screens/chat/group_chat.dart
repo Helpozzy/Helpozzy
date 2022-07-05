@@ -53,6 +53,7 @@ class _ChatState extends State<GroupChat> {
   void initState() {
     super.initState();
     groupChatId = project.projectId!;
+    listScrollController = ScrollController()..addListener(_scrollListener);
     listenUserData();
     _chatBloc.getGroupChat(groupChatId, limit);
     removeBadge();
@@ -110,7 +111,6 @@ class _ChatState extends State<GroupChat> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     _theme = Theme.of(context);
-    listScrollController = ScrollController()..addListener(_scrollListener);
     return GestureDetector(
       onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -160,47 +160,17 @@ class _ChatState extends State<GroupChat> {
         titleSpacing: 0.0,
         title: Row(
           children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Stack(
-                children: <Widget>[
-                  CommonUserProfileOrPlaceholder(
-                    size: width * 0.08,
-                    imgUrl: volunteers[0].profileUrl,
-                    borderColor:
-                        volunteers[0].presence! ? GREEN : PRIMARY_COLOR,
-                  ),
-                  Positioned(
-                    left: 15.0,
-                    child: CommonUserProfileOrPlaceholder(
-                      size: width * 0.08,
-                      imgUrl: volunteers[1].profileUrl,
-                      borderColor:
-                          volunteers[1].presence! ? GREEN : PRIMARY_COLOR,
-                    ),
-                  ),
-                  Positioned(
-                    left: 30.0,
-                    child: CommonUserProfileOrPlaceholder(
-                      size: width * 0.08,
-                      imgUrl: volunteers[2].profileUrl,
-                      borderColor:
-                          volunteers[2].presence! ? GREEN : PRIMARY_COLOR,
-                    ),
-                  )
-                ],
-              ),
+            CommonUserProfileOrPlaceholder(
+              size: width * 0.08,
+              borderColor: PRIMARY_COLOR,
             ),
             SizedBox(width: 5),
-            Expanded(
-              flex: 4,
-              child: Text(
-                project.projectName!,
-                style: _theme.textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: DARK_PINK_COLOR,
-                  fontSize: 18,
-                ),
+            Text(
+              project.projectName!,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: DARK_PINK_COLOR,
+                fontSize: 18,
               ),
             ),
           ],
@@ -210,9 +180,7 @@ class _ChatState extends State<GroupChat> {
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
-          ? Center(
-              child: LinearLoader(),
-            )
+          ? Center(child: LinearLoader())
           : StreamBuilder<Chats>(
               stream: _chatBloc.getGroupMessagesStream,
               builder: (context, snapshot) {
@@ -223,11 +191,11 @@ class _ChatState extends State<GroupChat> {
                 return chat.isNotEmpty
                     ? ListView.builder(
                         reverse: true,
+                        controller: listScrollController,
                         padding: EdgeInsets.symmetric(vertical: 10.0),
                         itemBuilder: (context, index) =>
                             buildItem(context, chat, index, chat[index]),
                         itemCount: chat.length,
-                        controller: listScrollController,
                       )
                     : Center(
                         child: Text(

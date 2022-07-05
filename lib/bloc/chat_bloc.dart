@@ -18,8 +18,9 @@ class ChatBloc {
     _chatHistoryController.sink.add(chatList);
   }
 
-  Future getChat(String projectId, int limit) async {
-    final Chats messages = await repo.getMessagesRepo(projectId, limit);
+  Future getChat(String projectId, String groupChatId, int limit) async {
+    final Chats messages =
+        await repo.getMessagesRepo(projectId, groupChatId, limit);
     _messagesController.sink.add(messages);
   }
 

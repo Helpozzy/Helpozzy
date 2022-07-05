@@ -24,6 +24,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
   final ProjectModel project;
   late TextTheme _textTheme;
   late double width;
+  late double height;
   final ChatBloc _chatBloc = ChatBloc();
   final MembersBloc _membersBloc = MembersBloc();
 
@@ -38,6 +39,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
   Widget build(BuildContext context) {
     _textTheme = Theme.of(context).textTheme;
     width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Column(
       children: [
         groupChatCard(),
@@ -58,9 +60,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
           );
         }
         final List<SignUpAndUserModel> volunteers = snapshot.data!;
-        return volunteers.isNotEmpty &&
-                (volunteers.contains(project.ownerId) ||
-                    volunteers.contains(prefsObject.getString(CURRENT_USER_ID)))
+        return volunteers.isNotEmpty
             ? SizedBox(
                 width: width - (width * 0.05),
                 child: InkWell(
@@ -81,47 +81,14 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Stack(
-                              children: <Widget>[
-                                CommonUserProfileOrPlaceholder(
-                                  size: width * 0.10,
-                                  imgUrl: volunteers[0].profileUrl,
-                                  borderColor: volunteers[0].presence!
-                                      ? GREEN
-                                      : PRIMARY_COLOR,
-                                ),
-                                Positioned(
-                                  left: 15.0,
-                                  child: CommonUserProfileOrPlaceholder(
-                                    size: width * 0.10,
-                                    imgUrl: volunteers[1].profileUrl,
-                                    borderColor: volunteers[1].presence!
-                                        ? GREEN
-                                        : PRIMARY_COLOR,
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 30.0,
-                                  child: CommonUserProfileOrPlaceholder(
-                                    size: width * 0.10,
-                                    imgUrl: volunteers[2].profileUrl,
-                                    borderColor: volunteers[2].presence!
-                                        ? GREEN
-                                        : PRIMARY_COLOR,
-                                  ),
-                                )
-                              ],
-                            ),
+                          CommonUserProfileOrPlaceholder(
+                            size: width * 0.1,
+                            borderColor: PRIMARY_COLOR,
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              GROUP_CHAT_TITLE,
-                              style:
-                                  _textTheme.bodyText2!.copyWith(fontSize: 16),
-                            ),
+                          SizedBox(width: 5),
+                          Text(
+                            project.projectName!,
+                            style: _textTheme.bodyText2!.copyWith(fontSize: 18),
                           ),
                         ],
                       ),
@@ -246,7 +213,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
               )
             : Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(bottom: width * 0.2),
+                padding: EdgeInsets.only(top: height / 7),
                 child: Text(
                   START_NEW_CONVERSATION,
                   style: _textTheme.headline6!.copyWith(color: DARK_GRAY),

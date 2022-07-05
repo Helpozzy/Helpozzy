@@ -87,15 +87,6 @@ class _MembersScreenState extends State<MembersScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // selectShowOption(
-          //   buttonText: FILTERS_HINT,
-          //   icon: Icons.tune_rounded,
-          //   buttonColor: GRAY,
-          //   borderColor: PRIMARY_COLOR,
-          //   iconColor: PRIMARY_COLOR,
-          //   fontColor: PRIMARY_COLOR,
-          //   onPressed: () {},
-          // ),
           popupButton(),
           StreamBuilder<bool>(
               initialData: favVolunteers,

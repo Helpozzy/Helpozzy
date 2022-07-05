@@ -80,6 +80,7 @@ class MembersBloc {
     final List<SignUpAndUserModel> _projectMember =
         await ProjectMembers().fromTasks(tasksResponse.tasks);
     if (searchText.isEmpty) {
+      print(_projectMember.length);
       _searchProjectMembersList.sink.add(_projectMember);
     } else {
       _projectMember.forEach((volunteer) {

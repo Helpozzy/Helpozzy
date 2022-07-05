@@ -157,8 +157,9 @@ class Repository {
   Future<ChatList> getChatHistoryRepo(String projectId) =>
       apiProvider.getChatHistory(projectId);
 
-  Future<Chats> getMessagesRepo(String projectId, int limit) =>
-      apiProvider.getMessages(projectId, limit);
+  Future<Chats> getMessagesRepo(
+          String projectId, String groupChatId, int limit) =>
+      apiProvider.getMessages(projectId, groupChatId, limit);
 
   Future<Chats> getGroupMessagesRepo(String projectId, int limit) =>
       apiProvider.getGroupMessages(projectId, limit);

@@ -716,10 +716,11 @@ class ApiProvider {
     return ChatList.fromSnapshot(list: querySnapshot.docs);
   }
 
-  Future<Chats> getMessages(String groupChatId, int limit) async {
+  Future<Chats> getMessages(
+      String projectId, String groupChatId, int limit) async {
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('messages')
-        .doc(groupChatId)
+        .doc(projectId)
         .collection(groupChatId)
         .orderBy('timestamp', descending: true)
         .limit(limit)
