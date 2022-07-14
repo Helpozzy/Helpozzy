@@ -459,10 +459,10 @@ InputDecoration inputRoundedDecoration({
     fillColor: fillColor == null ? Colors.white : fillColor,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    contentPadding: EdgeInsets.only(
-      left: 30,
-      right: isDropDown ? 15 : 30,
-    ),
+    // contentPadding: EdgeInsets.only(
+    //   left: 30,
+    //   right: isDropDown ? 15 : 30,
+    // ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
       borderSide:

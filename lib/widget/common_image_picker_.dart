@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CommonPicker {
+class CustomFilePicker {
   final ImagePicker _picker = ImagePicker();
   final FilePicker _filePicker = FilePicker.platform;
 

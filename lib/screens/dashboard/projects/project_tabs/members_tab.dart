@@ -97,6 +97,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                   return MemberTabCard(
                     volunteer: volunteer,
                     project: project,
+                    chatButton: volunteer.userId !=
+                        prefsObject.getString(CURRENT_USER_ID),
                   );
                 },
               )

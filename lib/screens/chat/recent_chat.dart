@@ -42,7 +42,9 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
     height = MediaQuery.of(context).size.height;
     return Column(
       children: [
+        CommonDivider(),
         groupChatCard(),
+        CommonDivider(),
         chatList(),
       ],
     );
@@ -61,39 +63,34 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
         }
         final List<SignUpAndUserModel> volunteers = snapshot.data!;
         return volunteers.isNotEmpty
-            ? SizedBox(
-                width: width - (width * 0.05),
-                child: InkWell(
-                  onTap: () async => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => GroupChat(
-                        volunteers: volunteers,
-                        project: project,
-                      ),
+            ? ListTile(
+                tileColor: BLACK.withOpacity(0.05),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.04),
+                onTap: () async => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => GroupChat(
+                      volunteers: volunteers,
+                      project: project,
                     ),
                   ),
-                  child: Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          CommonUserProfileOrPlaceholder(
-                            size: width * 0.1,
-                            borderColor: PRIMARY_COLOR,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            project.projectName!,
-                            style: _textTheme.bodyText2!.copyWith(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
+                ),
+                leading: CommonUserProfileOrPlaceholder(
+                  size: width * 0.11,
+                  borderColor: PRIMARY_COLOR,
+                ),
+                title: Text(
+                  project.projectName!,
+                  style: _textTheme.bodyText2!.copyWith(
+                    fontSize: 16,
+                    color: PRIMARY_COLOR,
+                    fontWeight: FontWeight.w700,
                   ),
+                ),
+                trailing: Icon(
+                  CupertinoIcons.person_2,
+                  color: DARK_PINK_COLOR,
                 ),
               )
             : SizedBox();
@@ -143,15 +140,16 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                         chatListItem.content.contains('firebasestorage')
                             ? SizedBox(width: 3)
                             : SizedBox(),
-                        Text(
-                          chatListItem.content.contains('firebasestorage')
-                              ? 'Image'
-                              : chatListItem.content,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: _textTheme.bodyText2!.copyWith(
-                            color: DARK_GRAY,
-                            fontSize: 12,
+                        Expanded(
+                          child: Text(
+                            chatListItem.content.contains('firebasestorage')
+                                ? 'Image'
+                                : chatListItem.content,
+                            overflow: TextOverflow.ellipsis,
+                            style: _textTheme.bodyText2!.copyWith(
+                              color: DARK_GRAY,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ],
@@ -182,10 +180,12 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                             color: PRIMARY_COLOR,
                           ),
                         ),
-                        chatListItem.badge != 0
+                        chatListItem.badge != 0 &&
+                                chatListItem.badge.toString().isNotEmpty
                             ? SizedBox(height: 6)
                             : SizedBox(),
-                        chatListItem.badge != 0
+                        chatListItem.badge != 0 &&
+                                chatListItem.badge.toString().isNotEmpty
                             ? Container(
                                 width: 16,
                                 height: 16,
@@ -195,9 +195,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    chatListItem.badge == 0
-                                        ? ''
-                                        : chatListItem.badge.toString(),
+                                    chatListItem.badge.toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .caption!

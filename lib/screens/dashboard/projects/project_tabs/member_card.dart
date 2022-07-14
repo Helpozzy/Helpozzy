@@ -10,10 +10,15 @@ import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
 
 class MemberTabCard extends StatelessWidget {
-  MemberTabCard({Key? key, required this.volunteer, required this.project})
+  MemberTabCard(
+      {Key? key,
+      required this.volunteer,
+      required this.project,
+      required this.chatButton})
       : super(key: key);
   final SignUpAndUserModel volunteer;
   final ProjectModel project;
+  final bool chatButton;
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
 
@@ -48,7 +53,7 @@ class MemberTabCard extends StatelessWidget {
                 ),
                 Text(
                   _dateFormatFromTimeStamp
-                      .getPastTimeFromCurrent(volunteer.lastSeen!),
+                      .lastSeenFromTimeStamp(volunteer.lastSeen!),
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 9,
                     color: UNSELECTED_TAB_COLOR,
@@ -92,38 +97,43 @@ class MemberTabCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    final ChatListItem chatListItem = ChatListItem(
-                      badge: 0,
-                      content: '',
-                      email: volunteer.email!,
-                      id: volunteer.userId!,
-                      name: volunteer.firstName! + ' ' + volunteer.lastName!,
-                      profileUrl: volunteer.profileUrl!,
-                      timestamp:
-                          DateTime.now().millisecondsSinceEpoch.toString(),
-                      type: 0,
-                    );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Chat(
-                          peerUser: chatListItem,
-                          project: project,
+                chatButton
+                    ? InkWell(
+                        onTap: () {
+                          final ChatListItem chatListItem = ChatListItem(
+                            badge: 0,
+                            content: '',
+                            email: volunteer.email!,
+                            id: volunteer.userId!,
+                            name: volunteer.firstName! +
+                                ' ' +
+                                volunteer.lastName!,
+                            profileUrl: volunteer.profileUrl!,
+                            timestamp: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
+                            type: 0,
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Chat(
+                                peerUser: chatListItem,
+                                project: project,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            CupertinoIcons.chat_bubble_text,
+                            color: BLACK,
+                            size: 20,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      CupertinoIcons.chat_bubble_text,
-                      color: BLACK,
-                      size: 20,
-                    ),
-                  ),
-                ),
+                      )
+                    : SizedBox(),
               ],
             ),
           ),

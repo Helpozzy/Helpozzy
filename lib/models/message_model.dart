@@ -13,13 +13,14 @@ class Chats {
 
 class MessageModel {
   MessageModel({
+    this.userName,
     required this.content,
     required this.idFrom,
     required this.idTo,
     required this.timestamp,
     required this.type,
   });
-
+  String? userName;
   String content;
   String idFrom;
   String idTo;
@@ -27,18 +28,20 @@ class MessageModel {
   int type;
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
-        content: json["content"],
-        idFrom: json["id_from"],
-        idTo: json["id_to"] ?? '',
-        timestamp: json["timestamp"],
-        type: json["type"],
+        userName: json['user_name'] ?? '',
+        content: json['content'],
+        idFrom: json['id_from'],
+        idTo: json['id_to'] ?? '',
+        timestamp: json['timestamp'],
+        type: json['type'],
       );
 
   Map<String, dynamic> toJson() => {
-        "content": content,
-        "id_from": idFrom,
-        "id_to": idTo,
-        "timestamp": timestamp,
-        "type": type,
+        'user_name': userName,
+        'content': content,
+        'id_from': idFrom,
+        'id_to': idTo,
+        'timestamp': timestamp,
+        'type': type,
       };
 }

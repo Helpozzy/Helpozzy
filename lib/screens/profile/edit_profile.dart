@@ -38,7 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late double height;
   late double width;
   XFile? _imageFile;
-  final CommonPicker _commonPicker = CommonPicker();
+  final CustomFilePicker _customFilePicker = CustomFilePicker();
   final EditProfileBloc _editProfileBloc = EditProfileBloc();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -1018,7 +1018,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             isDefaultAction: true,
             onPressed: () async {
               Navigator.of(context).pop();
-              _imageFile = await _commonPicker.onImageButtonPressed(
+              _imageFile = await _customFilePicker.onImageButtonPressed(
                   source: ImageSource.camera, isMultiImage: false);
               setState(() {});
             },
@@ -1031,7 +1031,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             isDestructiveAction: true,
             onPressed: () async {
               Navigator.of(context).pop();
-              _imageFile = await _commonPicker.onImageButtonPressed(
+              _imageFile = await _customFilePicker.onImageButtonPressed(
                   source: ImageSource.gallery, isMultiImage: false);
               setState(() {});
             },

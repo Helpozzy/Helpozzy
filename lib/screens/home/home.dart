@@ -34,7 +34,6 @@ class _HomeState extends State<Home> {
     DashboardScreen(),
     ExploreScreen(),
     // RewardsScreen(initialIndex: 1, fromBottomBar: true),
-    // ChatListScreen(),
     NotificationInbox(),
     ProfileScreen(),
     FullScreenSignOutPrompt(),

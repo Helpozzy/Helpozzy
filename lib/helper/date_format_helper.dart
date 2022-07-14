@@ -72,37 +72,39 @@ class DateFormatFromTimeStamp {
     return years;
   }
 
-  String getPastTimeFromCurrent(String timeStamp) {
-    final DateTime lastSeen =
+  String lastSeenFromTimeStamp(String timeStamp) {
+    final DateTime messageDateTime =
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp));
-    final DateTime currentDateTime = DateTime.now();
+    DateTime now = DateTime.now();
+    DateTime justNow = now.subtract(Duration(minutes: 1));
+    DateTime localDateTime = messageDateTime.toLocal();
 
-    Duration diff = currentDateTime.difference(lastSeen);
-
-    late String lastseen = '';
-    if (diff.inDays == 0 && diff.inHours == 0 && diff.inMinutes == 0) {
-      lastseen = 'Active now';
-    } else if (diff.inDays == 0 && diff.inHours == 0 && diff.inMinutes <= 60) {
-      lastseen = '${diff.inMinutes} mins ago';
-    } else if (diff.inDays == 0 && diff.inHours <= 12) {
-      lastseen = '${diff.inHours} hrs ago';
-    } else if (diff.inDays == 0) {
-      lastseen = 'Active today';
-    } else if (diff.inDays == 1) {
-      lastseen = 'Active yesterday';
-    } else if (diff.inDays == 2) {
-      lastseen = 'Last active 2 days ago';
-    } else if (diff.inDays == 3) {
-      lastseen = 'Last active 3 days ago';
-    } else if (diff.inDays == 4) {
-      lastseen = 'Last active 4 days ago';
-    } else if (diff.inDays == 5) {
-      lastseen = 'Last active 5 days ago';
-    } else if (diff.inDays == 6) {
-      lastseen = 'Last active 6 days ago';
-    } else if (diff.inDays > 6) {
-      lastseen = dateFormatToEEEDDMMMYYYY(timeStamp: timeStamp);
+    if (!localDateTime.difference(justNow).isNegative) {
+      return 'Just Now';
     }
-    return lastseen;
+
+    String roughTimeString = DateFormat('jm').format(messageDateTime);
+
+    if (localDateTime.day == now.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
+      return 'Today, $roughTimeString';
+    }
+
+    DateTime yesterday = now.subtract(Duration(days: 1));
+
+    if (localDateTime.day == yesterday.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
+      return 'Yesterday, $roughTimeString';
+    }
+
+    if (now.difference(localDateTime).inDays < 4) {
+      String weekday = DateFormat('EEEE').format(localDateTime);
+
+      return '$weekday, $roughTimeString';
+    }
+
+    return '${DateFormat('dd MMM yyyy').format(messageDateTime)}, $roughTimeString';
   }
 }
