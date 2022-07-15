@@ -1,37 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/chat_bloc.dart';
-import 'package:helpozzy/bloc/members_bloc.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
-import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/chat/chat.dart';
-import 'package:helpozzy/screens/chat/group_chat.dart';
+import 'package:helpozzy/screens/chat/one_to_one_chat.dart';
+import 'package:helpozzy/screens/dashboard/members/members.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:intl/intl.dart';
 
-class RecentChatHistory extends StatefulWidget {
-  RecentChatHistory({required this.project});
-  final ProjectModel project;
+class ChatListScreen extends StatefulWidget {
   @override
-  _RecentChatHistoryState createState() =>
-      _RecentChatHistoryState(project: project);
+  _RecentChatHistoryState createState() => _RecentChatHistoryState();
 }
 
-class _RecentChatHistoryState extends State<RecentChatHistory> {
-  _RecentChatHistoryState({required this.project});
-  final ProjectModel project;
+class _RecentChatHistoryState extends State<ChatListScreen> {
   late TextTheme _textTheme;
   late double width;
   late double height;
   final ChatBloc _chatBloc = ChatBloc();
-  final MembersBloc _membersBloc = MembersBloc();
 
   @override
   void initState() {
-    _membersBloc.getProjectMembers(project.projectId!);
-    _chatBloc.getCurrentChatHistory(project.projectId!);
+    _chatBloc.getOneToOneChatHistory(prefsObject.getString(CURRENT_USER_ID)!);
     super.initState();
   }
 
@@ -40,67 +30,52 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
     _textTheme = Theme.of(context).textTheme;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return Column(
-      children: [
-        CommonDivider(),
-        groupChatCard(),
-        CommonDivider(),
-        chatList(),
-      ],
-    );
-  }
-
-  Widget groupChatCard() {
-    return StreamBuilder<List<SignUpAndUserModel>>(
-      stream: _membersBloc.getProjectMembersStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            child: LinearLoader(),
-          );
-        }
-        final List<SignUpAndUserModel> volunteers = snapshot.data!;
-        return volunteers.isNotEmpty
-            ? ListTile(
-                tileColor: BLACK.withOpacity(0.05),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.04),
-                onTap: () async => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => GroupChat(
-                      volunteers: volunteers,
-                      project: project,
-                    ),
-                  ),
-                ),
-                leading: CommonUserProfileOrPlaceholder(
-                  size: width * 0.11,
-                  borderColor: PRIMARY_COLOR,
-                ),
-                title: Text(
-                  project.projectName!,
-                  style: _textTheme.bodyText2!.copyWith(
-                    fontSize: 16,
-                    color: PRIMARY_COLOR,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                trailing: Icon(
-                  CupertinoIcons.person_2,
-                  color: DARK_PINK_COLOR,
-                ),
-              )
-            : SizedBox();
-      },
+    return Scaffold(
+      floatingActionButton: Transform.scale(
+        scale: 0.8,
+        child: FloatingActionButton.extended(
+          elevation: 0,
+          backgroundColor: PRIMARY_COLOR,
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MembersScreen(fromChat: true),
+              ),
+            );
+          },
+          label: Text(
+            CHAT_TITLE,
+            style: _textTheme.bodyText2!.copyWith(color: WHITE, fontSize: 16),
+          ),
+          icon: Icon(
+            CupertinoIcons.person_add,
+            color: WHITE,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: width * 0.05,
+                right: width * 0.05,
+                top: 10.0,
+                bottom: 3.0,
+              ),
+              child: SmallInfoLabel(label: CHAT_TITLE),
+            ),
+            chatList(),
+          ],
+        ),
+      ),
     );
   }
 
   Widget chatList() {
     return StreamBuilder<ChatList>(
-      stream: _chatBloc.getChatListStream,
+      stream: _chatBloc.getOneToOneChatListStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
@@ -158,13 +133,12 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                       await Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => Chat(
-                            peerUser: chatListItem,
-                            project: project,
-                          ),
+                          builder: (context) =>
+                              OneToOneChat(peerUser: chatListItem),
                         ),
                       );
-                      await _chatBloc.getCurrentChatHistory(project.projectId!);
+                      await _chatBloc.getOneToOneChatHistory(
+                          prefsObject.getString(CURRENT_USER_ID)!);
                     },
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

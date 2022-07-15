@@ -5,12 +5,15 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/auth/bloc/auth_bloc.dart';
 import 'package:helpozzy/screens/dashboard/projects/categorised_projects_list.dart';
 import 'package:helpozzy/screens/profile/edit_profile.dart';
 import 'package:helpozzy/screens/profile/points_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
+import 'package:helpozzy/widget/platform_alert_dialog.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -94,7 +97,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           border: Border.all(width: 0.7, color: GRAY),
           borderRadius: BorderRadius.circular(18)),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(width: width * 0.04),
           GestureDetector(
@@ -118,33 +120,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      user.firstName! + ' ' + user.lastName!,
-                      style: _theme.textTheme.headline6!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: DARK_MARUN,
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: width * 0.07),
+                        alignment: Alignment.center,
+                        child: Text(
+                          user.firstName! + ' ' + user.lastName!,
+                          style: _theme.textTheme.headline6!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: DARK_MARUN,
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(width: 5),
-                    InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfileScreen(user: user),
-                          ),
-                        );
-                        await _userInfoBloc
-                            .getUser(prefsObject.getString(CURRENT_USER_ID)!);
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        color: DARK_GRAY,
-                        size: 16,
-                      ),
-                    )
+                    popupButton(user),
+                    SizedBox(width: 6),
                   ],
                 ),
                 Text(
@@ -188,6 +179,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Widget popupButton(SignUpAndUserModel user) {
+    return PopupMenuButton<int>(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: Icon(
+        Icons.more_vert_rounded,
+        color: PRIMARY_COLOR,
+      ),
+      onSelected: (item) async => await handleClick(item, user),
+      itemBuilder: (context) => [
+        popupMenuItem(
+            text: EDIT_PROFILE_MENU,
+            icon: CupertinoIcons.pencil_circle,
+            value: 0),
+        PopupMenuDivider(height: 0.1),
+        popupMenuItem(
+            text: SIGN_OUT_POPUP_MENU,
+            icon: Icons.exit_to_app_rounded,
+            value: 1),
+      ],
+    );
+  }
+
+  PopupMenuItem<int> popupMenuItem(
+          {required String text, required IconData icon, required int value}) =>
+      PopupMenuItem<int>(
+        value: value,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
+              ),
+            ),
+            Icon(
+              icon,
+              color: DARK_GRAY,
+              size: 20,
+            )
+          ],
+        ),
+      );
+
+  Future handleClick(int item, SignUpAndUserModel user) async {
+    switch (item) {
+      case 0:
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditProfileScreen(user: user),
+          ),
+        );
+        await _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
+        break;
+      case 1:
+        signOutPrompt();
+        break;
+    }
   }
 
   Widget aboutMe(SignUpAndUserModel user) {
@@ -360,6 +411,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
         ],
       ),
+    );
+  }
+
+  Future signOutPrompt() async {
+    PlatformAlertDialog().showWithAction(
+      context,
+      title: SIGN_OUT_TITLE,
+      content: SIGN_OUT_FROM_APP,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () {
+              Provider.of<AuthBloc>(context, listen: false).add(AppLogout());
+              prefsObject.clear();
+              prefsObject.reload();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, INTRO, (route) => false);
+            },
+            text: SIGN_OUT_BUTTON,
+          ),
+        ),
+      ],
     );
   }
 }

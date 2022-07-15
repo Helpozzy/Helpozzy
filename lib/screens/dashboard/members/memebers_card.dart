@@ -8,13 +8,11 @@ class MemberCard extends StatelessWidget {
   final SignUpAndUserModel volunteer;
   final bool selected;
   final GestureTapCallback? onTapItem;
-  final GestureTapCallback? onTapLike;
   final GestureTapCallback? onTapChat;
   MemberCard({
     required this.volunteer,
     this.selected = false,
     this.onTapItem,
-    this.onTapLike,
     this.onTapChat,
   });
   @override
@@ -35,11 +33,11 @@ class MemberCard extends StatelessWidget {
             horizontal: width * 0.04,
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CommonUserProfileOrPlaceholder(
-                size: width * 0.12,
+                size: width * 0.11,
                 imgUrl: volunteer.profileUrl,
               ),
               SizedBox(width: 8),
@@ -55,6 +53,7 @@ class MemberCard extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
+                    SizedBox(height: 3),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -75,65 +74,16 @@ class MemberCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(
-                    //         top: 3.0,
-                    //         bottom: 3.0,
-                    //         right: 5.0,
-                    //       ),
-                    //       child: RatingBar.builder(
-                    //         initialRating: volunteer.rating!,
-                    //         ignoreGestures: true,
-                    //         minRating: 1,
-                    //         itemSize: 15,
-                    //         direction: Axis.horizontal,
-                    //         allowHalfRating: true,
-                    //         itemCount: 5,
-                    //         unratedColor: GRAY,
-                    //         itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    //         itemBuilder: (context, _) => Icon(
-                    //           Icons.star,
-                    //           color: AMBER_COLOR,
-                    //         ),
-                    //         onRatingUpdate: (rating) => print(rating),
-                    //       ),
-                    //     ),
-                    //     Text(
-                    //       '(${volunteer.reviewsByPersons} Reviews)',
-                    //       style: _theme.textTheme.bodyText2!
-                    //           .copyWith(fontSize: 10),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),
               SizedBox(width: 5),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: onTapLike,
-                    child: Icon(
-                      volunteer.favorite!
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      color: volunteer.favorite! ? PINK_COLOR : BLACK,
-                      size: 16,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  InkWell(
-                    onTap: onTapChat,
-                    child: Icon(
-                      CupertinoIcons.chat_bubble_2_fill,
-                      color: BLACK,
-                      size: 16,
-                    ),
-                  ),
-                ],
+              InkWell(
+                onTap: onTapChat,
+                child: Icon(
+                  CupertinoIcons.chat_bubble_2_fill,
+                  color: BLACK,
+                ),
               ),
             ],
           ),

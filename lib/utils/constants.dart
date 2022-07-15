@@ -44,6 +44,7 @@ const RED_COLOR = Colors.red;
 const LABEL_TILE_COLOR = Color(0xFFD8D9DD);
 const ACCENT_GREEN = Color(0xFF34C759);
 const ACCENT_GRAY_COLOR = Color(0xFFF7F4F4);
+const ACCENT_PINK_COLOR = Color.fromARGB(255, 255, 172, 194);
 
 //Splash color
 const PURPLE_COLOR = Color(0xFF445393);
@@ -62,6 +63,18 @@ const ANDROID_MAP_API_KEY = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 late SharedPreferences prefsObject;
+
+//Qualification List
+final List<String> qualifications = [
+  PRIMARY_EDUCATION,
+  SECONDARY_HIGHER_SECONDARY,
+  UNDER_GRADUATE,
+  POST_GRADUATE,
+  DOCTORAL_STUDIES,
+  VOCATIONAL_EDUCATION,
+  CERTIFICATE_DIPLOMA,
+  DISTANCE_EDUCATION,
+];
 
 //Enum
 enum ProjectTabType {
@@ -136,8 +149,8 @@ const EXPLORE_TAB = 'Explore';
 const REWARD_TAB = 'Rewards';
 const HOME_TAB = 'Home';
 const INBOX_TAB = 'Inbox';
+const CHAT_TAB = 'Chat';
 const PROFILE_TAB = 'Profile';
-const LOGOUT_TAB = 'Logout';
 
 //Dropdown hint
 const SELECT_RELATION_HINT = 'Select Relation';
@@ -192,6 +205,7 @@ const ENTER_OTP_HINT = 'Enter OTP';
 const ENTER_PARENTS_EMAIL_HINT = 'Enter parents email';
 const SELECT_DATE_OF_BIRTH_HINT = 'MM/DD/YYYY';
 const SELCT_GENDER_HINT = 'Select gender';
+const SELCT_QUALIFICATION_HINT = 'Select qualification';
 const ENTER_PHONE_NUMBER_HINT = 'Enter phone number';
 const ENTER_SCHOOL_HINT = 'Enter your school';
 const SELECT_YOUR_GRADE = 'Select your grade';
@@ -407,12 +421,22 @@ const SCHOOL_STATE = 'State of School';
 const SCHOOL_CITY = 'City of School';
 const SCHOOL_NAME = 'School Name';
 const GRADE_LEVEL = 'Grade Level';
-const EMAIL_OTP_TEXT = 'Helpozzy email verification!';
+const EMAIL_OTP_TEXT = 'Helpozzy App';
 
 //School search type
 const STATE_BOTTOMSHEET = 'State Bottomsheet';
 const CITY_BOTTOMSHEET = 'City Bottomsheet';
 const SCHOOL_BOTTOMSHEET = 'School Bottomsheet';
+
+//Qualifications
+const PRIMARY_EDUCATION = 'Primary';
+const SECONDARY_HIGHER_SECONDARY = 'Secondary/Higher Secondary';
+const UNDER_GRADUATE = 'Under-Graduate/Bachelor’s level education';
+const POST_GRADUATE = 'Post-Graduate/Master’s level';
+const DOCTORAL_STUDIES = 'Doctoral studies/Ph.D level';
+const VOCATIONAL_EDUCATION = 'Vocational Education & Training';
+const CERTIFICATE_DIPLOMA = 'Certificate and Diploma programs';
+const DISTANCE_EDUCATION = 'Distance Education';
 
 //Alert Text
 const ALERT = 'Alert';
@@ -514,6 +538,8 @@ const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
 const ORGANIZATION_TAX_ID_NUMBER = '• Tax ID No. : ';
 const PROFIT_ORGANIZATION = '• Profile Organization';
 const NON_PROFIT_ORGANIZATION = '• Non Profit organization';
+const SIGN_OUT_POPUP_MENU = 'Sign Out';
+const EDIT_PROFILE_MENU = 'Edit Profile';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';

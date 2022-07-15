@@ -241,8 +241,6 @@ class _ExploreScreenState extends State<ExploreScreen>
                   final ProjectModel project = snapshot.data![index];
                   return ProjectCard(
                     project: project,
-                    onProjectLiked: () =>
-                        setState(() => project.isLiked = !project.isLiked!),
                     onTapCard: () => Navigator.push(
                       context,
                       MaterialPageRoute(

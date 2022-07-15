@@ -112,7 +112,6 @@ class ProjectModel {
   late int? enrollmentCount;
   late bool? isApprovedFromAdmin;
   late int? totalTaskshrs = 0;
-  late bool? isLiked = false;
   late bool? isProjectDetailsExpanded = false;
   late bool? isSignedUp = false;
   late bool? isTaskDetailsExpanded = false;

@@ -5,23 +5,43 @@ import 'package:rxdart/rxdart.dart';
 
 class ChatBloc {
   final repo = Repository();
-  final _chatHistoryController = BehaviorSubject<ChatList>();
-  final _messagesController = BehaviorSubject<Chats>();
+  final _projectChatHistoryController = BehaviorSubject<ChatList>();
+  final _projectMessagesController = BehaviorSubject<Chats>();
+  final _oneToOnechatHistoryController = BehaviorSubject<ChatList>();
+  final _oneToOneMessagesController = BehaviorSubject<Chats>();
   final _groupMessagesController = BehaviorSubject<Chats>();
 
-  Stream<ChatList> get getChatListStream => _chatHistoryController.stream;
-  Stream<Chats> get getMessagesStream => _messagesController.stream;
+  Stream<ChatList> get getChatListStream =>
+      _projectChatHistoryController.stream;
+  Stream<Chats> get getProjectMessagesStream =>
+      _projectMessagesController.stream;
+  Stream<Chats> get getOneToOneMessagesStream =>
+      _oneToOneMessagesController.stream;
+  Stream<ChatList> get getOneToOneChatListStream =>
+      _oneToOnechatHistoryController.stream;
   Stream<Chats> get getGroupMessagesStream => _groupMessagesController.stream;
 
-  Future getCurrentChatHistory(String projectId) async {
-    final ChatList chatList = await repo.getChatHistoryRepo(projectId);
-    _chatHistoryController.sink.add(chatList);
+  Future getProjectChatHistory(String projectId) async {
+    final ChatList chatList = await repo.getProjectChatHistoryRepo(projectId);
+    _projectChatHistoryController.sink.add(chatList);
   }
 
-  Future getChat(String projectId, String groupChatId, int limit) async {
+  Future getProjectChat(String projectId, String groupChatId, int limit) async {
     final Chats messages =
-        await repo.getMessagesRepo(projectId, groupChatId, limit);
-    _messagesController.sink.add(messages);
+        await repo.getProjectMessagesRepo(projectId, groupChatId, limit);
+    _projectMessagesController.sink.add(messages);
+  }
+
+  Future getOneToOneChatHistory(String groupChatId) async {
+    final ChatList chatList =
+        await repo.getOneToOneChatHistoryRepo(groupChatId);
+    _oneToOnechatHistoryController.sink.add(chatList);
+  }
+
+  Future getOneToOneChat(String groupChatId, int limit) async {
+    final Chats messages =
+        await repo.getOneToOneMessagesRepo(groupChatId, limit);
+    _oneToOneMessagesController.sink.add(messages);
   }
 
   Future getGroupChat(String projectId, int limit) async {
@@ -30,8 +50,10 @@ class ChatBloc {
   }
 
   void dispose() {
-    _chatHistoryController.close();
-    _messagesController.close();
+    _projectChatHistoryController.close();
+    _projectMessagesController.close();
     _groupMessagesController.close();
+    _oneToOneMessagesController.close();
+    _oneToOnechatHistoryController.close();
   }
 }

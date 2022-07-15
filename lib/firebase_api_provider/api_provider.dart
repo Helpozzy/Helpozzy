@@ -706,9 +706,9 @@ class ApiProvider {
   }
 
   //Chat API provider
-  Future<ChatList> getChatHistory(String projectId) async {
+  Future<ChatList> getProjectChatHistory(String projectId) async {
     final Query query = FirebaseFirestore.instance
-        .collection('chat_list')
+        .collection('project_chat_list')
         .doc(projectId)
         .collection(prefsObject.getString(CURRENT_USER_ID)!);
     final QuerySnapshot querySnapshot =
@@ -716,10 +716,10 @@ class ApiProvider {
     return ChatList.fromSnapshot(list: querySnapshot.docs);
   }
 
-  Future<Chats> getMessages(
+  Future<Chats> getProjectMessages(
       String projectId, String groupChatId, int limit) async {
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('messages')
+        .collection('project_messages')
         .doc(projectId)
         .collection(groupChatId)
         .orderBy('timestamp', descending: true)
@@ -727,6 +727,30 @@ class ApiProvider {
         .get();
     return Chats.fromJson(list: querySnapshot.docs);
   }
+
+  //One to One Chat
+  Future<ChatList> getOneToOneChatHistory(String groupChatId) async {
+    final Query query = FirebaseFirestore.instance
+        .collection('one_to_one_chat_list')
+        .doc(groupChatId)
+        .collection(prefsObject.getString(CURRENT_USER_ID)!);
+    final QuerySnapshot querySnapshot =
+        await query.orderBy('timestamp', descending: true).get();
+    return ChatList.fromSnapshot(list: querySnapshot.docs);
+  }
+
+  Future<Chats> getOneToOneMessages(String groupChatId, int limit) async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('one_to_one_messages')
+        .doc(groupChatId)
+        .collection(groupChatId)
+        .orderBy('timestamp', descending: true)
+        .limit(limit)
+        .get();
+    return Chats.fromJson(list: querySnapshot.docs);
+  }
+
+  //Group chat
 
   Future<Chats> getGroupMessages(String groupChatId, int limit) async {
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance

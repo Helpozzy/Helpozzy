@@ -1,18 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/dashboard/members/memebers_selection_card.dart';
+import 'package:helpozzy/screens/chat/one_to_one_chat.dart';
+import 'package:helpozzy/screens/dashboard/members/memebers_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class MembersScreen extends StatefulWidget {
+  MembersScreen({required this.fromChat});
+  final bool fromChat;
   @override
-  _MembersScreenState createState() => _MembersScreenState();
+  _MembersScreenState createState() => _MembersScreenState(fromChat: fromChat);
 }
 
 class _MembersScreenState extends State<MembersScreen> {
+  _MembersScreenState({required this.fromChat});
+  final bool fromChat;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
   late double width;
@@ -39,13 +44,15 @@ class _MembersScreenState extends State<MembersScreen> {
         title: MEMBERS_APPBAR,
         onBack: () => Navigator.of(context).pop(),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.pop(context, selectedItems),
-            icon: Icon(
-              Icons.check,
-              color: DARK_PINK_COLOR,
-            ),
-          ),
+          fromChat
+              ? SizedBox()
+              : IconButton(
+                  onPressed: () => Navigator.pop(context, selectedItems),
+                  icon: Icon(
+                    Icons.check,
+                    color: DARK_PINK_COLOR,
+                  ),
+                ),
         ],
       ),
       body: body(),
@@ -59,52 +66,31 @@ class _MembersScreenState extends State<MembersScreen> {
         children: [
           Container(
             height: 40,
-            padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: CommonRoundedTextfield(
-              fillColor: GRAY,
-              controller: _searchController,
-              hintText: SEARCH_MEMBERS_HINT,
-              textAlignCenter: true,
-              prefixIcon: Icon(
-                CupertinoIcons.search,
-                color: DARK_GRAY,
-                size: 24,
-              ),
-              validator: (val) => null,
-              onChanged: (val) => _membersBloc.searchMembers(searchText: val),
+            margin: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 5),
+            child: Row(
+              children: [
+                popupButton(),
+                SizedBox(width: 5),
+                Expanded(
+                  child: CommonRoundedTextfield(
+                    fillColor: GRAY,
+                    controller: _searchController,
+                    hintText: SEARCH_MEMBERS_HINT,
+                    textAlignCenter: false,
+                    prefixIcon: Icon(
+                      CupertinoIcons.search,
+                      color: DARK_GRAY,
+                      size: 24,
+                    ),
+                    validator: (val) => null,
+                    onChanged: (val) =>
+                        _membersBloc.searchMembers(searchText: val),
+                  ),
+                ),
+              ],
             ),
           ),
-          volunteerFilteringSection(),
           Expanded(child: membersList()),
-        ],
-      ),
-    );
-  }
-
-  Widget volunteerFilteringSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          popupButton(),
-          StreamBuilder<bool>(
-              initialData: favVolunteers,
-              stream: _membersBloc.getFavVolunteersStream,
-              builder: (context, snapshot) {
-                return selectShowOption(
-                  buttonText: FAVORITE_HINT,
-                  buttonColor: snapshot.data! ? PRIMARY_COLOR : GRAY,
-                  borderColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                  iconColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                  fontColor: snapshot.data! ? WHITE : PRIMARY_COLOR,
-                  icon: Icons.favorite_border_rounded,
-                  onPressed: () {
-                    favVolunteers = !favVolunteers;
-                    _membersBloc.changeFavVal(favVolunteers);
-                  },
-                );
-              }),
         ],
       ),
     );
@@ -113,13 +99,10 @@ class _MembersScreenState extends State<MembersScreen> {
   Widget popupButton() {
     return PopupMenuButton<int>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      child: selectShowOption(
-        buttonText: SORT_BY_HINT,
-        buttonColor: GRAY,
-        borderColor: PRIMARY_COLOR,
-        iconColor: PRIMARY_COLOR,
-        fontColor: PRIMARY_COLOR,
-        icon: Icons.keyboard_arrow_down_rounded,
+      child: Icon(
+        Icons.sort_rounded,
+        size: 30,
+        color: PRIMARY_COLOR,
       ),
       onSelected: (item) async => await handleClick(item),
       itemBuilder: (context) => [
@@ -156,27 +139,6 @@ class _MembersScreenState extends State<MembersScreen> {
     }
   }
 
-  Widget selectShowOption({
-    required String buttonText,
-    required IconData icon,
-    void Function()? onPressed,
-    required Color buttonColor,
-    required Color borderColor,
-    required Color fontColor,
-    required Color iconColor,
-  }) {
-    return SmallCommonButtonWithIcon(
-      icon: icon,
-      text: buttonText,
-      onPressed: onPressed,
-      fontSize: 12,
-      iconSize: 13,
-      buttonColor: buttonColor,
-      fontColor: fontColor,
-      iconColor: iconColor,
-    );
-  }
-
   Widget membersList() {
     return StreamBuilder<List<SignUpAndUserModel>>(
       stream: _membersBloc.getSearchedMembersStream,
@@ -190,146 +152,42 @@ class _MembersScreenState extends State<MembersScreen> {
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             final SignUpAndUserModel volunteer = snapshot.data![index];
-            return StreamBuilder<bool>(
-              initialData: favVolunteers,
-              stream: _membersBloc.getFavVolunteersStream,
-              builder: (context, snapshot) {
-                return snapshot.data!
-                    ? volunteer.favorite!
-                        ? MemberCard(
-                            volunteer: volunteer,
-                            selected: volunteer.isSelected!,
-                            onTapLike: () => setState(() =>
-                                volunteer.favorite = !volunteer.favorite!),
-                            onTapItem: () {
-                              setState(() => volunteer.isSelected =
-                                  !volunteer.isSelected!);
-                              if (volunteer.isSelected!) {
-                                if (!selectedItems.contains(volunteer)) {
-                                  selectedItems.add(volunteer);
-                                }
-                              }
-                            },
-                          )
-                        : SizedBox()
-                    : MemberCard(
-                        volunteer: volunteer,
-                        selected: volunteer.isSelected!,
-                        onTapLike: () => setState(
-                            () => volunteer.favorite = !volunteer.favorite!),
-                        onTapItem: () {
-                          setState(() =>
-                              volunteer.isSelected = !volunteer.isSelected!);
-                          if (volunteer.isSelected!) {
-                            if (!selectedItems.contains(volunteer)) {
-                              selectedItems.add(volunteer);
-                            }
-                          } else {
-                            selectedItems.remove(volunteer);
-                          }
-                        },
-                      );
+            return MemberCard(
+              volunteer: volunteer,
+              selected: volunteer.isSelected!,
+              onTapChat: () {
+                final ChatListItem chatListItem = ChatListItem(
+                  badge: 0,
+                  content: '',
+                  email: volunteer.email!,
+                  id: volunteer.userId!,
+                  name: volunteer.firstName! + ' ' + volunteer.lastName!,
+                  profileUrl: volunteer.profileUrl!,
+                  timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+                  type: 0,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OneToOneChat(peerUser: chatListItem),
+                  ),
+                );
               },
+              onTapItem: fromChat
+                  ? () {}
+                  : () {
+                      setState(
+                          () => volunteer.isSelected = !volunteer.isSelected!);
+                      if (volunteer.isSelected!) {
+                        if (!selectedItems.contains(volunteer)) {
+                          selectedItems.add(volunteer);
+                        }
+                      }
+                    },
             );
           },
         );
       },
-    );
-  }
-
-  Widget memberItem({required SignUpAndUserModel volunteer}) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: width * 0.035, horizontal: width * 0.04),
-        child: Row(
-          children: [
-            CommonUserProfileOrPlaceholder(
-              size: width * 0.11,
-              imgUrl: volunteer.profileUrl,
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    volunteer.firstName! + ' ' + volunteer.lastName!,
-                    style: _theme.textTheme.bodyText2!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    volunteer.address!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 3.0,
-                          bottom: 3.0,
-                          right: 5.0,
-                        ),
-                        child: RatingBar.builder(
-                          initialRating: volunteer.rating!,
-                          ignoreGestures: true,
-                          minRating: 1,
-                          itemSize: 15,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          unratedColor: GRAY,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: AMBER_COLOR,
-                          ),
-                          onRatingUpdate: (rating) => print(rating),
-                        ),
-                      ),
-                      Text(
-                        '(${volunteer.reviewsByPersons} Reviews)',
-                        style:
-                            _theme.textTheme.bodyText2!.copyWith(fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() => volunteer.favorite = !volunteer.favorite!);
-                  },
-                  child: Icon(
-                    volunteer.favorite!
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    color: volunteer.favorite! ? PINK_COLOR : BLACK,
-                    size: 16,
-                  ),
-                ),
-                SizedBox(height: 20),
-                InkWell(
-                  onTap: () {},
-                  child: Icon(
-                    CupertinoIcons.chat_bubble_2_fill,
-                    color: BLACK,
-                    size: 16,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

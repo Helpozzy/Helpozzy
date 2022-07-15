@@ -31,7 +31,6 @@ class SignUpAndUserModel {
     this.gradeLevel,
     this.areaOfInterests,
     this.currentYearTargetHours,
-    this.favorite,
     this.pointGifted,
     this.totalSpentHrs,
     this.rating,
@@ -142,7 +141,6 @@ class SignUpAndUserModel {
   late String? gradeLevel;
   late List<int>? areaOfInterests = [];
   late int? currentYearTargetHours;
-  late bool? favorite = false;
   late int? totalSpentHrs;
   late int? pointGifted;
   late double? rating;

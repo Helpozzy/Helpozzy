@@ -4,7 +4,7 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/chat/chat.dart';
+import 'package:helpozzy/screens/chat/project_chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -117,7 +117,7 @@ class MemberTabCard extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Chat(
+                              builder: (context) => ProjectChat(
                                 peerUser: chatListItem,
                                 project: project,
                               ),

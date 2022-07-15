@@ -10,12 +10,10 @@ class ProjectCard extends StatelessWidget {
     this.onTapCard,
     required this.project,
     required this.onPressedSignUpButton,
-    required this.onProjectLiked,
   });
   final GestureTapCallback? onTapCard;
   final void Function()? onPressedSignUpButton;
   final ProjectModel project;
-  final VoidCallback? onProjectLiked;
   final int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
@@ -138,20 +136,6 @@ class ProjectCard extends StatelessWidget {
                       ],
                     ),
                   ],
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  onPressed: onProjectLiked,
-                  icon: Icon(
-                    project.isLiked!
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    color: project.isLiked! ? Colors.red : WHITE,
-                    size: 19,
-                  ),
                 ),
               ),
             ],

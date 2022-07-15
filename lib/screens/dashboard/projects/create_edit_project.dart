@@ -313,21 +313,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: TextfieldLabelSmall(label: STATUS_LABEL),
               ),
               statusSegmentation(),
-              fromEdit ? SizedBox() : Divider(),
-              fromEdit
-                  ? SizedBox()
-                  : Padding(
-                      padding: EdgeInsets.only(
-                          top: width * 0.03, left: width * 0.05),
-                      child: TextfieldLabelSmall(
-                          label: PROJECT_INVITE_COLLABORATOR_LABEL),
-                    ),
-              fromEdit
-                  ? SizedBox()
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: inviteCollaborators(),
-                    ),
+              // fromEdit ? SizedBox() : Divider(),
+              // fromEdit
+              //     ? SizedBox()
+              //     : Padding(
+              //         padding: EdgeInsets.only(
+              //             top: width * 0.03, left: width * 0.05),
+              //         child: TextfieldLabelSmall(
+              //             label: PROJECT_INVITE_COLLABORATOR_LABEL),
+              //       ),
+              // fromEdit
+              //     ? SizedBox()
+              //     : Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              //         child: inviteCollaborators(),
+              // ),
               Divider(),
               Padding(
                 padding: EdgeInsets.only(top: width * 0.03, left: width * 0.05),

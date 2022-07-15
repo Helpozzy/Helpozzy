@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,25 +12,22 @@ import 'package:helpozzy/bloc/chat_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/message_model.dart';
-import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Chat extends StatefulWidget {
-  const Chat({required this.peerUser, required this.project});
+class OneToOneChat extends StatefulWidget {
+  const OneToOneChat({required this.peerUser});
   final ChatListItem peerUser;
-  final ProjectModel project;
   @override
-  _ChatState createState() => _ChatState(peerUser: peerUser, project: project);
+  _ProjectChatState createState() => _ProjectChatState(peerUser: peerUser);
 }
 
-class _ChatState extends State<Chat> {
-  _ChatState({required this.peerUser, required this.project});
+class _ProjectChatState extends State<OneToOneChat> {
+  _ProjectChatState({required this.peerUser});
   final ChatListItem peerUser;
-  final ProjectModel project;
   late double width;
   late double height;
   late ThemeData _theme;
@@ -53,11 +51,10 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
-    getUserData();
     readLocal();
     removeBadge();
     listenUserData();
-    _chatBloc.getChat(project.projectId!, groupChatId, limit);
+    _chatBloc.getOneToOneChat(groupChatId, limit);
   }
 
   Future listenUserData() async {
@@ -67,35 +64,18 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  Future getUserData() async {
-    prefsObject.setString(PEER_USRE_ID, peerUser.id);
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(peerUser.id)
-        .get()
-        .then((value) async {
-      setState(() {});
-      await FirebaseFirestore.instance
-          .collection('user_currently_active')
-          .doc(project.projectId)
-          .collection(userModel.userId!)
-          .doc(peerUser.id)
-          .set({'user_id': peerUser.id});
-    });
-  }
-
   Future removeBadge() async {
     await FirebaseFirestore.instance
-        .collection('chat_list')
-        .doc(project.projectId)
+        .collection('one_to_one_chat_list')
+        .doc(prefsObject.getString(CURRENT_USER_ID)!)
         .collection(prefsObject.getString(CURRENT_USER_ID)!)
         .doc(peerUser.id)
         .get()
         .then((data) async {
       if (data.data() != null) {
         await FirebaseFirestore.instance
-            .collection('chat_list')
-            .doc(project.projectId)
+            .collection('one_to_one_chat_list')
+            .doc(prefsObject.getString(CURRENT_USER_ID)!)
             .collection(prefsObject.getString(CURRENT_USER_ID)!)
             .doc(peerUser.id)
             .update({'badge': 0});
@@ -108,18 +88,6 @@ class _ChatState extends State<Chat> {
         listScrollController.position.maxScrollExtent) {
       startLoader();
     }
-  }
-
-  Future<bool> removeActiveUser() async {
-    prefsObject.remove(PEER_USRE_ID);
-    await FirebaseFirestore.instance
-        .collection('user_currently_active')
-        .doc(project.projectId)
-        .collection(userModel.userId!)
-        .doc(peerUser.id)
-        .delete();
-    Navigator.pop(context, true);
-    return false;
   }
 
   void startLoader() {
@@ -139,7 +107,7 @@ class _ChatState extends State<Chat> {
       isLoadingPreviousMsg = false;
       limit = limit + 20;
     });
-    await _chatBloc.getChat(project.projectId!, groupChatId, limit);
+    await _chatBloc.getOneToOneChat(groupChatId, limit);
   }
 
   void readLocal() {
@@ -149,12 +117,6 @@ class _ChatState extends State<Chat> {
     } else {
       groupChatId = '${peerUser.id}-${prefsObject.getString(CURRENT_USER_ID)}';
     }
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(prefsObject.getString(CURRENT_USER_ID))
-        .update({'chattingWith': peerUser.id});
-    setState(() {});
   }
 
   @override
@@ -163,27 +125,24 @@ class _ChatState extends State<Chat> {
     height = MediaQuery.of(context).size.height;
     _theme = Theme.of(context);
     listScrollController = ScrollController()..addListener(_scrollListener);
-    return WillPopScope(
-      onWillPop: removeActiveUser,
-      child: GestureDetector(
-        onPanDown: (_) => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          key: _key,
-          appBar: appBar(),
-          body: Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  buildListMessage(),
-                  buildInput(),
-                ],
-              ),
-              isLoadingPreviousMsg
-                  ? LinearProgressIndicator(color: PRIMARY_COLOR)
-                  : SizedBox(),
-            ],
-          ),
+    return GestureDetector(
+      onPanDown: (_) => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        key: _key,
+        appBar: appBar(),
+        body: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                buildListMessage(),
+                buildInput(),
+              ],
+            ),
+            isLoadingPreviousMsg
+                ? LinearProgressIndicator(color: PRIMARY_COLOR)
+                : SizedBox(),
+          ],
         ),
       ),
     );
@@ -195,7 +154,7 @@ class _ChatState extends State<Chat> {
         backgroundColor: WHITE,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: DARK_PINK_COLOR),
-          onPressed: () => removeActiveUser(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         titleSpacing: 0.0,
         title: Row(
@@ -224,7 +183,7 @@ class _ChatState extends State<Chat> {
       child: groupChatId == ''
           ? Center(child: LinearLoader())
           : StreamBuilder<Chats>(
-              stream: _chatBloc.getMessagesStream,
+              stream: _chatBloc.getOneToOneMessagesStream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: LinearLoader());
@@ -253,100 +212,90 @@ class _ChatState extends State<Chat> {
 
   Widget buildItem(BuildContext context, List<MessageModel> chat, int index,
       MessageModel message) {
-    return Row(
-      mainAxisAlignment:
-          message.idFrom == prefsObject.getString(CURRENT_USER_ID)
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
-      children: <Widget>[
-        GestureDetector(
-          onLongPress: () {
-            Clipboard.setData(ClipboardData(text: message.content));
-            ScaffoldSnakBar().show(context, msg: MESSAGE_COPIED_POPUP_MSG);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: message.idFrom == prefsObject.getString(CURRENT_USER_ID)
-                  ? DARK_PINK_COLOR.withOpacity(0.3)
-                  : DARK_BLUE.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-            margin: EdgeInsets.only(bottom: 10.0, right: 18, left: 18),
-            child: Column(
-              crossAxisAlignment:
-                  message.idFrom == prefsObject.getString(CURRENT_USER_ID)
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-              children: [
-                message.type == 0
-                    ? SizedBox(
-                        width: message.content.length > 40 ? width - 100 : null,
-                        child: Text(
-                          message.content,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(color: BLACK),
-                        ),
-                      )
-                    : InkWell(
-                        child: ClipRRect(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: Center(child: LinearLoader()),
-                              width: MediaQuery.of(context).size.width / 2,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: BLACK.withOpacity(0.3),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12.0)),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Icon(Icons.error_outline_rounded),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12.0),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: message.content,
-                            width: MediaQuery.of(context).size.width / 2,
-                            fit: BoxFit.cover,
+    return GestureDetector(
+      onLongPress: () {
+        Clipboard.setData(ClipboardData(text: message.content));
+        ScaffoldSnakBar().show(context, msg: MESSAGE_COPIED_POPUP_MSG);
+      },
+      child: Bubble(
+        margin: BubbleEdges.only(top: 12, left: 8, right: 8),
+        padding: BubbleEdges.symmetric(vertical: 8.0, horizontal: 12.0),
+        elevation: 0,
+        radius: Radius.circular(13),
+        nipWidth: 10,
+        nipHeight: 12,
+        nipRadius: 2.0,
+        alignment: message.idFrom == prefsObject.getString(CURRENT_USER_ID)
+            ? Alignment.topRight
+            : Alignment.topLeft,
+        nip: message.idFrom == prefsObject.getString(CURRENT_USER_ID)
+            ? BubbleNip.rightTop
+            : BubbleNip.leftTop,
+        color: message.idFrom == prefsObject.getString(CURRENT_USER_ID)
+            ? ACCENT_PINK_COLOR
+            : GRAY,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            message.type == 0
+                ? Text(
+                    message.content,
+                    style: _theme.textTheme.bodyText2!.copyWith(color: BLACK),
+                  )
+                : InkWell(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                          child: Center(child: LinearLoader()),
+                          width: MediaQuery.of(context).size.width / 2,
+                          padding: EdgeInsets.all(70.0),
+                          decoration: BoxDecoration(
+                            color: message.idFrom ==
+                                    prefsObject.getString(CURRENT_USER_ID)
+                                ? DARK_PINK_COLOR.withOpacity(0.3)
+                                : DARK_GRAY.withOpacity(0.2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0)),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  FullScreenView(imgUrl: message.content),
-                            ),
-                          );
-                        },
+                        errorWidget: (context, url, error) => Material(
+                          child: Icon(Icons.error_outline_rounded),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                        ),
+                        imageUrl: message.content,
+                        width: MediaQuery.of(context).size.width / 2,
+                        fit: BoxFit.cover,
                       ),
-                SizedBox(height: 3),
-                isLastMessage(chat, index)
-                    ? Container(
-                        alignment: message.idFrom ==
-                                prefsObject.getString(CURRENT_USER_ID)
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Text(
-                          _dateFormatFromTimeStamp
-                              .lastSeenFromTimeStamp(message.timestamp),
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            color: DARK_GRAY,
-                            fontSize: 9.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              FullScreenView(imgUrl: message.content),
                         ),
-                      )
-                    : SizedBox()
-              ],
-            ),
-          ),
-        )
-      ],
+                      );
+                    },
+                  ),
+            SizedBox(height: 3),
+            isLastMessage(chat, index)
+                ? Text(
+                    _dateFormatFromTimeStamp
+                        .lastSeenFromTimeStamp(message.timestamp),
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      color: DARK_GRAY,
+                      fontSize: 9.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                : SizedBox()
+          ],
+        ),
+      ),
     );
   }
 
@@ -368,7 +317,7 @@ class _ChatState extends State<Chat> {
                 child: IconButton(
                   icon: Icon(
                     CupertinoIcons.photo_fill_on_rectangle_fill,
-                    color: PRIMARY_COLOR,
+                    color: PRIMARY_COLOR.withOpacity(0.8),
                   ),
                   onPressed: () => imageOptionPopup(),
                 ),
@@ -376,7 +325,7 @@ class _ChatState extends State<Chat> {
               suffixIcon: InkWell(
                 child: Icon(
                   CupertinoIcons.play_circle_fill,
-                  color: PRIMARY_COLOR,
+                  color: PRIMARY_COLOR.withOpacity(0.8),
                   size: width * 0.09,
                 ),
                 onTap: () async => onSendMessage(
@@ -505,8 +454,8 @@ class _ChatState extends State<Chat> {
       textEditingController.clear();
 
       final documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(project.projectId)
+          .collection('one_to_one_messages')
+          .doc(groupChatId)
           .collection(groupChatId)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
@@ -523,8 +472,8 @@ class _ChatState extends State<Chat> {
         );
       }).then((onValue) async {
         await FirebaseFirestore.instance
-            .collection('chat_list')
-            .doc(project.projectId)
+            .collection('one_to_one_chat_list')
+            .doc(prefsObject.getString(CURRENT_USER_ID)!)
             .collection(prefsObject.getString(CURRENT_USER_ID)!)
             .doc(peerUser.id)
             .set({
@@ -539,8 +488,8 @@ class _ChatState extends State<Chat> {
         }).then((onValue) async {
           try {
             await FirebaseFirestore.instance
-                .collection('chat_list')
-                .doc(project.projectId)
+                .collection('one_to_one_chat_list')
+                .doc(peerUser.id)
                 .collection(peerUser.id)
                 .doc(prefsObject.getString(CURRENT_USER_ID))
                 .get()
@@ -548,8 +497,8 @@ class _ChatState extends State<Chat> {
               final ChatListItem chatItem =
                   ChatListItem.fromJson(doc.data() as Map<String, dynamic>);
               await FirebaseFirestore.instance
-                  .collection('chat_list')
-                  .doc(project.projectId)
+                  .collection('one_to_one_chat_list')
+                  .doc(peerUser.id)
                   .collection(peerUser.id)
                   .doc(prefsObject.getString(CURRENT_USER_ID))
                   .set({
@@ -561,20 +510,13 @@ class _ChatState extends State<Chat> {
                 'content': content,
                 'badge': chatItem.badge + 1,
                 'profile_image': userModel.profileUrl,
-              }).then((value) async {
-                await FirebaseFirestore.instance
-                    .collection('user_currently_active')
-                    .doc(peerUser.id)
-                    .collection(peerUser.id)
-                    .where('user_id', isEqualTo: userModel.userId)
-                    .get();
               });
             });
-            await _chatBloc.getChat(project.projectId!, groupChatId, limit);
+            await _chatBloc.getOneToOneChat(groupChatId, limit);
           } catch (e) {
             await FirebaseFirestore.instance
-                .collection('chat_list')
-                .doc(project.projectId)
+                .collection('one_to_one_chat_list')
+                .doc(peerUser.id)
                 .collection(peerUser.id)
                 .doc(prefsObject.getString(CURRENT_USER_ID))
                 .set({
@@ -586,15 +528,8 @@ class _ChatState extends State<Chat> {
               'content': content,
               'badge': 1,
               'profile_image': userModel.profileUrl,
-            }).then((value) async {
-              await FirebaseFirestore.instance
-                  .collection('user_currently_active')
-                  .doc(peerUser.id)
-                  .collection(peerUser.id)
-                  .where('user_id', isEqualTo: userModel.userId)
-                  .get();
             });
-            await _chatBloc.getChat(project.projectId!, groupChatId, limit);
+            await _chatBloc.getOneToOneChat(groupChatId, limit);
           }
         });
       });

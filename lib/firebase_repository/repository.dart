@@ -154,12 +154,19 @@ class Repository {
       apiProvider.removeNotificationAPIProvider(id);
 
   //Chat API provider
-  Future<ChatList> getChatHistoryRepo(String projectId) =>
-      apiProvider.getChatHistory(projectId);
+  Future<ChatList> getProjectChatHistoryRepo(String projectId) =>
+      apiProvider.getProjectChatHistory(projectId);
 
-  Future<Chats> getMessagesRepo(
+  Future<Chats> getProjectMessagesRepo(
           String projectId, String groupChatId, int limit) =>
-      apiProvider.getMessages(projectId, groupChatId, limit);
+      apiProvider.getProjectMessages(projectId, groupChatId, limit);
+
+  //OneToOne Chat
+  Future<ChatList> getOneToOneChatHistoryRepo(String groupChatId) =>
+      apiProvider.getOneToOneChatHistory(groupChatId);
+
+  Future<Chats> getOneToOneMessagesRepo(String groupChatId, int limit) =>
+      apiProvider.getOneToOneMessages(groupChatId, limit);
 
   Future<Chats> getGroupMessagesRepo(String projectId, int limit) =>
       apiProvider.getGroupMessages(projectId, limit);

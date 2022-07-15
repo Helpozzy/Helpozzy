@@ -523,24 +523,6 @@ class _VolunteerProjectTaskSignUpState
                 },
               )
             : SizedBox(),
-        !fromTask
-            ? Positioned(
-                right: 17,
-                bottom: 11,
-                child: InkWell(
-                  onTap: () {
-                    setState(() => project!.isLiked = !project!.isLiked!);
-                  },
-                  child: Icon(
-                    project!.isLiked!
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    color: project!.isLiked! ? Colors.red : WHITE,
-                    size: 19,
-                  ),
-                ),
-              )
-            : SizedBox(),
       ],
     );
   }

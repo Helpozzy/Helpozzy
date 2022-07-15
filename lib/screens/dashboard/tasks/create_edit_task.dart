@@ -413,7 +413,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         selectedItems = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MembersScreen(),
+            builder: (context) => MembersScreen(fromChat: false),
           ),
         );
         if (selectedItems.isNotEmpty) {
@@ -563,16 +563,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         minimumAgeRequirementSlider(),
         SizedBox(height: 8),
         TextfieldLabelSmall(label: TASK_QUALIFICATION_LABEL),
-        CommonSimpleTextfield(
-          controller: _taskQualificationController,
-          hintText: TASK_QUALIFICATION_HINT,
-          validator: (val) {
-            if (val!.isEmpty) {
-              return 'Enter qualification';
-            }
-            return null;
-          },
-        ),
+        qualificationDropDown(),
       ],
     );
   }
@@ -698,6 +689,35 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       style: _themeData.textTheme.bodyText2!
           .copyWith(fontWeight: FontWeight.w500, color: DARK_GRAY_FONT_COLOR),
     );
+  }
+
+  Widget qualificationDropDown() {
+    return DropdownButtonFormField<String>(
+        decoration: inputSimpleDecoration(
+          getHint: _taskQualificationController.text.isNotEmpty
+              ? _taskQualificationController.text
+              : SELCT_QUALIFICATION_HINT,
+        ),
+        icon: Icon(Icons.expand_more_rounded),
+        validator: (val) {
+          if (val == null && _taskQualificationController.text.isEmpty) {
+            return 'Select qualification want to continue';
+          }
+          return null;
+        },
+        isExpanded: true,
+        onTap: () => FocusScope.of(context).unfocus(),
+        onChanged: (String? newValue) =>
+            setState(() => _taskQualificationController.text = newValue!),
+        items: qualifications.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              textAlign: TextAlign.center,
+            ),
+          );
+        }).toList());
   }
 
   Future clearFields() async {

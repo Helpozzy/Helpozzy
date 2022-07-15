@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpozzy/screens/chat/chat_list.dart';
 import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
 import 'package:helpozzy/screens/notification/notification_inbox.dart';
 import 'package:helpozzy/screens/profile/profile_screen.dart';
-import 'package:helpozzy/screens/sign_out_prompt/sign_out_prompt.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'bloc/home_bloc.dart';
 
@@ -35,8 +35,8 @@ class _HomeState extends State<Home> {
     ExploreScreen(),
     // RewardsScreen(initialIndex: 1, fromBottomBar: true),
     NotificationInbox(),
+    ChatListScreen(),
     ProfileScreen(),
-    FullScreenSignOutPrompt(),
   ];
 
   @override
@@ -78,15 +78,15 @@ class _HomeState extends State<Home> {
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person, size: 16),
-                activeIcon: Icon(CupertinoIcons.person_solid, size: 20),
-                label: PROFILE_TAB,
+                icon: Icon(CupertinoIcons.chat_bubble_2, size: 18),
+                activeIcon: Icon(CupertinoIcons.chat_bubble_2_fill, size: 22),
+                label: CHAT_TAB,
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.logout_rounded, size: 16),
-                activeIcon: Icon(Icons.logout_rounded, size: 20),
-                label: LOGOUT_TAB,
+                icon: Icon(CupertinoIcons.person, size: 16),
+                activeIcon: Icon(CupertinoIcons.person_solid, size: 20),
+                label: PROFILE_TAB,
                 backgroundColor: Colors.white,
               ),
             ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/screens/common_screen.dart';
 import 'package:helpozzy/screens/rewards/tabs/my_rewards_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -23,7 +22,7 @@ class _RewardsScreenState extends State<RewardsScreen>
   @override
   void initState() {
     _tabController = TabController(
-        length: 5, initialIndex: widget.initialIndex, vsync: this);
+        length: 4, initialIndex: widget.initialIndex, vsync: this);
     super.initState();
   }
 
@@ -55,7 +54,6 @@ class _RewardsScreenState extends State<RewardsScreen>
           _tab(text: DETAILS_TAB),
           _tab(text: POINT_TAB),
           _tab(text: MY_REWARDS_TAB),
-          _tab(text: REDEEM_TAB),
           _tab(text: TRANSFER_POINT_TAB),
         ],
       );
@@ -80,7 +78,6 @@ class _RewardsScreenState extends State<RewardsScreen>
         DetailsTabScreen(),
         PointsTabScreen(tabController: _tabController),
         MyRewardsTabScreen(),
-        CommonSampleScreen('Redeem\nComing Soon!'),
         TransferPointTabScreen(),
       ],
     );

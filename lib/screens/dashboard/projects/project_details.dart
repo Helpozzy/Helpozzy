@@ -6,7 +6,7 @@ import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
-import 'package:helpozzy/screens/chat/recent_chat.dart';
+import 'package:helpozzy/screens/dashboard/projects/project_tabs/messenger_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
@@ -244,24 +244,6 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     ),
                   )
                 : SizedBox(),
-            currentPosition < height / 10
-                ? Positioned(
-                    right: 17,
-                    bottom: 11,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() => project.isLiked = !project.isLiked!);
-                      },
-                      child: Icon(
-                        project.isLiked!
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: project.isLiked! ? Colors.red : WHITE,
-                        size: 19,
-                      ),
-                    ),
-                  )
-                : SizedBox()
           ],
         ),
       ),

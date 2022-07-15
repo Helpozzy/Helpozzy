@@ -17,7 +17,6 @@ class MembersBloc {
   final _searchMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _searchProjectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
   final _projectMembersList = BehaviorSubject<List<SignUpAndUserModel>>();
-  final _filteredFavContoller = BehaviorSubject<bool>();
 
   Stream<Users> get getMembersStream => _membersController.stream;
   Stream<UserRewardsDetailsHelper> get getuserRewardDetailsStream =>
@@ -28,7 +27,6 @@ class MembersBloc {
       _searchProjectMembersList.stream;
   Stream<List<SignUpAndUserModel>> get getProjectMembersStream =>
       _projectMembersList.stream;
-  Stream<bool> get getFavVolunteersStream => _filteredFavContoller.stream;
 
   Future getMembers() async {
     final Users users =
@@ -121,16 +119,11 @@ class MembersBloc {
     _searchMembersList.sink.add(users.peoples);
   }
 
-  Future changeFavVal(bool enabled) async {
-    _filteredFavContoller.sink.add(enabled);
-  }
-
   void dispose() {
     _membersController.close();
     _userRewardDetailsController.close();
     _searchMembersList.close();
     _projectMembersList.close();
     _searchProjectMembersList.close();
-    _filteredFavContoller.close();
   }
 }
