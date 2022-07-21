@@ -33,7 +33,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   void initState() {
     super.initState();
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    _projectsBloc.getProjects();
+    _projectsBloc.getProjects(projectTabType: ProjectTabType.EXPLORE_SCREEN);
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
@@ -47,42 +47,34 @@ class _ExploreScreenState extends State<ExploreScreen>
     return SafeArea(
       child: GestureDetector(
         onPanDown: (_) => FocusScope.of(context).unfocus(),
-        child: Column(
-          children: [
-            searchField(),
-            CommonDivider(),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () => Future.delayed(
-                  Duration(seconds: 1),
-                  () async => await _projectsBloc.getProjects(),
-                ),
-                color: PRIMARY_COLOR,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: width * 0.05,
-                          right: width * 0.05,
-                          bottom: width * 0.02,
-                          top: 5,
-                        ),
-                        child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
-                      ),
-                      categoryView(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                        child:
-                            SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
-                      ),
-                      projectListView(),
-                    ],
+        child: RefreshIndicator(
+          onRefresh: () => Future.delayed(
+            Duration(seconds: 1),
+            () async => await _projectsBloc.getProjects(
+                projectTabType: ProjectTabType.EXPLORE_SCREEN),
+          ),
+          color: PRIMARY_COLOR,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                searchField(),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: width * 0.05,
+                    right: width * 0.05,
+                    top: 5,
                   ),
+                  child: SmallInfoLabel(label: SEARCH_BY_CATEGORY),
                 ),
-              ),
+                categoryView(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  child: SmallInfoLabel(label: CURRENT_OPEN_PROJECT_LABEL),
+                ),
+                projectListView(),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -109,7 +101,9 @@ class _ExploreScreenState extends State<ExploreScreen>
               suffixIcon: IconButton(
                 onPressed: () {
                   _searchController.clear();
-                  _projectsBloc.getProjects(searchText: '');
+                  _projectsBloc.getProjects(
+                      projectTabType: ProjectTabType.EXPLORE_SCREEN,
+                      searchText: '');
                 },
                 icon: Icon(
                   CupertinoIcons.clear,
@@ -120,7 +114,9 @@ class _ExploreScreenState extends State<ExploreScreen>
               fillColor: GRAY,
               controller: _searchController,
               hintText: TYPE_KEYWORD_HINT,
-              onChanged: (val) => _projectsBloc.getProjects(searchText: val),
+              onChanged: (val) => _projectsBloc.getProjects(
+                  projectTabType: ProjectTabType.EXPLORE_SCREEN,
+                  searchText: val),
               validator: (val) => null,
             ),
           ),
@@ -171,53 +167,49 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget categoryView() {
-    return Column(
-      children: [
-        GridView.count(
-          physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          children: categoriesList.map((CategoryModel category) {
-            return InkWell(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CategorisedProjectsScreen(
-                    category: category,
-                    fromPrefs: false,
-                  ),
+    return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      childAspectRatio: 1.2,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+      children: categoriesList.map((CategoryModel category) {
+        return InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategorisedProjectsScreen(
+                category: category,
+                fromPrefs: false,
+              ),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                category.asset!,
+                fit: BoxFit.fill,
+                color: PRIMARY_COLOR,
+                height: width * 0.1,
+                width: width * 0.1,
+              ),
+              SizedBox(height: 4),
+              Text(
+                category.label!,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: _themeData.textTheme.bodyText2!.copyWith(
+                  fontSize: 10,
+                  color: DARK_GRAY_FONT_COLOR,
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    category.asset!,
-                    fit: BoxFit.fill,
-                    color: PRIMARY_COLOR,
-                    height: width * 0.1,
-                    width: width * 0.1,
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    category.label!,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: _themeData.textTheme.bodyText2!.copyWith(
-                      fontSize: 10,
-                      color: DARK_GRAY_FONT_COLOR,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-        Divider(),
-      ],
+              )
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -258,10 +250,14 @@ class _ExploreScreenState extends State<ExploreScreen>
                   );
                 },
               )
-            : Center(
+            : Container(
+                height: height / 3,
+                alignment: Alignment.center,
                 child: Text(
-                  NOT_AVAILABLE,
-                  style: _themeData.textTheme.bodyText2,
+                  NO_CURRENT_VOLUNTEERING_OPPORTUNITIES,
+                  textAlign: TextAlign.center,
+                  style: _themeData.textTheme.headline6!
+                      .copyWith(color: DARK_GRAY),
                 ),
               );
       },

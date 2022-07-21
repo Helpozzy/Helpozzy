@@ -233,7 +233,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       pointGifted: user.pointGifted,
       profileUrl: profileUrl.isEmpty ? user.profileUrl : profileUrl,
       rating: user.rating,
-      reviewsByPersons: user.reviewsByPersons,
       volunteerType: user.volunteerType,
       lastSeen: user.lastSeen,
       presence: user.presence,

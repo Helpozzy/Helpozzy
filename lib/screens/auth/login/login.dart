@@ -131,8 +131,8 @@ class _LoginInputState extends State<LoginInput> {
                               padding: EdgeInsets.only(right: 8.0),
                               child: Icon(
                                 snapshot.data!
-                                    ? CupertinoIcons.eye_slash
-                                    : CupertinoIcons.eye,
+                                    ? CupertinoIcons.eye
+                                    : CupertinoIcons.eye_slash,
                                 color: DARK_GRAY,
                                 size: 16,
                               ),
@@ -142,16 +142,7 @@ class _LoginInputState extends State<LoginInput> {
                               _loginRxDartBloc.changeShowPass(showPass);
                             },
                           ),
-                          validator: (password) {
-                            if (password!.isEmpty) {
-                              return 'Please enter password';
-                            } else if (password.isNotEmpty &&
-                                password.length < 8) {
-                              return 'Password must be at least 8 characters';
-                            } else {
-                              return null;
-                            }
-                          },
+                          validator: (password) => null,
                         );
                       },
                     ),

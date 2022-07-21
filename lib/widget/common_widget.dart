@@ -1114,3 +1114,26 @@ class StatusWidget extends StatelessWidget {
     );
   }
 }
+
+class Badge extends StatelessWidget {
+  const Badge({Key? key, required this.counter}) : super(key: key);
+  final String counter;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: PRIMARY_COLOR,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 6.5, vertical: 2),
+      child: Text(
+        counter,
+        style: Theme.of(context).textTheme.caption!.copyWith(
+              color: WHITE,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+      ),
+    );
+  }
+}

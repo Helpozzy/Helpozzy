@@ -248,60 +248,99 @@ class ApiProvider {
     }
   }
 
+  Future<ResponseModel> removeNoLongerAvailProjectAPIProvider() async {
+    try {
+      DateTime currentDate = DateTime.now();
+      DateTime fifteenDayBackDate = currentDate.add(Duration(days: 8));
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+          .collection('projects')
+          .where('end_date',
+              isGreaterThanOrEqualTo:
+                  fifteenDayBackDate.millisecondsSinceEpoch.toString())
+          .get();
+      print(querySnapshot.docs.length);
+      // querySnapshot.docs.forEach((doc) async {
+      //   await doc.reference.delete();
+      // });
+      return ResponseModel(
+          success: true, message: 'No longer needed projects are removed');
+    } catch (e) {
+      return ResponseModel(
+          success: false, error: 'Failed, Projects are not removed');
+    }
+  }
+
   Future<Projects> getProjectsAPIProvider(
       {ProjectTabType? projectTabType}) async {
-    final QuerySnapshot querySnapshot = projectTabType == ProjectTabType.OWN_TAB
-        ? await firestore
-            .collection('projects')
-            .where('owner_id',
-                isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
-            .get()
-        : projectTabType == ProjectTabType.MY_ENROLLED_TAB
-            ? await firestore
-                .collection('signed_up_projects')
-                .where('signup_uid',
-                    isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
-                .where('is_approved_from_admin', isEqualTo: true)
-                .get()
-            : projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
-                ? await firestore
-                    .collection('projects')
-                    .where('status', isEqualTo: TOGGLE_NOT_STARTED)
-                    .where('owner_id',
-                        isNotEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
-                    .get()
-                : projectTabType == ProjectTabType.PROJECT_OPEN_TAB
-                    ? await firestore
-                        .collection('projects')
-                        .where('status', isEqualTo: TOGGLE_INPROGRESS)
-                        .where('owner_id',
-                            isNotEqualTo:
-                                prefsObject.getString(CURRENT_USER_ID)!)
-                        .get()
-                    : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                        ? await firestore
-                            .collection('signed_up_projects')
-                            .where('signup_uid',
-                                isEqualTo:
-                                    prefsObject.getString(CURRENT_USER_ID)!)
-                            .where('is_approved_from_admin', isEqualTo: true)
-                            .get()
-                        : projectTabType ==
-                                ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
-                            ? await firestore
-                                .collection('signed_up_projects')
-                                .where('owner_id',
-                                    isNotEqualTo:
-                                        prefsObject.getString(CURRENT_USER_ID)!)
-                                .where('signup_uid',
-                                    isEqualTo:
-                                        prefsObject.getString(CURRENT_USER_ID)!)
-                                .where('is_approved_from_admin',
-                                    isEqualTo: true)
-                                .get()
-                            : await firestore.collection('projects').get();
+    if (projectTabType == ProjectTabType.EXPLORE_SCREEN) {
+      final List<QueryDocumentSnapshot<Map<String, dynamic>>> filterdQuery =
+          await firestore
+              .collection('projects')
+              .where('owner_id',
+                  isNotEqualTo: prefsObject.getString(CURRENT_USER_ID))
+              .get()
+              .then((snapshot) => snapshot.docs
+                  .where((doc) =>
+                      int.parse(doc['end_date']) >=
+                      DateTime.now().millisecondsSinceEpoch)
+                  .toList());
 
-    return Projects.fromJson(list: querySnapshot.docs);
+      return Projects.fromJson(list: filterdQuery);
+    } else {
+      final QuerySnapshot querySnapshot = projectTabType ==
+              ProjectTabType.OWN_TAB
+          ? await firestore
+              .collection('projects')
+              .where('owner_id',
+                  isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+              .get()
+          : projectTabType == ProjectTabType.MY_ENROLLED_TAB
+              ? await firestore
+                  .collection('signed_up_projects')
+                  .where('signup_uid',
+                      isEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+                  .where('is_approved_from_admin', isEqualTo: true)
+                  .get()
+              : projectTabType == ProjectTabType.PROJECT_UPCOMING_TAB
+                  ? await firestore
+                      .collection('projects')
+                      .where('status', isEqualTo: TOGGLE_NOT_STARTED)
+                      .where('owner_id',
+                          isNotEqualTo: prefsObject.getString(CURRENT_USER_ID)!)
+                      .get()
+                  : projectTabType == ProjectTabType.PROJECT_OPEN_TAB
+                      ? await firestore
+                          .collection('projects')
+                          .where('status', isEqualTo: TOGGLE_INPROGRESS)
+                          .where('owner_id',
+                              isNotEqualTo:
+                                  prefsObject.getString(CURRENT_USER_ID)!)
+                          .get()
+                      : projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
+                          ? await firestore
+                              .collection('signed_up_projects')
+                              .where('signup_uid',
+                                  isEqualTo:
+                                      prefsObject.getString(CURRENT_USER_ID)!)
+                              .where('is_approved_from_admin', isEqualTo: true)
+                              .get()
+                          : projectTabType ==
+                                  ProjectTabType
+                                      .PROJECT_CONTRIBUTION_TRACKER_TAB
+                              ? await firestore
+                                  .collection('signed_up_projects')
+                                  .where('owner_id',
+                                      isNotEqualTo: prefsObject
+                                          .getString(CURRENT_USER_ID)!)
+                                  .where('signup_uid',
+                                      isEqualTo: prefsObject
+                                          .getString(CURRENT_USER_ID)!)
+                                  .where('is_approved_from_admin',
+                                      isEqualTo: true)
+                                  .get()
+                              : await firestore.collection('projects').get();
+      return Projects.fromJson(list: querySnapshot.docs);
+    }
   }
 
   Future<ProjectModel> getSignedUpProjectByProjectIdAPIProvider(

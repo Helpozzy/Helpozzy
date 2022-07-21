@@ -34,7 +34,6 @@ class SignUpAndUserModel {
     this.pointGifted,
     this.totalSpentHrs,
     this.rating,
-    this.reviewsByPersons,
     this.joiningDate,
     this.isOrganization,
     this.organizationDetails,
@@ -75,7 +74,6 @@ class SignUpAndUserModel {
         : double.parse(
             json['rating'] != null ? json['rating'].toString() : '0',
           );
-    reviewsByPersons = json['review_by_persons'];
     pointGifted = json['point_gifted'];
     totalSpentHrs = json['total_spent_hrs'];
     joiningDate = json['date_of_joining'];
@@ -110,7 +108,6 @@ class SignUpAndUserModel {
       'current_year_target_hours': currentYearTargetHours,
       'date_of_joining': joiningDate,
       'rating': rating,
-      'review_by_persons': reviewsByPersons,
       'total_spent_hrs': totalSpentHrs,
       'point_gifted': pointGifted,
       'is_organization': isOrganization,
@@ -144,7 +141,6 @@ class SignUpAndUserModel {
   late int? totalSpentHrs;
   late int? pointGifted;
   late double? rating;
-  late int? reviewsByPersons;
   late String? joiningDate;
   late OrganizationSignUpModel? organizationDetails;
   late bool? isOrganization = false;

@@ -52,6 +52,11 @@ class ProjectsBloc {
     return response;
   }
 
+  Future<ResponseModel> removeNoLongerAvailProject() async {
+    final ResponseModel response = await repo.removeNoLongerAvailProjectRepo();
+    return response;
+  }
+
   List<ProjectModel> searchedProjects = [];
 
   Future getProjects(

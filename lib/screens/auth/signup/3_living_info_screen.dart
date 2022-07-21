@@ -70,7 +70,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
     FocusScope.of(context).unfocus();
     signupAndUserModel.address = location;
     if (_formKey.currentState!.validate()) {
-      if (location != null || location!.isNotEmpty) {
+      if (location != null && location!.isNotEmpty) {
         if (signupAndUserModel.isOrganization!) {
           Navigator.push(
             context,
@@ -93,7 +93,7 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
         }
       } else {
         ScaffoldSnakBar()
-            .show(context, msg: 'Please select location to move forward');
+            .show(context, msg: 'Please select location to continue');
       }
     }
   }

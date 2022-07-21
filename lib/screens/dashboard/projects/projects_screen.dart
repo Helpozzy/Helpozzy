@@ -23,6 +23,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   void initState() {
+    _projectsBloc.removeNoLongerAvailProject();
     _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
     _myProjectTabController =
         TabController(length: 2, initialIndex: 0, vsync: this);

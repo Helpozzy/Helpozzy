@@ -98,7 +98,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
   Widget popupButton() {
     return PopupMenuButton<int>(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Icon(
         Icons.sort_rounded,
         size: 30,
@@ -109,8 +109,6 @@ class _MembersScreenState extends State<MembersScreen> {
         popupMenuItem(text: NAME_TEXT, value: 0),
         PopupMenuDivider(height: 0.1),
         popupMenuItem(text: RATING_TEXT, value: 1),
-        PopupMenuDivider(height: 0.1),
-        popupMenuItem(text: REVIEWS_TEXT, value: 2),
       ],
     );
   }
@@ -132,9 +130,6 @@ class _MembersScreenState extends State<MembersScreen> {
         break;
       case 1:
         _membersBloc.sortMembersByRating();
-        break;
-      case 2:
-        _membersBloc.sortMembersByReviewedPersons();
         break;
     }
   }

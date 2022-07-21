@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/chat_bloc.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
+import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -9,7 +10,6 @@ import 'package:helpozzy/screens/chat/project_chat.dart';
 import 'package:helpozzy/screens/chat/group_chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:intl/intl.dart';
 
 class RecentChatHistory extends StatefulWidget {
   RecentChatHistory({required this.project});
@@ -27,6 +27,8 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
   late double height;
   final ChatBloc _chatBloc = ChatBloc();
   final MembersBloc _membersBloc = MembersBloc();
+  final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
+      DateFormatFromTimeStamp();
 
   @override
   void initState() {
@@ -125,9 +127,10 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                     title: Text(
                       chatListItem.name,
                       style: _textTheme.bodyText2!.copyWith(
-                          fontSize: 16,
-                          color: PRIMARY_COLOR,
-                          fontWeight: FontWeight.w700),
+                        fontSize: 14,
+                        color: PRIMARY_COLOR,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     subtitle: Row(
                       children: [
@@ -170,11 +173,8 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('hh:mm a').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(chatListItem.timestamp),
-                            ),
-                          ),
+                          _dateFormatFromTimeStamp
+                              .lastSeenFromTimeStamp(chatListItem.timestamp),
                           style: _textTheme.bodyText2!.copyWith(
                             fontSize: 12,
                             color: PRIMARY_COLOR,
@@ -186,22 +186,8 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                             : SizedBox(),
                         chatListItem.badge != 0 &&
                                 chatListItem.badge.toString().isNotEmpty
-                            ? Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  color: PRIMARY_COLOR,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    chatListItem.badge.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption!
-                                        .copyWith(color: WHITE),
-                                  ),
-                                ),
+                            ? Badge(
+                                counter: chatListItem.badge.toString(),
                               )
                             : SizedBox(),
                       ],

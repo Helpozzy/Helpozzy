@@ -13,12 +13,15 @@ class UserInfoBloc {
 
   Stream<SignUpAndUserModel> get userStream => userController.stream;
 
-  Future getUser(String uId) async {
+  Future<SignUpAndUserModel> getUser(String uId) async {
     final SignUpAndUserModel response = await repo.userInfoRepo(uId);
-    prefsObject.setString(CURRENT_USER_PROFILE_URL, response.profileUrl!);
-    final String userData = jsonEncode(response.toJson());
-    prefsObject.setString(CURRENT_USER_DATA, userData);
+    if (uId == prefsObject.getString(CURRENT_USER_ID)) {
+      prefsObject.setString(CURRENT_USER_PROFILE_URL, response.profileUrl!);
+      final String userData = jsonEncode(response.toJson());
+      prefsObject.setString(CURRENT_USER_DATA, userData);
+    }
     userController.sink.add(response);
+    return response;
   }
 
   Future<ResponseModel> udateUserPresence(

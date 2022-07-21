@@ -304,8 +304,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
             : Center(
                 child: Text(
                   NO_NOTIFICATIONS_FOUND,
-                  style: _theme.textTheme.headline5!
-                      .copyWith(color: DARK_GRAY, fontWeight: FontWeight.bold),
+                  style: _theme.textTheme.headline6!.copyWith(color: DARK_GRAY),
                 ),
               );
       },

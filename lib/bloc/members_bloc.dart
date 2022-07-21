@@ -104,14 +104,6 @@ class MembersBloc {
     _searchMembersList.sink.add(users.peoples);
   }
 
-  Future sortMembersByReviewedPersons() async {
-    final Users users =
-        await repo.usersRepo(prefsObject.getString(CURRENT_USER_ID)!);
-    users.peoples
-        .sort((a, b) => a.reviewsByPersons!.compareTo(b.reviewsByPersons!));
-    _searchMembersList.sink.add(users.peoples);
-  }
-
   Future sortMembersByRating() async {
     final Users users =
         await repo.usersRepo(prefsObject.getString(CURRENT_USER_ID)!);

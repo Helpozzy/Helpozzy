@@ -1,11 +1,7 @@
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/project_task_bloc.dart';
-import 'package:helpozzy/bloc/task_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
-// import 'package:helpozzy/screens/dashboard/projects/volunteer_sign_up.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
@@ -22,14 +18,12 @@ class _TaskDetailsState extends State<TaskDetails> {
   late ThemeData _theme;
   late double width;
 
-  final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
-  final TaskBloc _taskBloc = TaskBloc();
-
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: CommonAppBar(context).show(title: TASK_DETAILS_APPBAR),
       body: SafeArea(child: body(task)),
     );
@@ -55,48 +49,70 @@ class _TaskDetailsState extends State<TaskDetails> {
                       ),
                     ),
                   ),
+                  SizedBox(height: width * 0.02),
                   taskSchedule(task),
-                  SizedBox(height: 10),
+                  SizedBox(height: width * 0.06),
                   taskDiscription(task),
                 ],
               ),
             ),
           ),
-          // task.isApprovedFromAdmin != null && task.isApprovedFromAdmin!
-          //     ? task.status == TOGGLE_NOT_STARTED
-          //         ? startDeclineButton(task)
-          //         : task.status == TOGGLE_INPROGRESS
-          //             ? completedButton(task)
-          //             : Container(
-          //                 alignment: Alignment.center,
-          //                 margin: EdgeInsets.symmetric(vertical: 10.0),
-          //                 child: CommonButton(
-          //                   text: LOG_HOURS_BUTTON,
-          //                   color: BUTTON_GRAY_COLOR,
-          //                   onPressed: () {},
-          //                 ),
-          //               )
-          //     : Container(
-          //         alignment: Alignment.center,
-          //         margin: EdgeInsets.symmetric(vertical: 10.0),
-          //         child: CommonButton(
-          //           text: SIGN_UP,
-          //           color: DARK_GRAY,
-          //           onPressed: () {
-          //             Navigator.push(
-          //               context,
-          //               CupertinoPageRoute(
-          //                 builder: (context) => VolunteerProjectTaskSignUp(
-          //                   fromTask: true,
-          //                   task: task,
-          //                 ),
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       ),
         ],
       ),
+    );
+  }
+
+  Widget taskSchedule(TaskModel task) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          SCHEDULE,
+          style:
+              _theme.textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: width * 0.02),
+        Row(
+          children: [
+            Text(
+              DateFormatFromTimeStamp()
+                  .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate!),
+              style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
+            ),
+            SizedBox(width: 5),
+            Icon(
+              CupertinoIcons.calendar,
+              size: 16,
+              color: PRIMARY_COLOR,
+            ),
+          ],
+        ),
+        SizedBox(height: 6),
+        Row(
+          children: [
+            Text(
+              ESTIMATED_HRS,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 12,
+                color: PRIMARY_COLOR,
+              ),
+            ),
+            Text(
+              task.estimatedHrs.toString(),
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 12,
+                color: UNSELECTED_TAB_COLOR,
+              ),
+            ),
+            SizedBox(width: 5),
+            Icon(
+              CupertinoIcons.timer,
+              size: 16,
+              color: PRIMARY_COLOR,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -106,15 +122,10 @@ class _TaskDetailsState extends State<TaskDetails> {
       children: [
         Text(
           TASK_DETAILS,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
+          style:
+              _theme.textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0),
-          child: CommonDivider(),
-        ),
+        SizedBox(height: width * 0.02),
         Text(
           task.description!,
           style: _theme.textTheme.bodyText2!.copyWith(
@@ -124,145 +135,6 @@ class _TaskDetailsState extends State<TaskDetails> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget taskSchedule(TaskModel task) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          SCHEDULES,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0),
-          child: CommonDivider(),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              DateFormatFromTimeStamp()
-                  .dateFormatToEEEDDMMMYYYY(timeStamp: task.startDate!),
-              style: _theme.textTheme.bodyText2!
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-            Row(
-              children: [
-                Text(
-                  ESTIMATED_HRS,
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    color: PRIMARY_COLOR,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  task.estimatedHrs.toString(),
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    color: UNSELECTED_TAB_COLOR,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget startDeclineButton(TaskModel task) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: width * 0.04),
-      child: Row(
-        children: [
-          Expanded(
-            child: CommonButton(
-              text: START_BUTTON,
-              color: GRAY,
-              fontColor: DARK_GRAY,
-              onPressed: () async {
-                final TaskModel taskModel = TaskModel(
-                  enrollTaskId: task.enrollTaskId,
-                  projectId: task.projectId,
-                  taskOwnerId: task.taskOwnerId,
-                  taskName: task.taskName,
-                  description: task.description,
-                  memberRequirement: task.memberRequirement,
-                  ageRestriction: task.ageRestriction,
-                  qualification: task.qualification,
-                  startDate: task.startDate,
-                  endDate: task.endDate,
-                  estimatedHrs: task.estimatedHrs,
-                  totalVolunteerHrs: task.totalVolunteerHrs,
-                  members: task.members,
-                  status: TOGGLE_INPROGRESS,
-                );
-                final ResponseModel response =
-                    await _projectTaskBloc.updateTask(taskModel);
-                if (response.success!) {
-                  _taskBloc.getTask(task.taskId!);
-                  ScaffoldSnakBar().show(context, msg: TASK_STARTED_POPUP_MSG);
-                } else {
-                  ScaffoldSnakBar()
-                      .show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-                }
-              },
-            ),
-          ),
-          SizedBox(width: 15),
-          Expanded(
-            child: CommonButton(
-              fontColor: BLACK,
-              color: SILVER_GRAY,
-              text: DECLINE_BUTTON,
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget completedButton(TaskModel task) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: width * 0.04),
-      child: CommonButton(
-        text: COMPLETED_BUTTON,
-        color: DARK_PINK_COLOR,
-        onPressed: () async {
-          final TaskModel taskModel = TaskModel(
-            enrollTaskId: task.enrollTaskId,
-            projectId: task.projectId,
-            taskOwnerId: task.taskOwnerId,
-            taskName: task.taskName,
-            description: task.description,
-            memberRequirement: task.memberRequirement,
-            ageRestriction: task.ageRestriction,
-            qualification: task.qualification,
-            startDate: task.startDate,
-            endDate: task.endDate,
-            estimatedHrs: task.estimatedHrs,
-            totalVolunteerHrs: task.totalVolunteerHrs,
-            members: task.members,
-            status: TOGGLE_COMPLETE,
-          );
-          final ResponseModel response =
-              await _projectTaskBloc.updateTask(taskModel);
-          if (response.success!) {
-            _taskBloc.getTask(task.taskId!);
-            ScaffoldSnakBar().show(context, msg: TASK_COMPLETED_POPUP_MSG);
-          } else {
-            ScaffoldSnakBar().show(context, msg: TASK_NOT_UPDATED_POPUP_MSG);
-          }
-        },
-      ),
     );
   }
 }

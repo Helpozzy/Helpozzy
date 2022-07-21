@@ -85,6 +85,7 @@ enum ProjectTabType {
   MY_ENROLLED_TAB,
   PROJECT_COMPLETED_TAB,
   PROJECT_CONTRIBUTION_TRACKER_TAB,
+  EXPLORE_SCREEN,
 }
 
 enum SearchBottomSheetType {
@@ -385,7 +386,8 @@ const ANIMAL_CARE = 'Animal\nCare';
 const SENIOR_CENTER = 'Senior\nCenter';
 const CHILDREN_AND_YOUTH = 'Children\nand Youth';
 const MORE = 'More..';
-const NOT_AVAILABLE = 'Not available..';
+const NO_CURRENT_VOLUNTEERING_OPPORTUNITIES =
+    'Not any current volunteering opportunities';
 
 //Project list labels
 const NEW_PROJECT_LABEL = 'New Projects';
@@ -473,7 +475,7 @@ const CURRENT_LOCATION = 'Current Location';
 const ABOUT_ORGANIZER = 'About Organizer';
 const OVERVIEW = 'Overview';
 const PROJECT_DETAILS = 'Project Details';
-const SCHEDULES = 'Schedules';
+const SCHEDULE = '• Schedule Info';
 const DIRECTION = 'Direction';
 const INFO = 'Info';
 const TASKS = 'Tasks';
@@ -491,7 +493,7 @@ const MESSENGER_TAB = 'Messenger';
 const ATTACHMENTS_TAB = 'Attachments';
 
 //User project task details
-const TASK_DETAILS = 'Task Details';
+const TASK_DETAILS = '• Task Details';
 const MY_TASKS_LABEL = 'My Tasks';
 const TASK_CREATED_ON = 'Task created on : ';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';

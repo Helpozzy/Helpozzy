@@ -223,7 +223,7 @@ class _ProjectChatState extends State<OneToOneChat> {
         elevation: 0,
         radius: Radius.circular(13),
         nipWidth: 10,
-        nipHeight: 12,
+        nipHeight: 10,
         nipRadius: 2.0,
         alignment: message.idFrom == prefsObject.getString(CURRENT_USER_ID)
             ? Alignment.topRight

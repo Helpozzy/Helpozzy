@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
+import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
+import 'package:helpozzy/screens/chat/one_to_one_chat.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_tabs/messenger_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -40,16 +44,25 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   final ProjectsBloc _projectsBloc = ProjectsBloc();
   final ScrollController scrollController = ScrollController();
   late double currentPosition = 0.0;
+  final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  late SignUpAndUserModel projectOwner;
 
   @override
   void initState() {
     _projectReviewsBloc.getProjectReviews(projectID);
     _projectsBloc.getProjectByProjectId(projectID);
     _tabController = TabController(length: 4, initialIndex: 0, vsync: this);
+    getProjectOwnerDetails();
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
     super.initState();
+  }
+
+  Future getProjectOwnerDetails() async {
+    _projectsBloc.getProjectByIdStream.listen((project) async {
+      projectOwner = await _userInfoBloc.getUser(project.ownerId!);
+    });
   }
 
   @override
@@ -64,23 +77,27 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
             if (!snapshot.hasData) {
               return Center(child: LinearLoader());
             }
+            final ProjectModel project = snapshot.data!;
             return SafeArea(
               child: CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
-                  projectOrganizer(snapshot.data!),
+                  projectOrganizer(project),
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
-                        scheduleTiming(snapshot.data!),
-                        contactPersontile(snapshot.data!),
+                        scheduleTiming(project),
+                        project.ownerId !=
+                                prefsObject.getString(CURRENT_USER_ID)
+                            ? contactPersontile(project)
+                            : SizedBox(),
                       ],
                     ),
                   ),
                   SliverFillRemaining(
                     child: Scaffold(
                       appBar: _tabBar(),
-                      body: _getPage(snapshot.data!),
+                      body: _getPage(project),
                     ),
                   ),
                 ],
@@ -329,12 +346,41 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   Widget contactPersontile(ProjectModel project) {
     return ListDividerLabel(
       label: PROJECT_LEAD_LABEL + project.contactName!,
-      suffixIcon: InkWell(
-        onTap: () => CommonUrlLauncher().launchCall(project.contactNumber!),
-        child: Icon(
-          CupertinoIcons.phone,
-          size: 18,
-        ),
+      suffixIcon: Row(
+        children: [
+          InkWell(
+            onTap: () => CommonUrlLauncher().launchCall(project.contactNumber!),
+            child: Icon(
+              CupertinoIcons.phone,
+              size: 18,
+            ),
+          ),
+          SizedBox(width: 10),
+          InkWell(
+            onTap: () async {
+              final ChatListItem chatListItem = ChatListItem(
+                badge: 0,
+                content: '',
+                email: projectOwner.email!,
+                id: projectOwner.userId!,
+                name: projectOwner.firstName! + ' ' + projectOwner.lastName!,
+                profileUrl: projectOwner.profileUrl!,
+                timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+                type: 0,
+              );
+              await Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => OneToOneChat(peerUser: chatListItem),
+                ),
+              );
+            },
+            child: Icon(
+              CupertinoIcons.chat_bubble_text,
+              size: 18,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -109,28 +109,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 5.0),
               child: CommonUserProfileOrPlaceholder(
-                size: width / 5.5,
+                size: width / 7,
                 imgUrl: user.profileUrl!,
               ),
             ),
           ),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: width * 0.07),
-                        alignment: Alignment.center,
-                        child: Text(
-                          user.firstName! + ' ' + user.lastName!,
-                          style: _theme.textTheme.headline6!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: DARK_MARUN,
-                          ),
+                      child: Text(
+                        user.firstName! + ' ' + user.lastName!,
+                        style: _theme.textTheme.headline6!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: DARK_MARUN,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -138,25 +136,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(width: 6),
                   ],
                 ),
-                Text(
-                  MEMBER_SYNC_LABEL +
-                      DateFormatFromTimeStamp()
-                          .dateFormatToMMMYYYY(timeStamp: user.joiningDate!),
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: DARK_GRAY_FONT_COLOR,
-                  ),
-                ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.people_alt_outlined, size: 16),
-                    SizedBox(width: 2),
+                    Icon(
+                      CupertinoIcons.person,
+                      size: 12,
+                      color: PRIMARY_COLOR,
+                    ),
+                    SizedBox(width: 3),
                     Text(
-                      user.reviewsByPersons != null
-                          ? '${user.reviewsByPersons} reviews'
-                          : '0 reviews',
+                      MEMBER_SYNC_LABEL +
+                          DateFormatFromTimeStamp().dateFormatToMMMYYYY(
+                              timeStamp: user.joiningDate!),
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -165,13 +156,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                Text(
-                  'Total volunteering hrs : ${user.totalSpentHrs} Hours',
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: DARK_GRAY_FONT_COLOR,
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.timer,
+                      size: 12,
+                      color: PRIMARY_COLOR,
+                    ),
+                    SizedBox(width: 3),
+                    Text(
+                      'Total volunteering hrs : ${user.totalSpentHrs} Hours',
+                      style: _theme.textTheme.bodyText2!.copyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: DARK_GRAY_FONT_COLOR,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -183,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget popupButton(SignUpAndUserModel user) {
     return PopupMenuButton<int>(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Icon(
         Icons.more_vert_rounded,
         color: PRIMARY_COLOR,

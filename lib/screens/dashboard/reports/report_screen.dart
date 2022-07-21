@@ -320,7 +320,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   List<BarChartGroupData> getData(List<ReportsDataModel> reportList) {
     return reportList.map((e) {
-      final yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
+      final double yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
       return BarChartGroupData(
         x: e.hrs != null ? e.hrs! : 0,
         barRods: [

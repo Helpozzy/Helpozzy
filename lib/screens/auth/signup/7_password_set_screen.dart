@@ -55,7 +55,6 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       signupAndUserModel.profileUrl = APP_ICON_URL;
       signupAndUserModel.totalSpentHrs = 0;
       signupAndUserModel.rating = 0.0;
-      signupAndUserModel.reviewsByPersons = 0;
       signupAndUserModel.pointGifted = 0;
       signupAndUserModel.joiningDate =
           DateTime.now().millisecondsSinceEpoch.toString();
@@ -209,8 +208,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 padding: EdgeInsets.only(right: 8.0),
                 child: Icon(
                   snapshot.data!
-                      ? CupertinoIcons.eye_slash
-                      : CupertinoIcons.eye,
+                      ? CupertinoIcons.eye
+                      : CupertinoIcons.eye_slash,
                   color: DARK_GRAY,
                   size: 16,
                 ),
@@ -252,8 +251,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 padding: EdgeInsets.only(right: 8.0),
                 child: Icon(
                   snapshot.data!
-                      ? CupertinoIcons.eye_slash
-                      : CupertinoIcons.eye,
+                      ? CupertinoIcons.eye
+                      : CupertinoIcons.eye_slash,
                   color: DARK_GRAY,
                   size: 16,
                 ),
