@@ -69,7 +69,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
             children: [
               StreamBuilder<bool>(
                   initialData: false,
-                  stream: _signUpBloc.parentEmailVerifiedStream,
+                  stream: _signUpBloc.emailVerifiedStream,
                   builder: (context, snapshot) {
                     return CommonWidget(context).showBackForwardButton(
                       onPressedForward: () => streamOncontinue(snapshot),
@@ -95,7 +95,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
                     vertical: width * 0.06, horizontal: width * 0.1),
                 child: StreamBuilder<bool>(
                   initialData: false,
-                  stream: _signUpBloc.parentEmailVerifiedStream,
+                  stream: _signUpBloc.emailVerifiedStream,
                   builder: (context, snapshot) {
                     return CommonButton(
                       text: CONTINUE_BUTTON,
@@ -119,7 +119,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
         children: [
           StreamBuilder<bool>(
               initialData: false,
-              stream: _signUpBloc.parentEmailVerifiedStream,
+              stream: _signUpBloc.emailVerifiedStream,
               builder: (context, snapshotEmailVerified) {
                 return CommonRoundedTextfield(
                   controller: _parentEmailController,
@@ -150,28 +150,46 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               fontSize: 10,
               text: SEND_VERIFICATION_CODE_BUTTON,
               onPressed: () async {
-                FocusScope.of(context).unfocus();
-                if (_parentEmailController.text.trim().isNotEmpty)
-                  _signUpBloc.sentOtpOfParentEmail(_parentEmailController.text);
-                else
+                if (_parentEmailController.text.trim().isNotEmpty) {
+                  CircularLoader().show(context);
+                  final bool response =
+                      await _signUpBloc.sentOtp(_parentEmailController.text);
+                  if (response) {
+                    CircularLoader().hide(context);
+                    ScaffoldSnakBar().show(
+                      context,
+                      msg: OTP_SENT_TO_POPUP_MSG +
+                          ' ${_parentEmailController.text}!',
+                    );
+                  } else {
+                    CircularLoader().hide(context);
+                    ScaffoldSnakBar().show(context, msg: FAILED_POPUP_MSG);
+                  }
+                } else {
                   PlatformAlertDialog().show(context,
                       title: ALERT, content: 'Parent/Guardian email is empty');
+                }
               },
             ),
           ),
           StreamBuilder<bool>(
             initialData: false,
-            stream: _signUpBloc.parentOtpSentStream,
+            stream: _signUpBloc.otpSentController,
             builder: (context, snapshotSentOtp) {
               return snapshotSentOtp.data!
                   ? CommonRoundedTextfield(
                       hintText: ENTER_OTP_HINT,
                       controller: _otpController,
                       maxLength: 6,
-                      onChanged: (val) {
-                        if (val.isNotEmpty && val.length == 6)
-                          _signUpBloc.verifyParentEmail(
+                      onChanged: (val) async {
+                        if (val.isNotEmpty && val.length == 6) {
+                          final bool response = await _signUpBloc.verifyEmail(
                               _parentEmailController.text, _otpController.text);
+                          if (response) {
+                            ScaffoldSnakBar()
+                                .show(context, msg: 'Email is verified');
+                          }
+                        }
                       },
                       validator: (val) {
                         if (val!.isEmpty) {

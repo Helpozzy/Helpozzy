@@ -51,7 +51,6 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     FocusScope.of(context).unfocus();
     if (SetPasswordScreen._formKey.currentState!.validate()) {
       CircularLoader().show(context);
-      signupAndUserModel.about = TELL_ME_ABOUT_YOUR_SELF;
       signupAndUserModel.profileUrl = APP_ICON_URL;
       signupAndUserModel.totalSpentHrs = 0;
       signupAndUserModel.rating = 0.0;

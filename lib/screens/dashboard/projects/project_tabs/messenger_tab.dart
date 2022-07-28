@@ -174,7 +174,8 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                       children: [
                         Text(
                           _dateFormatFromTimeStamp
-                              .lastSeenFromTimeStamp(chatListItem.timestamp),
+                              .chatListLastSeenFromTimeStamp(
+                                  chatListItem.timestamp),
                           style: _textTheme.bodyText2!.copyWith(
                             fontSize: 12,
                             color: PRIMARY_COLOR,
@@ -186,7 +187,7 @@ class _RecentChatHistoryState extends State<RecentChatHistory> {
                             : SizedBox(),
                         chatListItem.badge != 0 &&
                                 chatListItem.badge.toString().isNotEmpty
-                            ? Badge(
+                            ? CounterBadge(
                                 counter: chatListItem.badge.toString(),
                               )
                             : SizedBox(),

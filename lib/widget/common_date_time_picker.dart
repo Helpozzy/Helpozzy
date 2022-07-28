@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class CommonDatepicker {
-  Future<DateTime?> showDatePickerDialog(BuildContext context,
-      {DateTime? previousDate}) async {
+  Future<DateTime?> showDatePickerDialog(
+    BuildContext context, {
+    DateTime? previousDate,
+    DateTime? initialDate,
+  }) async {
     final DateTime currentDate = DateTime.now();
     final DateTime lastDate = DateTime(currentDate.year, currentDate.month + 3);
     return showDatePicker(
       context: context,
-      initialDate: currentDate,
+      initialDate: initialDate != null ? initialDate : currentDate,
       firstDate: previousDate != null ? previousDate : currentDate,
       lastDate: lastDate,
       builder: (context, child) {

@@ -53,7 +53,7 @@ class MemberTabCard extends StatelessWidget {
                 ),
                 Text(
                   _dateFormatFromTimeStamp
-                      .lastSeenFromTimeStamp(volunteer.lastSeen!),
+                      .messageLastSeenFromTimeStamp(volunteer.lastSeen!),
                   style: _theme.textTheme.bodyText2!.copyWith(
                     fontSize: 9,
                     color: UNSELECTED_TAB_COLOR,

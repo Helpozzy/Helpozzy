@@ -258,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Text(
               user.about != null && user.about!.isNotEmpty
                   ? user.about!
-                  : ADD_NOW,
+                  : TELL_US_ABOUT_HINT,
               style: _theme.textTheme.bodyText2!.copyWith(
                 fontWeight: FontWeight.w600,
                 color: user.about != null && user.about!.isNotEmpty
@@ -331,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            PROJECT_PREFRENCES_TEXT,
+            PROJECT_PREFERENCES_TEXT,
             style: _theme.textTheme.bodyText2!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
@@ -403,7 +403,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: Text(
-                    NO_PREFRENCES_FOUNDS,
+                    NO_PREFERENCES_FOUNDS,
                     style: _theme.textTheme.bodyText2!.copyWith(
                       color: DARK_GRAY,
                       fontWeight: FontWeight.bold,

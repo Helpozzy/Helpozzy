@@ -10,7 +10,6 @@ import 'package:helpozzy/screens/auth/signup/3_living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_widget.dart';
-import 'package:helpozzy/widget/platform_alert_dialog.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({required this.signupAndUserModel});
@@ -66,9 +65,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           ),
         );
       } else {
-        PlatformAlertDialog().show(context,
-            title: ALERT,
-            content: 'Email is not verified, Please verify your email.');
+        ScaffoldSnakBar().show(context,
+            msg: 'Email is not verified, Please verify your email.');
       }
     }
   }
@@ -243,10 +241,15 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       hintText: ENTER_OTP_HINT,
                       controller: _otpController,
                       maxLength: 6,
-                      onChanged: (val) {
-                        if (val.isNotEmpty && val.length == 6)
-                          _signUpBloc.verifyEmail(
+                      onChanged: (val) async {
+                        if (val.isNotEmpty && val.length == 6) {
+                          final bool response = await _signUpBloc.verifyEmail(
                               _emailController.text, _otpController.text);
+                          if (response) {
+                            ScaffoldSnakBar()
+                                .show(context, msg: 'Email is verified');
+                          }
+                        }
                       },
                       validator: (val) {
                         if (val!.isEmpty) {
@@ -329,7 +332,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               });
             _dateController.value = TextEditingValue(
                 text: DateFormatFromTimeStamp()
-                    .dateFormatToYMD(dateTime: _selectedBirthDate));
+                    .dateFormatToDDMMYYYY(dateTime: _selectedBirthDate));
           });
         },
         validator: (state) {

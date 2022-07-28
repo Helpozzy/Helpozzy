@@ -459,10 +459,10 @@ InputDecoration inputRoundedDecoration({
     fillColor: fillColor == null ? Colors.white : fillColor,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    // contentPadding: EdgeInsets.only(
-    //   left: 30,
-    //   right: isDropDown ? 15 : 30,
-    // ),
+    contentPadding: EdgeInsets.only(
+      left: 20, right: 20,
+      // right: isDropDown ? 15 : 30,
+    ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(50.0)),
       borderSide:
@@ -1115,8 +1115,8 @@ class StatusWidget extends StatelessWidget {
   }
 }
 
-class Badge extends StatelessWidget {
-  const Badge({Key? key, required this.counter}) : super(key: key);
+class CounterBadge extends StatelessWidget {
+  const CounterBadge({Key? key, required this.counter}) : super(key: key);
   final String counter;
   @override
   Widget build(BuildContext context) {
@@ -1125,7 +1125,7 @@ class Badge extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         color: PRIMARY_COLOR,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 6.5, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       child: Text(
         counter,
         style: Theme.of(context).textTheme.caption!.copyWith(
@@ -1133,6 +1133,22 @@ class Badge extends StatelessWidget {
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
+      ),
+    );
+  }
+}
+
+class Badge extends StatelessWidget {
+  const Badge({Key? key, this.size}) : super(key: key);
+  final double? size;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: size ?? 10,
+      width: size ?? 10,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: RED_COLOR,
       ),
     );
   }

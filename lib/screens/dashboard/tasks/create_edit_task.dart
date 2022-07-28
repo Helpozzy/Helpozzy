@@ -76,10 +76,10 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         DateTime.fromMillisecondsSinceEpoch(int.parse(task!.startDate!));
     _selectedEndDate =
         DateTime.fromMillisecondsSinceEpoch(int.parse(task!.endDate!));
-    _taskStartDateController.text =
-        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedStartDate);
-    _taskEndDateController.text =
-        DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
+    _taskStartDateController.text = DateFormatFromTimeStamp()
+        .dateFormatToDDMMYYYY(dateTime: _selectedStartDate);
+    _taskEndDateController.text = DateFormatFromTimeStamp()
+        .dateFormatToDDMMYYYY(dateTime: _selectedEndDate);
     _selectedIndexValue = task!.status == TOGGLE_NOT_STARTED
         ? 0
         : task!.status == TOGGLE_INPROGRESS
@@ -507,7 +507,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   setState(() => _selectedStartDate = pickedDate);
                 _taskStartDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
-                        .dateFormatToYMD(dateTime: _selectedStartDate));
+                        .dateFormatToDDMMYYYY(dateTime: _selectedStartDate));
               });
             },
           ),
@@ -541,7 +541,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                   setState(() => _selectedEndDate = pickedDate);
                 _taskEndDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
-                        .dateFormatToYMD(dateTime: _selectedEndDate));
+                        .dateFormatToDDMMYYYY(dateTime: _selectedEndDate));
               });
             },
           ),

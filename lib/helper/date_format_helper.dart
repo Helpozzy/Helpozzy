@@ -19,8 +19,8 @@ class DateFormatFromTimeStamp {
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)),
       );
 
-  String dateFormatToYMD({required DateTime dateTime}) =>
-      DateFormat.yMd().format(dateTime);
+  String dateFormatToDDMMYYYY({required DateTime dateTime}) =>
+      DateFormat('dd/MM/yyyy').format(dateTime);
 
   String dateFormatToMMMYYYY({required String timeStamp}) =>
       DateFormat('MMM, yyyy').format(
@@ -72,7 +72,7 @@ class DateFormatFromTimeStamp {
     return years;
   }
 
-  String lastSeenFromTimeStamp(String timeStamp) {
+  String messageLastSeenFromTimeStamp(String timeStamp) {
     final DateTime messageDateTime =
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp));
     DateTime now = DateTime.now();
@@ -88,7 +88,7 @@ class DateFormatFromTimeStamp {
     if (localDateTime.day == now.day &&
         localDateTime.month == now.month &&
         localDateTime.year == now.year) {
-      return 'Today, $roughTimeString';
+      return roughTimeString;
     }
 
     DateTime yesterday = now.subtract(Duration(days: 1));
@@ -97,6 +97,41 @@ class DateFormatFromTimeStamp {
         localDateTime.month == now.month &&
         localDateTime.year == now.year) {
       return 'Yesterday, $roughTimeString';
+    }
+
+    if (now.difference(localDateTime).inDays < 4) {
+      String weekday = DateFormat('EEEE').format(localDateTime);
+      return '$weekday, $roughTimeString';
+    }
+
+    return '${DateFormat('dd MMM yyyy').format(messageDateTime)}, $roughTimeString';
+  }
+
+  String chatListLastSeenFromTimeStamp(String timeStamp) {
+    final DateTime messageDateTime =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp));
+    DateTime now = DateTime.now();
+    DateTime justNow = now.subtract(Duration(minutes: 1));
+    DateTime localDateTime = messageDateTime.toLocal();
+
+    if (!localDateTime.difference(justNow).isNegative) {
+      return 'Just Now';
+    }
+
+    String roughTimeString = DateFormat('jm').format(messageDateTime);
+
+    if (localDateTime.day == now.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
+      return 'Today';
+    }
+
+    DateTime yesterday = now.subtract(Duration(days: 1));
+
+    if (localDateTime.day == yesterday.day &&
+        localDateTime.month == now.month &&
+        localDateTime.year == now.year) {
+      return 'Yesterday';
     }
 
     if (now.difference(localDateTime).inDays < 4) {

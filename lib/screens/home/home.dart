@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpozzy/bloc/chat_bloc.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/screens/chat/chat_list.dart';
 import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
 import 'package:helpozzy/screens/notification/notification_inbox.dart';
 import 'package:helpozzy/screens/profile/profile_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_widget.dart';
 import 'bloc/home_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,6 +33,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final ChatBloc _chatBloc = ChatBloc();
   final List<Widget> _children = [
     DashboardScreen(),
     ExploreScreen(),
@@ -38,6 +42,12 @@ class _HomeState extends State<Home> {
     ChatListScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    _chatBloc.getOneToOneChatHistory(prefsObject.getString(CURRENT_USER_ID)!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +84,13 @@ class _HomeState extends State<Home> {
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.bell, size: 16),
                 activeIcon: Icon(CupertinoIcons.bell_fill, size: 20),
-                label: INBOX_TAB,
+                label: NOTIFICATIONS_TAB,
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.chat_bubble_2, size: 18),
-                activeIcon: Icon(CupertinoIcons.chat_bubble_2_fill, size: 22),
+                icon: chatBottomBarItem(CupertinoIcons.chat_bubble_2, 18),
+                activeIcon:
+                    chatBottomBarItem(CupertinoIcons.chat_bubble_2_fill, 22),
                 label: CHAT_TAB,
                 backgroundColor: Colors.white,
               ),
@@ -90,8 +101,11 @@ class _HomeState extends State<Home> {
                 backgroundColor: Colors.white,
               ),
             ],
-            onTap: (position) =>
-                ctx.read<HomeBloc>().add(HomeUpdateTab(tabIndex: position)),
+            onTap: (position) {
+              _chatBloc.getOneToOneChatHistory(
+                  prefsObject.getString(CURRENT_USER_ID)!);
+              ctx.read<HomeBloc>().add(HomeUpdateTab(tabIndex: position));
+            },
             currentIndex: state.currentIndex,
             selectedItemColor: DARK_MARUN,
             unselectedItemColor: PRIMARY_COLOR,
@@ -100,4 +114,23 @@ class _HomeState extends State<Home> {
       },
     );
   }
+
+  Widget chatBottomBarItem(IconData icon, double size) => Stack(
+        children: [
+          Icon(icon, size: size),
+          StreamBuilder<ChatList>(
+            stream: _chatBloc.getOneToOneChatListStream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return SizedBox();
+              }
+              final List<ChatListItem> chatHistory =
+                  snapshot.data!.chats.where((e) => e.badge != 0).toList();
+              return chatHistory.isNotEmpty
+                  ? Positioned(right: 0, top: 0, child: Badge())
+                  : SizedBox();
+            },
+          ),
+        ],
+      );
 }

@@ -105,8 +105,8 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
                 organizationOtherType(),
                 textfieldLabel(TAX_ID_NUMBER_LABEL),
                 taxIdNumber(),
-                textfieldLabel(INVITE_OTHER_ADMIN_LABEL),
-                inviteOtherMember(),
+                // textfieldLabel(INVITE_OTHER_ADMIN_LABEL),
+                // inviteOtherMember(),
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(

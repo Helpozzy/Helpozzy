@@ -71,9 +71,6 @@ class Repository {
   Future<ResponseModel> deleteProjectRepo(String projectId) =>
       apiProvider.deleteProjectAPIProvider(projectId);
 
-  Future<ResponseModel> removeNoLongerAvailProjectRepo() =>
-      apiProvider.removeNoLongerAvailProjectAPIProvider();
-
   Future<Projects> getprojectsRepo({ProjectTabType? projectTabType}) =>
       apiProvider.getProjectsAPIProvider(projectTabType: projectTabType);
 

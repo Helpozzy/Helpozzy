@@ -15,6 +15,7 @@ import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
+import 'package:helpozzy/widget/common_date_time_picker.dart';
 import 'package:helpozzy/widget/common_image_picker_.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
@@ -92,6 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   late List<int> selectedAreaOfInterests = [];
   late List<CategoryModel> tempList = [];
+  late DateTime _selectedBirthDate = DateTime.now();
 
   @override
   void initState() {
@@ -153,11 +155,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future listenUser() async {
     _firstNameController.text = user.firstName!;
     _lastNameController.text = user.lastName!;
-    _aboutController.text = user.about!;
+    _aboutController.text = user.about ?? '';
     _emailController.text = user.email!;
-    _dateOfBirthController.text = DateFormatFromTimeStamp().dateFormatToYMD(
-        dateTime:
-            DateTime.fromMillisecondsSinceEpoch(int.parse(user.dateOfBirth!)));
+    _selectedBirthDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(user.dateOfBirth!));
+    _dateOfBirthController.text = DateFormatFromTimeStamp()
+        .dateFormatToDDMMYYYY(
+            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                int.parse(user.dateOfBirth!)));
     _genderController.text = user.gender!;
     countryCode = CountryCode(code: user.countryCode!);
     _personalPhoneController.text = user.personalPhnNo!;
@@ -228,7 +233,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       currentYearTargetHours: trackerVal.round() <= 200
           ? trackerVal.round()
           : int.parse(_targetHoursController.text),
-      dateOfBirth: user.dateOfBirth,
+      dateOfBirth: _selectedBirthDate.millisecondsSinceEpoch.toString(),
       joiningDate: user.joiningDate,
       pointGifted: user.pointGifted,
       profileUrl: profileUrl.isEmpty ? user.profileUrl : profileUrl,
@@ -522,9 +527,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         CommonSimpleTextfield(
           maxLines: 2,
           controller: _aboutController,
-          hintText: ENTER_ABOUT_HINT,
+          hintText: TELL_US_ABOUT_HINT,
           textCapitalization: TextCapitalization.sentences,
-          validator: (val) => val!.isEmpty ? 'Enter about your self' : null,
+          validator: (val) => null,
         ),
         SizedBox(height: 15),
         TextfieldLabelSmall(label: EMAIL_LABEL),
@@ -549,6 +554,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: _dateOfBirthController,
           hintText: SELECT_DATE_OF_BIRTH_HINT,
           validator: (val) => null,
+          onTap: user.volunteerType == 1
+              ? () {}
+              : () {
+                  FocusScope.of(context).unfocus();
+                  CommonDatepicker()
+                      .showDatePickerDialog(context,
+                          initialDate: _selectedBirthDate,
+                          previousDate: DateTime(1930))
+                      .then((pickedDate) {
+                    if (pickedDate != null && pickedDate != _selectedBirthDate)
+                      setState(() {
+                        _selectedBirthDate = pickedDate;
+                      });
+                    _dateOfBirthController.value = TextEditingValue(
+                        text: DateFormatFromTimeStamp().dateFormatToDDMMYYYY(
+                            dateTime: _selectedBirthDate));
+                  });
+                },
         ),
         SizedBox(height: 15),
         TextfieldLabelSmall(label: GENDER_LABEL),

@@ -112,9 +112,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       _selectedEndDate =
           DateTime.fromMillisecondsSinceEpoch(int.parse(project.endDate!));
       _projStartDateController.text = DateFormatFromTimeStamp()
-          .dateFormatToYMD(dateTime: _selectedStartDate);
-      _projEndDateController.text =
-          DateFormatFromTimeStamp().dateFormatToYMD(dateTime: _selectedEndDate);
+          .dateFormatToDDMMYYYY(dateTime: _selectedStartDate);
+      _projEndDateController.text = DateFormatFromTimeStamp()
+          .dateFormatToDDMMYYYY(dateTime: _selectedEndDate);
       _selectedIndexValue = project.status == TOGGLE_NOT_STARTED
           ? 0
           : project.status == TOGGLE_INPROGRESS
@@ -824,7 +824,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   setState(() => _selectedStartDate = pickedDate);
                 _projStartDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
-                        .dateFormatToYMD(dateTime: _selectedStartDate));
+                        .dateFormatToDDMMYYYY(dateTime: _selectedStartDate));
               });
             },
           ),
@@ -860,7 +860,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   });
                 _projEndDateController.value = TextEditingValue(
                     text: DateFormatFromTimeStamp()
-                        .dateFormatToYMD(dateTime: _selectedEndDate));
+                        .dateFormatToDDMMYYYY(dateTime: _selectedEndDate));
               });
             },
           ),

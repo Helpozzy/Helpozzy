@@ -285,7 +285,7 @@ class _ProjectChatState extends State<OneToOneChat> {
             isLastMessage(chat, index)
                 ? Text(
                     _dateFormatFromTimeStamp
-                        .lastSeenFromTimeStamp(message.timestamp),
+                        .messageLastSeenFromTimeStamp(message.timestamp),
                     style: _theme.textTheme.bodyText2!.copyWith(
                       color: DARK_GRAY,
                       fontSize: 9.0,
@@ -312,16 +312,16 @@ class _ProjectChatState extends State<OneToOneChat> {
               textAlignCenter: false,
               borderEnable: false,
               textCapitalization: TextCapitalization.sentences,
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: IconButton(
-                  icon: Icon(
-                    CupertinoIcons.photo_fill_on_rectangle_fill,
-                    color: PRIMARY_COLOR.withOpacity(0.8),
-                  ),
-                  onPressed: () => imageOptionPopup(),
-                ),
-              ),
+              // prefixIcon: Padding(
+              //   padding: const EdgeInsets.only(left: 8.0),
+              //   child: IconButton(
+              //     icon: Icon(
+              //       CupertinoIcons.photo_fill_on_rectangle_fill,
+              //       color: PRIMARY_COLOR.withOpacity(0.8),
+              //     ),
+              //     onPressed: () => imageOptionPopup(),
+              //   ),
+              // ),
               suffixIcon: InkWell(
                 child: Icon(
                   CupertinoIcons.play_circle_fill,

@@ -55,7 +55,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
         );
       } else {
         ScaffoldSnakBar()
-            .show(context, msg: 'Please Select school to move forward');
+            .show(context, msg: 'Please Select school to continue');
       }
     }
   }

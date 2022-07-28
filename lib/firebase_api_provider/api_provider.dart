@@ -248,28 +248,6 @@ class ApiProvider {
     }
   }
 
-  Future<ResponseModel> removeNoLongerAvailProjectAPIProvider() async {
-    try {
-      DateTime currentDate = DateTime.now();
-      DateTime fifteenDayBackDate = currentDate.add(Duration(days: 8));
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
-          .collection('projects')
-          .where('end_date',
-              isGreaterThanOrEqualTo:
-                  fifteenDayBackDate.millisecondsSinceEpoch.toString())
-          .get();
-      print(querySnapshot.docs.length);
-      // querySnapshot.docs.forEach((doc) async {
-      //   await doc.reference.delete();
-      // });
-      return ResponseModel(
-          success: true, message: 'No longer needed projects are removed');
-    } catch (e) {
-      return ResponseModel(
-          success: false, error: 'Failed, Projects are not removed');
-    }
-  }
-
   Future<Projects> getProjectsAPIProvider(
       {ProjectTabType? projectTabType}) async {
     if (projectTabType == ProjectTabType.EXPLORE_SCREEN) {

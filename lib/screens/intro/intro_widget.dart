@@ -20,7 +20,7 @@ class IntroWidget extends StatelessWidget {
             padding: EdgeInsets.only(top: height * 0.07),
             child: TopAppLogo(
               size: height / 6,
-              color: PRIMARY_COLOR,
+              color: WHITE,
             ),
           ),
           _createButtonsContainer(context),

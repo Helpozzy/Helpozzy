@@ -149,7 +149,7 @@ const COMING_SOON_SCREEN_TEXT = 'Coming Soon!';
 const EXPLORE_TAB = 'Explore';
 const REWARD_TAB = 'Rewards';
 const HOME_TAB = 'Home';
-const INBOX_TAB = 'Inbox';
+const NOTIFICATIONS_TAB = 'Notifications';
 const CHAT_TAB = 'Chat';
 const PROFILE_TAB = 'Profile';
 
@@ -200,7 +200,7 @@ const STREET_NAME_HINT = 'Enter Street Name';
 const ENTER_ZIP_CODE_HINT = 'Enter Zip Code';
 const ENTER_FIRST_NAME_HINT = 'Enter first name';
 const ENTER_LAST_NAME_HINT = 'Enter last name';
-const ENTER_ABOUT_HINT = 'Enter about';
+const TELL_US_ABOUT_HINT = 'Tell us about';
 const ENTER_EMAIL_HINT = 'Enter email';
 const ENTER_OTP_HINT = 'Enter OTP';
 const ENTER_PARENTS_EMAIL_HINT = 'Enter parents email';
@@ -518,7 +518,6 @@ const SART_CONVERSATION = 'Start Conversation';
 const START_NEW_CONVERSATION = 'Start new conversation';
 
 //Notification
-const NOTIFICATION_LABEL = 'Notifications';
 const NO_NOTIFICATIONS_FOUND = 'No new notifications';
 const FEEDBACK_LABEL = 'Feedback : ';
 const REQUESTED_HRS = 'Reuested Hrs : ';
@@ -531,7 +530,7 @@ const DASH_LABEL = ' - ';
 const CONTACT_TEXT = 'Contact';
 const ABOUT_TEXT = 'About';
 const ORGANIZATION_DETAILS_TEXT = 'Organization Details';
-const PROJECT_PREFRENCES_TEXT = 'My Volunteering Prefrences';
+const PROJECT_PREFERENCES_TEXT = 'My Volunteering Preferences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
@@ -592,7 +591,7 @@ const PROJECT_CONTRIBUTION_TRACKER_TAB = 'Contribution Tracker';
 
 //Project
 const NO_PROJECTS_FOUNDS = 'No projects found';
-const NO_PREFRENCES_FOUNDS = 'No prefrences found';
+const NO_PREFERENCES_FOUNDS = 'No preferences found';
 const PLEASE_VISIT_OTHER = 'Please visit other categories section';
 const NO_ACTIVITIES_FOUNDS = 'No activities found';
 
