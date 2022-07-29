@@ -134,6 +134,7 @@ class _ProjectChatState extends State<ProjectChat> {
       onPanDown: (_) => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: _key,
+        backgroundColor: WHITE,
         appBar: appBar(),
         body: Stack(
           alignment: Alignment.topCenter,

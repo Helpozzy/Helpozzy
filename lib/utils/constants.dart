@@ -223,7 +223,7 @@ const CURRENT_USER_PROFILE_URL = 'profileImage';
 const CURRENT_USER_DATA = 'currentUser';
 
 //Snakbar message
-const LOGIN_SUCEED_POPUP_MSG = 'Login Succeed';
+const LOGIN_SUCEED_POPUP_MSG = 'Login Successfully';
 const SIGN_UP_FAILED_POPUP_MSG = 'Sign-Up Failed!';
 const AUTHENTICATION_SUCCESS_POPUP_MSG = 'Authentication Success!';
 const AUTHENTICATION_FAILED_POPUP_MSG = 'Authentication Failed!';

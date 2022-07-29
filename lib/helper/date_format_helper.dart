@@ -136,8 +136,7 @@ class DateFormatFromTimeStamp {
 
     if (now.difference(localDateTime).inDays < 4) {
       String weekday = DateFormat('EEEE').format(localDateTime);
-
-      return '$weekday, $roughTimeString';
+      return weekday;
     }
 
     return '${DateFormat('dd MMM yyyy').format(messageDateTime)}, $roughTimeString';

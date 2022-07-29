@@ -51,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _personalPhoneController =
       TextEditingController();
   final TextEditingController _parentEmailController = TextEditingController();
-  final TextEditingController _otpController = TextEditingController();
+  // final TextEditingController _otpController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _gradeLevelController = TextEditingController();
@@ -744,87 +744,87 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        StreamBuilder<bool>(
-          initialData: false,
-          stream: _editProfileBloc.parentEmailVerifiedStream,
-          builder: (context, snapshotEmailVerified) {
-            return CommonSimpleTextfield(
-              controller: _parentEmailController,
-              hintText: ENTER_EMAIL_HINT,
-              suffixIcon: Icon(
-                snapshotEmailVerified.data!
-                    ? CupertinoIcons.checkmark_seal_fill
-                    : user.parentEmail == _parentEmailController.text
-                        ? CupertinoIcons.checkmark_seal_fill
-                        : CupertinoIcons.checkmark_seal,
-                size: 18,
-                color: snapshotEmailVerified.data!
-                    ? ACCENT_GREEN
-                    : user.parentEmail == _parentEmailController.text
-                        ? ACCENT_GREEN
-                        : DARK_GRAY,
-              ),
-              onChanged: (val) {
-                setState(() => _parentEmailController.selection =
-                    TextSelection.fromPosition(
-                        TextPosition(offset: val.length)));
-              },
-              validator: (parentEmail) {
-                if (parentEmail!.isEmpty) {
-                  return 'Please enter parents/guardian email';
-                } else if (parentEmail.isNotEmpty &&
-                    !EmailValidator.validate(parentEmail)) {
-                  return 'Please enter valid email';
-                }
-                return null;
-              },
-            );
+        // StreamBuilder<bool>(
+        //   initialData: false,
+        //   stream: _editProfileBloc.parentEmailVerifiedStream,
+        //   builder: (context, snapshotEmailVerified) {
+        //     return
+        CommonSimpleTextfield(
+          controller: _parentEmailController,
+          hintText: ENTER_EMAIL_HINT,
+          // suffixIcon: Icon(
+          //   snapshotEmailVerified.data!
+          //       ? CupertinoIcons.checkmark_seal_fill
+          //       : user.parentEmail == _parentEmailController.text
+          //           ? CupertinoIcons.checkmark_seal_fill
+          //           : CupertinoIcons.checkmark_seal,
+          //   size: 18,
+          //   color: snapshotEmailVerified.data!
+          //       ? ACCENT_GREEN
+          //       : user.parentEmail == _parentEmailController.text
+          //           ? ACCENT_GREEN
+          //           : DARK_GRAY,
+          // ),
+          onChanged: (val) {
+            setState(() => _parentEmailController.selection =
+                TextSelection.fromPosition(TextPosition(offset: val.length)));
           },
-        ),
-        Container(
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: SmallCommonButton(
-            fontSize: 12,
-            text: SEND_VERIFICATION_CODE_BUTTON,
-            onPressed: () async {
-              FocusScope.of(context).unfocus();
-              if (_parentEmailController.text.trim().isNotEmpty)
-                _editProfileBloc
-                    .sentOtpOfParentEmail(_parentEmailController.text);
-              else
-                PlatformAlertDialog().show(context,
-                    title: ALERT, content: 'Parent/Guardian email is empty');
-            },
-          ),
-        ),
-        StreamBuilder<bool>(
-          initialData: false,
-          stream: _editProfileBloc.parentOtpSentStream,
-          builder: (context, snapshotSentOtp) {
-            return snapshotSentOtp.data!
-                ? CommonSimpleTextfield(
-                    hintText: ENTER_OTP_HINT,
-                    controller: _otpController,
-                    maxLength: 6,
-                    onChanged: (val) {
-                      if (val.isNotEmpty && val.length == 6)
-                        _editProfileBloc.verifyParentEmail(
-                            _parentEmailController.text, _otpController.text);
-                    },
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'Please enter OTP';
-                      } else if (val.isNotEmpty && val.length != 6) {
-                        return 'Please enter 6 digit OTP';
-                      } else {
-                        return null;
-                      }
-                    },
-                  )
-                : SizedBox();
+          validator: (parentEmail) {
+            if (parentEmail!.isEmpty) {
+              return 'Please enter parents/guardian email';
+            } else if (parentEmail.isNotEmpty &&
+                !EmailValidator.validate(parentEmail)) {
+              return 'Please enter valid email';
+            }
+            return null;
           },
+          //   );
+          // },
         ),
+        // Container(
+        //   alignment: Alignment.centerRight,
+        //   padding: const EdgeInsets.symmetric(vertical: 5.0),
+        //   child: SmallCommonButton(
+        //     fontSize: 12,
+        //     text: SEND_VERIFICATION_CODE_BUTTON,
+        //     onPressed: () async {
+        //       FocusScope.of(context).unfocus();
+        //       if (_parentEmailController.text.trim().isNotEmpty)
+        //         _editProfileBloc
+        //             .sentOtpOfParentEmail(_parentEmailController.text);
+        //       else
+        //         PlatformAlertDialog().show(context,
+        //             title: ALERT, content: 'Parent/Guardian email is empty');
+        //     },
+        //   ),
+        // ),
+        // StreamBuilder<bool>(
+        //   initialData: false,
+        //   stream: _editProfileBloc.parentOtpSentStream,
+        //   builder: (context, snapshotSentOtp) {
+        //     return snapshotSentOtp.data!
+        //         ? CommonSimpleTextfield(
+        //             hintText: ENTER_OTP_HINT,
+        //             controller: _otpController,
+        //             maxLength: 6,
+        //             onChanged: (val) {
+        //               if (val.isNotEmpty && val.length == 6)
+        //                 _editProfileBloc.verifyParentEmail(
+        //                     _parentEmailController.text, _otpController.text);
+        //             },
+        //             validator: (val) {
+        //               if (val!.isEmpty) {
+        //                 return 'Please enter OTP';
+        //               } else if (val.isNotEmpty && val.length != 6) {
+        //                 return 'Please enter 6 digit OTP';
+        //               } else {
+        //                 return null;
+        //               }
+        //             },
+        //           )
+        //         : SizedBox();
+        //   },
+        // ),
       ],
     );
   }
