@@ -471,6 +471,8 @@ const SUBMIT_BUTTON = 'SUBMIT';
 const ADD_NEW_ADMIN = 'Add New Admin';
 
 //User Project Details Text
+const NOT_SIGNUP_MESSAGE_ALERT =
+    "You can't Sign-Up This project! Because this project is closed by owner or Project is ended look another one.";
 const CURRENT_LOCATION = 'Current Location';
 const ABOUT_ORGANIZER = 'About Organizer';
 const OVERVIEW = 'Overview';

@@ -52,7 +52,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double noOfMemberTrackerVal = 0.0;
   late double minimumAgeTrackerVal = 7.0;
   late int _selectedIndexValue = 0;
-  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -92,11 +91,13 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
       final List<String> members = [];
-      if (selectedItems.isNotEmpty) {
-        selectedItems.forEach((member) {
-          members.add(member.userId!);
-        });
-      }
+      _projectsBloc.getSelectedMembersStream.listen((selectedMember) {
+        if (selectedMember.isNotEmpty) {
+          selectedMember.forEach((member) {
+            members.add(member.userId!);
+          });
+        }
+      });
 
       if (fromEdit) {
         final TaskModel taskDetails = TaskModel(
@@ -410,15 +411,16 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         color: DARK_PINK_COLOR,
       ),
       onTap: () async {
-        selectedItems = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MembersScreen(fromChat: false),
+            builder: (context) => MembersScreen(),
           ),
-        );
-        if (selectedItems.isNotEmpty) {
-          await _projectsBloc.getSelectedMembers(members: selectedItems);
-        }
+        ).then((memberList) async {
+          if (memberList != null && memberList.isNotEmpty) {
+            await _projectsBloc.getSelectedMembers(members: memberList);
+          }
+        });
       },
     );
   }

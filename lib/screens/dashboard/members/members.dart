@@ -1,23 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/members_bloc.dart';
-import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/chat/one_to_one_chat.dart';
 import 'package:helpozzy/screens/dashboard/members/memebers_card.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class MembersScreen extends StatefulWidget {
-  MembersScreen({required this.fromChat});
-  final bool fromChat;
   @override
-  _MembersScreenState createState() => _MembersScreenState(fromChat: fromChat);
+  _MembersScreenState createState() => _MembersScreenState();
 }
 
 class _MembersScreenState extends State<MembersScreen> {
-  _MembersScreenState({required this.fromChat});
-  final bool fromChat;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
   late double width;
@@ -44,15 +38,13 @@ class _MembersScreenState extends State<MembersScreen> {
         title: MEMBERS_APPBAR,
         onBack: () => Navigator.of(context).pop(),
         actions: [
-          fromChat
-              ? SizedBox()
-              : IconButton(
-                  onPressed: () => Navigator.pop(context, selectedItems),
-                  icon: Icon(
-                    Icons.check,
-                    color: DARK_PINK_COLOR,
-                  ),
-                ),
+          IconButton(
+            onPressed: () => Navigator.pop(context, selectedItems),
+            icon: Icon(
+              Icons.check,
+              color: DARK_PINK_COLOR,
+            ),
+          ),
         ],
       ),
       body: body(),
@@ -98,6 +90,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
   Widget popupButton() {
     return PopupMenuButton<int>(
+      elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Icon(
         Icons.sort_rounded,
@@ -150,35 +143,14 @@ class _MembersScreenState extends State<MembersScreen> {
             return MemberCard(
               volunteer: volunteer,
               selected: volunteer.isSelected!,
-              onTapChat: () {
-                final ChatListItem chatListItem = ChatListItem(
-                  badge: 0,
-                  content: '',
-                  email: volunteer.email!,
-                  id: volunteer.userId!,
-                  name: volunteer.firstName! + ' ' + volunteer.lastName!,
-                  profileUrl: volunteer.profileUrl!,
-                  timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-                  type: 0,
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OneToOneChat(peerUser: chatListItem),
-                  ),
-                );
+              onTapItem: () {
+                setState(() => volunteer.isSelected = !volunteer.isSelected!);
+                if (volunteer.isSelected!) {
+                  if (!selectedItems.contains(volunteer)) {
+                    selectedItems.add(volunteer);
+                  }
+                }
               },
-              onTapItem: fromChat
-                  ? () {}
-                  : () {
-                      setState(
-                          () => volunteer.isSelected = !volunteer.isSelected!);
-                      if (volunteer.isSelected!) {
-                        if (!selectedItems.contains(volunteer)) {
-                          selectedItems.add(volunteer);
-                        }
-                      }
-                    },
             );
           },
         );

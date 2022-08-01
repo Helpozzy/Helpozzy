@@ -8,12 +8,10 @@ class MemberCard extends StatelessWidget {
   final SignUpAndUserModel volunteer;
   final bool selected;
   final GestureTapCallback? onTapItem;
-  final GestureTapCallback? onTapChat;
   MemberCard({
     required this.volunteer,
     this.selected = false,
     this.onTapItem,
-    this.onTapChat,
   });
   @override
   Widget build(BuildContext context) {
@@ -75,14 +73,6 @@ class MemberCard extends StatelessWidget {
                       ],
                     ),
                   ],
-                ),
-              ),
-              SizedBox(width: 5),
-              InkWell(
-                onTap: onTapChat,
-                child: Icon(
-                  CupertinoIcons.chat_bubble_2_fill,
-                  color: BLACK,
                 ),
               ),
             ],

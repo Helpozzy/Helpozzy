@@ -5,17 +5,14 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
-import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/screens/chat/one_to_one_chat.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_tabs/messenger_tab.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/sliver_class.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
-
 import 'project_tabs/members_tab.dart';
 import 'project_tabs/other_details_tab.dart';
 import 'project_tabs/tasks_tab.dart';
@@ -87,10 +84,21 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
                     delegate: SliverChildListDelegate(
                       [
                         scheduleTiming(project),
-                        project.ownerId !=
+                        project.ownerId ==
                                 prefsObject.getString(CURRENT_USER_ID)
-                            ? contactPersontile(project)
-                            : SizedBox(),
+                            ? SizedBox()
+                            : DateFormatFromTimeStamp()
+                                        .dateTime(
+                                            timeStamp:
+                                                currentTimeStamp.toString())
+                                        .difference(DateFormatFromTimeStamp()
+                                            .dateTime(
+                                                timeStamp: project.endDate!))
+                                        .inDays >=
+                                    1
+                                ? projectEndedMsg()
+                                : SizedBox(),
+                        contactPersontile(project),
                       ],
                     ),
                   ),
@@ -343,45 +351,35 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     );
   }
 
+  Widget projectEndedMsg() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: width * 0.04),
+      color: RED_COLOR,
+      child: Text(
+        NOT_SIGNUP_MESSAGE_ALERT,
+        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: WHITE,
+            ),
+      ),
+    );
+  }
+
   Widget contactPersontile(ProjectModel project) {
     return ListDividerLabel(
       label: PROJECT_LEAD_LABEL + project.contactName!,
-      suffixIcon: Row(
-        children: [
-          InkWell(
-            onTap: () => CommonUrlLauncher().launchCall(project.contactNumber!),
-            child: Icon(
-              CupertinoIcons.phone,
-              size: 18,
-            ),
-          ),
-          SizedBox(width: 10),
-          InkWell(
-            onTap: () async {
-              final ChatListItem chatListItem = ChatListItem(
-                badge: 0,
-                content: '',
-                email: projectOwner.email!,
-                id: projectOwner.userId!,
-                name: projectOwner.firstName! + ' ' + projectOwner.lastName!,
-                profileUrl: projectOwner.profileUrl!,
-                timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-                type: 0,
-              );
-              await Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => OneToOneChat(peerUser: chatListItem),
-                ),
-              );
-            },
-            child: Icon(
-              CupertinoIcons.chat_bubble_text,
-              size: 18,
-            ),
-          ),
-        ],
-      ),
+      suffixIcon: prefsObject.getString(CURRENT_USER_ID) != project.ownerId
+          ? InkWell(
+              onTap: () =>
+                  CommonUrlLauncher().launchCall(project.contactNumber!),
+              child: Icon(
+                CupertinoIcons.phone,
+                size: 16,
+              ),
+            )
+          : SizedBox(),
     );
   }
 

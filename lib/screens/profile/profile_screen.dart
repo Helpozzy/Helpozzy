@@ -44,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (!snapshot.hasData) {
             return Center(child: LinearLoader());
           }
-          final SignUpAndUserModel? user = snapshot.data;
+          final SignUpAndUserModel user = snapshot.data!;
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      profileSection(user!),
+                      profileSection(user),
                       aboutMe(user),
                       user.organizationDetails != null &&
                               user.organizationDetails!.legalOrganizationName !=
@@ -90,15 +90,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget profileSection(SignUpAndUserModel user) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      margin: const EdgeInsets.only(top: 15.0, bottom: 10.0),
-      decoration: BoxDecoration(
-          border: Border.all(width: 0.7, color: GRAY),
-          borderRadius: BorderRadius.circular(18)),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: width * 0.04),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user.firstName! + ' ' + user.lastName!,
+                  style: _theme.textTheme.headline6!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: DARK_MARUN,
+                    fontSize: 18,
+                  ),
+                ),
+                UserBasicInfoDetails(
+                  icon: CupertinoIcons.person,
+                  text: MEMBER_SYNC_LABEL +
+                      DateFormatFromTimeStamp().dateFormatToMMMYYYY(
+                        timeStamp: user.joiningDate!,
+                      ),
+                ),
+                UserBasicInfoDetails(
+                  icon: CupertinoIcons.timer,
+                  text: 'Total volunteering hrs : ${user.totalSpentHrs} Hours',
+                ),
+                UserBasicInfoDetails(
+                  icon: CupertinoIcons.location,
+                  text: user.address!,
+                ),
+                SizedBox(height: 5),
+                optionMenu(user),
+              ],
+            ),
+          ),
           GestureDetector(
             onTap: () => Navigator.push(
               context,
@@ -109,72 +138,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 5.0),
               child: CommonUserProfileOrPlaceholder(
-                size: width / 7,
+                size: width * 0.2,
                 imgUrl: user.profileUrl!,
               ),
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        user.firstName! + ' ' + user.lastName!,
-                        style: _theme.textTheme.headline6!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: DARK_MARUN,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    popupButton(user),
-                    SizedBox(width: 6),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.person,
-                      size: 12,
-                      color: PRIMARY_COLOR,
-                    ),
-                    SizedBox(width: 3),
-                    Text(
-                      MEMBER_SYNC_LABEL +
-                          DateFormatFromTimeStamp().dateFormatToMMMYYYY(
-                              timeStamp: user.joiningDate!),
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: DARK_GRAY_FONT_COLOR,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.timer,
-                      size: 12,
-                      color: PRIMARY_COLOR,
-                    ),
-                    SizedBox(width: 3),
-                    Text(
-                      'Total volunteering hrs : ${user.totalSpentHrs} Hours',
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: DARK_GRAY_FONT_COLOR,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
           ),
         ],
@@ -182,64 +148,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget popupButton(SignUpAndUserModel user) {
-    return PopupMenuButton<int>(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Icon(
-        Icons.more_vert_rounded,
-        color: PRIMARY_COLOR,
-      ),
-      onSelected: (item) async => await handleClick(item, user),
-      itemBuilder: (context) => [
-        popupMenuItem(
-            text: EDIT_PROFILE_MENU,
-            icon: CupertinoIcons.pencil_circle,
-            value: 0),
-        PopupMenuDivider(height: 0.1),
-        popupMenuItem(
-            text: SIGN_OUT_POPUP_MENU,
-            icon: Icons.exit_to_app_rounded,
-            value: 1),
+  Widget optionMenu(SignUpAndUserModel user) {
+    return Row(
+      children: [
+        SmallCommonButtonWithIcon(
+          icon: CupertinoIcons.pencil,
+          text: EDIT_PROFILE_MENU,
+          onPressed: () async => await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditProfileScreen(user: user),
+            ),
+          ),
+          fontSize: 12,
+          iconSize: 12,
+          buttonColor: DARK_GRAY,
+        ),
+        SizedBox(width: 5),
+        SmallCommonButtonWithIcon(
+          icon: Icons.exit_to_app_rounded,
+          text: SIGN_OUT_BUTTON,
+          onPressed: () => signOutPrompt(),
+          fontSize: 12,
+          iconSize: 12,
+          buttonColor: RED_COLOR,
+        ),
       ],
     );
-  }
-
-  PopupMenuItem<int> popupMenuItem(
-          {required String text, required IconData icon, required int value}) =>
-      PopupMenuItem<int>(
-        value: value,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                text,
-                style: _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
-              ),
-            ),
-            Icon(
-              icon,
-              color: DARK_GRAY,
-              size: 20,
-            )
-          ],
-        ),
-      );
-
-  Future handleClick(int item, SignUpAndUserModel user) async {
-    switch (item) {
-      case 0:
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditProfileScreen(user: user),
-          ),
-        );
-        await _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-        break;
-      case 1:
-        signOutPrompt();
-        break;
-    }
   }
 
   Widget aboutMe(SignUpAndUserModel user) {
@@ -446,6 +381,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class UserBasicInfoDetails extends StatelessWidget {
+  const UserBasicInfoDetails({Key? key, required this.icon, required this.text})
+      : super(key: key);
+  final IconData icon;
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1.0),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 12,
+            color: DARK_GRAY,
+          ),
+          SizedBox(width: 3),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: DARK_GRAY,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

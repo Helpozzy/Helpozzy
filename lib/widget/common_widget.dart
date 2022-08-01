@@ -811,7 +811,6 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
                 fontSize: fontSize,
                 fontFamily: QUICKSAND,
                 color: fontColor,
-                fontWeight: FontWeight.w600,
               ),
             ),
           ],
