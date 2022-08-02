@@ -221,6 +221,7 @@ const CURRENT_USER_ID = 'uID';
 const PEER_USRE_ID = 'PeerId';
 const CURRENT_USER_PROFILE_URL = 'profileImage';
 const CURRENT_USER_DATA = 'currentUser';
+const NOTIFICATION_LENGTH = 'notificationLength';
 
 //Snakbar message
 const LOGIN_SUCEED_POPUP_MSG = 'Login Successfully';
@@ -536,6 +537,7 @@ const PROJECT_PREFERENCES_TEXT = 'My Volunteering Preferences';
 const COMPLETED_PROJECT_TEXT = 'Completed Projects';
 const VOLUNTEER_REPORT_TEXT = 'Reports';
 const MEMBER_SYNC_LABEL = 'Member Sync : ';
+const TOTAL_VOLUNTEERING_LABEL = 'Total volunteering hrs : ';
 const ADD_NOW = 'Add now!';
 const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
 const ORGANIZATION_TAX_ID_NUMBER = '• Tax ID No. : ';

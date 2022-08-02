@@ -98,7 +98,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                     volunteer: volunteer,
                     project: project,
                     chatButton: volunteer.userId !=
-                            prefsObject.getString(CURRENT_USER_ID) ||
+                            prefsObject.getString(CURRENT_USER_ID) &&
                         project.ownerId ==
                             prefsObject.getString(CURRENT_USER_ID),
                   );

@@ -242,6 +242,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
         }
         final List<NotificationModel> notifications =
             snapshot.data!.notifications;
+        prefsObject.setInt(NOTIFICATION_LENGTH,
+            notifications.isNotEmpty ? notifications.length : 0);
         return notifications.isNotEmpty
             ? ListView.separated(
                 shrinkWrap: true,

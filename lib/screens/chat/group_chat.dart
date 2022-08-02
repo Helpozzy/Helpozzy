@@ -447,6 +447,9 @@ class _ChatState extends State<GroupChat> {
       await _chatBloc.getGroupChat(groupChatId, limit);
       await listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    } else {
+      ScaffoldSnakBar()
+          .show(context, msg: 'Please enter the message to be sent');
     }
   }
 }

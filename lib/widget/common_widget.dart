@@ -1137,14 +1137,14 @@ class CounterBadge extends StatelessWidget {
   }
 }
 
-class Badge extends StatelessWidget {
-  const Badge({Key? key, this.size}) : super(key: key);
+class NotifyBadge extends StatelessWidget {
+  const NotifyBadge({Key? key, this.size}) : super(key: key);
   final double? size;
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size ?? 10,
-      width: size ?? 10,
+      height: size ?? 8,
+      width: size ?? 8,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: RED_COLOR,

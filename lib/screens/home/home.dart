@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpozzy/models/chat_list_model.dart';
+import 'package:helpozzy/bloc/notification_bloc.dart';
+import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/screens/dashboard/dashboard_menu.dart';
 import 'package:helpozzy/screens/explore/explore.dart';
 import 'package:helpozzy/screens/notification/notification_inbox.dart';
@@ -31,12 +32,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final NotificationBloc _notificationBloc = NotificationBloc();
+
   final List<Widget> _children = [
     DashboardScreen(),
     ExploreScreen(),
     NotificationInbox(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    _notificationBloc.getNotifications();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +74,9 @@ class _HomeState extends State<Home> {
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.bell, size: 16),
-                activeIcon: Icon(CupertinoIcons.bell_fill, size: 20),
+                icon: notificationBottomBarItem(CupertinoIcons.bell, 16),
+                activeIcon:
+                    notificationBottomBarItem(CupertinoIcons.bell_fill, 20),
                 label: NOTIFICATIONS_TAB,
                 backgroundColor: Colors.white,
               ),
@@ -78,6 +88,7 @@ class _HomeState extends State<Home> {
               ),
             ],
             onTap: (position) {
+              _notificationBloc.getNotifications();
               ctx.read<HomeBloc>().add(HomeUpdateTab(tabIndex: position));
             },
             currentIndex: state.currentIndex,
@@ -89,19 +100,20 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget chatBottomBarItem(IconData icon, double size) => Stack(
+  Widget notificationBottomBarItem(IconData icon, double size) => Stack(
         children: [
           Icon(icon, size: size),
-          StreamBuilder<ChatList>(
-            stream: null,
+          StreamBuilder<Notifications>(
+            stream: _notificationBloc.getNotificationsStream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return SizedBox();
               }
-              final List<ChatListItem> chatHistory =
-                  snapshot.data!.chats.where((e) => e.badge != 0).toList();
-              return chatHistory.isNotEmpty
-                  ? Positioned(right: 0, top: 0, child: Badge())
+              final int previousNotificationLength =
+                  prefsObject.getInt(NOTIFICATION_LENGTH) ?? 0;
+              return snapshot.data!.notifications.length >
+                      previousNotificationLength
+                  ? Positioned(right: 0, top: 0, child: NotifyBadge())
                   : SizedBox();
             },
           ),

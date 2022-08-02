@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:helpozzy/bloc/chat_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/review_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/chat_list_model.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/review_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -42,6 +44,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
   final ScrollController scrollController = ScrollController();
   late double currentPosition = 0.0;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final ChatBloc _chatBloc = ChatBloc();
   late SignUpAndUserModel projectOwner;
 
   @override
@@ -53,6 +56,7 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
     scrollController.addListener(() {
       setState(() => currentPosition = scrollController.offset);
     });
+    _chatBloc.getProjectChatHistory(projectID);
     super.initState();
   }
 
@@ -390,24 +394,45 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorWeight: 2,
         enableFeedback: true,
+        onTap: (index) async =>
+            await _chatBloc.getProjectChatHistory(projectID),
         tabs: [
           _tab(text: DETAILS_TAB),
           _tab(text: TASKS_TAB),
           _tab(text: MEMBERS_TAB),
-          _tab(text: MESSENGER_TAB),
+          StreamBuilder<ChatList>(
+              stream: _chatBloc.getChatListStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return _tab(text: MESSENGER_TAB);
+                }
+                final List<ChatListItem> chatHistory =
+                    snapshot.data!.chats.where((e) => e.badge != 0).toList();
+                return _tab(
+                  text: MESSENGER_TAB,
+                  badge: chatHistory.isNotEmpty ? true : false,
+                );
+              }),
           // _tab(text: ATTACHMENTS_TAB),
         ],
       );
 
-  Tab _tab({required String text}) => Tab(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: _theme.textTheme.bodyText2!.copyWith(
-            fontSize: 13,
-            color: DARK_PINK_COLOR,
-            fontWeight: FontWeight.bold,
-          ),
+  Tab _tab({required String text, bool badge = false}) => Tab(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: _theme.textTheme.bodyText2!.copyWith(
+                fontSize: 13,
+                color: DARK_PINK_COLOR,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            badge ? SizedBox(width: 2) : SizedBox(),
+            badge ? NotifyBadge() : SizedBox(),
+          ],
         ),
       );
 

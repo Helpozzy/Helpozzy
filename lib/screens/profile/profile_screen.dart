@@ -104,20 +104,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.firstName! + ' ' + user.lastName!,
                   style: _theme.textTheme.headline6!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: DARK_MARUN,
+                    color: PRIMARY_COLOR,
                     fontSize: 18,
                   ),
                 ),
                 UserBasicInfoDetails(
                   icon: CupertinoIcons.person,
                   text: MEMBER_SYNC_LABEL +
-                      DateFormatFromTimeStamp().dateFormatToMMMYYYY(
-                        timeStamp: user.joiningDate!,
-                      ),
+                      DateFormatFromTimeStamp()
+                          .dateFormatToMMMYYYY(timeStamp: user.joiningDate!),
                 ),
                 UserBasicInfoDetails(
                   icon: CupertinoIcons.timer,
-                  text: 'Total volunteering hrs : ${user.totalSpentHrs} Hours',
+                  text:
+                      TOTAL_VOLUNTEERING_LABEL + user.totalSpentHrs.toString(),
                 ),
                 UserBasicInfoDetails(
                   icon: CupertinoIcons.location,
@@ -154,12 +154,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SmallCommonButtonWithIcon(
           icon: CupertinoIcons.pencil,
           text: EDIT_PROFILE_MENU,
-          onPressed: () async => await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditProfileScreen(user: user),
-            ),
-          ),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProfileScreen(user: user),
+              ),
+            );
+            await _userInfoBloc
+                .getUser(prefsObject.getString(CURRENT_USER_ID)!);
+          },
           fontSize: 12,
           iconSize: 12,
           buttonColor: DARK_GRAY,
