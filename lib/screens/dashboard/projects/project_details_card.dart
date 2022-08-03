@@ -6,7 +6,6 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -19,6 +18,7 @@ class ProjectTile extends StatelessWidget {
     required this.projectsBloc,
     required this.projectTaskBloc,
     required this.onPressedTaskDetail,
+    required this.onPressedEdit,
     required this.onPressedDelete,
   });
   final ProjectTabType projectTabType;
@@ -27,6 +27,7 @@ class ProjectTile extends StatelessWidget {
   final ProjectsBloc projectsBloc;
   final ProjectTaskBloc projectTaskBloc;
   final void Function()? onPressedTaskDetail;
+  final SlidableActionCallback? onPressedEdit;
   final SlidableActionCallback? onPressedDelete;
 
   @override
@@ -48,17 +49,7 @@ class ProjectTile extends StatelessWidget {
         children: [
           SlidableAction(
             flex: 1,
-            onPressed: (BuildContext context) async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateEditProject(
-                    fromEdit: true,
-                    projectID: project.projectId,
-                  ),
-                ),
-              );
-            },
+            onPressed: onPressedEdit,
             backgroundColor: DARK_GRAY,
             foregroundColor: WHITE,
             icon: CupertinoIcons.pencil_ellipsis_rectangle,

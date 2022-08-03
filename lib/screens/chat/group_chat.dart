@@ -17,6 +17,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:readmore/readmore.dart';
 
 class GroupChat extends StatefulWidget {
   GroupChat({required this.volunteers, required this.project});
@@ -224,9 +225,15 @@ class _ChatState extends State<GroupChat> {
                 ? SizedBox(height: 3)
                 : SizedBox(),
             message.type == 0
-                ? Text(
+                ? ReadMoreText(
                     message.content,
-                    style: _theme.textTheme.bodyText2!.copyWith(color: BLACK),
+                    trimLines: 4,
+                    colorClickableText: BLUE_COLOR,
+                    trimMode: TrimMode.Line,
+                    trimCollapsedText: SHOW_MORE,
+                    trimExpandedText: SHOW_LESS,
+                    moreStyle:
+                        _theme.textTheme.bodyText2!.copyWith(color: BLACK),
                   )
                 : imageContent(message),
             SizedBox(height: 3),
@@ -426,13 +433,13 @@ class _ChatState extends State<GroupChat> {
       setState(() => contentMsg = textEditingController.text);
       textEditingController.clear();
 
-      final documentReference = FirebaseFirestore.instance
+      final DocumentReference documentReference = FirebaseFirestore.instance
           .collection('group_messages')
           .doc(groupChatId)
           .collection(groupChatId)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
-      FirebaseFirestore.instance.runTransaction((transaction) async {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
         transaction.set(
           documentReference,
           {

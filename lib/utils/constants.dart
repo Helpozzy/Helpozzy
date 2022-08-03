@@ -124,6 +124,8 @@ const HTTP_CODE = 'code';
 //Loading
 const LOADING = 'Loading..';
 const DOT = '• ';
+const SHOW_MORE = ' show more';
+const SHOW_LESS = ' show less';
 
 // Routes
 const INTRO = 'intro';
@@ -483,6 +485,8 @@ const DIRECTION = 'Direction';
 const INFO = 'Info';
 const TASKS = 'Tasks';
 const REVIEWS = 'Reviews';
+const REVIEW_SUBTITLE =
+    'Volunteers rated this non-profit highly for the work\nResponsiveness and professionalism';
 const ESTIMATED_HRS = 'Estimated Hrs : ';
 const MEMBERS_SIGNED_UP = ' Members signed up';
 const PROJECT_CREATED_ON = 'Project created on : ';

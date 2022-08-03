@@ -42,6 +42,7 @@ dependencies:
   google_place: ^0.4.7
   geolocator: ^8.0.1
   geocoding: ^2.0.1
+  readmore: ^2.2.0
   provider: ^6.0.2
   fl_chart: ^0.50.6
   email_validator: ^2.0.1

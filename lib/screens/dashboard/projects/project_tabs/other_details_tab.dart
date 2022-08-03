@@ -13,6 +13,7 @@ import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
+import 'package:readmore/readmore.dart';
 
 class ProjectDetailsTab extends StatefulWidget {
   ProjectDetailsTab({required this.project});
@@ -56,10 +57,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              aboutOraganizer(),
-              overviewDetails(),
               projectDetails(),
-              scheduleTimeAndLocation(),
               locationMap(),
               infoSection(),
               reviewSection(),
@@ -72,91 +70,6 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
     );
   }
 
-  Widget aboutOraganizer() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2.0),
-            child: Text(
-              ABOUT_ORGANIZER,
-              style: _theme.textTheme.bodyText2!.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          CommonDivider(),
-          Padding(
-            padding: const EdgeInsets.only(top: 7.0),
-            child: Text(
-              project.aboutOrganizer!.isNotEmpty
-                  ? project.aboutOrganizer!
-                  : 'No details found',
-              style: _theme.textTheme.bodyText2!.copyWith(
-                fontSize: 12,
-                fontFamily: QUICKSAND,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget overviewDetails() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            OVERVIEW,
-            style: _theme.textTheme.bodyText2!.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          overViewTile(
-            icon: Icons.verified_outlined,
-            text: 'Verified Non-Profit Organization',
-          ),
-          overViewTile(
-            icon: Icons.schedule_rounded,
-            text: '23 yrs in Service',
-          ),
-          overViewTile(
-            icon: Icons.people_outlined,
-            text: '15 Employees',
-          ),
-          overViewTile(
-            icon: Icons.emoji_people_outlined,
-            text: '75 Routine Volunteers',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget overViewTile({required IconData icon, required String text}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Row(
-        children: [
-          Icon(icon, size: 15),
-          SizedBox(width: 7),
-          Text(
-            text,
-            style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget projectDetails() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
@@ -164,7 +77,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 2.0),
+            padding: const EdgeInsets.only(top: 2.0),
             child: Text(
               PROJECT_DETAILS,
               style: _theme.textTheme.bodyText2!.copyWith(
@@ -173,64 +86,18 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
               ),
             ),
           ),
-          CommonDivider(),
           Padding(
             padding: const EdgeInsets.only(top: 7.0),
-            child: Text(
+            child: ReadMoreText(
               project.description!,
-              style: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
+              trimLines: 4,
+              colorClickableText: BLUE_COLOR,
+              trimMode: TrimMode.Line,
+              trimCollapsedText: SHOW_MORE,
+              trimExpandedText: SHOW_LESS,
+              moreStyle: _theme.textTheme.bodyText2!.copyWith(fontSize: 12),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget scheduleTimeAndLocation() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonDivider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  'Contact ' + project.organization!,
-                  style: _theme.textTheme.bodyText2!.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 15.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.call_outlined,
-                      size: 18,
-                      color: DARK_GRAY,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Icon(
-                      Icons.messenger_outline_rounded,
-                      size: 18,
-                      color: DARK_GRAY,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          CommonDivider(),
         ],
       ),
     );
@@ -250,11 +117,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
             ),
           ),
           infoMenu(
-            icon: Icons.language_rounded,
-            text: 'Visit Website',
-          ),
-          infoMenu(
-            icon: Icons.image_outlined,
+            icon: CupertinoIcons.photo_on_rectangle,
             text: 'Project Photos',
           ),
         ],
@@ -275,11 +138,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
             ),
           ),
           Spacer(),
-          Icon(
-            icon,
-            size: 16,
-            color: DARK_GRAY,
-          ),
+          Icon(icon, size: 20, color: DARK_PINK_COLOR),
         ],
       ),
     );
@@ -299,7 +158,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
             ),
           ),
           Text(
-            'Volunteers rated this non-profit highly for the work\nResponsiveness and professionalism',
+            REVIEW_SUBTITLE,
             style: _theme.textTheme.bodyText2!.copyWith(
               fontSize: 12,
               color: DARK_GRAY,
@@ -568,85 +427,103 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
   }
 
   Widget locationMap() {
-    return FutureBuilder(
-      future: _mapFuture,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: LinearLoader(),
-          );
-        }
-        return Container(
-          height: height / 3.5,
-          margin: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.05),
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: GoogleMap(
-                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                    Factory<OneSequenceGestureRecognizer>(
-                        () => EagerGestureRecognizer()),
-                  },
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  myLocationEnabled: true,
-                  scrollGesturesEnabled: true,
-                  zoomGesturesEnabled: true,
-                  tiltGesturesEnabled: true,
-                  mapType: MapType.normal,
-                  indoorViewEnabled: true,
-                  onMapCreated: (GoogleMapController controller) async {
-                    mapController = controller;
-                    final int markerIdVal = generateIds();
-                    final MarkerId markerId = MarkerId(markerIdVal.toString());
-                    final Marker marker = Marker(
-                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueGreen),
-                      markerId: markerId,
-                      position: LatLng(
-                        project.projectLocationLati!,
-                        project.projectLocationLongi!,
-                      ),
-                      infoWindow: InfoWindow(
-                        title: project.projectName,
-                        snippet: project.location,
-                      ),
-                    );
-                    _markers.add(marker);
-                    setState(() {});
-                  },
-                  mapToolbarEnabled: false,
-                  markers: _markers,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      project.projectLocationLati!,
-                      project.projectLocationLongi!,
-                    ),
-                    zoom: 11.0,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: IconButton(
-                    onPressed: () async =>
-                        await _commonUrlLauncher.openSystemMap(
-                      project.projectLocationLati!,
-                      project.projectLocationLongi!,
-                    ),
-                    icon: Icon(Icons.directions, color: GREEN),
-                  ),
-                ),
-              ),
-            ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: width * 0.04),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            DIRECTION,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        );
-      },
+          FutureBuilder(
+            future: _mapFuture,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: LinearLoader(),
+                );
+              }
+              return Container(
+                height: height / 4,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5.0),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: GoogleMap(
+                        gestureRecognizers: <
+                            Factory<OneSequenceGestureRecognizer>>{
+                          Factory<OneSequenceGestureRecognizer>(
+                              () => EagerGestureRecognizer()),
+                        },
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        myLocationEnabled: true,
+                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: true,
+                        tiltGesturesEnabled: true,
+                        mapType: MapType.normal,
+                        indoorViewEnabled: true,
+                        onMapCreated: (GoogleMapController controller) async {
+                          mapController = controller;
+                          final int markerIdVal = generateIds();
+                          final MarkerId markerId =
+                              MarkerId(markerIdVal.toString());
+                          final Marker marker = Marker(
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                                BitmapDescriptor.hueGreen),
+                            markerId: markerId,
+                            position: LatLng(
+                              project.projectLocationLati!,
+                              project.projectLocationLongi!,
+                            ),
+                            infoWindow: InfoWindow(
+                              title: project.projectName,
+                              snippet: project.location,
+                            ),
+                          );
+                          _markers.add(marker);
+                          setState(() {});
+                        },
+                        mapToolbarEnabled: false,
+                        markers: _markers,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            project.projectLocationLati!,
+                            project.projectLocationLongi!,
+                          ),
+                          zoom: 11.0,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: FloatingActionButton(
+                        mini: true,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        backgroundColor: WHITE,
+                        onPressed: () async =>
+                            await _commonUrlLauncher.openSystemMap(
+                          project.projectLocationLati!,
+                          project.projectLocationLongi!,
+                        ),
+                        child: Icon(CupertinoIcons.arrow_up_right_diamond_fill,
+                            size: 25, color: GREEN),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

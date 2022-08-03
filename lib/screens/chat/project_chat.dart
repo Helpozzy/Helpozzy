@@ -18,6 +18,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/full_screen_image_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:readmore/readmore.dart';
 
 class ProjectChat extends StatefulWidget {
   const ProjectChat({required this.peerUser, required this.project});
@@ -244,9 +245,15 @@ class _ProjectChatState extends State<ProjectChat> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             message.type == 0
-                ? Text(
+                ? ReadMoreText(
                     message.content,
-                    style: _theme.textTheme.bodyText2!.copyWith(color: BLACK),
+                    trimLines: 4,
+                    colorClickableText: BLUE_COLOR,
+                    trimMode: TrimMode.Line,
+                    trimCollapsedText: SHOW_MORE,
+                    trimExpandedText: SHOW_LESS,
+                    moreStyle:
+                        _theme.textTheme.bodyText2!.copyWith(color: BLACK),
                   )
                 : InkWell(
                     child: ClipRRect(

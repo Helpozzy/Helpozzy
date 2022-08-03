@@ -5,6 +5,7 @@ import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/models/response_model.dart';
+import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/platform_alert_dialog.dart';
@@ -167,6 +168,19 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                 _projectTaskBloc
                                     .getProjectTaskDetails(project.projectId!);
                               }
+                            },
+                            onPressedEdit: (BuildContext context) async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateEditProject(
+                                    fromEdit: true,
+                                    projectID: project.projectId,
+                                  ),
+                                ),
+                              );
+                              await projectsBloc.getProjects(
+                                  projectTabType: projectTabType);
                             },
                             onPressedDelete: (context) =>
                                 showDeletePrompt(project),
