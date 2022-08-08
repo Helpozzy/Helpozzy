@@ -8,28 +8,26 @@ class ProjectHelper {
       final String month = DateFormat('MMMM').format(
         DateTime.fromMillisecondsSinceEpoch(int.parse(project.startDate!)),
       );
-      late ProjectActivityModel monthActivity;
       if (monthlyList.isNotEmpty) {
-        monthlyList.forEach((monthData) {
+        for (int i = 0; i < monthlyList.length; i++) {
+          final ProjectActivityModel monthData = monthlyList[i];
           if (monthData.month == month) {
-            monthData.projectCounter++;
-            monthActivity = ProjectActivityModel(
-              monthVal: month,
-              projectCounterVal: monthData.projectCounter,
-            );
+            monthData.month = month;
+            monthData.projectCounter = monthData.projectCounter + 1;
           } else {
-            monthData.projectCounter++;
-            monthActivity = ProjectActivityModel(
+            monthlyList.add(ProjectActivityModel(
               monthVal: month,
-              projectCounterVal: monthData.projectCounter,
-            );
+              projectCounterVal: 1,
+            ));
           }
-        });
+          break;
+        }
       } else {
-        monthActivity =
-            ProjectActivityModel(monthVal: month, projectCounterVal: 1);
+        monthlyList.add(ProjectActivityModel(
+          monthVal: month,
+          projectCounterVal: 1,
+        ));
       }
-      monthlyList.add(monthActivity);
     });
   }
   late List<ProjectActivityModel> monthlyList = [];

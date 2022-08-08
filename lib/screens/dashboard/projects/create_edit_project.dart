@@ -286,6 +286,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   label: PROJECT_DESCRIPTION_LABEL,
                   controller: _projDesController,
                   maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
                   hintText: PROJECT_DESCRIPTION_HINT,
                   validator: (val) {
                     if (val!.isEmpty) {

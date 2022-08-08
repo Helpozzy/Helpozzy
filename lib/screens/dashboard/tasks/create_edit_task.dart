@@ -52,11 +52,13 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   late double noOfMemberTrackerVal = 0.0;
   late double minimumAgeTrackerVal = 7.0;
   late int _selectedIndexValue = 0;
+  late List<SignUpAndUserModel>? selectedMembers = [];
 
   @override
   void initState() {
     if (fromEdit) retriveTaskDetails();
     _projectsBloc.getOtherUsersInfo();
+    //  _projectsBloc.getSelectedMembers(members: task.members);
     super.initState();
   }
 
@@ -91,13 +93,11 @@ class _CreateEditTaskState extends State<CreateEditTask> {
       FocusScope.of(context).unfocus();
       CircularLoader().show(context);
       final List<String> members = [];
-      _projectsBloc.getSelectedMembersStream.listen((selectedMember) {
-        if (selectedMember.isNotEmpty) {
-          selectedMember.forEach((member) {
-            members.add(member.userId!);
-          });
-        }
-      });
+      if (selectedMembers != null && selectedMembers!.isNotEmpty) {
+        selectedMembers!.forEach((member) {
+          members.add(member.userId!);
+        });
+      }
 
       if (fromEdit) {
         final TaskModel taskDetails = TaskModel(
@@ -240,7 +240,9 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                         label: TASK_DESCRIPTION_LABEL,
                         controller: _taskDesController,
                         maxLines: 3,
+                        keyboardType: TextInputType.multiline,
                         hintText: TASK_DESCRIPTION_HINT,
+                        textInputAction: TextInputAction.newline,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return 'Enter task description';
@@ -411,16 +413,16 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         color: DARK_PINK_COLOR,
       ),
       onTap: () async {
-        await Navigator.push(
+        selectedMembers = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MembersScreen(),
+            builder: (context) =>
+                MembersScreen(selectedMembers: selectedMembers),
           ),
-        ).then((memberList) async {
-          if (memberList != null && memberList.isNotEmpty) {
-            await _projectsBloc.getSelectedMembers(members: memberList);
-          }
-        });
+        );
+        if (selectedMembers != null && selectedMembers!.isNotEmpty) {
+          await _projectsBloc.getSelectedMembers(members: selectedMembers!);
+        }
       },
     );
   }
@@ -441,45 +443,43 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                     spacing: 5,
                     runSpacing: 5,
                     children: snapshot.data!
-                        .map(
-                          (volunteer) => Container(
-                            margin: EdgeInsets.symmetric(horizontal: 2.0),
-                            padding: EdgeInsets.only(
-                              top: 3.0,
-                              bottom: 3.0,
-                              left: 10.0,
-                              right: 3.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: PRIMARY_COLOR,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  volunteer.firstName! +
-                                      ' ' +
-                                      volunteer.lastName!,
-                                  style: _themeData.textTheme.bodyText2!
-                                      .copyWith(color: WHITE),
-                                ),
-                                SizedBox(width: 3),
-                                InkWell(
-                                  onTap: () {
-                                    snapshot.data!.remove(volunteer);
-                                    setState(() {});
-                                  },
-                                  child: Icon(
-                                    CupertinoIcons.multiply_circle_fill,
-                                    color: WHITE,
-                                    size: 20,
+                        .map((volunteer) => Container(
+                              margin: EdgeInsets.symmetric(horizontal: 2.0),
+                              padding: EdgeInsets.only(
+                                top: 3.0,
+                                bottom: 3.0,
+                                left: 10.0,
+                                right: 3.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: PRIMARY_COLOR,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    volunteer.firstName! +
+                                        ' ' +
+                                        volunteer.lastName!,
+                                    style: _themeData.textTheme.bodyText2!
+                                        .copyWith(color: WHITE),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
+                                  SizedBox(width: 3),
+                                  InkWell(
+                                    onTap: () {
+                                      snapshot.data!.remove(volunteer);
+                                      setState(() {});
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.multiply_circle_fill,
+                                      color: WHITE,
+                                      size: 20,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ))
                         .toList()),
               )
             : SizedBox();

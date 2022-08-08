@@ -14,6 +14,7 @@ class CommonDatepicker {
       initialDate: initialDate != null ? initialDate : currentDate,
       firstDate: previousDate != null ? previousDate : currentDate,
       lastDate: lastDate,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

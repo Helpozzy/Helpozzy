@@ -426,9 +426,7 @@ class ActivityTrackerListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  projectTabType == ProjectTabType.PROJECT_COMPLETED_TAB
-                      ? '${projectActivity.projectCounter} projects'
-                      : '${projectActivity.activities} activities',
+                  '${projectActivity.projectCounter} projects',
                   style: _textTheme.bodyText2!.copyWith(
                     color: DARK_PINK_COLOR,
                     fontSize: 12,

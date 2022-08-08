@@ -7,11 +7,16 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
 class MembersScreen extends StatefulWidget {
+  MembersScreen({this.selectedMembers});
+  final List<SignUpAndUserModel>? selectedMembers;
   @override
-  _MembersScreenState createState() => _MembersScreenState();
+  _MembersScreenState createState() =>
+      _MembersScreenState(selectedMembers: selectedMembers);
 }
 
 class _MembersScreenState extends State<MembersScreen> {
+  _MembersScreenState({this.selectedMembers});
+  final List<SignUpAndUserModel>? selectedMembers;
   final TextEditingController _searchController = TextEditingController();
   final MembersBloc _membersBloc = MembersBloc();
   late double width;
@@ -142,7 +147,10 @@ class _MembersScreenState extends State<MembersScreen> {
             final SignUpAndUserModel volunteer = snapshot.data![index];
             return MemberCard(
               volunteer: volunteer,
-              selected: volunteer.isSelected!,
+              selected: selectedMembers!.isNotEmpty &&
+                      selectedMembers!.contains(volunteer.userId)
+                  ? true
+                  : volunteer.isSelected!,
               onTapItem: () {
                 setState(() => volunteer.isSelected = !volunteer.isSelected!);
                 if (volunteer.isSelected!) {

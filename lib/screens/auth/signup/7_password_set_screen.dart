@@ -317,8 +317,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       ..onTap = () async => await Navigator.push(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) =>
-                                  AgreementScreen(isPrivacyPolicy: false),
+                              builder: (context) => PrivacyPolicy(),
                             ),
                           ),
                     style: _theme.textTheme.bodySmall!.copyWith(
@@ -338,8 +337,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       ..onTap = () async => await Navigator.push(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) =>
-                                  AgreementScreen(isPrivacyPolicy: true),
+                              builder: (context) => PrivacyPolicy(),
                             ),
                           ),
                     style: _theme.textTheme.bodySmall!.copyWith(

@@ -232,7 +232,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                     center: Text(
                       (double.parse(user.totalSpentHrs.toString()) /
                                   (user.currentYearTargetHours! / 100))
-                              .toString() +
+                              .toStringAsFixed(2) +
                           ' %',
                       style: _theme.textTheme.bodyText2!.copyWith(
                         fontSize: 10,

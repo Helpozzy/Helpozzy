@@ -92,7 +92,7 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
             child: Column(
               children: [
                 CommonWidget(context).showBackForwardButton(
-                  onPressedForward: () {},
+                  onPressedForward: () async => await onContinue(),
                 ),
                 TopInfoLabel(label: ORAGANIZATION_SIGN_UP_LABEL),
                 textfieldLabel(LEGAL_ORGANIZATION_NAME_LABEL),
@@ -162,6 +162,9 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
       child: CommonRoundedTextfield(
         controller: _organizationDiscriptionContntroller,
+        maxLines: 3,
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
         hintText: ORGANIZATION_DISCRIPTION_HINT,
         validator: (val) {
           if (val!.isEmpty) {
@@ -280,29 +283,17 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
   Widget taxIdNumber() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
-      child: Row(
-        children: [
-          Expanded(
-            child: CommonRoundedTextfield(
-              controller: _organizationTaxIdNumberContntroller,
-              hintText: TAX_ID_NUM_HINT,
-              keyboardType: TextInputType.number,
-              inputFormatters: [maskFormatter],
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return 'Please enter tax id number';
-                }
-                return null;
-              },
-            ),
-          ),
-          SizedBox(width: 10),
-          Text(
-            '0/9',
-            style: _theme.textTheme.bodyText2!
-                .copyWith(fontWeight: FontWeight.w600, color: DARK_GRAY),
-          ),
-        ],
+      child: CommonRoundedTextfield(
+        controller: _organizationTaxIdNumberContntroller,
+        hintText: TAX_ID_NUM_HINT,
+        keyboardType: TextInputType.number,
+        inputFormatters: [maskFormatter],
+        validator: (val) {
+          if (val!.isEmpty) {
+            return 'Please enter tax id number';
+          }
+          return null;
+        },
       ),
     );
   }

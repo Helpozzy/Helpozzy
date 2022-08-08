@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/report_bloc.dart';
@@ -10,6 +9,8 @@ import 'package:helpozzy/screens/dashboard/reports/pvsa_chart.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_project_tile.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportsScreen extends StatefulWidget {
   @override
@@ -26,10 +27,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final ReportBloc _reportBloc = ReportBloc();
   late String selectedYear = DateTime.now().year.toString();
   late String selectedMonth = '';
+  late TooltipBehavior _tooltipBehavior;
 
   @override
   void initState() {
     loadMonth(selectedYear);
+    _tooltipBehavior = TooltipBehavior(enable: true);
     super.initState();
   }
 
@@ -202,89 +205,32 @@ class _ReportsScreenState extends State<ReportsScreen> {
         final List<ReportsDataModel> reportList = snapshot.data!;
         return reportList.isNotEmpty
             ? AspectRatio(
-                aspectRatio: 1.66,
+                aspectRatio: 1.5,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 15.0,
-                          right: 8.0,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: BarChart(
-                            BarChartData(
-                              alignment: BarChartAlignment.center,
-                              barTouchData: BarTouchData(enabled: true),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                bottomTitles: AxisTitles(
-                                  axisNameSize: 10,
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 20,
-                                  ),
-                                ),
-                                leftTitles: AxisTitles(
-                                  axisNameSize: 10,
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 20,
-                                  ),
-                                ),
-                                topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                              ),
-                              gridData: FlGridData(
-                                show: true,
-                                checkToShowHorizontalLine: (value) =>
-                                    value % 10 == 0,
-                                getDrawingHorizontalLine: (value) => FlLine(
-                                  color: NORMAL_BAR_COLOR,
-                                  strokeWidth: 0.5,
-                                ),
-                                getDrawingVerticalLine: (value) => FlLine(
-                                  color: GRAY,
-                                  strokeWidth: 0.5,
-                                ),
-                              ),
-                              borderData: FlBorderData(
-                                show: true,
-                                border: Border(
-                                  bottom: BorderSide(width: 0.5),
-                                  left: BorderSide(width: 0.2),
-                                ),
-                              ),
-                              groupsSpace: reportList.length == 12 ? 13 : 30,
-                              barGroups: getData(reportList),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          CHART_HOURS_VERTICAL_LABEL,
-                          textAlign: TextAlign.center,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          CHART_MONTHS_LABEL,
-                          textAlign: TextAlign.center,
-                          style: _theme.textTheme.bodyText2!
-                              .copyWith(fontWeight: FontWeight.w600),
-                        ),
+                  padding:
+                      EdgeInsets.only(right: width * 0.05, left: width * 0.02),
+                  child: SfCartesianChart(
+                    tooltipBehavior: _tooltipBehavior,
+                    primaryXAxis: CategoryAxis(
+                      name: CHART_MONTHS_LABEL,
+                      title: AxisTitle(text: CHART_MONTHS_LABEL),
+                    ),
+                    primaryYAxis: NumericAxis(
+                      name: CHART_HOURS_VERTICAL_LABEL,
+                      numberFormat: NumberFormat.decimalPattern(),
+                      title: AxisTitle(text: CHART_HOURS_VERTICAL_LABEL),
+                    ),
+                    isTransposed: true,
+                    series: <ChartSeries>[
+                      BarSeries<ReportsDataModel, String>(
+                        width: 0.5,
+                        spacing: 0.3,
+                        dataSource: reportList,
+                        name: 'Project Hrs',
+                        isVisibleInLegend: true,
+                        enableTooltip: true,
+                        xValueMapper: (ReportsDataModel data, _) => data.month,
+                        yValueMapper: (ReportsDataModel data, _) => data.hrs,
                       ),
                     ],
                   ),
@@ -318,26 +264,34 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  List<BarChartGroupData> getData(List<ReportsDataModel> reportList) {
+  List getData(List<ReportsDataModel> reportList) {
     return reportList.map((e) {
       final double yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
-      return BarChartGroupData(
-        x: e.hrs != null ? e.hrs! : 0,
-        barRods: [
-          BarChartRodData(
-            toY: yVal,
-            width: reportList.length == 12 ? 12 : 20,
-            rodStackItems: [
-              BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
-              BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
-            ],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(3),
-              topRight: Radius.circular(3),
-            ),
-          ),
-        ],
-      );
+      BarSeries<ReportsDataModel, String>(
+          dataSource: reportList,
+          xValueMapper: (ReportsDataModel data, _) => data.month,
+          yValueMapper: (ReportsDataModel data, _) => yVal,
+          // Width of the bars
+          width: 0.6,
+          // Spacing between the bars
+          spacing: 0.3);
+      // return BarChartGroupData(
+      //   x: e.hrs != null ? e.hrs! : 0,
+      //   barRods: [
+      //     BarChartRodData(
+      //       toY: yVal,
+      //       width: reportList.length == 12 ? 12 : 20,
+      //       rodStackItems: [
+      //         BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
+      //         BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
+      //       ],
+      //       borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(3),
+      //         topRight: Radius.circular(3),
+      //       ),
+      //     ),
+      //   ],
+      // );
     }).toList();
   }
 

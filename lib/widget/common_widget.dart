@@ -113,6 +113,8 @@ class CommonRoundedTextfield extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
+    this.textInputAction,
+    this.maxLines = 1,
     this.borderEnable = true,
     this.textAlignCenter = true,
     this.textCapitalization = TextCapitalization.none,
@@ -133,11 +135,12 @@ class CommonRoundedTextfield extends StatelessWidget {
   final bool? textAlignCenter;
   final TextCapitalization textCapitalization;
   final bool? borderEnable;
+  final TextInputAction? textInputAction;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-
     return TextFormField(
       obscureText: obscureText,
       controller: controller,
@@ -147,7 +150,8 @@ class CommonRoundedTextfield extends StatelessWidget {
       style: _theme.textTheme.bodyText1,
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
-      textInputAction: TextInputAction.next,
+      maxLines: maxLines,
+      textInputAction: textInputAction ?? TextInputAction.next,
       textCapitalization: textCapitalization,
       decoration: inputRoundedDecoration(
         fillColor: fillColor,
@@ -261,6 +265,7 @@ class CommonSimpleTextfield extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.maxLines = 1,
+    this.textInputAction,
   });
   final TextEditingController controller;
   final String hintText;
@@ -276,6 +281,7 @@ class CommonSimpleTextfield extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final int maxLines;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +298,8 @@ class CommonSimpleTextfield extends StatelessWidget {
           ? textCapitalization!
           : TextCapitalization.none,
       keyboardType: keyboardType,
-      textInputAction: TextInputAction.next,
+      textInputAction:
+          textInputAction != null ? textInputAction : TextInputAction.next,
       decoration: inputSimpleDecoration(
         getHint: hintText,
         prefixIcon: prefixIcon,
@@ -317,6 +324,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
     this.onTap,
     this.maxLines = 1,
     this.maxLength,
+    this.textInputAction,
     this.keyboardType = TextInputType.text,
   });
   final TextEditingController controller;
@@ -330,6 +338,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
   final int maxLines;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -348,6 +357,7 @@ class SimpleFieldWithLabel extends StatelessWidget {
           maxLines: maxLines,
           keyboardType: keyboardType,
           onTap: onTap,
+          textInputAction: textInputAction,
           onChanged: onChanged,
         ),
       ],
@@ -460,6 +470,7 @@ InputDecoration inputRoundedDecoration({
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     contentPadding: EdgeInsets.only(
+      top: 20,
       left: 20, right: 20,
       // right: isDropDown ? 15 : 30,
     ),

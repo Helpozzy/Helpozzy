@@ -58,28 +58,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       user.organizationDetails != null &&
                               user.organizationDetails!.legalOrganizationName !=
                                   null
+                          ? SizedBox()
+                          : SizedBox(height: 5),
+                      user.organizationDetails != null &&
+                              user.organizationDetails!.legalOrganizationName !=
+                                  null
                           ? organizationDetails(user.organizationDetails!)
                           : SizedBox(),
                       user.isOrganization! ? SizedBox() : projectPref(user),
                     ],
                   ),
                 ),
-                ListDividerLabel(label: SERVICE_RECORDS),
-                ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: width * 0.04),
-                  title: Text(POINT_TAB),
-                  trailing: Icon(
-                    CupertinoIcons.list_bullet_below_rectangle,
-                    color: DARK_PINK_COLOR,
-                  ),
-                  onTap: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => PointsScreen(),
-                    ),
-                  ),
-                ),
+                user.currentYearTargetHours != 0
+                    ? ListDividerLabel(label: SERVICE_RECORDS)
+                    : SizedBox(),
+                user.currentYearTargetHours != 0
+                    ? ListTile(
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: width * 0.04),
+                        title: Text(POINT_TAB),
+                        trailing: Icon(
+                          CupertinoIcons.list_bullet_below_rectangle,
+                          color: DARK_PINK_COLOR,
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => PointsScreen(),
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
                 CommonDivider(),
               ],
             ),
@@ -183,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget aboutMe(SignUpAndUserModel user) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, top: 5.0),
+      padding: const EdgeInsets.only(top: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -213,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget organizationDetails(OrganizationSignUpModel organizationDetails) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
