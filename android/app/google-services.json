@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "217556872773",
+    "firebase_url": "https://helpozzyapp-default-rtdb.firebaseio.com",
     "project_id": "helpozzyapp",
     "storage_bucket": "helpozzyapp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:217556872773:android:493ed5bc5a0790182bfd2c",
+        "mobilesdk_app_id": "1:217556872773:android:5b08c0ce56c7988c2bfd2c",
         "android_client_info": {
-          "package_name": "com.dev.helpozzy"
+          "package_name": "com.app.helpozzyapp"
         }
       },
       "oauth_client": [
@@ -29,6 +30,13 @@
             {
               "client_id": "217556872773-lse87vhklba0un1k6290n1lgipm82rrv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "217556872773-op3440rpq2f5sf9tj27q0n91lbd60t3r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.helpozzy"
+              }
             }
           ]
         }
