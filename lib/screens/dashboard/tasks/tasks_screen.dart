@@ -140,7 +140,7 @@ class _TasksScreenState extends State<TasksScreen> {
     CircularLoader().show(context);
     final ResponseModel response =
         await _projectTaskBloc.deleteTask(task.taskId!);
-    if (response.success!) {
+    if (response.status!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: TASK_DELETED_SUCCESSFULLY_POPUP_MSG);
     } else {

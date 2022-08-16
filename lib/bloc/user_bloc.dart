@@ -31,6 +31,11 @@ class UserInfoBloc {
     return response;
   }
 
+  Future<ResponseModel> deleteUserRefrences() async {
+    final ResponseModel response = await repo.deletUserRefrencesRepo();
+    return response;
+  }
+
   void dispose() {
     userController.close();
   }

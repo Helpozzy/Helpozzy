@@ -265,7 +265,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
     final ResponseModel response =
         await _editProfileBloc.editProfile(signUpAndUserModel);
-    if (response.success!) {
+    if (response.status!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: response.message!);
       Navigator.of(context).pop();

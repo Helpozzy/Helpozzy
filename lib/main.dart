@@ -10,7 +10,7 @@ import 'package:helpozzy/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home/bloc/home_bloc.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -66,9 +66,9 @@ class ApiProvider {
       final DocumentReference documentRef =
           firestore.collection('users').doc(signupAndUserModel.userId);
       await documentRef.set(signupAndUserModel.toJson());
-      return ResponseModel(success: true);
+      return ResponseModel(status: true);
     } catch (e) {
-      return ResponseModel(success: false);
+      return ResponseModel(status: false);
     }
   }
 
@@ -81,10 +81,9 @@ class ApiProvider {
       await documentRef.update(json).catchError((onError) {
         print(onError.toString());
       });
-      return ResponseModel(success: true, message: PROFILE_UPDATED_POPUP_MSG);
+      return ResponseModel(status: true, message: PROFILE_UPDATED_POPUP_MSG);
     } catch (e) {
-      return ResponseModel(
-          success: false, error: PROFILE_NOT_UPDATED_POPUP_MSG);
+      return ResponseModel(status: false, error: PROFILE_NOT_UPDATED_POPUP_MSG);
     }
   }
 
@@ -107,9 +106,9 @@ class ApiProvider {
           print(onError.toString());
         });
       });
-      return ResponseModel(success: true, message: 'Total hours updated');
+      return ResponseModel(status: true, message: 'Total hours updated');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Total hrs not updated');
+      return ResponseModel(status: false, error: 'Total hrs not updated');
     }
   }
 
@@ -164,12 +163,12 @@ class ApiProvider {
         'last_seen': timeStamp,
       });
       return ResponseModel(
-        success: true,
+        status: true,
         message: 'Activity is updated',
       );
     } catch (e) {
       return ResponseModel(
-        success: false,
+        status: false,
         error: 'Failed! Activity is not updated',
       );
     }
@@ -190,12 +189,12 @@ class ApiProvider {
       project.projectId = documentReference.id;
       await documentReference.set(project.toJson());
       return ResponseModel(
-        success: true,
+        status: true,
         message: 'Project created',
         returnValue: documentReference.id,
       );
     } catch (e) {
-      return ResponseModel(success: false, error: 'Failed project not created');
+      return ResponseModel(status: false, error: 'Failed project not created');
     }
   }
 
@@ -205,13 +204,13 @@ class ApiProvider {
           firestore.collection('projects').doc(project.projectId);
       await documentReference.update(project.toJson());
       return ResponseModel(
-        success: true,
+        status: true,
         message: 'Project is updated',
         returnValue: documentReference.id,
       );
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Fail! Project is not updated');
+          status: false, error: 'Fail! Project is not updated');
     }
   }
 
@@ -231,20 +230,20 @@ class ApiProvider {
 
       documentSnapshot.reference.update({'total_tasks_hrs': hrs});
 
-      return ResponseModel(success: true, message: 'Project is updated');
+      return ResponseModel(status: true, message: 'Project is updated');
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Failed! Project is not updated');
+          status: false, error: 'Failed! Project is not updated');
     }
   }
 
   Future<ResponseModel> deleteProjectAPIProvider(String projectId) async {
     try {
       await firestore.collection('projects').doc(projectId).delete();
-      return ResponseModel(success: true, message: 'Project is deleted');
+      return ResponseModel(status: true, message: 'Project is deleted');
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Failed, Project is not deleted');
+          status: false, error: 'Failed, Project is not deleted');
     }
   }
 
@@ -354,9 +353,9 @@ class ApiProvider {
           firestore.collection('tasks').doc();
       task.taskId = documentReference.id;
       await documentReference.set(task.toJson());
-      return ResponseModel(success: true, message: 'Task created');
+      return ResponseModel(status: true, message: 'Task created');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Task is not created');
+      return ResponseModel(status: false, error: 'Task is not created');
     }
   }
 
@@ -365,20 +364,18 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('tasks').doc(task.taskId);
       await documentReference.update(task.toJson());
-      return ResponseModel(success: true, message: 'Task is updated');
+      return ResponseModel(status: true, message: 'Task is updated');
     } catch (e) {
-      return ResponseModel(
-          success: false, error: 'Failed! Task is not updated');
+      return ResponseModel(status: false, error: 'Failed! Task is not updated');
     }
   }
 
   Future<ResponseModel> deleteTaskAPIProvider(String taskId) async {
     try {
       await firestore.collection('tasks').doc(taskId).delete();
-      return ResponseModel(success: true, message: 'Task is deleted');
+      return ResponseModel(status: true, message: 'Task is deleted');
     } catch (e) {
-      return ResponseModel(
-          success: false, error: 'Failed! Task is not deleted');
+      return ResponseModel(status: false, error: 'Failed! Task is not deleted');
     }
   }
 
@@ -387,18 +384,18 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('signed_up_tasks').doc(task.enrollTaskId);
       await documentReference.update(task.toJson());
-      return ResponseModel(success: true, message: 'Task Updated');
+      return ResponseModel(status: true, message: 'Task Updated');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Task not updated');
+      return ResponseModel(status: false, error: 'Task not updated');
     }
   }
 
   Future<ResponseModel> removeEnrollTaskAPIProvider(String enrollTaskId) async {
     try {
       await firestore.collection('signed_up_tasks').doc(enrollTaskId).delete();
-      return ResponseModel(success: true, message: 'Task declined');
+      return ResponseModel(status: true, message: 'Task declined');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Task not declined');
+      return ResponseModel(status: false, error: 'Task not declined');
     }
   }
 
@@ -467,7 +464,7 @@ class ApiProvider {
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         return ResponseModel(
-          success: false,
+          status: false,
           error: 'You have already signed up for this task',
         );
       } else {
@@ -477,12 +474,12 @@ class ApiProvider {
         enrolledTaskModel.enrollTaskId = documentReference.id;
         await documentReference.set(enrolledTaskModel.toJson());
         return ResponseModel(
-          success: true,
+          status: true,
           message: 'Task signed up wait for admin approval',
         );
       }
     } catch (e) {
-      return ResponseModel(success: false, error: 'Failed! Task not enrolled');
+      return ResponseModel(status: false, error: 'Failed! Task not enrolled');
     }
   }
 
@@ -511,7 +508,7 @@ class ApiProvider {
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         if (querySnapshot.docs[i].exists) {
           responseModel =
-              ResponseModel(message: 'Already enrolled', success: true);
+              ResponseModel(message: 'Already enrolled', status: true);
         } else {
           responseModel = await projectSignUpAPIProvider(projectSignUpVal);
         }
@@ -535,7 +532,7 @@ class ApiProvider {
 
       if (querySnapshot.docs.isNotEmpty) {
         return ResponseModel(
-          success: false,
+          status: false,
           error: 'You have already signed up for this project',
         );
       } else {
@@ -561,11 +558,11 @@ class ApiProvider {
         });
         return ResponseModel(
           message: 'Project signed up wait for admin approval',
-          success: true,
+          status: true,
         );
       }
     } catch (e) {
-      return ResponseModel(error: 'Project enrollment failed', success: false);
+      return ResponseModel(error: 'Project enrollment failed', status: false);
     }
   }
 
@@ -584,9 +581,9 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('signed_up_projects').doc(project.enrolledId);
       await documentReference.update(project.toJson());
-      return ResponseModel(success: true, message: 'Task Updated');
+      return ResponseModel(status: true, message: 'Task Updated');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Task not updated');
+      return ResponseModel(status: false, error: 'Task not updated');
     }
   }
 
@@ -596,10 +593,10 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('signed_up_projects').doc(enrollesProjectId);
       await documentReference.delete();
-      return ResponseModel(success: true, message: 'Project request Declined');
+      return ResponseModel(status: true, message: 'Project request Declined');
     } catch (e) {
       return ResponseModel(
-          success: false, error: 'Project request not declined');
+          status: false, error: 'Project request not declined');
     }
   }
 
@@ -609,9 +606,9 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('signed_up_tasks').doc(enrolledTaskId);
       await documentReference.delete();
-      return ResponseModel(success: true, message: 'Task request Declined');
+      return ResponseModel(status: true, message: 'Task request Declined');
     } catch (e) {
-      return ResponseModel(success: false, error: 'Task request not declined');
+      return ResponseModel(status: false, error: 'Task request not declined');
     }
   }
 
@@ -648,7 +645,7 @@ class ApiProvider {
       if (querySnapshot.docs.isNotEmpty && querySnapshot.docs.first.exists) {
         querySnapshot.docs.first.reference.update(reviewModel.toJson());
         return ResponseModel(
-          success: true,
+          status: true,
           message: 'Review updated',
         );
       } else {
@@ -657,13 +654,13 @@ class ApiProvider {
         reviewModel.reviewId = documentReference.id;
         await documentReference.set(reviewModel.toJson());
         return ResponseModel(
-          success: true,
+          status: true,
           message: 'Review posted',
         );
       }
     } catch (e) {
       return ResponseModel(
-        success: false,
+        status: false,
         error: 'Failed!',
       );
     }
@@ -686,9 +683,9 @@ class ApiProvider {
           firestore.collection('notifications').doc();
       notification.id = documentReference.id;
       await documentReference.set(notification.toJson());
-      return ResponseModel(success: true);
+      return ResponseModel(status: true);
     } catch (e) {
-      return ResponseModel(success: false, error: 'Fail to sent');
+      return ResponseModel(status: false, error: 'Fail to sent');
     }
   }
 
@@ -698,18 +695,18 @@ class ApiProvider {
       final DocumentReference documentReference =
           firestore.collection('notifications').doc(notification.id);
       await documentReference.update(notification.toJson());
-      return ResponseModel(success: true);
+      return ResponseModel(status: true);
     } catch (e) {
-      return ResponseModel(success: false, error: 'Failed');
+      return ResponseModel(status: false, error: 'Failed');
     }
   }
 
   Future<ResponseModel> removeNotificationAPIProvider(String id) async {
     try {
       await firestore.collection('notifications').doc(id).delete();
-      return ResponseModel(success: true);
+      return ResponseModel(status: true);
     } catch (e) {
-      return ResponseModel(success: false, error: 'Failed');
+      return ResponseModel(status: false, error: 'Failed');
     }
   }
 
@@ -745,28 +742,6 @@ class ApiProvider {
     return Chats.fromJson(list: querySnapshot.docs);
   }
 
-  //One to One Chat
-  Future<ChatList> getOneToOneChatHistory(String groupChatId) async {
-    final Query query = FirebaseFirestore.instance
-        .collection('one_to_one_chat_list')
-        .doc(groupChatId)
-        .collection(prefsObject.getString(CURRENT_USER_ID)!);
-    final QuerySnapshot querySnapshot =
-        await query.orderBy('timestamp', descending: true).get();
-    return ChatList.fromSnapshot(list: querySnapshot.docs);
-  }
-
-  Future<Chats> getOneToOneMessages(String groupChatId, int limit) async {
-    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('one_to_one_messages')
-        .doc(groupChatId)
-        .collection(groupChatId)
-        .orderBy('timestamp', descending: true)
-        .limit(limit)
-        .get();
-    return Chats.fromJson(list: querySnapshot.docs);
-  }
-
   //Group chat
 
   Future<Chats> getGroupMessages(String groupChatId, int limit) async {
@@ -778,5 +753,56 @@ class ApiProvider {
         .limit(limit)
         .get();
     return Chats.fromJson(list: querySnapshot.docs);
+  }
+
+  //Delete user account and all data
+
+  Future<ResponseModel> deleteUserRefrencesAPI() async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(prefsObject.getString(CURRENT_USER_ID))
+          .delete();
+
+      await firestore
+          .collection('projects')
+          .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+          .get()
+          .then((querySnapshot) async => querySnapshot.docs
+              .forEach((doc) async => await doc.reference.delete()));
+
+      await firestore
+          .collection('tasks')
+          .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+          .get()
+          .then((querySnapshot) async => querySnapshot.docs
+              .forEach((doc) async => await doc.reference.delete()));
+
+      await firestore
+          .collection('signed_up_projects')
+          .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+          .get()
+          .then((querySnapshot) async => querySnapshot.docs
+              .forEach((doc) async => await doc.reference.delete()));
+
+      await firestore
+          .collection('signed_up_tasks')
+          .where('owner_id', isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+          .get()
+          .then((querySnapshot) async => querySnapshot.docs
+              .forEach((doc) async => await doc.reference.delete()));
+
+      await firestore
+          .collection('reviews')
+          .where('reviewer_id',
+              isEqualTo: prefsObject.getString(CURRENT_USER_ID))
+          .get()
+          .then((querySnapshot) async => querySnapshot.docs
+              .forEach((doc) async => await doc.reference.delete()));
+
+      return ResponseModel(status: true, message: 'User refrences are cleared');
+    } catch (e) {
+      return ResponseModel(status: false, error: e.toString());
+    }
   }
 }

@@ -74,7 +74,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               CircularLoader().show(context);
               final ResponseModel response =
                   await projectsBloc.deleteProject(project.projectId!);
-              if (response.success!) {
+              if (response.status!) {
                 CircularLoader().hide(context);
                 ScaffoldSnakBar()
                     .show(context, msg: PROJECT_DELETED_SUCCESSFULLY_POPUP_MSG);

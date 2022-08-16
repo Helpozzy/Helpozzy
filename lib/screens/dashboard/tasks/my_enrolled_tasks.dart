@@ -52,7 +52,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
     if (taskProgressType == TaskProgressType.DECLINE) {
       final ResponseModel response =
           await _taskBloc.removeEnrollTask(task.enrollTaskId!);
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         await _taskBloc.getEnrolledTasks();
         ScaffoldSnakBar().show(context, msg: response.message!);
@@ -91,7 +91,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
       );
       final ResponseModel response =
           await _taskBloc.updateEnrollTask(enrolledTaskModel);
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         await _taskBloc.getEnrolledTasks();
         ScaffoldSnakBar().show(
@@ -134,7 +134,7 @@ class _MyEnrolledTaskState extends State<MyEnrolledTask> {
 
           final ResponseModel notificationResponse =
               await _notificationBloc.postNotification(notification);
-          if (notificationResponse.success!) {
+          if (notificationResponse.status!) {
             await ScaffoldSnakBar().show(context, msg: response.message!);
             await _taskBloc.getEnrolledTasks();
           } else {

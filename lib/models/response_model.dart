@@ -1,11 +1,11 @@
 class ResponseModel {
-  bool? success;
+  bool? status;
   String? message;
   String? error;
   dynamic returnValue;
 
   ResponseModel({
-    this.success = false,
+    this.status = false,
     this.message = '',
     this.error = '',
     this.returnValue,

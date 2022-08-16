@@ -109,4 +109,22 @@ class AuthRepository {
       return false;
     }
   }
+
+  Future<AuthResponseModel> deleteAccount(User user) async {
+    late AuthResponseModel response;
+    try {
+      await user.delete().then((value) {
+        response = AuthResponseModel(
+          success: true,
+          message: 'Account is deleted',
+        );
+      });
+    } on FirebaseAuthException catch (e) {
+      response = AuthResponseModel(
+        success: false,
+        error: e.message!,
+      );
+    }
+    return response;
+  }
 }

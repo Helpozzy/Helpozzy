@@ -49,7 +49,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
-    if (updateTaskResponse.success!) {
+    if (updateTaskResponse.status!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(
         context,
@@ -86,7 +86,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         final ResponseModel response =
             await _projectsBloc.updateEnrolledProjectHrs(
                 task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
-        if (response.success!) {
+        if (response.status!) {
           ScaffoldSnakBar().show(context, msg: response.message!);
         } else {
           ScaffoldSnakBar().show(context, msg: response.error!);
@@ -107,7 +107,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     task.isApprovedFromAdmin = true;
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
-    if (updateTaskResponse.success!) {
+    if (updateTaskResponse.status!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: 'Request Approved');
       notification.userTo = notification.userFrom;
@@ -132,7 +132,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     signUpProject.isApprovedFromAdmin = true;
     final ResponseModel updateProjectResponse =
         await _projectSignUpBloc.updateSignedUpProject(signUpProject);
-    if (updateProjectResponse.success!) {
+    if (updateProjectResponse.status!) {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: 'Request Approved');
       notification.userTo = notification.userFrom;
@@ -157,7 +157,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
       final ResponseModel notificationResponse =
           await _notificationBloc.removeNotification(notification.id!);
 
-      if (notificationResponse.success!) {
+      if (notificationResponse.status!) {
         CircularLoader().hide(context);
         late ResponseModel response;
         if (notification.type == 0) {
@@ -171,7 +171,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           response =
               await _projectTaskBloc.removeEnrolledTask(task.enrollTaskId!);
         }
-        if (response.success!) {
+        if (response.status!) {
           ScaffoldSnakBar().show(context, msg: response.message!);
         } else {
           ScaffoldSnakBar().show(context, msg: response.error!);

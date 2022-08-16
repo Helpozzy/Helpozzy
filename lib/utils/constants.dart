@@ -385,6 +385,7 @@ const ALERT = 'Alert';
 const SUCCESSFULL = 'Successful';
 const SIGN_OUT_TITLE = 'Sign Out';
 const SIGN_OUT_FROM_APP = 'You want to sign out from app!';
+const DELETE_ACCOUNT_SUBTITLE = 'Are you sure, Want to delete this account?';
 const CONFIRM = 'Confirm';
 const DELETE_PROJECT_TEXT = 'Are you sure! Want to delete this project!';
 const DELETE_TASK_TEXT = 'Are you sure! Want to delete this task!';
@@ -485,7 +486,9 @@ const ORGANIZATION_TAX_ID_NUMBER = '• Tax ID No. : ';
 const PROFIT_ORGANIZATION = '• Profile Organization';
 const NON_PROFIT_ORGANIZATION = '• Non Profit organization';
 const SIGN_OUT_POPUP_MENU = 'Sign Out';
+const DELETE_ACCOUNT = 'Delete Account';
 const EDIT_PROFILE_MENU = 'Edit Profile';
+const ACCOUNT_SETTING = 'Account Setting';
 
 //Edit profile
 const EDIT_PROFILE_TEXT = 'Edit Profile';

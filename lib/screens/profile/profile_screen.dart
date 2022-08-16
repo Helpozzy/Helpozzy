@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
+import 'package:helpozzy/firebase_repository/auth_repository.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
@@ -25,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late double height;
   late double width;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
+  final AuthRepository _authRepository = AuthRepository();
 
   @override
   void initState() {
@@ -69,27 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                user.currentYearTargetHours != 0
-                    ? ListDividerLabel(label: SERVICE_RECORDS)
-                    : SizedBox(),
-                user.currentYearTargetHours != 0
-                    ? ListTile(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: width * 0.04),
-                        title: Text(POINT_TAB),
-                        trailing: Icon(
-                          CupertinoIcons.list_bullet_below_rectangle,
-                          color: DARK_PINK_COLOR,
-                        ),
-                        onTap: () => Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => PointsScreen(),
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-                CommonDivider(),
+                menus(user),
               ],
             ),
           );
@@ -133,7 +115,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   text: user.address!,
                 ),
                 SizedBox(height: 5),
-                optionMenu(user),
+                SmallCommonButtonWithIcon(
+                  icon: CupertinoIcons.pencil,
+                  text: EDIT_PROFILE_MENU,
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfileScreen(user: user),
+                      ),
+                    );
+                    await _userInfoBloc
+                        .getUser(prefsObject.getString(CURRENT_USER_ID)!);
+                  },
+                  fontSize: 12,
+                  iconSize: 12,
+                  buttonColor: DARK_GRAY,
+                ),
               ],
             ),
           ),
@@ -145,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             child: Container(
-              margin: EdgeInsets.symmetric(vertical: 5.0),
+              margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 6.0),
               child: CommonUserProfileOrPlaceholder(
                 size: width * 0.2,
                 imgUrl: user.profileUrl!,
@@ -154,39 +152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget optionMenu(SignUpAndUserModel user) {
-    return Row(
-      children: [
-        SmallCommonButtonWithIcon(
-          icon: CupertinoIcons.pencil,
-          text: EDIT_PROFILE_MENU,
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditProfileScreen(user: user),
-              ),
-            );
-            await _userInfoBloc
-                .getUser(prefsObject.getString(CURRENT_USER_ID)!);
-          },
-          fontSize: 12,
-          iconSize: 12,
-          buttonColor: DARK_GRAY,
-        ),
-        SizedBox(width: 5),
-        SmallCommonButtonWithIcon(
-          icon: Icons.exit_to_app_rounded,
-          text: SIGN_OUT_BUTTON,
-          onPressed: () => signOutPrompt(),
-          fontSize: 12,
-          iconSize: 12,
-          buttonColor: RED_COLOR,
-        ),
-      ],
     );
   }
 
@@ -361,6 +326,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Widget menus(SignUpAndUserModel user) {
+    return Column(
+      children: [
+        user.currentYearTargetHours != 0
+            ? ListDividerLabel(label: SERVICE_RECORDS)
+            : SizedBox(),
+        user.currentYearTargetHours != 0
+            ? menuTile(
+                title: POINT_TAB,
+                icon: CupertinoIcons.list_bullet_below_rectangle,
+                onTap: () => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => PointsScreen(),
+                  ),
+                ),
+              )
+            : SizedBox(),
+        CommonDivider(),
+        ListDividerLabel(label: ACCOUNT_SETTING),
+        menuTile(
+          title: DELETE_ACCOUNT,
+          icon: CupertinoIcons.trash,
+          onTap: () => deleteAccountPrompt(),
+        ),
+        CommonDivider(),
+        menuTile(
+          title: SIGN_OUT_POPUP_MENU,
+          icon: CupertinoIcons.square_arrow_left,
+          onTap: () => signOutPrompt(),
+        ),
+        CommonDivider(),
+      ],
+    );
+  }
+
+  Widget menuTile({
+    required IconData icon,
+    required String title,
+    GestureTapCallback? onTap,
+  }) =>
+      ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: width * 0.04),
+        title: Text(
+          title,
+          style: _theme.textTheme.bodyText2,
+        ),
+        trailing: Icon(icon, size: 18),
+        onTap: onTap,
+      );
+
+  Future deleteAccountPrompt() async {
+    PlatformAlertDialog().showWithAction(
+      context,
+      title: DELETE_ACCOUNT,
+      content: DELETE_ACCOUNT_SUBTITLE,
+      actions: [
+        TextButton(
+          onPressed: () async => Navigator.of(context).pop(),
+          child: Text(
+            CANCEL_BUTTON,
+            style: _theme.textTheme.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: PRIMARY_COLOR,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: SmallCommonButton(
+            fontSize: 12,
+            onPressed: () => onDeleteAccount(),
+            text: CONFIRM,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future onDeleteAccount() async {
+    Navigator.of(context).pop();
+    CircularLoader().show(context);
+
+    await _authRepository.getCurrentUser().then(
+          (response) async => await _authRepository
+              .deleteAccount(response!.user!)
+              .then((deleteUser) async {
+            if (deleteUser.success!) {
+              await _userInfoBloc
+                  .deleteUserRefrences()
+                  .then((userRefClearResponse) async {
+                CircularLoader().hide(context);
+                await prefsObject.clear();
+                await prefsObject.reload();
+                await ScaffoldSnakBar()
+                    .show(context, msg: userRefClearResponse.message!);
+                await Navigator.pushNamedAndRemoveUntil(
+                    context, INTRO, (route) => false);
+              });
+            } else {
+              CircularLoader().hide(context);
+              await ScaffoldSnakBar().show(context, msg: deleteUser.error!);
+            }
+          }),
+        );
   }
 
   Future signOutPrompt() async {

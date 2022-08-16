@@ -161,7 +161,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         final ResponseModel response = fromEdit
             ? await _projectsBloc.updateProject(modifiedProject)
             : await _projectsBloc.postProject(modifiedProject);
-        if (response.success!) {
+        if (response.status!) {
           if (selectedItems.isNotEmpty) {
             for (int i = 0; i < selectedItems.length; i++) {
               selectedItems[i].projectId = response.returnValue;

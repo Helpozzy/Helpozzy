@@ -128,7 +128,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         );
         final ResponseModel response =
             await _projectTaskBloc.updateTask(taskDetails);
-        if (response.success!) {
+        if (response.status!) {
           await clearFields();
           CircularLoader().hide(context);
           Navigator.of(context).pop();
@@ -167,7 +167,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         );
         final ResponseModel response =
             await _projectTaskBloc.postTask(taskDetails);
-        if (response.success!) {
+        if (response.status!) {
           CircularLoader().hide(context);
           Navigator.of(context).pop();
           ScaffoldSnakBar().show(

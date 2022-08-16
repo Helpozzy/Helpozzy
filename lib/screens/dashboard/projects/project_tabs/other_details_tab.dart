@@ -297,7 +297,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
     final ResponseModel response =
         await _projectReviewsBloc.postReview(reviewModel);
 
-    if (response.success!) {
+    if (response.status!) {
       ScaffoldSnakBar().show(context, msg: response.message!);
       selectedRating = 0.0;
       _reviewController.clear();

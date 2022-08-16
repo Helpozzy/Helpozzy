@@ -54,7 +54,7 @@ class _TaskTabState extends State<TaskTab> {
     if (taskProgressType == TaskProgressType.DECLINE) {
       final ResponseModel response =
           await _taskBloc.removeEnrollTask(task.enrollTaskId!);
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         await _taskBloc.getEnrolledTasks();
         ScaffoldSnakBar().show(context, msg: response.message!);
@@ -93,7 +93,7 @@ class _TaskTabState extends State<TaskTab> {
       );
       final ResponseModel response =
           await _taskBloc.updateEnrollTask(enrolledTaskModel);
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         if (isMyTask) {
           await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
@@ -140,7 +140,7 @@ class _TaskTabState extends State<TaskTab> {
 
           final ResponseModel notificationResponse =
               await _notificationBloc.postNotification(notification);
-          if (notificationResponse.success!) {
+          if (notificationResponse.status!) {
             await ScaffoldSnakBar().show(context, msg: response.message!);
             if (isMyTask) {
               await _projectTaskBloc
@@ -204,7 +204,7 @@ class _TaskTabState extends State<TaskTab> {
               task.projectId = null;
               final ResponseModel response =
                   await _projectTaskBloc.updateTask(task);
-              if (response.success!) {
+              if (response.status!) {
                 CircularLoader().hide(context);
                 ScaffoldSnakBar()
                     .show(context, msg: TASK_DELETED_SUCCESSFULLY_POPUP_MSG);

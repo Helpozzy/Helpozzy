@@ -99,7 +99,7 @@ class _VolunteerProjectTaskSignUpState
       final ResponseModel response =
           await _projectSignUpBloc.postVolunteerProjectSignUp(projectSignUpVal);
 
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
@@ -115,7 +115,7 @@ class _VolunteerProjectTaskSignUpState
 
         final ResponseModel notificationResponse =
             await _notificationBloc.postNotification(notification);
-        if (notificationResponse.success!) {
+        if (notificationResponse.status!) {
           Navigator.of(context).pop();
         } else {
           await ScaffoldSnakBar().show(context, msg: response.error!);
@@ -154,7 +154,7 @@ class _VolunteerProjectTaskSignUpState
       final ResponseModel response =
           await _taskBloc.postEnrolledTask(taskSignUpVal);
 
-      if (response.success!) {
+      if (response.status!) {
         CircularLoader().hide(context);
         await ScaffoldSnakBar().show(context, msg: response.message!);
         final NotificationModel notification = NotificationModel(
@@ -171,7 +171,7 @@ class _VolunteerProjectTaskSignUpState
 
         final ResponseModel notificationResponse =
             await _notificationBloc.postNotification(notification);
-        if (notificationResponse.success!) {
+        if (notificationResponse.status!) {
           Navigator.of(context).pop();
         } else {
           await ScaffoldSnakBar().show(context, msg: response.error!);

@@ -66,7 +66,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
             .registerUser(signupAndUserModel, _confirmPassController.text)
             .then((response) {
           CircularLoader().hide(context);
-          if (response.success!)
+          if (response.status!)
             Navigator.pushNamedAndRemoveUntil(
                 context, HOME_SCREEN, (route) => false);
           else

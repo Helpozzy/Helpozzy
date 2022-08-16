@@ -33,12 +33,10 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Allow permission to use Music in app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This application requires location services to show location</string>
+	<string>Accessing Location services to show project location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow permission to attach Photo/Video in app</string>
+	<string>Accessing Photo Library to upload profile picture of users</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

@@ -161,13 +161,9 @@ class Repository {
           String projectId, String groupChatId, int limit) =>
       apiProvider.getProjectMessages(projectId, groupChatId, limit);
 
-  //OneToOne Chat
-  Future<ChatList> getOneToOneChatHistoryRepo(String groupChatId) =>
-      apiProvider.getOneToOneChatHistory(groupChatId);
-
-  Future<Chats> getOneToOneMessagesRepo(String groupChatId, int limit) =>
-      apiProvider.getOneToOneMessages(groupChatId, limit);
-
   Future<Chats> getGroupMessagesRepo(String projectId, int limit) =>
       apiProvider.getGroupMessages(projectId, limit);
+
+  Future<ResponseModel> deletUserRefrencesRepo() =>
+      apiProvider.deleteUserRefrencesAPI();
 }

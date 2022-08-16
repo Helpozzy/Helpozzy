@@ -39,12 +39,12 @@ class SignUpBloc {
       final ResponseModel response =
           await repo.postSignUpDetailsRepo(signupAndUserModel);
       return ResponseModel(
-        success: response.success,
+        status: response.status,
         message: result.message,
       );
     } catch (e) {
       return ResponseModel(
-        success: false,
+        status: false,
         message: result!.message,
       );
     }
