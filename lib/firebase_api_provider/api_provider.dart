@@ -148,8 +148,12 @@ class ApiProvider {
     final DocumentReference documentRef =
         firestore.collection('users').doc(uId);
     final DocumentSnapshot doc = await documentRef.get();
-    return SignUpAndUserModel.fromJson(
-        json: doc.data() as Map<String, dynamic>);
+    if (doc.exists) {
+      return SignUpAndUserModel.fromJson(
+          json: doc.data() as Map<String, dynamic>);
+    } else {
+      return SignUpAndUserModel.fromJson(json: {});
+    }
   }
 
   Future<ResponseModel> updateUserPresenceAPIProvider(

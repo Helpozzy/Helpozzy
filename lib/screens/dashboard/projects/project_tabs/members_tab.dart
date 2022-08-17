@@ -27,8 +27,12 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
   @override
   void initState() {
     super.initState();
-    _membersBloc.searchProjectMembers(
-        searchText: '', projectId: project.projectId!);
+    getProjectMembers();
+  }
+
+  Future getProjectMembers() async {
+    await _membersBloc.getProjectMembers(project.projectId!);
+    await _membersBloc.searchProjectMembers(searchText: '');
   }
 
   @override
@@ -64,10 +68,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 ),
               ),
               validator: (val) => null,
-              onChanged: (val) => _membersBloc.searchProjectMembers(
-                searchText: val,
-                projectId: project.projectId!,
-              ),
+              onChanged: (val) =>
+                  _membersBloc.searchProjectMembers(searchText: val),
             ),
           ),
           Expanded(child: membersList()),
@@ -83,10 +85,7 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        final List<SignUpAndUserModel> volunteers = snapshot.data!
-            .where((volunteer) =>
-                volunteer.userId != prefsObject.getString(CURRENT_USER_ID))
-            .toList();
+        final List<SignUpAndUserModel> volunteers = snapshot.data!;
         return volunteers.isNotEmpty
             ? ListView.separated(
                 separatorBuilder: (context, index) => CommonDivider(),

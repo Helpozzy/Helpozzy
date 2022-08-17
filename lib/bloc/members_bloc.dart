@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/members_helper.dart';
 import 'package:helpozzy/helper/rewards_helper.dart';
@@ -65,23 +64,21 @@ class MembersBloc {
         await repo.getProjectTasksRepo(projectId, false);
     final List<SignUpAndUserModel> _projectMember =
         await ProjectMembers().fromTasks(tasksResponse.tasks);
+    _projectMember.sort((a, b) =>
+        a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase()));
+    projectMembersList = _projectMember;
     _projectMembersList.sink.add(_projectMember);
   }
 
+  List<SignUpAndUserModel> projectMembersList = [];
   List<SignUpAndUserModel> searchedProjectMembersList = [];
 
-  Future searchProjectMembers(
-      {required String searchText, required String projectId}) async {
+  Future searchProjectMembers({required String searchText}) async {
     searchedProjectMembersList = [];
-    final Tasks tasksResponse =
-        await repo.getProjectTasksRepo(projectId, false);
-    final List<SignUpAndUserModel> _projectMember =
-        await ProjectMembers().fromTasks(tasksResponse.tasks);
     if (searchText.isEmpty) {
-      print(_projectMember.length);
-      _searchProjectMembersList.sink.add(_projectMember);
+      _searchProjectMembersList.sink.add(projectMembersList);
     } else {
-      _projectMember.forEach((volunteer) {
+      projectMembersList.forEach((volunteer) {
         if (volunteer.firstName!
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
@@ -89,7 +86,6 @@ class MembersBloc {
                 .toLowerCase()
                 .contains(searchText.toLowerCase())) {
           searchedProjectMembersList.add(volunteer);
-          log(searchedProjectMembersList.length.toString());
         }
       });
       _searchProjectMembersList.sink.add(searchedProjectMembersList);

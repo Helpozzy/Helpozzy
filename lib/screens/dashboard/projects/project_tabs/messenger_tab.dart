@@ -11,16 +11,15 @@ import 'package:helpozzy/screens/chat/group_chat.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 
-class RecentChatHistory extends StatefulWidget {
-  RecentChatHistory({required this.project});
+class MessengerTab extends StatefulWidget {
+  MessengerTab({required this.project});
   final ProjectModel project;
   @override
-  _RecentChatHistoryState createState() =>
-      _RecentChatHistoryState(project: project);
+  _MessengerTabState createState() => _MessengerTabState(project: project);
 }
 
-class _RecentChatHistoryState extends State<RecentChatHistory> {
-  _RecentChatHistoryState({required this.project});
+class _MessengerTabState extends State<MessengerTab> {
+  _MessengerTabState({required this.project});
   final ProjectModel project;
   late TextTheme _textTheme;
   late double width;

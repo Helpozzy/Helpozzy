@@ -23,8 +23,6 @@ class _PointsTabScreenState extends State<PointsTabScreen>
   late double width;
 
   late bool boo = true;
-  late Animation<double> animation;
-  late AnimationController controller;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
@@ -33,24 +31,6 @@ class _PointsTabScreenState extends State<PointsTabScreen>
   void initState() {
     super.initState();
     _userInfoBloc.getUser(prefsObject.getString(CURRENT_USER_ID)!);
-    controller =
-        AnimationController(duration: const Duration(seconds: 1), vsync: this);
-    animation = Tween<double>(begin: 0, end: 500).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      });
-    animateContainer();
-  }
-
-  void animateContainer() {
-    setState(() {
-      if (boo == true) {
-        controller.forward();
-      } else {
-        controller.reverse();
-      }
-      boo = !boo;
-    });
   }
 
   int ageCalculation(String timestamp) {
@@ -103,99 +83,97 @@ class _PointsTabScreenState extends State<PointsTabScreen>
     return Container(
       height: height / 4,
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
-      width: animation.value,
+      width: double.infinity,
       color: GRAY,
-      child: animation.value > 400
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  user.totalSpentHrs! <= 25
-                      ? 'assets/images/medal_beginer.png'
-                      : user.totalSpentHrs! <= 50
-                          ? 'assets/images/medal_bronze.png'
-                          : user.totalSpentHrs! <= 100
-                              ? 'assets/images/medal_silver.png'
-                              : user.totalSpentHrs! <= 150
-                                  ? 'assets/images/medal_gold.png'
-                                  : user.totalSpentHrs! <= 200
-                                      ? 'assets/images/trophy.png'
-                                      : 'assets/images/medal_beginer.png',
-                  height: height / 5.8,
-                  width: height / 5.8,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            user.totalSpentHrs! <= 25
+                ? 'assets/images/medal_beginer.png'
+                : user.totalSpentHrs! <= 50
+                    ? 'assets/images/medal_bronze.png'
+                    : user.totalSpentHrs! <= 100
+                        ? 'assets/images/medal_silver.png'
+                        : user.totalSpentHrs! <= 150
+                            ? 'assets/images/medal_gold.png'
+                            : user.totalSpentHrs! <= 200
+                                ? 'assets/images/trophy.png'
+                                : 'assets/images/medal_beginer.png',
+            height: height / 5.8,
+            width: height / 5.8,
+          ),
+          SizedBox(width: 12),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                user.totalSpentHrs! <= 25
+                    ? BEGINNER_MEMBER
+                    : user.totalSpentHrs! <= 50
+                        ? BRONZE_MEMBER
+                        : user.totalSpentHrs! <= 100
+                            ? SILVER_MEMBER
+                            : user.totalSpentHrs! <= 150
+                                ? GOLD_MEMBER
+                                : user.totalSpentHrs! <= 200
+                                    ? LIFETIME_ACHIEVMENT
+                                    : BEGINNER_MEMBER,
+                style: _theme.textTheme.headline5!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: height / 35,
                 ),
-                SizedBox(width: 12),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      user.totalSpentHrs! <= 25
-                          ? BEGINNER_MEMBER
-                          : user.totalSpentHrs! <= 50
-                              ? BRONZE_MEMBER
-                              : user.totalSpentHrs! <= 100
-                                  ? SILVER_MEMBER
-                                  : user.totalSpentHrs! <= 150
-                                      ? GOLD_MEMBER
-                                      : user.totalSpentHrs! <= 200
-                                          ? LIFETIME_ACHIEVMENT
-                                          : BEGINNER_MEMBER,
-                      style: _theme.textTheme.headline5!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: height / 35,
-                      ),
-                    ),
-                    SizedBox(height: 7.0),
-                    Text(
-                      'Points last updated on 12/6/2020',
-                      style: _theme.textTheme.bodyText2!.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          user.totalSpentHrs!.toString(),
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontSize: height / 10,
-                            fontWeight: FontWeight.bold,
-                            color: DARK_PINK_COLOR,
-                          ),
-                        ),
-                        SizedBox(width: 3),
-                        Text(
-                          HRS_LABEL,
-                          style: _theme.textTheme.bodyText2!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Text(
-                    //   POINT_TO_REDEEM,
-                    //   style: _theme.textTheme.bodyText2!.copyWith(
-                    //     fontSize: 10,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
-                    // Container(
-                    //   height: 36,
-                    //   width: height / 4.5,
-                    //   margin: EdgeInsets.only(top: 7),
-                    //   child: CommonButton(
-                    //     text: REDEEM_MY_POINT,
-                    //     color: LIGHT_BLACK,
-                    //     fontSize: 12,
-                    //     onPressed: () => tabController!.animateTo(3),
-                    //   ),
-                    // ),
-                  ],
+              ),
+              SizedBox(height: 7.0),
+              Text(
+                'Points last updated on 12/6/2020',
+                style: _theme.textTheme.bodyText2!.copyWith(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            )
-          : SizedBox(),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    user.totalSpentHrs!.toString(),
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontSize: height / 10,
+                      fontWeight: FontWeight.bold,
+                      color: DARK_PINK_COLOR,
+                    ),
+                  ),
+                  SizedBox(width: 3),
+                  Text(
+                    HRS_LABEL,
+                    style: _theme.textTheme.bodyText2!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              // Text(
+              //   POINT_TO_REDEEM,
+              //   style: _theme.textTheme.bodyText2!.copyWith(
+              //     fontSize: 10,
+              //     fontWeight: FontWeight.w600,
+              //   ),
+              // ),
+              // Container(
+              //   height: 36,
+              //   width: height / 4.5,
+              //   margin: EdgeInsets.only(top: 7),
+              //   child: CommonButton(
+              //     text: REDEEM_MY_POINT,
+              //     color: LIGHT_BLACK,
+              //     fontSize: 12,
+              //     onPressed: () => tabController!.animateTo(3),
+              //   ),
+              // ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

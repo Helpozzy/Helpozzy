@@ -375,7 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title,
           style: _theme.textTheme.bodyText2,
         ),
-        trailing: Icon(icon, size: 18),
+        trailing: Icon(icon, size: 20),
         onTap: onTap,
       );
 
