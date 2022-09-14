@@ -24,7 +24,7 @@ class CommonDatepicker {
               onSurface: PRIMARY_COLOR,
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(primary: PRIMARY_COLOR),
+              style: TextButton.styleFrom(backgroundColor: WHITE),
             ),
           ),
           child: child!,

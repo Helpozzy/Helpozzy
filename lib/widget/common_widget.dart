@@ -696,7 +696,7 @@ class CommonButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: color,
+        backgroundColor: color,
         elevation: elevation,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
@@ -745,7 +745,7 @@ class CommonButtonWithIcon extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 1.0,
-        primary: buttonColor,
+        backgroundColor: buttonColor,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor, width: 0.6),
           borderRadius: BorderRadius.circular(100),
@@ -806,7 +806,7 @@ class SmallCommonButtonWithIcon extends StatelessWidget {
           color: buttonColor,
           borderRadius: BorderRadius.circular(100),
         ),
-        padding: EdgeInsets.only(top: 3.0, bottom: 3.0, right: 10.0, left: 6.0),
+        padding: EdgeInsets.only(top: 4.0, bottom: 4.0, right: 10.0, left: 6.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

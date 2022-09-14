@@ -20,7 +20,7 @@ class IntroWidget extends StatelessWidget {
             padding: EdgeInsets.only(top: height * 0.07),
             child: TopAppLogo(
               size: height / 6,
-              color: WHITE,
+              color: PRIMARY_COLOR,
             ),
           ),
           _createButtonsContainer(context),
@@ -49,6 +49,8 @@ class IntroWidget extends StatelessWidget {
             ),
           ),
           TextButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.transparent)),
             child: Text(
               MSG_LOGIN,
               style: _theme.textTheme.headline6!.copyWith(

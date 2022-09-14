@@ -108,9 +108,8 @@ class _ProjectMembersTabState extends State<ProjectMembersTab> {
                 padding: EdgeInsets.only(bottom: width * 0.15),
                 child: Text(
                   NO_MEMBERS_AVAILABLE,
-                  style: _theme.textTheme.bodyText2!.copyWith(
+                  style: _theme.textTheme.headline6!.copyWith(
                     color: DARK_GRAY,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               );

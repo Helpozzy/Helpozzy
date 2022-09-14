@@ -252,6 +252,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               )
             : Container(
                 height: height / 3,
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 alignment: Alignment.center,
                 child: Text(
                   NO_CURRENT_VOLUNTEERING_OPPORTUNITIES,

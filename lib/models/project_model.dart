@@ -31,6 +31,7 @@ class ProjectModel {
     this.projectLocationLati,
     this.projectLocationLongi,
     this.enrollmentCount,
+    this.isPrivate,
     this.aboutOrganizer,
     this.status,
     this.isApprovedFromAdmin,
@@ -48,7 +49,10 @@ class ProjectModel {
     description = json['description'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    collaboratorsCoadmin = json['collaborators_or_co_admin'];
+    isPrivate = json['is_private'] ?? false;
+    collaboratorsCoadmin = json['collaborators_or_co_admin'] != null
+        ? json['collaborators_or_co_admin']
+        : [];
     imageUrl = json['image_url'];
     organization = json['oraganization'];
     location = json['location'];
@@ -74,6 +78,7 @@ class ProjectModel {
       'description': description,
       'start_date': startDate,
       'end_date': endDate,
+      'is_private': isPrivate ?? false,
       'collaborators_or_co_admin': collaboratorsCoadmin,
       'image_url': imageUrl,
       'oraganization': organization,
@@ -99,7 +104,8 @@ class ProjectModel {
   late String? description;
   late String? startDate;
   late String? endDate;
-  late String? collaboratorsCoadmin;
+  late List? collaboratorsCoadmin = [];
+  late bool? isPrivate;
   late String? imageUrl;
   late String? contactName;
   late String? contactNumber;
@@ -112,7 +118,7 @@ class ProjectModel {
   late int? enrollmentCount;
   late bool? isApprovedFromAdmin;
   late int? totalTaskshrs = 0;
-  late bool? isProjectDetailsExpanded = false;
+  late bool? isDetailsExpanded = false;
   late bool? isSignedUp = false;
   late bool? isTaskDetailsExpanded = false;
 }

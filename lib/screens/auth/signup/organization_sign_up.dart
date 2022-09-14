@@ -247,6 +247,8 @@ class _OrganizationSignUpState extends State<OrganizationSignUp> {
           children: [
             Checkbox(
               value: nonProfitOrganization,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
               onChanged: (val) {
                 setState(() => nonProfitOrganization = val!);
               },

@@ -60,6 +60,7 @@ const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 const APP_ICON_URL =
     'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/helpozzy_icon%2Fhelpozzy_icon.png?alt=media&token=4e4a5fa0-ea75-4fbe-8f36-7db01347da3f';
 const ANDROID_MAP_API_KEY = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';
+const IOS_MAP_API_KEY = 'AIzaSyDHlyHquqxv7jZC2ghoWpy_1AdZEtYqrdw';
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 late SharedPreferences prefsObject;
@@ -669,6 +670,8 @@ const MEMBERS_LABEL = 'Members';
 const TASKS_LABEL = 'Tasks';
 const HOURS_LABEL = 'Estimated Hours';
 const STATUS_LABEL = 'Status';
+const VISIBILITY_LABEL = 'Visibility';
+const PRIVATE_LABEL = 'Private';
 const TIMELINE_LABEL = 'Timeline';
 const PROJECT_INVITE_COLLABORATOR_LABEL = 'Invite Collaborators';
 const PROJECT_NAME_HINT = 'Enter Name';

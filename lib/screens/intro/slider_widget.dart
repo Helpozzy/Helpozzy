@@ -28,37 +28,35 @@ class SliderWidget extends StatelessWidget {
         children: [
           CarouselSlider(
             items: arrItems
-                .map(
-                  (e) => Builder(
-                    builder: (BuildContext context) {
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.asset(
-                            e.imgPath,
-                            fit: BoxFit.cover,
-                          ),
-                          Container(color: Colors.black38),
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            padding: EdgeInsets.only(bottom: height * 0.175),
-                            child: Text(
-                              e.text,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(
-                                    color: WHITE,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                .map((e) => Builder(
+                      builder: (BuildContext context) {
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.asset(
+                              e.imgPath,
+                              fit: BoxFit.cover,
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                )
+                            Container(color: Colors.black26),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              padding: EdgeInsets.only(bottom: height * 0.175),
+                              child: Text(
+                                e.text,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .copyWith(
+                                      color: WHITE,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ))
                 .toList(),
             options: CarouselOptions(
               height: MediaQuery.of(context).size.height,

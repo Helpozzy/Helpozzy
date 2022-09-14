@@ -116,39 +116,35 @@ class _ReportProjectTileState extends State<ReportProjectTile> {
                   SizedBox(width: 10),
                   SmallCommonButtonWithIcon(
                     onPressed: () {
-                      project.isProjectDetailsExpanded =
-                          !project.isProjectDetailsExpanded!;
+                      project.isDetailsExpanded = !project.isDetailsExpanded!;
                       reportBloc.isExpanded(isExpanded);
-                      if (project.isProjectDetailsExpanded!) {
+                      if (project.isDetailsExpanded!) {
                         reportBloc.getSignedUpProjectCompletedTasks(
                             project.projectId!);
                       }
                     },
-                    icon: project.isProjectDetailsExpanded!
+                    icon: project.isDetailsExpanded!
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
                     fontSize: 10,
                     iconSize: 10,
                     text: TASK_DETAILS_BUTTON,
-                    buttonColor: project.isProjectDetailsExpanded!
-                        ? PRIMARY_COLOR
-                        : GRAY,
-                    iconColor: project.isProjectDetailsExpanded!
-                        ? WHITE
-                        : PRIMARY_COLOR,
-                    fontColor: project.isProjectDetailsExpanded!
-                        ? WHITE
-                        : PRIMARY_COLOR,
+                    buttonColor:
+                        project.isDetailsExpanded! ? PRIMARY_COLOR : GRAY,
+                    iconColor:
+                        project.isDetailsExpanded! ? WHITE : PRIMARY_COLOR,
+                    fontColor:
+                        project.isDetailsExpanded! ? WHITE : PRIMARY_COLOR,
                   ),
                 ],
               ),
-              project.isProjectDetailsExpanded!
+              project.isDetailsExpanded!
                   ? Padding(
                       padding: const EdgeInsets.only(top: 6),
                       child: CommonDivider(),
                     )
                   : SizedBox(),
-              project.isProjectDetailsExpanded! ? tasksOfProject() : SizedBox(),
+              project.isDetailsExpanded! ? tasksOfProject() : SizedBox(),
             ],
           ),
         ),

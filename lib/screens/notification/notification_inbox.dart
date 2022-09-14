@@ -149,6 +149,32 @@ class _NotificationInboxState extends State<NotificationInbox> {
     }
   }
 
+  Future onApproveCoAdminCollobratorNotification(
+      NotificationModel notification) async {
+    CircularLoader().show(context);
+    final ProjectModel signUpProject =
+        ProjectModel.fromjson(json: notification.payload!);
+
+    signUpProject.isApprovedFromAdmin = true;
+    final ResponseModel updateProjectResponse =
+        await _projectSignUpBloc.updateSignedUpProject(signUpProject);
+    if (updateProjectResponse.status!) {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: 'collaboration Request Approved');
+      notification.userTo = notification.userFrom;
+      notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      notification.title = 'Accepted the collaboration request';
+      notification.subTitle =
+          'Now you member of the ${signUpProject.projectName} project';
+      notification.isUpdated = true;
+      await _notificationBloc.updateNotifications(notification);
+      await _notificationBloc.getNotifications();
+    } else {
+      CircularLoader().hide(context);
+      ScaffoldSnakBar().show(context, msg: updateProjectResponse.error!);
+    }
+  }
+
   Future onDecline(NotificationModel notification) async {
     CircularLoader().show(context);
     if (notification.type == 2) {

@@ -81,7 +81,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
 
   Widget topMemberShipSection(SignUpAndUserModel user) {
     return Container(
-      height: height / 4,
+      height: height / 3.8,
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
       width: double.infinity,
       color: GRAY,
@@ -101,7 +101,7 @@ class _PointsTabScreenState extends State<PointsTabScreen>
                                 ? 'assets/images/trophy.png'
                                 : 'assets/images/medal_beginer.png',
             height: height / 5.8,
-            width: height / 5.8,
+            width: width / 3.2,
           ),
           SizedBox(width: 12),
           Column(

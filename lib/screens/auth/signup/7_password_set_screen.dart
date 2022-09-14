@@ -293,6 +293,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 builder: (context, snapshot) {
                   return Checkbox(
                     value: snapshot.data,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
                     onChanged: (val) =>
                         _signUpBloc.changeTermsConditionPrivacyPolicy(val!),
                   );

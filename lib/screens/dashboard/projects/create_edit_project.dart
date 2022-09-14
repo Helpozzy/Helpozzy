@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io' show Platform;
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
@@ -60,11 +62,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   late double latitude = 0.0;
   late double longitude = 0.0;
   late List<TaskModel> selectedItems = [];
+  late bool isPrivate = false;
+  late List collbratorsCoadmin = [];
+  late Uri dynamicLink = Uri();
 
   @override
   void initState() {
     _projectsBloc.getOtherUsersInfo();
-    googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
+    googlePlace =
+        GooglePlace(Platform.isAndroid ? ANDROID_MAP_API_KEY : IOS_MAP_API_KEY);
     listenExistingDetails();
     super.initState();
   }
@@ -82,6 +88,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     if (result != null && result.predictions != null && mounted) {
       setState(() => predictions = result.predictions!);
     }
+  }
+
+  Future clearFields() async {
+    _projNameController.clear();
+    _projDesController.clear();
+    _projStartDateController.clear();
+    _projEndDateController.clear();
+    _projCategoryController.clear();
+    _projCollaboraorController.clear();
+    _searchEmailController.clear();
+    _projLocationController.clear();
+    _projEndDateController.clear();
   }
 
   Future listenProjectDetails() async {
@@ -107,6 +125,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       location = project.location!;
       latitude = project.projectLocationLati!;
       longitude = project.projectLocationLongi!;
+      isPrivate = project.isPrivate ?? false;
       _selectedStartDate =
           DateTime.fromMillisecondsSinceEpoch(int.parse(project.startDate!));
       _selectedEndDate =
@@ -138,18 +157,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           aboutOrganizer: SAMPLE_LONG_TEXT,
           contactName: currentUser.firstName,
           contactNumber: currentUser.personalPhnNo,
-          imageUrl: img(),
+          imageUrl: randomImg,
           location: location,
           projectLocationLati: latitude,
           projectLocationLongi: longitude,
           organization: '',
+          isPrivate: isPrivate,
           enrollmentCount: 0,
           projectName: _projNameController.text,
           description: _projDesController.text,
           startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
           endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
           ownerId: prefsObject.getString(CURRENT_USER_ID)!,
-          collaboratorsCoadmin: _projCollaboraorController.text,
+          collaboratorsCoadmin: collbratorsCoadmin,
           status: _selectedIndexValue == 0
               ? TOGGLE_NOT_STARTED
               : _selectedIndexValue == 1
@@ -168,6 +188,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               await _projectTaskBloc.updateTask(selectedItems[i]);
             }
           }
+
           await clearFields();
           CircularLoader().hide(context);
           Navigator.of(context).pop();
@@ -177,6 +198,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 ? PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG
                 : PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG,
           );
+          if (!fromEdit) {
+            await showPrivatePublicDialog();
+          }
         } else {
           await clearFields();
           CircularLoader().hide(context);
@@ -197,7 +221,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     }
   }
 
-  String img() {
+  String get randomImg {
     final List<String> images = selectedCategoryId == 0
         ? volunteerProjectImage
         : selectedCategoryId == 1
@@ -234,6 +258,100 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     }
   }
 
+  Future showPrivatePublicDialog() async {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      constraints: BoxConstraints(maxHeight: 200),
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      builder: ((context) {
+        return SafeArea(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: Icon(Icons.close_rounded),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.check_rounded),
+                  )
+                ],
+              ),
+              CommonDivider(),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 10.0),
+                child: TextfieldLabelSmall(label: VISIBILITY_LABEL),
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: isPrivate,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    onChanged: (val) async {
+                      setState(() => isPrivate = val!);
+                      await _retrieveDynamicInvitationLink();
+                    },
+                  ),
+                  Text(
+                    PRIVATE_LABEL,
+                    style:
+                        _themeData.textTheme.bodyText2!.copyWith(fontSize: 16),
+                  ),
+                  Spacer(),
+                  TextButton(
+                    onPressed: () => CommonUrlLauncher()
+                        .shareToOtherApp(subject: '$dynamicLink'),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.link,
+                          color: BLACK,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          COPY_LINK,
+                          style: _themeData.textTheme.bodyText2!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: PRIMARY_COLOR),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 15)
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: TextfieldLabelSmall(
+                    label: PROJECT_INVITE_COLLABORATOR_LABEL),
+              ),
+              inviteCollaborators(),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  Future<void> _retrieveDynamicInvitationLink() async {
+    final DynamicLinkParameters dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse('https://www.helpozzy.com/'),
+      uriPrefix: 'https://helpozzy.page.link',
+      androidParameters:
+          const AndroidParameters(packageName: 'com.app.helpozzyapp'),
+      iosParameters: const IOSParameters(bundleId: 'com.app.helpozzyapp'),
+    );
+    dynamicLink =
+        await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
+    print('Project Link : $dynamicLink');
+  }
+
   @override
   Widget build(BuildContext context) {
     _themeData = Theme.of(context);
@@ -245,7 +363,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         title: fromEdit ? EDIT_PROJECT_APPBAR : CREATE_PROJECT_APPBAR,
         actions: [
           IconButton(
-            onPressed: () => onAddEditProject(),
+            onPressed: () async => await onAddEditProject(),
             icon: Icon(
               Icons.check_rounded,
               color: DARK_PINK_COLOR,
@@ -315,21 +433,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: TextfieldLabelSmall(label: STATUS_LABEL),
               ),
               statusSegmentation(),
-              // fromEdit ? SizedBox() : Divider(),
-              // fromEdit
-              //     ? SizedBox()
-              //     : Padding(
-              //         padding: EdgeInsets.only(
-              //             top: width * 0.03, left: width * 0.05),
-              //         child: TextfieldLabelSmall(
-              //             label: PROJECT_INVITE_COLLABORATOR_LABEL),
-              //       ),
-              // fromEdit
-              //     ? SizedBox()
-              //     : Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              //         child: inviteCollaborators(),
-              // ),
               Divider(),
               Padding(
                 padding: EdgeInsets.only(top: width * 0.03, left: width * 0.05),
@@ -339,6 +442,73 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: startDateAndEndDateSection(),
               ),
+              Divider(),
+              fromEdit
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: width * 0.03,
+                        horizontal: width * 0.05,
+                      ),
+                      child: TextfieldLabelSmall(label: VISIBILITY_LABEL),
+                    )
+                  : SizedBox(),
+              fromEdit
+                  ? ListTile(
+                      contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      leading: Checkbox(
+                          value: isPrivate,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          onChanged: (val) async {
+                            setState(() => isPrivate = val!);
+                            await _retrieveDynamicInvitationLink();
+                          }),
+                      title: Text(
+                        PRIVATE_LABEL,
+                        style: _themeData.textTheme.bodyText2!
+                            .copyWith(fontSize: 16),
+                      ),
+                      trailing: TextButton(
+                        onPressed: () async {
+                          await _retrieveDynamicInvitationLink().then(
+                            (value) async => await CommonUrlLauncher()
+                                .shareToOtherApp(subject: '$dynamicLink'),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.link, color: BLACK),
+                            SizedBox(width: 5),
+                            Text(
+                              COPY_LINK,
+                              style: _themeData.textTheme.bodyText2!.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: PRIMARY_COLOR,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+              isPrivate
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        top: width * 0.03,
+                        left: width * 0.05,
+                      ),
+                      child: TextfieldLabelSmall(
+                        label: PROJECT_INVITE_COLLABORATOR_LABEL,
+                      ),
+                    )
+                  : SizedBox(),
+              isPrivate
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                      child: inviteCollaborators(),
+                    )
+                  : SizedBox(),
               Divider(),
               SizedBox(height: 10),
               Container(
@@ -658,145 +828,51 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   Widget inviteCollaborators() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          children: [
-            appImageButton(
-              'instagram.png',
-              onPressed: () => CommonUrlLauncher().launchApp(
-                androidPackageName: 'com.instagram.android',
-                iosUrlScheme: 'instagram://',
-                subject: 'Test share text!',
-              ),
-            ),
-            appImageButton(
-              'whatsapp.png',
-              onPressed: () => CommonUrlLauncher().launchApp(
-                androidPackageName: 'com.whatsapp',
-                iosUrlScheme: 'whatsapp://',
-                subject: 'Test share text!',
-              ),
-            ),
-            appImageButton(
-              'twitter.png',
-              onPressed: () => CommonUrlLauncher().launchApp(
-                androidPackageName: 'com.twitter.android',
-                iosUrlScheme: 'twitter://',
-                subject: 'Test share text!',
-              ),
-            ),
-            appImageButton(
-              'snapchat.png',
-              onPressed: () => CommonUrlLauncher().launchApp(
-                androidPackageName: 'com.snapchat.android',
-                iosUrlScheme: 'snapchat://',
-                subject: 'Test share text!',
-              ),
-            ),
-          ],
+        appImageButton(
+          'gmail.png',
+          onPressed: () => CommonUrlLauncher().launchApp(
+            androidPackageName: 'com.google.android.gm',
+            iosUrlScheme:
+                'googlegmail:///co?to={email}&subject=${_projNameController.text} Invitation&body=$dynamicLink',
+            subject: '$dynamicLink',
+          ),
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: CommonSimpleTextfield(
-                controller: _searchEmailController,
-                hintText: PROJECT_SEARCH_WITH_EMAIL_HINT,
-                prefixIcon: Icon(
-                  CupertinoIcons.search,
-                  color: BLACK,
-                ),
-                validator: (val) => null,
-                onChanged: (val) => _projectsBloc.searchUsers(val),
-              ),
-            ),
-            TextButton(
-              onPressed: () => CommonUrlLauncher()
-                  .shareToOtherApp(subject: 'Test share text!'),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.link,
-                    color: BLACK,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    COPY_LINK,
-                    style: _themeData.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.w600, color: PRIMARY_COLOR),
-                  )
-                ],
-              ),
-            ),
-          ],
+        appImageButton(
+          'instagram.png',
+          onPressed: () => CommonUrlLauncher().launchApp(
+            androidPackageName: 'com.instagram.android',
+            iosUrlScheme: 'instagram://',
+            subject: '$dynamicLink',
+          ),
         ),
-        expandSearchUserList()
+        appImageButton(
+          'whatsapp.png',
+          onPressed: () => CommonUrlLauncher().launchApp(
+            androidPackageName: 'com.whatsapp',
+            iosUrlScheme: 'whatsapp://',
+            subject: '$dynamicLink',
+          ),
+        ),
+        appImageButton(
+          'twitter.png',
+          onPressed: () => CommonUrlLauncher().launchApp(
+            androidPackageName: 'com.twitter.android',
+            iosUrlScheme: 'twitter://',
+            subject: '$dynamicLink',
+          ),
+        ),
+        appImageButton(
+          'snapchat.png',
+          onPressed: () => CommonUrlLauncher().launchApp(
+            androidPackageName: 'com.snapchat.android',
+            iosUrlScheme: 'snapchat://',
+            subject: '$dynamicLink',
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget expandSearchUserList() {
-    return StreamBuilder<List<SignUpAndUserModel>>(
-      stream: _projectsBloc.getOtherUsersStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(8.0),
-            child: LinearLoader(),
-          );
-        }
-        final List<SignUpAndUserModel> users = snapshot.data!;
-        return _searchEmailController.text.isNotEmpty && users.isNotEmpty
-            ? PreferredSize(
-                preferredSize: Size(width, height),
-                child: ListView.builder(
-                  itemCount: users.length,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 6,
-                    left: width * 0.09,
-                    right: width * 0.01,
-                  ),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        _searchEmailController.text = users[index].email!;
-                        _projectsBloc.searchUsers('');
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  users[index].firstName!,
-                                  style: _themeData.textTheme.bodyText2!
-                                      .copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  users[index].email!,
-                                  style: _themeData.textTheme.bodyText2!
-                                      .copyWith(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )
-            : SizedBox();
-      },
     );
   }
 
@@ -874,17 +950,5 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         )
       ],
     );
-  }
-
-  Future clearFields() async {
-    _projNameController.clear();
-    _projDesController.clear();
-    _projStartDateController.clear();
-    _projEndDateController.clear();
-    _projCategoryController.clear();
-    _projCollaboraorController.clear();
-    _searchEmailController.clear();
-    _projLocationController.clear();
-    _projEndDateController.clear();
   }
 }

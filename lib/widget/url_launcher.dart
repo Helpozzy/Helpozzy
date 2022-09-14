@@ -51,12 +51,15 @@ class CommonUrlLauncher {
         androidPackageName: androidPackageName, iosUrlScheme: iosUrlScheme);
     if (isAvailable) {
       LaunchApp.openApp(
-          androidPackageName: androidPackageName, iosUrlScheme: iosUrlScheme);
+        androidPackageName: androidPackageName,
+        iosUrlScheme: iosUrlScheme,
+        openStore: true,
+      );
     } else {
       Share.share(HELPOZZY_TEXT, subject: subject);
     }
   }
 
   Future shareToOtherApp({required String subject}) async =>
-      await Share.share(subject);
+      await Share.share(subject, subject: subject);
 }

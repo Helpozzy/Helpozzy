@@ -1421,6 +1421,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           children: [
             Checkbox(
               value: nonProfitOrganization,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
               onChanged: (val) {
                 setState(() => nonProfitOrganization = val!);
               },

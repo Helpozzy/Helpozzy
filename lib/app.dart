@@ -27,18 +27,18 @@ class HelpozzyApp extends MaterialApp {
         primaryColor: PRIMARY_COLOR,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: Colors.white,
+            backgroundColor: Colors.transparent,
             textStyle: TextStyle(
               fontFamily: QUICKSAND,
               fontSize: 20,
               fontWeight: FontWeight.w500,
-              color: Colors.white,
+              color: PRIMARY_COLOR,
             ),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: PRIMARY_COLOR,
+            backgroundColor: PRIMARY_COLOR,
             padding: EdgeInsets.all(10),
             elevation: 5,
             textStyle: TextStyle(
@@ -53,7 +53,7 @@ class HelpozzyApp extends MaterialApp {
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-            primary: PRIMARY_COLOR,
+            backgroundColor: PRIMARY_COLOR,
             elevation: 5,
           ),
         ),

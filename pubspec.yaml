@@ -31,10 +31,11 @@ dependencies:
   carousel_slider: ^4.0.0
   flutter_bloc: ^7.0.1
   rxdart: ^0.27.3
-  cloud_firestore: ^3.1.7
-  firebase_core: ^1.6.0
-  firebase_auth: ^3.0.1
-  firebase_storage: ^10.0.6
+  cloud_firestore: ^3.4.6
+  firebase_core: ^1.21.1
+  firebase_auth: ^3.7.0
+  firebase_storage: ^10.3.7
+  firebase_dynamic_links: ^4.3.6
   custom_timer: ^0.1.1
   local_auth: ^2.0.0
   email_auth: ^1.0.0

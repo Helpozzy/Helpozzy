@@ -47,6 +47,11 @@ class ProjectsBloc {
     return response;
   }
 
+  Future<ResponseModel> updateProjectCollabrator(ProjectModel project) async {
+    final ResponseModel response = await repo.updateProjectRepo(project);
+    return response;
+  }
+
   Future<ResponseModel> deleteProject(String projectId) async {
     final ResponseModel response = await repo.deleteProjectRepo(projectId);
     return response;
