@@ -21,7 +21,6 @@ class _MembersScreenState extends State<MembersScreen> {
   final MembersBloc _membersBloc = MembersBloc();
   late double width;
   late double height;
-  late ThemeData _theme;
   late bool favVolunteers = false;
   late List<SignUpAndUserModel> selectedItems = [];
 
@@ -33,7 +32,6 @@ class _MembersScreenState extends State<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _theme = Theme.of(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -66,8 +64,6 @@ class _MembersScreenState extends State<MembersScreen> {
             margin: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 5),
             child: Row(
               children: [
-                popupButton(),
-                SizedBox(width: 5),
                 Expanded(
                   child: CommonRoundedTextfield(
                     fillColor: GRAY,
@@ -84,6 +80,11 @@ class _MembersScreenState extends State<MembersScreen> {
                         _membersBloc.searchMembers(searchText: val),
                   ),
                 ),
+                SizedBox(width: 5),
+                IconButton(
+                    onPressed: () async =>
+                        await _membersBloc.sortMembersByName(),
+                    icon: Icon(Icons.sort_by_alpha_rounded))
               ],
             ),
           ),
@@ -91,45 +92,6 @@ class _MembersScreenState extends State<MembersScreen> {
         ],
       ),
     );
-  }
-
-  Widget popupButton() {
-    return PopupMenuButton<int>(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Icon(
-        Icons.sort_rounded,
-        size: 30,
-        color: PRIMARY_COLOR,
-      ),
-      onSelected: (item) async => await handleClick(item),
-      itemBuilder: (context) => [
-        popupMenuItem(text: NAME_TEXT, value: 0),
-        PopupMenuDivider(height: 0.1),
-        popupMenuItem(text: RATING_TEXT, value: 1),
-      ],
-    );
-  }
-
-  PopupMenuItem<int> popupMenuItem(
-          {required String text, required int value}) =>
-      PopupMenuItem<int>(
-        value: value,
-        child: Text(
-          text,
-          style: _theme.textTheme.bodyText2!.copyWith(color: DARK_GRAY),
-        ),
-      );
-
-  Future handleClick(int item) async {
-    switch (item) {
-      case 0:
-        _membersBloc.sortMembersByName();
-        break;
-      case 1:
-        _membersBloc.sortMembersByRating();
-        break;
-    }
   }
 
   Widget membersList() {

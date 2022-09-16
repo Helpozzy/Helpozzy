@@ -130,6 +130,7 @@ class _LoginInputState extends State<LoginInput> {
                           controller: _passController,
                           obscureText: !snapshot.data!,
                           hintText: ENTER_PASSWORD_HINT,
+                          textInputAction: TextInputAction.done,
                           suffixIcon: IconButton(
                             icon: Padding(
                               padding: EdgeInsets.only(right: 8.0),

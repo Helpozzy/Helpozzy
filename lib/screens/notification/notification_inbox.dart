@@ -38,7 +38,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
-  Future onApproveTaskLogHrs(
+  Future onApproveDeclineTaskLogHrs(
       NotificationModel notification, bool fromDeclineLogHrs) async {
     if (!fromDeclineLogHrs) CircularLoader().show(context);
     final TaskLogHrsModel taskLogHrs =
@@ -57,7 +57,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
             ? 'Log Hours Request Declined'
             : 'Log Hours Request Approved',
       );
-      // taskLogHrs.comment = _commentController.text;
       taskLogHrs.hrs = taskLogHrs.hrs;
       taskLogHrs.mins = taskLogHrs.mins;
       taskLogHrs.isApprovedFromAdmin = fromDeclineLogHrs ? false : true;
@@ -124,6 +123,51 @@ class _NotificationInboxState extends State<NotificationInbox> {
     }
   }
 
+  Future onDecline(NotificationModel notification) async {
+    CircularLoader().show(context);
+    if (notification.type == 2) {
+      await onApproveDeclineTaskLogHrs(notification, true);
+    } else {
+      late ResponseModel response;
+      if (notification.type == 0) {
+        final ProjectModel project =
+            ProjectModel.fromjson(json: notification.payload!);
+        notification.type = notification.type;
+        notification.userTo = notification.userFrom;
+        notification.timeStamp =
+            DateTime.now().millisecondsSinceEpoch.toString();
+        notification.isUpdated = true;
+        notification.title = 'Project Signup Request Declined';
+        notification.subTitle =
+            'Your request for ${project.projectName} is declined by owner, Please re-enroll for same.';
+        response =
+            await _projectsBloc.removeSignedUpProject(project.enrolledId!);
+      } else if (notification.type == 1) {
+        final TaskModel task = TaskModel.fromjson(json: notification.payload!);
+        notification.type = notification.type;
+        notification.userTo = notification.userFrom;
+        notification.timeStamp =
+            DateTime.now().millisecondsSinceEpoch.toString();
+        notification.isUpdated = true;
+        notification.title = 'Task Signup Request Declined';
+        notification.subTitle =
+            'Your request for ${task.taskName} is declined by project admin, Please re-enroll for same.';
+        response =
+            await _projectTaskBloc.removeEnrolledTask(task.enrollTaskId!);
+      }
+      final ResponseModel notificationResponse =
+          await _notificationBloc.updateNotifications(notification);
+      if (notificationResponse.status!) {
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: response.message!);
+      } else {
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(context, msg: response.error!);
+      }
+      await _notificationBloc.getNotifications();
+    }
+  }
+
   Future onApproveProjectNotification(NotificationModel notification) async {
     CircularLoader().show(context);
     final ProjectModel signUpProject =
@@ -160,7 +204,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         await _projectSignUpBloc.updateSignedUpProject(signUpProject);
     if (updateProjectResponse.status!) {
       CircularLoader().hide(context);
-      ScaffoldSnakBar().show(context, msg: 'collaboration Request Approved');
+      ScaffoldSnakBar().show(context, msg: 'Collaboration Request Approved');
       notification.userTo = notification.userFrom;
       notification.timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
       notification.title = 'Accepted the collaboration request';
@@ -172,41 +216,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
     } else {
       CircularLoader().hide(context);
       ScaffoldSnakBar().show(context, msg: updateProjectResponse.error!);
-    }
-  }
-
-  Future onDecline(NotificationModel notification) async {
-    CircularLoader().show(context);
-    if (notification.type == 2) {
-      await onApproveTaskLogHrs(notification, true);
-    } else {
-      final ResponseModel notificationResponse =
-          await _notificationBloc.removeNotification(notification.id!);
-
-      if (notificationResponse.status!) {
-        CircularLoader().hide(context);
-        late ResponseModel response;
-        if (notification.type == 0) {
-          final ProjectModel project =
-              ProjectModel.fromjson(json: notification.payload!);
-          response =
-              await _projectsBloc.removeSignedUpProject(project.enrolledId!);
-        } else if (notification.type == 1) {
-          final TaskModel task =
-              TaskModel.fromjson(json: notification.payload!);
-          response =
-              await _projectTaskBloc.removeEnrolledTask(task.enrollTaskId!);
-        }
-        if (response.status!) {
-          ScaffoldSnakBar().show(context, msg: response.message!);
-        } else {
-          ScaffoldSnakBar().show(context, msg: response.error!);
-        }
-        await _notificationBloc.getNotifications();
-      } else {
-        CircularLoader().hide(context);
-        ScaffoldSnakBar().show(context, msg: notificationResponse.error!);
-      }
     }
   }
 
@@ -308,7 +317,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
                                         : notification.type == 1
                                             ? await onApproveTaskNotification(
                                                 notification)
-                                            : await onApproveTaskLogHrs(
+                                            : await onApproveDeclineTaskLogHrs(
                                                 notification, false);
                                   },
                                 ),

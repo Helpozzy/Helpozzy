@@ -60,6 +60,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                   ),
                   suffixIcon: createNewProjectButton(),
                   fillColor: GRAY,
+                  textAlignCenter: false,
                   controller: _searchController,
                   hintText: SEARCH_PROJECT_HINT,
                   onChanged: (val) => _projectsBloc.getProjects(

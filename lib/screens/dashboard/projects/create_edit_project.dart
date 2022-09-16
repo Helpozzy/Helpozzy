@@ -198,9 +198,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 ? PROJECT_UPDATED_SUCCESSFULLY_POPUP_MSG
                 : PROJECT_CREATED_SUCCESSFULLY_POPUP_MSG,
           );
-          if (!fromEdit) {
-            await showPrivatePublicDialog();
-          }
         } else {
           await clearFields();
           CircularLoader().hide(context);
@@ -256,87 +253,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       predictions.clear();
       setState(() {});
     }
-  }
-
-  Future showPrivatePublicDialog() async {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      constraints: BoxConstraints(maxHeight: 200),
-      elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      builder: ((context) {
-        return SafeArea(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close_rounded),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.check_rounded),
-                  )
-                ],
-              ),
-              CommonDivider(),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 10.0),
-                child: TextfieldLabelSmall(label: VISIBILITY_LABEL),
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: isPrivate,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
-                    onChanged: (val) async {
-                      setState(() => isPrivate = val!);
-                      await _retrieveDynamicInvitationLink();
-                    },
-                  ),
-                  Text(
-                    PRIVATE_LABEL,
-                    style:
-                        _themeData.textTheme.bodyText2!.copyWith(fontSize: 16),
-                  ),
-                  Spacer(),
-                  TextButton(
-                    onPressed: () => CommonUrlLauncher()
-                        .shareToOtherApp(subject: '$dynamicLink'),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.link,
-                          color: BLACK,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          COPY_LINK,
-                          style: _themeData.textTheme.bodyText2!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: PRIMARY_COLOR),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 15)
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: TextfieldLabelSmall(
-                    label: PROJECT_INVITE_COLLABORATOR_LABEL),
-              ),
-              inviteCollaborators(),
-            ],
-          ),
-        );
-      }),
-    );
   }
 
   Future<void> _retrieveDynamicInvitationLink() async {
@@ -452,46 +368,43 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       child: TextfieldLabelSmall(label: VISIBILITY_LABEL),
                     )
                   : SizedBox(),
-              fromEdit
-                  ? ListTile(
-                      contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      leading: Checkbox(
-                          value: isPrivate,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                          onChanged: (val) async {
-                            setState(() => isPrivate = val!);
-                            await _retrieveDynamicInvitationLink();
-                          }),
-                      title: Text(
-                        PRIVATE_LABEL,
-                        style: _themeData.textTheme.bodyText2!
-                            .copyWith(fontSize: 16),
-                      ),
-                      trailing: TextButton(
-                        onPressed: () async {
-                          await _retrieveDynamicInvitationLink().then(
-                            (value) async => await CommonUrlLauncher()
-                                .shareToOtherApp(subject: '$dynamicLink'),
-                          );
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.link, color: BLACK),
-                            SizedBox(width: 5),
-                            Text(
-                              COPY_LINK,
-                              style: _themeData.textTheme.bodyText2!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: PRIMARY_COLOR,
-                              ),
-                            )
-                          ],
+              ListTile(
+                contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+                leading: Checkbox(
+                    value: isPrivate,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    onChanged: (val) async {
+                      setState(() => isPrivate = val!);
+                      await _retrieveDynamicInvitationLink();
+                    }),
+                title: Text(
+                  PRIVATE_LABEL,
+                  style: _themeData.textTheme.bodyText2!.copyWith(fontSize: 16),
+                ),
+                trailing: TextButton(
+                  onPressed: () async {
+                    await _retrieveDynamicInvitationLink().then(
+                      (value) async => await CommonUrlLauncher()
+                          .shareToOtherApp(subject: '$dynamicLink'),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.link, color: BLACK),
+                      SizedBox(width: 5),
+                      Text(
+                        COPY_LINK,
+                        style: _themeData.textTheme.bodyText2!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: PRIMARY_COLOR,
                         ),
-                      ),
-                    )
-                  : SizedBox(),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               isPrivate
                   ? Padding(
                       padding: EdgeInsets.only(

@@ -56,7 +56,11 @@ class _TaskTabState extends State<TaskTab> {
           await _taskBloc.removeEnrollTask(task.enrollTaskId!);
       if (response.status!) {
         CircularLoader().hide(context);
-        await _taskBloc.getEnrolledTasks();
+        if (isMyTask) {
+          await _projectTaskBloc.getProjectEnrolledTasks(project.projectId!);
+        } else {
+          await _projectTaskBloc.getProjectAllTasks(project.projectId!);
+        }
         ScaffoldSnakBar().show(context, msg: response.message!);
       } else {
         CircularLoader().hide(context);

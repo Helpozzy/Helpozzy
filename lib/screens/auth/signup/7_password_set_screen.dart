@@ -202,6 +202,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
             obscureText: !snapshot.data!,
             controller: _passController,
             hintText: ENTER_PASSWORD_HINT,
+            textInputAction: TextInputAction.done,
             suffixIcon: IconButton(
               icon: Padding(
                 padding: EdgeInsets.only(right: 8.0),
@@ -245,6 +246,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
             obscureText: !snapshot.data!,
             controller: _confirmPassController,
             hintText: ENTER_CONFIRM_PASSWORD_HINT,
+            textInputAction: TextInputAction.done,
             suffixIcon: IconButton(
               icon: Padding(
                 padding: EdgeInsets.only(right: 8.0),

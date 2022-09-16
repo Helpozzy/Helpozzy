@@ -420,49 +420,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   : SizedBox(),
               Divider(),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: width * 0.05,
-                  right: width * 0.05,
-                  bottom: width * 0.04,
-                ),
-                child: userProjectPrefs(),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.04, vertical: width * 0.05),
-                width: double.infinity,
-                child: StreamBuilder<bool>(
-                  initialData: false,
-                  stream: _editProfileBloc.parentEmailVerifiedStream,
-                  builder: (context, snapshot) {
-                    return CommonButton(
-                      text: SAVE_BUTTON,
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          if (snapshot.data!) {
-                            await postModifiedData();
-                          } else {
-                            if (user.parentEmail != null) {
-                              if (user.parentEmail ==
-                                  _parentEmailController.text) {
-                                await postModifiedData();
-                              } else {
-                                PlatformAlertDialog().show(context,
-                                    title: ALERT,
-                                    content:
-                                        'Parent/Guardian email is not verified, Please verify your email.');
+              user.isOrganization!
+                  ? SizedBox()
+                  : Padding(
+                      padding: EdgeInsets.only(
+                        left: width * 0.05,
+                        right: width * 0.05,
+                        bottom: width * 0.04,
+                      ),
+                      child: userProjectPrefs(),
+                    ),
+              user.isOrganization!
+                  ? SizedBox()
+                  : Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.04, vertical: width * 0.05),
+                      width: double.infinity,
+                      child: StreamBuilder<bool>(
+                        initialData: false,
+                        stream: _editProfileBloc.parentEmailVerifiedStream,
+                        builder: (context, snapshot) {
+                          return CommonButton(
+                            text: SAVE_BUTTON,
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                if (snapshot.data!) {
+                                  await postModifiedData();
+                                } else {
+                                  if (user.parentEmail != null) {
+                                    if (user.parentEmail ==
+                                        _parentEmailController.text) {
+                                      await postModifiedData();
+                                    } else {
+                                      PlatformAlertDialog().show(context,
+                                          title: ALERT,
+                                          content:
+                                              'Parent/Guardian email is not verified, Please verify your email.');
+                                    }
+                                  } else {
+                                    await postModifiedData();
+                                  }
+                                }
                               }
-                            } else {
-                              await postModifiedData();
-                            }
-                          }
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
+                            },
+                          );
+                        },
+                      ),
+                    ),
             ],
           ),
         ),
