@@ -1,3 +1,13 @@
+class Categories {
+  Categories.fromJson({required List<Map<String, dynamic>> list}) {
+    list.forEach((category) {
+      categories.add(CategoryModel.fromJson(category));
+    });
+  }
+
+  late List<CategoryModel> categories = [];
+}
+
 class CategoryModel {
   CategoryModel({
     this.id,
@@ -5,10 +15,19 @@ class CategoryModel {
     this.label,
     this.isSelected = false,
   });
+
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      id: json['id'],
+      asset: json['asset'],
+      label: json['label'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'img_url': asset,
+      'asset': asset,
       'label': label,
     };
   }

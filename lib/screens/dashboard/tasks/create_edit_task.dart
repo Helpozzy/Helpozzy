@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
+import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/task_model.dart';
@@ -58,7 +59,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   void initState() {
     if (fromEdit) retriveTaskDetails();
     _projectsBloc.getOtherUsersInfo();
-    //  _projectsBloc.getSelectedMembers(members: task.members);
     super.initState();
   }
 
@@ -70,6 +70,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     } else {
       _estimatedHoursController.text = task!.estimatedHrs.toString();
     }
+    await getMembers();
     noOfMemberTrackerVal = double.parse(task!.memberRequirement.toString());
     minimumAgeTrackerVal = double.parse(task!.ageRestriction.toString());
     _taskQualificationController.text = task!.qualification!;
@@ -86,6 +87,15 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         : task!.status == TOGGLE_INPROGRESS
             ? 1
             : 2;
+  }
+
+  Future getMembers() async {
+    for (int i = 0; i < task!.members!.length; i++) {
+      final SignUpAndUserModel user =
+          await Repository().userInfoRepo(task!.members![i]);
+      selectedMembers!.add(user);
+    }
+    print(selectedMembers);
   }
 
   Future addUpdateData() async {
@@ -420,71 +430,59 @@ class _CreateEditTaskState extends State<CreateEditTask> {
                 MembersScreen(selectedMembers: selectedMembers),
           ),
         );
-        if (selectedMembers != null && selectedMembers!.isNotEmpty) {
-          await _projectsBloc.getSelectedMembers(members: selectedMembers!);
-        }
       },
     );
   }
 
   Widget selectedMembersList() {
-    return StreamBuilder<List<SignUpAndUserModel>>(
-      stream: _projectsBloc.getSelectedMembersStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: SizedBox());
-        }
-        return snapshot.data!.isNotEmpty
-            ? Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                child: Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 5,
-                    runSpacing: 5,
-                    children: snapshot.data!
-                        .map((volunteer) => Container(
-                              margin: EdgeInsets.symmetric(horizontal: 2.0),
-                              padding: EdgeInsets.only(
-                                top: 3.0,
-                                bottom: 3.0,
-                                left: 10.0,
-                                right: 3.0,
+    return selectedMembers!.isNotEmpty
+        ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+            child: Wrap(
+                alignment: WrapAlignment.start,
+                spacing: 5,
+                runSpacing: 5,
+                children: selectedMembers!
+                    .map((volunteer) => Container(
+                          margin: EdgeInsets.symmetric(horizontal: 2.0),
+                          padding: EdgeInsets.only(
+                            top: 3.0,
+                            bottom: 3.0,
+                            left: 10.0,
+                            right: 3.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: PRIMARY_COLOR,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                volunteer.firstName! +
+                                    ' ' +
+                                    volunteer.lastName!,
+                                style: _themeData.textTheme.bodyText2!
+                                    .copyWith(color: WHITE),
                               ),
-                              decoration: BoxDecoration(
-                                color: PRIMARY_COLOR,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    volunteer.firstName! +
-                                        ' ' +
-                                        volunteer.lastName!,
-                                    style: _themeData.textTheme.bodyText2!
-                                        .copyWith(color: WHITE),
-                                  ),
-                                  SizedBox(width: 3),
-                                  InkWell(
-                                    onTap: () {
-                                      snapshot.data!.remove(volunteer);
-                                      setState(() {});
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.multiply_circle_fill,
-                                      color: WHITE,
-                                      size: 20,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ))
-                        .toList()),
-              )
-            : SizedBox();
-      },
-    );
+                              SizedBox(width: 3),
+                              InkWell(
+                                onTap: () {
+                                  selectedMembers!.remove(volunteer);
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  CupertinoIcons.multiply_circle_fill,
+                                  color: WHITE,
+                                  size: 20,
+                                ),
+                              )
+                            ],
+                          ),
+                        ))
+                    .toList()),
+          )
+        : SizedBox();
   }
 
   Widget startDateAndEndDateSection() {

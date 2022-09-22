@@ -702,6 +702,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   Widget projectCategoryDropdown() {
+    final Categories categoriesItems =
+        Categories.fromJson(list: categoriesList);
     return Column(
       children: [
         SizedBox(height: width * 0.05),
@@ -726,7 +728,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               selectedCategoryId = newValue.id!;
             });
           },
-          items: categoriesList
+          items: categoriesItems.categories
               .map<DropdownMenuItem<CategoryModel>>((CategoryModel value) {
             return DropdownMenuItem<CategoryModel>(
               value: value,

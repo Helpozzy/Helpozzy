@@ -235,7 +235,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget projectPref(SignUpAndUserModel user) {
-    final List<CategoryModel> userPrefs = categoriesList
+    final Categories categoriesItems =
+        Categories.fromJson(list: categoriesList);
+    final List<CategoryModel> userPrefs = categoriesItems.categories
         .where((category) => user.areaOfInterests!.contains(category.id))
         .toList();
     return Padding(

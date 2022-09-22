@@ -75,6 +75,7 @@ class _VolunteerProjectTaskSignUpState
       CircularLoader().show(context);
       final ProjectModel projectSignUpVal = ProjectModel(
         signUpUserId: prefsObject.getString(CURRENT_USER_ID),
+        signedUpDate: DateTime.now().millisecondsSinceEpoch.toString(),
         projectId: project!.projectId,
         ownerId: project!.ownerId,
         description: project!.description,
@@ -135,6 +136,7 @@ class _VolunteerProjectTaskSignUpState
       final TaskModel taskSignUpVal = TaskModel(
         taskId: task!.taskId,
         signUpUserId: prefsObject.getString(CURRENT_USER_ID),
+        signedUpDate: DateTime.now().millisecondsSinceEpoch.toString(),
         projectId: project!.projectId,
         enrollTaskId: task!.enrollTaskId,
         taskOwnerId: task!.taskOwnerId,

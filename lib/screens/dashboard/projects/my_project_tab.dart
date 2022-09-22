@@ -39,7 +39,6 @@ class _MyProjectTabState extends State<MyProjectTab>
           indicatorColor: DARK_PINK_COLOR,
           indicatorSize: TabBarIndicatorSize.tab,
           indicatorWeight: 2,
-          isScrollable: false,
           tabs: [
             _tab(OWN_TAB),
             _tab(ENROLLED_TAB),

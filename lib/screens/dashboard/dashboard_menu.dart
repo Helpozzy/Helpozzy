@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/bloc/user_bloc.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:helpozzy/models/organization_sign_up_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/dashboard/process_timeline.dart';
-import 'package:helpozzy/screens/dashboard/projects/project_list.dart';
 import 'package:helpozzy/screens/dashboard/reports/report_screen.dart';
 import 'package:helpozzy/screens/dashboard/tasks/my_enrolled_tasks.dart';
+import 'package:helpozzy/screens/dashboard/time_tracker/time_tracker.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'projects/projects_screen.dart';
@@ -23,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late double width;
   late ThemeData _theme;
   final UserInfoBloc _userInfoBloc = UserInfoBloc();
-  final ProjectsBloc _projectsBloc = ProjectsBloc();
+
   late int _processIndex = 2;
   late double currentPosition = 0.0;
 
@@ -328,15 +327,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         pagesNavigation(child: ReportsScreen());
         break;
       case 3:
-        pagesNavigation(
-          child: Scaffold(
-            appBar: CommonAppBar(context).show(title: TIME_TRACKER_TILE),
-            body: ProjectListScreen(
-              projectTabType: ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB,
-              projectsBloc: _projectsBloc,
-            ),
-          ),
-        );
+        pagesNavigation(child: TimeTracker());
         break;
     }
   }

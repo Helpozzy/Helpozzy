@@ -25,11 +25,24 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
   late double trackerVal = 0.0;
   late List<int> selectedAreaOfInterests = [];
   final TextEditingController _targetHoursController = TextEditingController();
+  late List<CategoryModel> categories = [];
+
+  @override
+  void initState() {
+    loadCategories();
+    super.initState();
+  }
+
+  Future loadCategories() async {
+    final Categories categoriesItems =
+        Categories.fromJson(list: categoriesList);
+    categories = categoriesItems.categories;
+  }
 
   Future onContinue() async {
     if (_formKey.currentState!.validate()) {
       selectedAreaOfInterests = [];
-      categoriesList.forEach((category) {
+      categories.forEach((category) {
         if (category.isSelected!) {
           selectedAreaOfInterests.add(category.id!);
         }
@@ -170,11 +183,11 @@ class _TargetAndAreaOfInterestState extends State<TargetAndAreaOfInterest> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: (2), childAspectRatio: 2.2),
       physics: NeverScrollableScrollPhysics(),
-      itemCount: categoriesList.length,
+      itemCount: categories.length,
       shrinkWrap: true,
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       itemBuilder: (context, index) {
-        final CategoryModel category = categoriesList[index];
+        final CategoryModel category = categories[index];
         return Card(
           elevation: 3,
           shape:

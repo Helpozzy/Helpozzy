@@ -16,7 +16,6 @@ class ProjectsBloc {
   final otherUserInfoController = PublishSubject<List<SignUpAndUserModel>>();
   final projectsActivityStatusController = PublishSubject<ProjectHelper>();
   final categorisedProjectsController = PublishSubject<List<ProjectModel>>();
-  final selectedMembersController = PublishSubject<List<SignUpAndUserModel>>();
 
   Stream<bool> get getProjectExpandStream =>
       projectDetailsExpandController.stream;
@@ -30,8 +29,6 @@ class ProjectsBloc {
       projectsActivityStatusController.stream;
   Stream<List<ProjectModel>> get getCategorisedSignedUpProjectsStream =>
       categorisedProjectsController.stream;
-  Stream<List<SignUpAndUserModel>> get getSelectedMembersStream =>
-      selectedMembersController.stream;
 
   Future isExpanded(bool isExpanded) async {
     projectDetailsExpandController.sink.add(isExpanded);
@@ -177,10 +174,6 @@ class ProjectsBloc {
     return response;
   }
 
-  Future getSelectedMembers({required List<SignUpAndUserModel> members}) async {
-    selectedMembersController.sink.add(members);
-  }
-
   void dispose() {
     projectDetailsExpandController.close();
     projectsActivityStatusController.close();
@@ -189,6 +182,5 @@ class ProjectsBloc {
     projectByIdController.close();
     onGoingProjectsController.close();
     categorisedProjectsController.close();
-    selectedMembersController.close();
   }
 }

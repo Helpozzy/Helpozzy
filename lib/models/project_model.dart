@@ -16,6 +16,7 @@ class ProjectModel {
     this.enrolledId,
     this.projectId,
     this.ownerId,
+    this.signedUpDate,
     this.signUpUserId,
     this.categoryId,
     this.projectName,
@@ -43,6 +44,7 @@ class ProjectModel {
     enrolledId = json['enrolled_id'];
     projectId = json['project_id'];
     signUpUserId = json['signup_uid'];
+    signedUpDate = json['signup_date'];
     ownerId = json['owner_id'];
     categoryId = json['category_id'];
     projectName = json['project_name'];
@@ -72,6 +74,7 @@ class ProjectModel {
       'enrolled_id': enrolledId,
       'project_id': projectId,
       'signup_uid': signUpUserId,
+      'signup_date': signedUpDate,
       'owner_id': ownerId,
       'category_id': categoryId,
       'project_name': projectName,
@@ -98,6 +101,7 @@ class ProjectModel {
   late String? enrolledId;
   late String? projectId;
   late String? signUpUserId;
+  late String? signedUpDate;
   late String? ownerId;
   late int? categoryId;
   late String? projectName;

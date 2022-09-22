@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/categories_model.dart';
 import 'package:helpozzy/models/dashboard_menu_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,6 +86,7 @@ enum ProjectTabType {
   PROJECT_COMPLETED_TAB,
   PROJECT_CONTRIBUTION_TRACKER_TAB,
   EXPLORE_SCREEN,
+  COMPLETED_SCREEN,
 }
 
 enum SearchBottomSheetType {
@@ -787,47 +787,47 @@ List<MenuModel> dashBoardMenuList = [
   ),
 ];
 
-List<CategoryModel> categoriesList = [
-  CategoryModel(
-    id: 0,
-    asset: 'assets/images/volunteer.png',
-    label: VOLUNTEER_0,
-  ),
-  CategoryModel(
-    id: 1,
-    asset: 'assets/images/food_bank.png',
-    label: FOOD_BANK_1,
-  ),
-  CategoryModel(
-    id: 2,
-    asset: 'assets/images/teaching.png',
-    label: TEACHING_2,
-  ),
-  CategoryModel(
-    id: 3,
-    asset: 'assets/images/homeless_shelter.png',
-    label: HOMELESS_SHELTER_3,
-  ),
-  CategoryModel(
-    id: 4,
-    asset: 'assets/images/animal_care.png',
-    label: ANIMAL_CARE_4,
-  ),
-  CategoryModel(
-    id: 5,
-    asset: 'assets/images/cenior_center.png',
-    label: SENIOR_CENTER_5,
-  ),
-  CategoryModel(
-    id: 6,
-    asset: 'assets/images/children_and_youth.png',
-    label: CHILDREN_AND_YOUTH_6,
-  ),
-  CategoryModel(
-    id: 7,
-    asset: 'assets/images/other.png',
-    label: OTHER_7,
-  ),
+List<Map<String, dynamic>> categoriesList = [
+  {
+    'id': 0,
+    'asset': 'assets/images/volunteer.png',
+    'label': VOLUNTEER_0,
+  },
+  {
+    'id': 1,
+    'asset': 'assets/images/food_bank.png',
+    'label': FOOD_BANK_1,
+  },
+  {
+    'id': 2,
+    'asset': 'assets/images/teaching.png',
+    'label': TEACHING_2,
+  },
+  {
+    'id': 3,
+    'asset': 'assets/images/homeless_shelter.png',
+    'label': HOMELESS_SHELTER_3,
+  },
+  {
+    'id': 4,
+    'asset': 'assets/images/animal_care.png',
+    'label': ANIMAL_CARE_4,
+  },
+  {
+    'id': 5,
+    'asset': 'assets/images/cenior_center.png',
+    'label': SENIOR_CENTER_5,
+  },
+  {
+    'id': 6,
+    'asset': 'assets/images/children_and_youth.png',
+    'label': CHILDREN_AND_YOUTH_6,
+  },
+  {
+    'id': 7,
+    'asset': 'assets/images/other.png',
+    'label': OTHER_7,
+  },
 ];
 
 Map<String, dynamic> rewardsList = {

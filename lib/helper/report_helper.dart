@@ -8,14 +8,14 @@ class ProjectReportHelper {
 
   ProjectReportHelper.fromProjects(List<ProjectModel> projects) {
     projects.forEach((project) {
-      final String projectStartYear =
-          _dateFormatFromTimeStamp.dateYearYYYY(timestamp: project.startDate!);
-      final String projectStartMonth =
-          _dateFormatFromTimeStamp.dateMonthMMM(timestamp: project.startDate!);
+      final String projectSignedUpYear = _dateFormatFromTimeStamp.dateYearYYYY(
+          timestamp: project.signedUpDate!);
+      final String projectSignedUpMonth = _dateFormatFromTimeStamp.dateMonthMMM(
+          timestamp: project.signedUpDate!);
 
       chartDetailsList.add(ReportsDataModel(
-        month: projectStartMonth,
-        year: projectStartYear,
+        month: projectSignedUpMonth,
+        year: projectSignedUpYear,
         hrs: project.totalTaskshrs,
         project: project,
       ));

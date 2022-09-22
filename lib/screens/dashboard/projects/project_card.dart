@@ -9,7 +9,7 @@ class ProjectCard extends StatelessWidget {
   ProjectCard({
     this.onTapCard,
     required this.project,
-    required this.onPressedSignUpButton,
+    this.onPressedSignUpButton,
   });
   final GestureTapCallback? onTapCard;
   final void Function()? onPressedSignUpButton;
@@ -126,12 +126,15 @@ class ProjectCard extends StatelessWidget {
                                     ? SizedBox()
                                     : project.status == TOGGLE_COMPLETE
                                         ? SizedBox()
-                                        : SmallCommonButton(
-                                            fontSize: 12,
-                                            text: SIGN_UP,
-                                            buttonColor: DARK_PINK_COLOR,
-                                            onPressed: onPressedSignUpButton!,
-                                          ),
+                                        : onPressedSignUpButton != null
+                                            ? SmallCommonButton(
+                                                fontSize: 12,
+                                                text: SIGN_UP,
+                                                buttonColor: DARK_PINK_COLOR,
+                                                onPressed:
+                                                    onPressedSignUpButton!,
+                                              )
+                                            : SizedBox(),
                         SizedBox(width: 5),
                       ],
                     ),

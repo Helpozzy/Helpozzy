@@ -72,6 +72,7 @@ class _CategorisedProjectsScreenState extends State<CategorisedProjectsScreen> {
           margin: EdgeInsets.only(bottom: 5.0),
           child: CommonRoundedTextfield(
             textAlignCenter: false,
+            textInputAction: TextInputAction.done,
             prefixIcon: Icon(
               CupertinoIcons.search,
               color: DARK_MARUN,

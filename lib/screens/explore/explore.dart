@@ -93,6 +93,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             height: 37,
             child: CommonRoundedTextfield(
               textAlignCenter: false,
+              textInputAction: TextInputAction.done,
               prefixIcon: Icon(
                 CupertinoIcons.search,
                 color: DARK_MARUN,
@@ -167,13 +168,15 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget categoryView() {
+    final Categories categoriesItems =
+        Categories.fromJson(list: categoriesList);
     return GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
       shrinkWrap: true,
       childAspectRatio: 1.2,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-      children: categoriesList.map((CategoryModel category) {
+      children: categoriesItems.categories.map((CategoryModel category) {
         return InkWell(
           onTap: () => Navigator.push(
             context,
@@ -251,8 +254,8 @@ class _ExploreScreenState extends State<ExploreScreen>
                 },
               )
             : Container(
-                height: height / 3,
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                height: height / 2.5,
+                padding: EdgeInsets.symmetric(horizontal: 18.0),
                 alignment: Alignment.center,
                 child: Text(
                   NO_CURRENT_VOLUNTEERING_OPPORTUNITIES,

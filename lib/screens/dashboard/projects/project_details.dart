@@ -301,35 +301,40 @@ class _ProjectDetailsInfoState extends State<ProjectDetailsInfo>
           ),
           project.ownerId == prefsObject.getString(CURRENT_USER_ID)
               ? SizedBox()
-              : DateFormatFromTimeStamp()
-                          .dateTime(timeStamp: currentTimeStamp.toString())
-                          .difference(DateFormatFromTimeStamp()
-                              .dateTime(timeStamp: project.endDate!))
-                          .inDays >=
-                      1
+              : projectTabType == ProjectTabType.COMPLETED_SCREEN ||
+                      projectTabType ==
+                          ProjectTabType.PROJECT_CONTRIBUTION_TRACKER_TAB
                   ? SizedBox()
-                  : project.isSignedUp!
+                  : DateFormatFromTimeStamp()
+                              .dateTime(timeStamp: currentTimeStamp.toString())
+                              .difference(DateFormatFromTimeStamp()
+                                  .dateTime(timeStamp: project.endDate!))
+                              .inDays >=
+                          1
                       ? SizedBox()
-                      : project.status == TOGGLE_COMPLETE
+                      : project.isSignedUp!
                           ? SizedBox()
-                          : projectTabType == ProjectTabType.OWN_TAB ||
-                                  projectTabType ==
-                                      ProjectTabType.PROJECT_COMPLETED_TAB ||
-                                  projectTabType ==
-                                      ProjectTabType.MY_ENROLLED_TAB
+                          : project.status == TOGGLE_COMPLETE
                               ? SizedBox()
-                              : SmallCommonButton(
-                                  fontSize: 10,
-                                  text: SIGN_UP,
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) =>
-                                          VolunteerProjectTaskSignUp(
-                                              project: project),
+                              : projectTabType == ProjectTabType.OWN_TAB ||
+                                      projectTabType ==
+                                          ProjectTabType
+                                              .PROJECT_COMPLETED_TAB ||
+                                      projectTabType ==
+                                          ProjectTabType.MY_ENROLLED_TAB
+                                  ? SizedBox()
+                                  : SmallCommonButton(
+                                      fontSize: 10,
+                                      text: SIGN_UP,
+                                      onPressed: () => Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) =>
+                                              VolunteerProjectTaskSignUp(
+                                                  project: project),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
         ],
       ),
     );

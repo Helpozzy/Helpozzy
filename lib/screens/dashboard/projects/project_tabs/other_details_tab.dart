@@ -59,7 +59,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
             children: [
               projectDetails(),
               locationMap(),
-              infoSection(),
+              // infoSection(),
               reviewSection(),
               reviewCard(),
               reviewList(),

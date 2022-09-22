@@ -6,6 +6,7 @@ import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/screens/dashboard/time_tracker/mothly_projects.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
 import 'package:helpozzy/widget/url_launcher.dart';
@@ -403,36 +404,32 @@ class ActivityTrackerListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme _textTheme = Theme.of(context).textTheme;
-    return Container(
-      color: ACCENT_GRAY_COLOR,
-      padding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 13.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  projectActivity.month,
-                  style: _textTheme.bodyText2!.copyWith(
-                    color: BLACK,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  '${projectActivity.projectCounter} projects',
-                  style: _textTheme.bodyText2!.copyWith(
-                    color: DARK_PINK_COLOR,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Icon(Icons.arrow_forward_ios_rounded, size: 14)
-        ],
+    return ListTile(
+      tileColor: ACCENT_GRAY_COLOR,
+      contentPadding: EdgeInsets.symmetric(horizontal: 13.0),
+      trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              MonthlyProjects(projectActivity: projectActivity),
+        ),
+      ),
+      title: Text(
+        projectActivity.month,
+        style: _textTheme.bodyText2!.copyWith(
+          color: BLACK,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      subtitle: Text(
+        '${projectActivity.projectCounter} projects',
+        style: _textTheme.bodyText2!.copyWith(
+          color: DARK_PINK_COLOR,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

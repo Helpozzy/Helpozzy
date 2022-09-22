@@ -69,6 +69,7 @@ class _MembersScreenState extends State<MembersScreen> {
                     fillColor: GRAY,
                     controller: _searchController,
                     hintText: SEARCH_MEMBERS_HINT,
+                    textInputAction: TextInputAction.done,
                     textAlignCenter: false,
                     prefixIcon: Icon(
                       CupertinoIcons.search,

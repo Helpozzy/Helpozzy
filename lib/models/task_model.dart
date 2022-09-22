@@ -17,6 +17,7 @@ class TaskModel {
     this.projectId,
     this.taskOwnerId,
     this.signUpUserId,
+    this.signedUpDate,
     this.taskId,
     this.taskName,
     this.description,
@@ -39,6 +40,7 @@ class TaskModel {
     taskOwnerId = json['owner_id'];
     taskId = json['task_id'];
     signUpUserId = json['sign_up_uid'];
+    signedUpDate = json['signup_date'];
     taskName = json['task_name'];
     description = json['description'];
     memberRequirement = json['member_requirement'];
@@ -59,6 +61,7 @@ class TaskModel {
       'project_id': projectId,
       'owner_id': taskOwnerId,
       'sign_up_uid': signUpUserId,
+      'signup_date': signedUpDate,
       'task_id': taskId,
       'task_name': taskName,
       'description': description,
@@ -79,6 +82,7 @@ class TaskModel {
   late String? projectId;
   late String? taskOwnerId;
   late String? signUpUserId;
+  late String? signedUpDate;
   late String? taskId;
   late String? taskName;
   late String? description;

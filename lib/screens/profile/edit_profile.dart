@@ -94,6 +94,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late List<int> selectedAreaOfInterests = [];
   late List<CategoryModel> tempList = [];
   late DateTime _selectedBirthDate = DateTime.now();
+  late List<CategoryModel> categories = [];
 
   @override
   void initState() {
@@ -105,7 +106,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future getCategories() async {
-    categoriesList.forEach((category) {
+    final Categories categoriesItems =
+        Categories.fromJson(list: categoriesList);
+    categories = categoriesItems.categories;
+    categories.forEach((category) {
       if (user.areaOfInterests!.contains(category.id)) {
         category.isSelected = true;
         tempList.add(category);
@@ -209,7 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     selectedAreaOfInterests = [];
-    categoriesList.forEach((category) {
+    categories.forEach((category) {
       if (category.isSelected!) {
         selectedAreaOfInterests.add(category.id!);
       }
