@@ -44,6 +44,7 @@ const LABEL_TILE_COLOR = Color(0xFFD8D9DD);
 const ACCENT_GREEN = Color(0xFF34C759);
 const ACCENT_GRAY_COLOR = Color(0xFFF7F4F4);
 const ACCENT_PINK_COLOR = Color.fromARGB(255, 255, 172, 194);
+const TRANSPARENT_COLOR = Colors.transparent;
 
 //Splash color
 const PURPLE_COLOR = Color(0xFF445393);
@@ -259,6 +260,7 @@ const TASK_NOT_UPDATED_ERROR_POPUP_MSG =
     'Task not updated due some error, Try again!';
 const TASK_NOT_CREATED_ERROR_POPUP_MSG =
     'Task not created due some error, Try again!';
+const TASK_SELECT_ESTIMATED_HOURS_ERROR_POPUP_MSG = 'Select estimated hours.';
 const TASK_NOT_DELETED_ERROR_POPUP_MSG =
     'Task not deleted due some error, Try again!';
 const REVIEW_NOT_POSTED_ERROR_POPUP_MSG = 'Try again! Review not posted';
@@ -441,6 +443,7 @@ const ATTACHMENTS_TAB = 'Attachments';
 //User project task details
 const TASK_DETAILS = '• Task Details';
 const MY_TASKS_LABEL = 'My Tasks';
+const TASK_MEMBERS = '• Members';
 const TASK_CREATED_ON = 'Task created on : ';
 const VIEW_ALL_TASKS_LABEL = 'View all Tasks';
 const TASK_ARE_YOU_RUNNING_LATE = 'Are you running late?';
@@ -484,7 +487,7 @@ const TOTAL_VOLUNTEERING_LABEL = 'Total volunteering hrs : ';
 const ADD_NOW = 'Add now!';
 const TELL_ME_ABOUT_YOUR_SELF = 'Tell me about your self';
 const ORGANIZATION_TAX_ID_NUMBER = '• Tax ID No. : ';
-const PROFIT_ORGANIZATION = '• Profile Organization';
+const PROFIT_ORGANIZATION = '• Profit Organization';
 const NON_PROFIT_ORGANIZATION = '• Non Profit organization';
 const SIGN_OUT_POPUP_MENU = 'Sign Out';
 const DELETE_ACCOUNT = 'Delete Account';

@@ -648,7 +648,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      CupertinoIcons.location,
+                      Icons.place_outlined,
                       color: PRIMARY_COLOR,
                     ),
                     SizedBox(width: 8),
@@ -1173,7 +1173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      CupertinoIcons.location,
+                      Icons.place_outlined,
                       color: PRIMARY_COLOR,
                     ),
                     SizedBox(width: 8),
@@ -1352,6 +1352,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return CommonSimpleTextfield(
       controller: _organizationDiscriptionContntroller,
       hintText: ORGANIZATION_DISCRIPTION_HINT,
+      keyboardType: TextInputType.multiline,
+      textInputAction: TextInputAction.newline,
+      maxLines: 3,
       validator: (val) {
         if (val!.isEmpty) {
           return 'Please enter organization discription';
@@ -1462,28 +1465,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget taxIdNumber() {
-    return Row(
-      children: [
-        Expanded(
-          child: CommonSimpleTextfield(
-            controller: _organizationTaxIdNumberContntroller,
-            hintText: TAX_ID_NUM_HINT,
-            inputFormatters: [maskFormatter],
-            validator: (val) {
-              if (val!.isEmpty) {
-                return 'Please enter tax id number';
-              }
-              return null;
-            },
-          ),
-        ),
-        SizedBox(width: 10),
-        Text(
-          '0/9',
-          style: _theme.textTheme.bodyText2!
-              .copyWith(fontWeight: FontWeight.w600, color: DARK_GRAY),
-        ),
-      ],
+    return CommonSimpleTextfield(
+      controller: _organizationTaxIdNumberContntroller,
+      hintText: TAX_ID_NUM_HINT,
+      inputFormatters: [maskFormatter],
+      validator: (val) {
+        if (val!.isEmpty) {
+          return 'Please enter tax id number';
+        }
+        return null;
+      },
     );
   }
 }

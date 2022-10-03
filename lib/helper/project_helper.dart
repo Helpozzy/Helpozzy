@@ -6,7 +6,7 @@ class ProjectHelper {
   ProjectHelper.fromProjects(Projects projects) {
     projects.projectList.forEach((project) {
       final String month = DateFormat('MMMM').format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(project.startDate!)),
+        DateTime.fromMillisecondsSinceEpoch(int.parse(project.signedUpDate!)),
       );
       late List<ProjectModel> tempList = [];
       if (monthlyList.isNotEmpty) {

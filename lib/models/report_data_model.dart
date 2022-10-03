@@ -7,7 +7,7 @@ class Reports {
         month: element.month,
         year: element.year,
         hrs: element.hrs,
-        project: element.project,
+        projects: element.projects,
       ));
     });
   }
@@ -16,14 +16,14 @@ class Reports {
 
 class ReportsDataModel {
   ReportsDataModel({
-    this.project,
     this.year,
     this.month,
     this.hrs,
+    this.projects,
   });
 
   late String? year;
   late String? month;
   late int? hrs = 0;
-  late ProjectModel? project;
+  late List<ProjectModel>? projects;
 }

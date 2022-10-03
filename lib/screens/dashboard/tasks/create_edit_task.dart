@@ -90,12 +90,13 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   }
 
   Future getMembers() async {
-    for (int i = 0; i < task!.members!.length; i++) {
-      final SignUpAndUserModel user =
-          await Repository().userInfoRepo(task!.members![i]);
-      selectedMembers!.add(user);
+    if (task!.members != null && task!.members!.isNotEmpty && fromEdit) {
+      for (int i = 0; i < task!.members!.length; i++) {
+        final SignUpAndUserModel user =
+            await Repository().userInfoRepo(task!.members![i]);
+        selectedMembers!.add(user);
+      }
     }
-    print(selectedMembers);
   }
 
   Future addUpdateData() async {
@@ -108,89 +109,96 @@ class _CreateEditTaskState extends State<CreateEditTask> {
           members.add(member.userId!);
         });
       }
-
-      if (fromEdit) {
-        final TaskModel taskDetails = TaskModel(
-          taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
-          projectId: task!.projectId,
-          enrollTaskId: task!.enrollTaskId,
-          taskId: task!.taskId,
-          isApprovedFromAdmin: task!.isApprovedFromAdmin,
-          isSelected: task!.isSelected,
-          signUpUserId: task!.signUpUserId,
-          taskName: _taskNameController.text,
-          description: _taskDesController.text,
-          memberRequirement: noOfMemberTrackerVal.round(),
-          ageRestriction: minimumAgeTrackerVal.round(),
-          qualification: _taskQualificationController.text,
-          startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-          endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-          estimatedHrs: hrsTrackerVal.round() <= 10
-              ? hrsTrackerVal.round()
-              : int.parse(_estimatedHoursController.text),
-          totalVolunteerHrs: 0,
-          members: members,
-          status: _selectedIndexValue == 0
-              ? TOGGLE_NOT_STARTED
-              : _selectedIndexValue == 1
-                  ? TOGGLE_INPROGRESS
-                  : TOGGLE_COMPLETE,
-        );
-        final ResponseModel response =
-            await _projectTaskBloc.updateTask(taskDetails);
-        if (response.status!) {
-          await clearFields();
-          CircularLoader().hide(context);
-          Navigator.of(context).pop();
-          ScaffoldSnakBar().show(
-            context,
-            msg: TASK_UPDATED_SUCCESSFULLY_POPUP_MSG,
+      if (hrsTrackerVal.round() != 0) {
+        if (fromEdit) {
+          final TaskModel taskDetails = TaskModel(
+            taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
+            projectId: task!.projectId,
+            enrollTaskId: task!.enrollTaskId,
+            taskId: task!.taskId,
+            isApprovedFromAdmin: task!.isApprovedFromAdmin,
+            isSelected: task!.isSelected,
+            signUpUserId: task!.signUpUserId,
+            taskName: _taskNameController.text,
+            description: _taskDesController.text,
+            memberRequirement: noOfMemberTrackerVal.round(),
+            ageRestriction: minimumAgeTrackerVal.round(),
+            qualification: _taskQualificationController.text,
+            startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+            endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+            estimatedHrs: hrsTrackerVal.round() <= 10
+                ? hrsTrackerVal.round()
+                : int.parse(_estimatedHoursController.text),
+            totalVolunteerHrs: 0,
+            members: members,
+            status: _selectedIndexValue == 0
+                ? TOGGLE_NOT_STARTED
+                : _selectedIndexValue == 1
+                    ? TOGGLE_INPROGRESS
+                    : TOGGLE_COMPLETE,
           );
+          final ResponseModel response =
+              await _projectTaskBloc.updateTask(taskDetails);
+          if (response.status!) {
+            await clearFields();
+            CircularLoader().hide(context);
+            Navigator.of(context).pop();
+            ScaffoldSnakBar().show(
+              context,
+              msg: TASK_UPDATED_SUCCESSFULLY_POPUP_MSG,
+            );
+          } else {
+            await clearFields();
+            CircularLoader().hide(context);
+            ScaffoldSnakBar().show(
+              context,
+              msg: TASK_NOT_UPDATED_ERROR_POPUP_MSG,
+            );
+          }
         } else {
-          await clearFields();
-          CircularLoader().hide(context);
-          ScaffoldSnakBar().show(
-            context,
-            msg: TASK_NOT_UPDATED_ERROR_POPUP_MSG,
+          final TaskModel taskDetails = TaskModel(
+            taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
+            taskName: _taskNameController.text,
+            description: _taskDesController.text,
+            memberRequirement: noOfMemberTrackerVal.round(),
+            ageRestriction: minimumAgeTrackerVal.round(),
+            qualification: _taskQualificationController.text,
+            startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
+            endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
+            estimatedHrs: hrsTrackerVal.round() <= 10
+                ? hrsTrackerVal.round()
+                : int.parse(_estimatedHoursController.text),
+            totalVolunteerHrs: 0,
+            members: members,
+            status: _selectedIndexValue == 0
+                ? TOGGLE_NOT_STARTED
+                : _selectedIndexValue == 1
+                    ? TOGGLE_INPROGRESS
+                    : TOGGLE_COMPLETE,
           );
+          final ResponseModel response =
+              await _projectTaskBloc.postTask(taskDetails);
+          if (response.status!) {
+            CircularLoader().hide(context);
+            Navigator.of(context).pop();
+            ScaffoldSnakBar().show(
+              context,
+              msg: TASK_CREATED_SUCCESSFULLY_POPUP_MSG,
+            );
+          } else {
+            CircularLoader().hide(context);
+            ScaffoldSnakBar().show(
+              context,
+              msg: TASK_NOT_CREATED_ERROR_POPUP_MSG,
+            );
+          }
         }
       } else {
-        final TaskModel taskDetails = TaskModel(
-          taskOwnerId: prefsObject.getString(CURRENT_USER_ID)!,
-          taskName: _taskNameController.text,
-          description: _taskDesController.text,
-          memberRequirement: noOfMemberTrackerVal.round(),
-          ageRestriction: minimumAgeTrackerVal.round(),
-          qualification: _taskQualificationController.text,
-          startDate: _selectedStartDate.millisecondsSinceEpoch.toString(),
-          endDate: _selectedEndDate.millisecondsSinceEpoch.toString(),
-          estimatedHrs: hrsTrackerVal.round() <= 10
-              ? hrsTrackerVal.round()
-              : int.parse(_estimatedHoursController.text),
-          totalVolunteerHrs: 0,
-          members: members,
-          status: _selectedIndexValue == 0
-              ? TOGGLE_NOT_STARTED
-              : _selectedIndexValue == 1
-                  ? TOGGLE_INPROGRESS
-                  : TOGGLE_COMPLETE,
+        CircularLoader().hide(context);
+        ScaffoldSnakBar().show(
+          context,
+          msg: TASK_SELECT_ESTIMATED_HOURS_ERROR_POPUP_MSG,
         );
-        final ResponseModel response =
-            await _projectTaskBloc.postTask(taskDetails);
-        if (response.status!) {
-          CircularLoader().hide(context);
-          Navigator.of(context).pop();
-          ScaffoldSnakBar().show(
-            context,
-            msg: TASK_CREATED_SUCCESSFULLY_POPUP_MSG,
-          );
-        } else {
-          CircularLoader().hide(context);
-          ScaffoldSnakBar().show(
-            context,
-            msg: TASK_NOT_CREATED_ERROR_POPUP_MSG,
-          );
-        }
       }
     }
   }
@@ -423,13 +431,22 @@ class _CreateEditTaskState extends State<CreateEditTask> {
         color: DARK_PINK_COLOR,
       ),
       onTap: () async {
-        selectedMembers = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>
                 MembersScreen(selectedMembers: selectedMembers),
           ),
-        );
+        ).then((members) {
+          if (members != null && members.isNotEmpty) {
+            for (SignUpAndUserModel member in members) {
+              if (!selectedMembers!.contains(member)) {
+                selectedMembers!.add(member);
+              }
+            }
+          }
+          setState(() {});
+        });
       },
     );
   }

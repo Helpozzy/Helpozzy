@@ -146,6 +146,7 @@ class CommonRoundedTextfield extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
       maxLength: maxLength,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       textAlign: textAlignCenter! ? TextAlign.center : TextAlign.left,
       style: _theme.textTheme.bodyText1,
       inputFormatters: inputFormatters,

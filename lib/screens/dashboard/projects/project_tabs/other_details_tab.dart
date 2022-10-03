@@ -212,7 +212,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
-                                CupertinoIcons.location,
+                                Icons.place_outlined,
                                 color: DARK_GRAY,
                                 size: 14,
                               ),
@@ -363,7 +363,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Icon(
-                                  CupertinoIcons.location,
+                                  Icons.place_outlined,
                                   color: DARK_GRAY,
                                   size: 14,
                                 ),

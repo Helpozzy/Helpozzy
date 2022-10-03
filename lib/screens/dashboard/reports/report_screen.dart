@@ -41,10 +41,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
-    final List<ReportsDataModel> filterdList = projectReportHelper
-        .chartDetailsList
-        .where((e) => e.year == year)
-        .toList();
+    final List<ReportsDataModel> filterdList =
+        projectReportHelper.chartDetails.where((e) => e.year == year).toList();
     await _reportBloc.getFilteredReportProjects(filterdList);
   }
 
@@ -54,8 +52,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.fromProjects(projects);
-    final List<ReportsDataModel> filterdList = projectReportHelper
-        .chartDetailsList
+    final List<ReportsDataModel> filterdList = projectReportHelper.chartDetails
         .where((e) => e.year == year && e.month == month.substring(0, 3))
         .toList();
     await _reportBloc.getFilteredReportProjects(filterdList);
@@ -93,19 +90,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ' - ' +
                       selectedYear
                   : ANALYSIS_LABEL + ' : ' + selectedYear,
-              // suffixIcon: InkWell(
-              //   onTap: () async {
-              //     selectedYear = DateTime.now().year.toString();
-              //     selectedMonth = '';
-              //     setState(() {});
-              //     loadMonth(selectedYear);
-              //   },
-              //   child: Icon(
-              //     CupertinoIcons.refresh,
-              //     color: PRIMARY_COLOR,
-              //     size: 16,
-              //   ),
-              // ),
             ),
             filterDropDown(),
             reportView(),
@@ -138,6 +122,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         hintText: SELECT_YEAR_HINT,
         hintStyle: TextStyle(color: DARK_GRAY),
         filled: true,
+        fillColor: Colors.transparent,
         focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -171,6 +156,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         hintText: SELECT_MONTH_HINT,
         hintStyle: TextStyle(color: DARK_GRAY),
         filled: true,
+        fillColor: Colors.transparent,
         focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -268,30 +254,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return reportList.map((e) {
       final double yVal = e.hrs != null ? double.parse(e.hrs.toString()) : 0.0;
       BarSeries<ReportsDataModel, String>(
-          dataSource: reportList,
-          xValueMapper: (ReportsDataModel data, _) => data.month,
-          yValueMapper: (ReportsDataModel data, _) => yVal,
-          // Width of the bars
-          width: 0.6,
-          // Spacing between the bars
-          spacing: 0.3);
-      // return BarChartGroupData(
-      //   x: e.hrs != null ? e.hrs! : 0,
-      //   barRods: [
-      //     BarChartRodData(
-      //       toY: yVal,
-      //       width: reportList.length == 12 ? 12 : 20,
-      //       rodStackItems: [
-      //         BarChartRodStackItem(0, yVal, DARK_BAR_COLOR),
-      //         BarChartRodStackItem(yVal / 2, yVal, NORMAL_BAR_COLOR),
-      //       ],
-      //       borderRadius: BorderRadius.only(
-      //         topLeft: Radius.circular(3),
-      //         topRight: Radius.circular(3),
-      //       ),
-      //     ),
-      //   ],
-      // );
+        dataSource: reportList,
+        xValueMapper: (ReportsDataModel data, _) => data.month,
+        yValueMapper: (ReportsDataModel data, _) => yVal,
+        width: 0.6,
+        spacing: 0.3,
+      );
     }).toList();
   }
 
@@ -309,26 +277,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
         final List<ReportsDataModel> reportList = snapshot.data!;
         Reports reports = Reports.fromList(list: reportList);
         return reports.reportList.isNotEmpty
-            ? ListView.separated(
+            ? ListView(
                 shrinkWrap: true,
-                separatorBuilder: (context, index) => CommonDivider(),
                 physics: ScrollPhysics(),
-                itemCount: reports.reportList.length,
-                itemBuilder: (context, index) {
-                  ReportsDataModel report = reports.reportList[index];
-                  final ProjectModel project = report.project!;
-                  return StreamBuilder<bool>(
-                    initialData: false,
-                    stream: _reportBloc.getProjectExpandStream,
-                    builder: (context, snapshot) {
-                      return ReportProjectTile(
-                        project: project,
-                        isExpanded: snapshot.data!,
-                        reportBloc: _reportBloc,
-                      );
-                    },
-                  );
-                },
+                children: [
+                  for (var list in reports.reportList)
+                    for (var project in list.projects!)
+                      StreamBuilder<bool>(
+                        initialData: false,
+                        stream: _reportBloc.getProjectExpandStream,
+                        builder: (context, snapshot) {
+                          return ReportProjectTile(
+                            project: project,
+                            isExpanded: snapshot.data!,
+                            reportBloc: _reportBloc,
+                          );
+                        },
+                      ),
+                ],
               )
             : Container(
                 alignment: Alignment.center,

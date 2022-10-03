@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -17,6 +19,24 @@ class _TaskDetailsState extends State<TaskDetails> {
   final TaskModel task;
   late ThemeData _theme;
   late double width;
+  late List<SignUpAndUserModel> membersDetails = [];
+
+  @override
+  void initState() {
+    getMembers();
+    super.initState();
+  }
+
+  Future getMembers() async {
+    if (task.members != null && task.members!.isNotEmpty) {
+      for (int i = 0; i < task.members!.length; i++) {
+        final SignUpAndUserModel user =
+            await Repository().userInfoRepo(task.members![i]);
+        membersDetails.add(user);
+      }
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +73,8 @@ class _TaskDetailsState extends State<TaskDetails> {
                   taskSchedule(task),
                   SizedBox(height: width * 0.06),
                   taskDiscription(task),
+                  SizedBox(height: width * 0.06),
+                  members(),
                 ],
               ),
             ),
@@ -136,5 +158,58 @@ class _TaskDetailsState extends State<TaskDetails> {
         ),
       ],
     );
+  }
+
+  Widget members() {
+    return membersDetails.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    TASK_MEMBERS,
+                    style: _theme.textTheme.bodyText2!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 3),
+                  Icon(
+                    CupertinoIcons.person_2,
+                    size: 14,
+                  )
+                ],
+              ),
+              SizedBox(height: width * 0.02),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                child: Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: membersDetails
+                        .map((volunteer) => Container(
+                              margin: EdgeInsets.symmetric(horizontal: 2.0),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 4.0,
+                                horizontal: 10.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: PRIMARY_COLOR,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Text(
+                                volunteer.firstName! +
+                                    ' ' +
+                                    volunteer.lastName!,
+                                style: _theme.textTheme.bodyText2!
+                                    .copyWith(color: WHITE),
+                              ),
+                            ))
+                        .toList()),
+              ),
+            ],
+          )
+        : SizedBox();
   }
 }

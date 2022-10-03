@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -15,6 +14,8 @@ class MemberCard extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    print('member selected :$selected');
+    print('member name :${volunteer.firstName}');
     final ThemeData _theme = Theme.of(context);
     final double width = MediaQuery.of(context).size.width;
     return GestureDetector(
@@ -57,7 +58,7 @@ class MemberCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(
-                          CupertinoIcons.location,
+                          Icons.place_outlined,
                           color: DARK_GRAY,
                           size: 13,
                         ),

@@ -12,15 +12,36 @@ class ProjectReportHelper {
           timestamp: project.signedUpDate!);
       final String projectSignedUpMonth = _dateFormatFromTimeStamp.dateMonthMMM(
           timestamp: project.signedUpDate!);
-
-      chartDetailsList.add(ReportsDataModel(
-        month: projectSignedUpMonth,
-        year: projectSignedUpYear,
-        hrs: project.totalTaskshrs,
-        project: project,
-      ));
+      late List<ProjectModel> tempList = [];
+      tempList.clear();
+      if (chartDetails.isNotEmpty) {
+        for (int i = 0; i < chartDetails.length; i++) {
+          final ReportsDataModel report = chartDetails[i];
+          if (report.month == projectSignedUpMonth) {
+            report.month = projectSignedUpMonth;
+            report.year = report.year;
+            report.hrs = report.hrs! + project.totalTaskshrs!;
+            report.projects!.add(project);
+          } else {
+            tempList.add(project);
+            chartDetails.add(ReportsDataModel(
+              month: projectSignedUpMonth,
+              year: projectSignedUpYear,
+              hrs: project.totalTaskshrs,
+              projects: tempList,
+            ));
+          }
+        }
+      } else {
+        tempList.add(project);
+        chartDetails.add(ReportsDataModel(
+          month: projectSignedUpMonth,
+          year: projectSignedUpYear,
+          hrs: project.totalTaskshrs,
+          projects: tempList,
+        ));
+      }
     });
   }
-
-  late List<ReportsDataModel> chartDetailsList = [];
+  late List<ReportsDataModel> chartDetails = [];
 }

@@ -117,7 +117,7 @@ class TaskCard extends StatelessWidget {
                       ? InkWell(
                           onTap: onTapEditFromAttachedTask,
                           child: Icon(
-                            CupertinoIcons.pencil_ellipsis_rectangle,
+                            CupertinoIcons.pencil_circle,
                             size: width * 0.04,
                           ),
                         )

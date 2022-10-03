@@ -3,15 +3,18 @@ import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_log_hrs_model.dart';
 import 'package:helpozzy/utils/constants.dart';
-import 'package:helpozzy/widget/common_widget.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
   final List<Widget>? childrens;
   final bool? hasCommentBox;
-  final TextEditingController _commentController = TextEditingController();
+  final Widget? commentBox;
+
   NotificationTile(
-      {required this.notification, this.hasCommentBox, this.childrens});
+      {required this.notification,
+      this.hasCommentBox,
+      this.commentBox,
+      this.childrens});
 
   String getComment() {
     final TaskLogHrsModel taskLogHrsModel =
@@ -132,14 +135,7 @@ class NotificationTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       hasCommentBox!
-                          ? Expanded(
-                              child: CommonRoundedTextfield(
-                                fillColor: GRAY,
-                                controller: _commentController,
-                                hintText: ENTER_COMMENT_HINT,
-                                validator: (val) => null,
-                              ),
-                            )
+                          ? Expanded(child: commentBox!)
                           : SizedBox(),
                       SizedBox(width: 3),
                       childrens != null

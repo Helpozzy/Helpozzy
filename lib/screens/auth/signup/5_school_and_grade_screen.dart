@@ -185,7 +185,7 @@ class _SchoolAndGradeScreenState extends State<SchoolAndGradeScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      CupertinoIcons.location,
+                      Icons.place_outlined,
                       color: PRIMARY_COLOR,
                     ),
                     SizedBox(width: 8),

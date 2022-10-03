@@ -64,7 +64,7 @@ class MemberTabCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      CupertinoIcons.location,
+                      Icons.place_outlined,
                       size: width * 0.03,
                     ),
                     Expanded(

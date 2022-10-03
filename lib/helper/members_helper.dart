@@ -12,7 +12,7 @@ class ProjectMembers {
             if (!projectMembers.contains(memberId)) {
               final SignUpAndUserModel user =
                   await Repository().userInfoRepo(memberId);
-              if (user.userId != null) {
+              if (user.userId != null && !projectMembers.contains(user)) {
                 projectMembers.add(user);
               }
             }

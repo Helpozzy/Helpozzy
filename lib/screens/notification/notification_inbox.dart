@@ -31,6 +31,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   final ProjectSignUpBloc _projectSignUpBloc = ProjectSignUpBloc();
   final ProjectTaskBloc _projectTaskBloc = ProjectTaskBloc();
   final EditProfileBloc _editProfileBloc = EditProfileBloc();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     TaskModel task = TaskModel.fromjson(json: taskLogHrs.data!);
     task.status = fromDeclineLogHrs ? TOGGLE_COMPLETE : LOG_HRS_APPROVED;
     task.isApprovedFromAdmin = true;
+    taskLogHrs.comment = _commentController.text;
     taskLogHrs.data = task.toJson();
     final ResponseModel updateTaskResponse =
         await _taskBloc.updateEnrollTask(task);
@@ -80,16 +82,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
         taskProject.totalTaskshrs =
             taskProject.totalTaskshrs ?? 0 + taskLogHrs.hrs!;
+
         await _editProfileBloc.updateTotalSpentHrs(
             task.signUpUserId!, taskLogHrs.hrs!);
-        final ResponseModel response =
-            await _projectsBloc.updateEnrolledProjectHrs(
-                task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
-        if (response.status!) {
-          ScaffoldSnakBar().show(context, msg: response.message!);
-        } else {
-          ScaffoldSnakBar().show(context, msg: response.error!);
-        }
+
+        await _projectsBloc.updateEnrolledProjectHrs(
+            task.signUpUserId!, task.projectId!, taskLogHrs.hrs!);
+
         await _notificationBloc.updateNotifications(notification);
         await _notificationBloc.getNotifications();
       }
@@ -295,6 +294,12 @@ class _NotificationInboxState extends State<NotificationInbox> {
                             : notification.type == 2
                                 ? true
                                 : false,
+                    commentBox: CommonRoundedTextfield(
+                      fillColor: GRAY,
+                      controller: _commentController,
+                      hintText: ENTER_COMMENT_HINT,
+                      validator: (val) => null,
+                    ),
                     childrens: itLogHrDecline(notification)
                         ? []
                         : notification.isUpdated!

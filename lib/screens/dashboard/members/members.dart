@@ -22,7 +22,6 @@ class _MembersScreenState extends State<MembersScreen> {
   late double width;
   late double height;
   late bool favVolunteers = false;
-  late List<SignUpAndUserModel> selectedItems = [];
 
   @override
   void initState() {
@@ -42,7 +41,7 @@ class _MembersScreenState extends State<MembersScreen> {
         onBack: () => Navigator.of(context).pop(),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pop(context, selectedItems),
+            onPressed: () => Navigator.pop(context, selectedMembers),
             icon: Icon(
               Icons.check,
               color: DARK_PINK_COLOR,
@@ -61,7 +60,12 @@ class _MembersScreenState extends State<MembersScreen> {
         children: [
           Container(
             height: 40,
-            margin: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 5),
+            margin: EdgeInsets.only(
+              left: width * 0.05,
+              right: width * 0.03,
+              top: 5,
+              bottom: 5,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -81,11 +85,10 @@ class _MembersScreenState extends State<MembersScreen> {
                         _membersBloc.searchMembers(searchText: val),
                   ),
                 ),
-                SizedBox(width: 5),
                 IconButton(
-                    onPressed: () async =>
-                        await _membersBloc.sortMembersByName(),
-                    icon: Icon(Icons.sort_by_alpha_rounded))
+                  onPressed: () async => await _membersBloc.sortMembersByName(),
+                  icon: Icon(Icons.sort_by_alpha_rounded),
+                )
               ],
             ),
           ),
@@ -102,6 +105,8 @@ class _MembersScreenState extends State<MembersScreen> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
+        var firstListSet = selectedMembers!.toSet();
+        var secondListSet = snapshot.data!.toSet();
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -110,17 +115,20 @@ class _MembersScreenState extends State<MembersScreen> {
             final SignUpAndUserModel volunteer = snapshot.data![index];
             return MemberCard(
               volunteer: volunteer,
-              selected: selectedMembers!.isNotEmpty &&
-                      selectedMembers!.contains(volunteer.userId)
-                  ? true
-                  : volunteer.isSelected!,
+              selected:
+                  firstListSet.every((item) => secondListSet.contains(item))
+                      ? true
+                      : volunteer.isSelected!,
               onTapItem: () {
-                setState(() => volunteer.isSelected = !volunteer.isSelected!);
+                volunteer.isSelected = !volunteer.isSelected!;
                 if (volunteer.isSelected!) {
-                  if (!selectedItems.contains(volunteer)) {
-                    selectedItems.add(volunteer);
+                  if (!selectedMembers!.contains(volunteer)) {
+                    selectedMembers!.add(volunteer);
+                  } else {
+                    selectedMembers!.remove(volunteer);
                   }
                 }
+                setState(() {});
               },
             );
           },

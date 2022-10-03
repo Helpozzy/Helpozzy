@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
@@ -89,7 +88,7 @@ class ProjectCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                CupertinoIcons.location,
+                                Icons.place_outlined,
                                 size: 15,
                                 color: WHITE,
                               ),

@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TOTAL_VOLUNTEERING_LABEL + user.totalSpentHrs.toString(),
                 ),
                 UserBasicInfoDetails(
-                  icon: CupertinoIcons.location,
+                  icon: Icons.place_outlined,
                   text: user.address!,
                 ),
                 SizedBox(height: 5),
@@ -213,6 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: PRIMARY_COLOR,
             ),
           ),
+          SizedBox(height: 5),
           Text(
             organizationDetails.isNonProfitOrganization!
                 ? NON_PROFIT_ORGANIZATION

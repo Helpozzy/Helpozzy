@@ -19,38 +19,60 @@ class _FullScreenViewState extends State<FullScreenView> {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(imgUrl),
-      onDismissed: (direction) {
-        Navigator.of(context).pop();
-      },
-      direction: DismissDirection.down,
-      child: GestureDetector(
-        onScaleStart: (ScaleStartDetails details) {
-          _previousScale = _scale;
-        },
-        onScaleUpdate: (ScaleUpdateDetails details) {
-          setState(() => _scale = _previousScale * details.scale);
-        },
-        onScaleEnd: (ScaleEndDetails details) {
-          _previousScale = 0.0;
-        },
-        child: Transform(
-          transform: Matrix4.diagonal3(Vector3(_scale, _scale, _scale)),
-          alignment: FractionalOffset.center,
-          child: CachedNetworkImage(
-            imageUrl: imgUrl,
-            fit: BoxFit.fitWidth,
-            height: double.infinity,
-            width: double.infinity,
-            alignment: Alignment.center,
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Center(child: CircularProgressIndicator(color: PRIMARY_COLOR)),
-            errorWidget: (context, url, error) =>
-                Center(child: Icon(Icons.error)),
+    return Stack(
+      children: [
+        Dismissible(
+          key: Key(imgUrl),
+          onDismissed: (direction) {
+            Navigator.of(context).pop();
+          },
+          direction: DismissDirection.down,
+          child: GestureDetector(
+            onScaleStart: (ScaleStartDetails details) {
+              _previousScale = _scale;
+            },
+            onScaleUpdate: (ScaleUpdateDetails details) {
+              setState(() => _scale = _previousScale * details.scale);
+            },
+            onScaleEnd: (ScaleEndDetails details) {
+              _previousScale = 0.0;
+            },
+            child: Transform(
+              transform: Matrix4.diagonal3(Vector3(_scale, _scale, _scale)),
+              alignment: FractionalOffset.center,
+              child: CachedNetworkImage(
+                imageUrl: imgUrl,
+                fit: BoxFit.fitWidth,
+                height: double.infinity,
+                width: double.infinity,
+                alignment: Alignment.center,
+                progressIndicatorBuilder: (context, _, __) {
+                  return Center(
+                    child: CircularProgressIndicator(color: PRIMARY_COLOR),
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return Center(child: Icon(Icons.error));
+                },
+              ),
+            ),
           ),
         ),
-      ),
+        Positioned(
+          top: 20,
+          right: 0,
+          child: Material(
+            color: TRANSPARENT_COLOR,
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icon(
+                Icons.close_rounded,
+                color: WHITE,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
