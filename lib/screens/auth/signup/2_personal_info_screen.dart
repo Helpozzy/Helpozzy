@@ -1,8 +1,12 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:helpozzy/bloc/signup_bloc.dart';
 import 'package:helpozzy/helper/date_format_helper.dart';
+import 'package:helpozzy/models/login_response_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/auth/signup/3_living_info_screen.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -25,12 +29,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _otpController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _personalPhoneController =
       TextEditingController();
-  // final SignUpBloc _signUpBloc = SignUpBloc();
+  final SignUpBloc _signUpBloc = SignUpBloc();
   late DateTime _selectedBirthDate = DateTime.now();
 
   late double width;
@@ -83,15 +86,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // StreamBuilder<bool>(
-                //   initialData: false,
-                //   stream: _signUpBloc.emailVerifiedStream,
-                //   builder: (context, snapshot) {
-                // return
-                CommonWidget(context).showBackForwardButton(
-                  onPressedForward: () => onContinue(),
-                  //   );
-                  // },
+                StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.emailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return CommonWidget(context).showBackForwardButton(
+                      onPressedForward: () => onContinue(),
+                    );
+                  },
                 ),
                 TopInfoLabel(label: ENTER_YOUR_NAME),
                 Padding(
@@ -147,21 +149,20 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 dateOfBirthField(),
                 TopInfoLabel(label: SELECT_GENDER),
                 genderDropDown(),
-                // StreamBuilder<bool>(
-                //   initialData: false,
-                //   stream: _signUpBloc.emailVerifiedStream,
-                //   builder: (context, snapshot) {
-                //     return
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                      vertical: width * 0.06, horizontal: width * 0.1),
-                  child: CommonButton(
-                    text: CONTINUE_BUTTON,
-                    onPressed: () => onContinue(),
-                  ),
-                  //   );
-                  // },
+                StreamBuilder<bool>(
+                  initialData: false,
+                  stream: _signUpBloc.emailVerifiedStream,
+                  builder: (context, snapshot) {
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          vertical: width * 0.06, horizontal: width * 0.1),
+                      child: CommonButton(
+                        text: CONTINUE_BUTTON,
+                        onPressed: () => onContinue(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -177,93 +178,87 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // StreamBuilder<bool>(
-          //     initialData: false,
-          //     stream: _signUpBloc.emailVerifiedStream,
-          //     builder: (context, snapshotEmailVerified) {
-          // return
-          CommonRoundedTextfield(
-            controller: _emailController,
-            // suffixIcon: Icon(
-            //     snapshotEmailVerified.data!
-            //         ? CupertinoIcons.checkmark_seal_fill
-            //         : CupertinoIcons.checkmark_seal,
-            //     size: 18,
-            //     color: snapshotEmailVerified.data!
-            //         ? ACCENT_GREEN
-            //         : DARK_GRAY),
-            hintText: ENTER_EMAIL_HINT,
-            validator: (email) {
-              if (email!.isEmpty) {
-                return 'Please enter email';
-              } else if (email.isNotEmpty && !EmailValidator.validate(email)) {
-                return 'Please enter valid email';
-              } else {
-                return null;
-              }
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _signUpBloc.emailVerifiedStream,
+            builder: (context, snapshotEmailVerified) {
+              return CommonRoundedTextfield(
+                controller: _emailController,
+                suffixIcon: Icon(
+                    snapshotEmailVerified.data!
+                        ? CupertinoIcons.checkmark_seal_fill
+                        : CupertinoIcons.checkmark_seal,
+                    size: 18,
+                    color:
+                        snapshotEmailVerified.data! ? ACCENT_GREEN : DARK_GRAY),
+                hintText: ENTER_EMAIL_HINT,
+                validator: (email) {
+                  if (email!.isEmpty) {
+                    return 'Please enter email';
+                  } else if (email.isNotEmpty &&
+                      !EmailValidator.validate(email)) {
+                    return 'Please enter valid email';
+                  } else {
+                    return null;
+                  }
+                },
+              );
             },
           ),
-          // }),
-          // Container(
-          //   alignment: Alignment.centerRight,
-          //   padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
-          //   child: SmallCommonButton(
-          //     fontSize: 10,
-          //     text: SEND_VERIFICATION_CODE_BUTTON,
-          //     onPressed: () async {
-          //       FocusScope.of(context).unfocus();
-          //       if (_emailController.text.trim().isNotEmpty) {
-          //         CircularLoader().show(context);
-          //         final bool response =
-          //             await _signUpBloc.sentOtp(_emailController.text);
-          //         if (response) {
-          //           CircularLoader().hide(context);
-          //           ScaffoldSnakBar().show(
-          //             context,
-          //             msg: OTP_SENT_TO_POPUP_MSG + ' ${_emailController.text}!',
-          //           );
-          //         } else {
-          //           CircularLoader().hide(context);
-          //           ScaffoldSnakBar().show(context, msg: FAILED_POPUP_MSG);
-          //         }
-          //       } else {
-          //         ScaffoldSnakBar().show(context, msg: 'Email is empty');
-          //       }
-          //     },
-          //   ),
-          // ),
-          // StreamBuilder<bool>(
-          //   initialData: false,
-          //   stream: _signUpBloc.otpSentStream,
-          //   builder: (context, snapshotSentOtp) {
-          //     return snapshotSentOtp.data!
-          //         ? CommonRoundedTextfield(
-          //             hintText: ENTER_OTP_HINT,
-          //             controller: _otpController,
-          //             maxLength: 6,
-          //             onChanged: (val) async {
-          //               if (val.isNotEmpty && val.length == 6) {
-          //                 final bool response = await _signUpBloc.verifyEmail(
-          //                     _emailController.text, _otpController.text);
-          //                 if (response) {
-          //                   ScaffoldSnakBar()
-          //                       .show(context, msg: 'Email is verified');
-          //                 }
-          //               }
-          //             },
-          //             validator: (val) {
-          //               if (val!.isEmpty) {
-          //                 return 'Please enter OTP';
-          //               } else if (val.isNotEmpty && val.length != 6) {
-          //                 return 'Please enter 6 digit OTP';
-          //               } else {
-          //                 return null;
-          //               }
-          //             },
-          //           )
-          //         : SizedBox();
-          //   },
-          // ),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
+            child: SmallCommonButton(
+              fontSize: 10,
+              text: SEND_VERIFICATION_LINK_BUTTON,
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                if (_emailController.text.trim().isNotEmpty) {
+                  CircularLoader().show(context);
+                  _signUpBloc
+                      .signUpTempEmail(_emailController.text, '000000')
+                      .then((AuthResponseModel authResponse) async {
+                    if (authResponse.success!) {
+                      final ResponseModel response =
+                          await _signUpBloc.sendEmailToVerify();
+                      if (response.status!) {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar().show(
+                          context,
+                          msg: VERIFICATION_LINK_SENT_TO +
+                              ' ${_emailController.text}!',
+                        );
+                      } else {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar().show(context, msg: response.error!);
+                      }
+                    } else if (!authResponse.success! &&
+                        authResponse.error ==
+                            "The email address is already in use by another account.") {
+                      final ResponseModel response =
+                          await _signUpBloc.sendEmailToVerify();
+                      if (response.status!) {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar().show(
+                          context,
+                          msg: VERIFICATION_LINK_SENT_TO +
+                              ' ${_emailController.text}!',
+                        );
+                      } else {
+                        CircularLoader().hide(context);
+                        ScaffoldSnakBar().show(context, msg: response.error!);
+                      }
+                    } else {
+                      CircularLoader().hide(context);
+                      ScaffoldSnakBar().show(context, msg: authResponse.error!);
+                    }
+                  });
+                } else {
+                  ScaffoldSnakBar().show(context, msg: 'Email is empty');
+                }
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -350,6 +345,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: width * 0.1),
       child: DropdownButtonFormField<String>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: inputRoundedDecoration(
               getHint: SELCT_GENDER_HINT, isDropDown: true),
           icon: Icon(Icons.expand_more_rounded),
@@ -362,9 +358,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           isExpanded: true,
           onTap: () => FocusScope.of(context).unfocus(),
           onChanged: (String? newValue) {
-            setState(() {
-              _genderController.text = newValue!;
-            });
+            setState(() => _genderController.text = newValue!);
           },
           items: gendersItems.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(

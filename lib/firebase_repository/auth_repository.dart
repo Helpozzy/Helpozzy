@@ -1,11 +1,14 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpozzy/models/login_response_model.dart';
+import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class AuthRepository {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  AuthRepository();
 
   // Sign Up with email and password
   Future<AuthResponseModel> signUp(String email, String password) async {
@@ -21,7 +24,7 @@ class AuthRepository {
       print('Auth ${e.toString()}');
       return AuthResponseModel(
         user: null,
-        message: e.toString().split('] ')[1],
+        error: e.toString().split('] ')[1],
         success: false,
       );
     }
@@ -100,14 +103,29 @@ class AuthRepository {
     }
   }
 
-  Future<bool> verifyEmail() async {
-    User? user = firebaseAuth.currentUser;
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
-      return true;
-    } else {
-      return false;
-    }
+  Future<ResponseModel> verifyEmail() async {
+    final Completer<ResponseModel> c = Completer<ResponseModel>();
+    firebaseAuth.authStateChanges().listen((User? user) async {
+      if (user != null && !user.emailVerified) {
+        try {
+          await user
+              .sendEmailVerification()
+              .then((value) => c.complete(ResponseModel(
+                    status: true,
+                    message: 'Email is not verified please verify your email.',
+                  )));
+        } catch (e) {
+          c.complete(ResponseModel(status: false, error: e.toString()));
+          log(e.toString());
+        }
+      } else {
+        c.complete(ResponseModel(
+          status: true,
+          message: 'Email is verified',
+        ));
+      }
+    });
+    return c.future;
   }
 
   Future<AuthResponseModel> deleteAccount(User user) async {

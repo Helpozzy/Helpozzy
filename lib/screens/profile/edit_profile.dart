@@ -1081,6 +1081,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget genderDropDown() {
     return DropdownButtonFormField<String>(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: inputSimpleDecoration(
           getHint: _genderController.text.isNotEmpty
               ? _genderController.text
@@ -1201,6 +1202,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget selectRelationshipDropdown() {
     return DropdownButtonFormField<String>(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       icon: Icon(Icons.expand_more_rounded),
       isExpanded: true,
       decoration: inputSimpleDecoration(
@@ -1239,6 +1241,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         SizedBox(height: 10),
         TextfieldLabelSmall(label: GRADE_LEVEL_LABEL),
         DropdownButtonFormField<String>(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             hint: Text(_gradeLevelController.text.isNotEmpty
                 ? _gradeLevelController.text
                 : GRADE_HINT),

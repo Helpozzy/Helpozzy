@@ -39,23 +39,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future loadMonth(String year) async {
     selectedYear = year;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
+    final List<ReportsDataModel> filteredProject =
+        await FilteredProjectHelper().fromProjects(projects);
     final ProjectReportHelper projectReportHelper =
-        ProjectReportHelper.fromProjects(projects);
-    final List<ReportsDataModel> filterdList =
-        projectReportHelper.chartDetails.where((e) => e.year == year).toList();
-    await _reportBloc.getFilteredReportProjects(filterdList);
+        ProjectReportHelper.generateReportList(
+            filteredProject, selectedMonth, selectedYear);
+    await _reportBloc
+        .getFilteredReportProjects(projectReportHelper.chartDetails);
+    await _reportBloc.getFilteredReportBars(projectReportHelper.barChart);
   }
 
   Future loadProject(String year, String month) async {
     selectedYear = year;
     selectedMonth = month;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
+    final List<ReportsDataModel> filteredProject =
+        await FilteredProjectHelper().fromProjects(projects);
     final ProjectReportHelper projectReportHelper =
-        ProjectReportHelper.fromProjects(projects);
-    final List<ReportsDataModel> filterdList = projectReportHelper.chartDetails
-        .where((e) => e.year == year && e.month == month.substring(0, 3))
-        .toList();
-    await _reportBloc.getFilteredReportProjects(filterdList);
+        ProjectReportHelper.generateReportList(
+            filteredProject, selectedMonth, selectedYear);
+    await _reportBloc
+        .getFilteredReportProjects(projectReportHelper.chartDetails);
+    await _reportBloc.getFilteredReportBars(projectReportHelper.barChart);
   }
 
   @override
@@ -121,8 +126,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       decoration: InputDecoration(
         hintText: SELECT_YEAR_HINT,
         hintStyle: TextStyle(color: DARK_GRAY),
-        filled: true,
-        fillColor: Colors.transparent,
         focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -130,22 +133,25 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
       isExpanded: true,
       onChanged: (String? newValue) async {
-        setState(() => _yearController.text = newValue!);
+        setState(() {
+          _yearController.text = newValue!;
+          _monthController.clear();
+        });
         await loadMonth(newValue!);
       },
       validator: (val) => null,
       items: _dateFromTimeStamp
           .getYears()
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            textAlign: TextAlign.center,
-            style: _theme.textTheme.bodyText2,
-          ),
-        );
-      }).toList(),
+          .map<DropdownMenuItem<String>>(
+              (String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText2,
+                    ),
+                  ))
+          .toList(),
     );
   }
 
@@ -155,8 +161,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       decoration: InputDecoration(
         hintText: SELECT_MONTH_HINT,
         hintStyle: TextStyle(color: DARK_GRAY),
-        filled: true,
-        fillColor: Colors.transparent,
         focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -165,25 +169,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
       isExpanded: true,
       onChanged: (String? newValue) async {
         setState(() => _monthController.text = newValue!);
-        await loadProject(_yearController.text, newValue!);
+        await loadProject(selectedYear, newValue!);
       },
       validator: (val) => null,
-      items: months.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            textAlign: TextAlign.center,
-            style: _theme.textTheme.bodyText2,
-          ),
-        );
-      }).toList(),
+      items: months
+          .map<DropdownMenuItem<String>>(
+              (String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText2,
+                    ),
+                  ))
+          .toList(),
     );
   }
 
   Widget reportView() {
     return StreamBuilder<List<ReportsDataModel>>(
-      stream: _reportBloc.getFilteredReportProjectsTaskStream,
+      stream: _reportBloc.getFilteredReportBarsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return SizedBox();
@@ -224,8 +229,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
               )
             : Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.04,
                   vertical: 20.0,
                 ),
                 child: Column(
@@ -299,7 +304,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
             : Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0, vertical: 20.0),
+                  horizontal: 10.0,
+                  vertical: 20.0,
+                ),
                 child: Text(
                   NO_ACTIVITIES_FOUNDS,
                   style: _theme.textTheme.headline6!

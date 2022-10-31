@@ -63,6 +63,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
   }
 
   Future retriveTaskDetails() async {
+    await getMembers();
     _taskNameController.text = task!.taskName!;
     _taskDesController.text = task!.description!;
     if (task!.estimatedHrs! < 10) {
@@ -70,7 +71,6 @@ class _CreateEditTaskState extends State<CreateEditTask> {
     } else {
       _estimatedHoursController.text = task!.estimatedHrs.toString();
     }
-    await getMembers();
     noOfMemberTrackerVal = double.parse(task!.memberRequirement.toString());
     minimumAgeTrackerVal = double.parse(task!.ageRestriction.toString());
     _taskQualificationController.text = task!.qualification!;
@@ -437,10 +437,12 @@ class _CreateEditTaskState extends State<CreateEditTask> {
             builder: (context) =>
                 MembersScreen(selectedMembers: selectedMembers),
           ),
-        ).then((members) {
+        ).then((members) async {
           if (members != null && members.isNotEmpty) {
             for (SignUpAndUserModel member in members) {
-              if (!selectedMembers!.contains(member)) {
+              var contain = selectedMembers!
+                  .where((element) => element.userId == member.userId);
+              if (contain.isEmpty) {
                 selectedMembers!.add(member);
               }
             }
@@ -710,6 +712,7 @@ class _CreateEditTaskState extends State<CreateEditTask> {
 
   Widget qualificationDropDown() {
     return DropdownButtonFormField<String>(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: inputSimpleDecoration(
           getHint: _taskQualificationController.text.isNotEmpty
               ? _taskQualificationController.text

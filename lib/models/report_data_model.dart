@@ -27,3 +27,13 @@ class ReportsDataModel {
   late int? hrs = 0;
   late List<ProjectModel>? projects;
 }
+
+class MonthByYear {
+  MonthByYear({
+    this.year,
+    this.month,
+  });
+
+  late String? year;
+  late String? month;
+}

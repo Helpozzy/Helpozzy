@@ -11,6 +11,7 @@ class ReportBloc {
   final projectDetailsExpandController = PublishSubject<bool>();
   final signedUpProjectCompletedTasks = PublishSubject<Tasks>();
   final filteredReportProjects = PublishSubject<List<ReportsDataModel>>();
+  final filteredReportBars = PublishSubject<List<ReportsDataModel>>();
 
   Stream<List<ProjectModel>> get getSignedUpProjectsStream =>
       signedUpProjectsController.stream;
@@ -20,6 +21,8 @@ class ReportBloc {
       signedUpProjectCompletedTasks.stream;
   Stream<List<ReportsDataModel>> get getFilteredReportProjectsTaskStream =>
       filteredReportProjects.stream;
+  Stream<List<ReportsDataModel>> get getFilteredReportBarsStream =>
+      filteredReportBars.stream;
 
   Future<List<ProjectModel>> getSignedUpProjects() async {
     final Projects response = await repo.getEnrolledProjectRepo();
@@ -29,6 +32,10 @@ class ReportBloc {
 
   Future getFilteredReportProjects(List<ReportsDataModel> projects) async {
     filteredReportProjects.sink.add(projects);
+  }
+
+  Future getFilteredReportBars(List<ReportsDataModel> projects) async {
+    filteredReportBars.sink.add(projects);
   }
 
   Future isExpanded(bool isExpanded) async {
@@ -46,5 +53,6 @@ class ReportBloc {
     projectDetailsExpandController.close();
     signedUpProjectCompletedTasks.close();
     filteredReportProjects.close();
+    filteredReportBars.close();
   }
 }

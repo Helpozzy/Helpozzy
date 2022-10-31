@@ -70,7 +70,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
             Navigator.pushNamedAndRemoveUntil(
                 context, HOME_SCREEN, (route) => false);
           else
-            ScaffoldSnakBar().show(context, msg: response.message!);
+            ScaffoldSnakBar().show(context, msg: response.error!);
         });
       } else {
         CircularLoader().hide(context);

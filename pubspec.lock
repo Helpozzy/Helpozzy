@@ -134,13 +134,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  email_auth:
-    dependency: "direct main"
-    description:
-      name: email_auth
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   email_validator:
     dependency: "direct main"
     description:

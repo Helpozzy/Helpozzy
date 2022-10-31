@@ -36,7 +36,7 @@ class _ProjectDetailsTabState extends State<ProjectDetailsTab> {
   late GoogleMapController mapController;
   late double selectedRating = 0.0;
   final Set<Marker> _markers = {};
-  Future _mapFuture = Future.delayed(Duration(seconds: 2), () => true);
+  final Future _mapFuture = Future.delayed(Duration(seconds: 1), () => true);
 
   @override
   void initState() {

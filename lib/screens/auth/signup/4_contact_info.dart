@@ -213,6 +213,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
   Widget selectRelationshipDropdown() {
     return DropdownButtonFormField<String>(
       icon: Icon(Icons.expand_more_rounded),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       isExpanded: true,
       decoration: inputRoundedDecoration(
           getHint: SELECT_RELATION_HINT, isDropDown: true),

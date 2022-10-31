@@ -39,6 +39,12 @@ class _NotificationInboxState extends State<NotificationInbox> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
   Future onApproveDeclineTaskLogHrs(
       NotificationModel notification, bool fromDeclineLogHrs) async {
     if (!fromDeclineLogHrs) CircularLoader().show(context);

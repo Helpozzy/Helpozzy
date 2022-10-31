@@ -105,8 +105,6 @@ class _MembersScreenState extends State<MembersScreen> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        var firstListSet = selectedMembers!.toSet();
-        var secondListSet = snapshot.data!.toSet();
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -115,17 +113,14 @@ class _MembersScreenState extends State<MembersScreen> {
             final SignUpAndUserModel volunteer = snapshot.data![index];
             return MemberCard(
               volunteer: volunteer,
-              selected:
-                  firstListSet.every((item) => secondListSet.contains(item))
-                      ? true
-                      : volunteer.isSelected!,
+              selected: volunteer.isSelected!,
               onTapItem: () {
+                var contain = selectedMembers!
+                    .where((element) => element.userId == volunteer.userId);
                 volunteer.isSelected = !volunteer.isSelected!;
                 if (volunteer.isSelected!) {
-                  if (!selectedMembers!.contains(volunteer)) {
+                  if (contain.isEmpty) {
                     selectedMembers!.add(volunteer);
-                  } else {
-                    selectedMembers!.remove(volunteer);
                   }
                 }
                 setState(() {});

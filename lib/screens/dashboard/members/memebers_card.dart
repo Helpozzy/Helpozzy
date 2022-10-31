@@ -14,8 +14,6 @@ class MemberCard extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    print('member selected :$selected');
-    print('member name :${volunteer.firstName}');
     final ThemeData _theme = Theme.of(context);
     final double width = MediaQuery.of(context).size.width;
     return GestureDetector(
@@ -45,14 +43,13 @@ class MemberCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 2.0),
+                      padding: const EdgeInsets.only(left: 2.0, bottom: 3.0),
                       child: Text(
                         volunteer.firstName! + ' ' + volunteer.lastName!,
                         style: _theme.textTheme.bodyText2!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 3),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,

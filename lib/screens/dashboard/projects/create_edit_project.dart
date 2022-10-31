@@ -709,6 +709,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         SizedBox(height: width * 0.05),
         TextfieldLabelSmall(label: PROJECT_CATEGORY_LABEL),
         DropdownButtonFormField<CategoryModel>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: inputSimpleDecoration(
             getHint: _projCategoryController.text.isNotEmpty
                 ? _projCategoryController.text

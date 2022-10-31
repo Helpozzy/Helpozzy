@@ -71,7 +71,10 @@ class ProjectsBloc {
                   .contains(searchText.toLowerCase()) ||
               project.organization!
                   .toLowerCase()
-                  .contains(searchText.toLowerCase())) {
+                  .contains(searchText.toLowerCase()) ||
+              (project.location!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()))) {
             searchedProjects.add(project);
           }
         });

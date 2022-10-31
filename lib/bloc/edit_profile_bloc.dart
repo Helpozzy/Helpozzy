@@ -1,13 +1,10 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
-import 'package:helpozzy/provider/email_verfication_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EditProfileBloc {
   final repo = Repository();
-  final EmailVerificationProvider _emailVerificationProvider =
-      EmailVerificationProvider();
 
   final PublishSubject<bool> organizationDetailsExpand = PublishSubject<bool>();
   final PublishSubject<bool> parentsOtpSentController = PublishSubject<bool>();
@@ -38,16 +35,16 @@ class EditProfileBloc {
     return response;
   }
 
-  Future sentOtpOfParentEmail(String email) async {
-    final bool result = await _emailVerificationProvider.sendOtp(email);
-    parentsOtpSentController.sink.add(result);
-  }
+  // Future sentOtpOfParentEmail(String email) async {
+  //   final bool result = await _emailVerificationProvider.sendOtp(email);
+  //   parentsOtpSentController.sink.add(result);
+  // }
 
-  Future verifyParentEmail(String email, String otp) async {
-    final bool result =
-        await _emailVerificationProvider.validateOTP(email: email, otp: otp);
-    parentsEmailVerifiedController.sink.add(result);
-  }
+  // Future verifyParentEmail(String email, String otp) async {
+  //   final bool result =
+  //       await _emailVerificationProvider.validateOTP(email: email, otp: otp);
+  //   parentsEmailVerifiedController.sink.add(result);
+  // }
 
   void dispose() {
     organizationDetailsExpand.close();
