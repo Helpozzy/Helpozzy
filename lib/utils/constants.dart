@@ -56,7 +56,6 @@ const DARK_BAR_COLOR = Color(0xff3b8c75);
 const NORMAL_BAR_COLOR = Color(0xff64caad);
 const LIGHT_BAR_COLOR = Color(0xff73e8c9);
 
-const BASE_URL = 'https://prismapi.parksquarehomes.com/api/';
 const APP_ICON_URL =
     'https://firebasestorage.googleapis.com/v0/b/helpozzyapp.appspot.com/o/helpozzy_icon%2Fhelpozzy_icon.png?alt=media&token=4e4a5fa0-ea75-4fbe-8f36-7db01347da3f';
 const ANDROID_MAP_API_KEY = 'AIzaSyCLWAG1kDcGh8S8ac0RdyIhKUgS8jdQ64g';

@@ -1,5 +1,6 @@
 import 'package:helpozzy/firebase_repository/repository.dart';
 import 'package:helpozzy/helper/project_helper.dart';
+import 'package:helpozzy/helper/report_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
@@ -95,7 +96,11 @@ class ProjectsBloc {
       {required ProjectTabType projectTabType}) async {
     final Projects response =
         await repo.getprojectsRepo(projectTabType: projectTabType);
-    final ProjectHelper projectHelper = ProjectHelper.fromProjects(response);
+    final FilteredProjectHelper filteredProjectHelper =
+        FilteredProjectHelper.fromProjects(response.projectList);
+
+    final ProjectHelper projectHelper = ProjectHelper.fromProjects(
+        filteredProjectHelper.projectListByMonthAndYear);
     projectsActivityStatusController.sink.add(projectHelper);
   }
 

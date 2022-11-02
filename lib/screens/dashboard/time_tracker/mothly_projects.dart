@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helpozzy/models/project_counter_model.dart';
 import 'package:helpozzy/models/project_model.dart';
+import 'package:helpozzy/models/report_data_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_details.dart';
 import 'package:helpozzy/screens/dashboard/projects/project_card.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -8,7 +8,7 @@ import 'package:helpozzy/widget/common_widget.dart';
 
 class MonthlyProjects extends StatefulWidget {
   const MonthlyProjects({required this.projectActivity});
-  final ProjectActivityModel projectActivity;
+  final ReportsDataModel projectActivity;
 
   @override
   _MonthlyProjectsState createState() =>
@@ -17,7 +17,7 @@ class MonthlyProjects extends StatefulWidget {
 
 class _MonthlyProjectsState extends State<MonthlyProjects> {
   _MonthlyProjectsState({required this.projectActivity});
-  final ProjectActivityModel projectActivity;
+  final ReportsDataModel projectActivity;
 
   late ThemeData _theme;
   late double height;
@@ -34,21 +34,21 @@ class _MonthlyProjectsState extends State<MonthlyProjects> {
         backgroundColor: WHITE,
         appBar: CommonAppBar(context).show(
           elevation: 0,
-          title: projectActivity.month + ' Activity',
+          title: projectActivity.month! + ' Activity',
         ),
         body: projectListView(projectActivity),
       ),
     );
   }
 
-  Widget projectListView(ProjectActivityModel projectActivity) {
-    return projectActivity.projects.isNotEmpty
+  Widget projectListView(ReportsDataModel projectActivity) {
+    return projectActivity.projects!.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: width * 0.02),
-            itemCount: projectActivity.projects.length,
+            itemCount: projectActivity.projects!.length,
             itemBuilder: (context, index) {
-              final ProjectModel project = projectActivity.projects[index];
+              final ProjectModel project = projectActivity.projects![index];
               return ProjectCard(
                 project: project,
                 onTapCard: () => Navigator.push(

@@ -4,49 +4,13 @@ import 'package:helpozzy/models/message_model.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/review_model.dart';
-import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class ApiProvider {
-  Future<States> getStatesAPIProvider() async {
-    final QuerySnapshot querySnapshot =
-        await firestore.collection('states').get();
-
-    return States.fromJson(list: querySnapshot.docs);
-  }
-
-  Future<Cities> getCitiesByStateNameAPIProvider(String stateName) async {
-    final QuerySnapshot querySnapshot = await firestore
-        .collection('cities_info')
-        .where('state_name', isEqualTo: stateName)
-        .get();
-
-    return Cities.fromJson(list: querySnapshot.docs);
-  }
-
-  Future<Schools> getSchoolsAPIProvider({String? state, String? city}) async {
-    final QuerySnapshot querySnapshot =
-        (state != null && state.isNotEmpty) && (city != null && city.isNotEmpty)
-            ? await firestore
-                .collection('schools_info')
-                .where('state', isEqualTo: state)
-                .where('city', isEqualTo: city)
-                .get()
-            : (state != null && state.isNotEmpty)
-                ? await firestore
-                    .collection('schools_info')
-                    .where('state', isEqualTo: state)
-                    .get()
-                : await firestore.collection('schools_info').get();
-
-    return Schools.fromJson(list: querySnapshot.docs);
-  }
-
   Future<VolunteerTypes> volunteerListAPIProvider() async {
     final DocumentReference documentRefVolunteer =
         firestore.collection('volunteers_types').doc('volunteers_types');

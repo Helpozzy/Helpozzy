@@ -4,24 +4,14 @@ import 'package:helpozzy/models/message_model.dart';
 import 'package:helpozzy/models/notification_model.dart';
 import 'package:helpozzy/models/task_model.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/models/review_model.dart';
-import 'package:helpozzy/models/school_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/models/volunteer_type_model.dart';
 import 'package:helpozzy/utils/constants.dart';
 
 class Repository {
   final apiProvider = ApiProvider();
-
-  Future<States> getStateRepo() => apiProvider.getStatesAPIProvider();
-
-  Future<Cities> getCitiesByStateNameRepo(String stateName) =>
-      apiProvider.getCitiesByStateNameAPIProvider(stateName);
-
-  Future<Schools> getSchoolsRepo({String? state, String? city}) =>
-      apiProvider.getSchoolsAPIProvider(state: state, city: city);
 
   Future<VolunteerTypes> volunteerListRepo() =>
       apiProvider.volunteerListAPIProvider();

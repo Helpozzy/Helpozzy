@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
-import 'package:helpozzy/bloc/cities_bloc.dart';
 import 'package:helpozzy/models/cities_model.dart';
 import 'package:helpozzy/models/sign_up_user_model.dart';
 import 'package:helpozzy/screens/auth/signup/organization_sign_up.dart';
@@ -23,7 +22,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
   _LivingInfoScreenState({required this.signupAndUserModel});
   final SignUpAndUserModel signupAndUserModel;
   final _formKey = GlobalKey<FormState>();
-  final CityBloc _cityInfoBloc = CityBloc();
   final TextEditingController _addressLocationController =
       TextEditingController();
   late ThemeData _theme;
@@ -41,7 +39,6 @@ class _LivingInfoScreenState extends State<LivingInfoScreen> {
 
   @override
   void initState() {
-    _cityInfoBloc.getStates();
     googlePlace = GooglePlace(ANDROID_MAP_API_KEY);
     super.initState();
   }

@@ -5,7 +5,7 @@ import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/task_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/models/report_data_model.dart';
 import 'package:helpozzy/screens/dashboard/time_tracker/mothly_projects.dart';
 import 'package:helpozzy/utils/constants.dart';
 import 'package:helpozzy/widget/common_widget.dart';
@@ -399,7 +399,7 @@ class ActivityTrackerListItem extends StatelessWidget {
     required this.projectActivity,
     required this.projectTabType,
   });
-  final ProjectActivityModel projectActivity;
+  final ReportsDataModel projectActivity;
   final ProjectTabType projectTabType;
   @override
   Widget build(BuildContext context) {
@@ -416,7 +416,7 @@ class ActivityTrackerListItem extends StatelessWidget {
         ),
       ),
       title: Text(
-        projectActivity.month,
+        projectActivity.month!,
         style: _textTheme.bodyText2!.copyWith(
           color: BLACK,
           fontWeight: FontWeight.bold,
@@ -424,7 +424,7 @@ class ActivityTrackerListItem extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        '${projectActivity.projectCounter} projects',
+        '${projectActivity.projects!.length} projects',
         style: _textTheme.bodyText2!.copyWith(
           color: DARK_PINK_COLOR,
           fontSize: 12,

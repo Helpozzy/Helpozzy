@@ -39,11 +39,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future loadMonth(String year) async {
     selectedYear = year;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
-    final List<ReportsDataModel> filteredProject =
-        await FilteredProjectHelper().fromProjects(projects);
+    final FilteredProjectHelper filteredProjectHelper =
+        FilteredProjectHelper.fromProjects(projects);
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.generateReportList(
-            filteredProject, selectedMonth, selectedYear);
+      filteredProjectHelper.projectListByMonthAndYear,
+      selectedMonth,
+      selectedYear,
+    );
     await _reportBloc
         .getFilteredReportProjects(projectReportHelper.chartDetails);
     await _reportBloc.getFilteredReportBars(projectReportHelper.barChart);
@@ -53,11 +56,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
     selectedYear = year;
     selectedMonth = month;
     final List<ProjectModel> projects = await _reportBloc.getSignedUpProjects();
-    final List<ReportsDataModel> filteredProject =
-        await FilteredProjectHelper().fromProjects(projects);
+    final FilteredProjectHelper filteredProjectHelper =
+        FilteredProjectHelper.fromProjects(projects);
     final ProjectReportHelper projectReportHelper =
         ProjectReportHelper.generateReportList(
-            filteredProject, selectedMonth, selectedYear);
+      filteredProjectHelper.projectListByMonthAndYear,
+      selectedMonth,
+      selectedYear,
+    );
     await _reportBloc
         .getFilteredReportProjects(projectReportHelper.chartDetails);
     await _reportBloc.getFilteredReportBars(projectReportHelper.barChart);

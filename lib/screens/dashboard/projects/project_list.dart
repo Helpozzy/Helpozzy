@@ -3,7 +3,7 @@ import 'package:helpozzy/bloc/project_task_bloc.dart';
 import 'package:helpozzy/bloc/projects_bloc.dart';
 import 'package:helpozzy/helper/project_helper.dart';
 import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/project_counter_model.dart';
+import 'package:helpozzy/models/report_data_model.dart';
 import 'package:helpozzy/models/response_model.dart';
 import 'package:helpozzy/screens/dashboard/projects/create_edit_project.dart';
 import 'package:helpozzy/utils/constants.dart';
@@ -228,8 +228,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         if (!snapshot.hasData) {
           return Center(child: LinearLoader());
         }
-        final List<ProjectActivityModel> monthlyList =
-            snapshot.data!.monthlyList;
+        final List<ReportsDataModel> monthlyList = snapshot.data!.monthlyList;
         return monthlyList.isNotEmpty
             ? ListView.separated(
                 separatorBuilder: (BuildContext context, int index) => Divider(

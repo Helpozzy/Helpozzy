@@ -5,9 +5,7 @@ import 'package:helpozzy/models/report_data_model.dart';
 class FilteredProjectHelper {
   final DateFormatFromTimeStamp _dateFormatFromTimeStamp =
       DateFormatFromTimeStamp();
-  Future<List<ReportsDataModel>> fromProjects(
-      List<ProjectModel> projects) async {
-    late List<ReportsDataModel> projectListByMonthAndYear = [];
+  FilteredProjectHelper.fromProjects(List<ProjectModel> projects) {
     for (int i = 0; i < projects.length; i++) {
       final ProjectModel project = projects[i];
       final String projectSignedUpYear = _dateFormatFromTimeStamp.dateYearYYYY(
@@ -21,8 +19,8 @@ class FilteredProjectHelper {
         projects: [project],
       ));
     }
-    return projectListByMonthAndYear;
   }
+  late List<ReportsDataModel> projectListByMonthAndYear = [];
 }
 
 class ProjectReportHelper {

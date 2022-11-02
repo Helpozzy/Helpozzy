@@ -1,41 +1,26 @@
-import 'package:helpozzy/models/project_model.dart';
-import 'package:helpozzy/models/project_counter_model.dart';
-import 'package:intl/intl.dart';
+import 'package:helpozzy/models/report_data_model.dart';
 
 class ProjectHelper {
-  ProjectHelper.fromProjects(Projects projects) {
-    projects.projectList.forEach((project) {
-      final String month = DateFormat('MMMM').format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(project.signedUpDate!)),
-      );
-      late List<ProjectModel> tempList = [];
-      if (monthlyList.isNotEmpty) {
-        tempList.clear();
-        for (int i = 0; i < monthlyList.length; i++) {
-          final ProjectActivityModel monthData = monthlyList[i];
-          if (monthData.month == month) {
-            monthData.month = month;
-            monthData.projectCounter = monthData.projectCounter + 1;
-            monthData.projects.add(project);
-          } else {
-            tempList.add(project);
-            monthlyList.add(ProjectActivityModel(
-              monthVal: month,
-              projectCounterVal: 1,
-              projectsVal: tempList,
-            ));
-          }
-          break;
-        }
-      } else {
-        tempList.add(project);
-        monthlyList.add(ProjectActivityModel(
-          monthVal: month,
-          projectCounterVal: 1,
-          projectsVal: tempList,
-        ));
+  ProjectHelper.fromProjects(List<ReportsDataModel> projects) {
+    late List<String> monthList = [];
+    projects.forEach((filteredProject) {
+      if (!monthList.contains(filteredProject.month)) {
+        monthList.add(filteredProject.month!);
       }
     });
+    monthList.forEach((String selectedMonth) {
+      final tempList =
+          projects.where((element) => element.month == selectedMonth).toList();
+      final finalList = tempList.map((e) => e.projects).toList();
+      final finalProjects =
+          finalList.reduce((value, element) => value! + element!);
+      monthlyList.add(ReportsDataModel(
+        month: tempList.first.month,
+        year: tempList.first.year,
+        projects: finalProjects,
+      ));
+    });
   }
-  late List<ProjectActivityModel> monthlyList = [];
+
+  late List<ReportsDataModel> monthlyList = [];
 }
